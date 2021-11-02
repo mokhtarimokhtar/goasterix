@@ -1,0 +1,258 @@
+{
+  "category": 48,
+  "version": 1.27,
+  "description": "",
+  "UAP": [
+    {
+      "frn": 1,
+      "dataItem": "I048/010",
+      "description": "sourceIdentifier",
+      "type": {
+        "name": "Fixed",
+        "size": 2
+      }
+    },
+    {
+      "FRN": 2,
+      "dataItem": "I048/140",
+      "description": "timeOfDay",
+      "type": {
+        "name": "Fixed",
+        "size": 3
+      }
+    },
+    {
+      "FRN": 3,
+      "dataItem": "I048/020",
+      "description": "TargetReportDescriptor",
+      "type": {
+        "name": "Extended"
+      }
+    },
+    {
+      "FRN": 4,
+      "dataItem": "I048/040",
+      "description": "Measured Position in Slant Polar Coordinates",
+      "type": {
+        "name": "Fixed",
+        "size": 4
+      }
+    },
+    {
+      "FRN": 5,
+      "dataItem": "I048/070",
+      "description": "Mode-3/A Code in Octal Representation",
+      "type": {
+        "name": "Fixed",
+        "size": 2
+      }
+    },
+    {
+      "FRN": 6,
+      "dataItem": "I048/090",
+      "description": "Flight Level in Binary Representation",
+      "type": {
+        "name": "Fixed",
+        "size": 2
+      }
+    },
+    {
+      "FRN": 7,
+      "dataItem": "I048/130",
+      "description": "Radar Plot Characteristics",
+      "type": {
+        "name": "Compound",
+        "subfields":{
+          "8": 1, "7": 1, "6": 1, "5": 1, "4": 1, "3": 1, "2": 1
+        }
+      }
+    },
+    {
+      "FRN": 8,
+      "dataItem": "I048/220",
+      "description": "Aircraft Address",
+      "type": {
+        "name": "Fixed",
+        "size": 3
+      }
+    },
+    {
+      "FRN": 9,
+      "dataItem": "I048/240",
+      "description": "Aircraft Identification",
+      "type": {
+        "name": "Fixed",
+        "size": 6
+      }
+    },
+    {
+      "FRN": 10,
+      "dataItem": "I048/250",
+      "description": "Mode S MB Data",
+      "type": {
+        "name": "Repetitive",
+        "size": 8
+      }
+    },
+    {
+      "FRN": 11,
+      "dataItem": "I048/161",
+      "description": "Track Number",
+      "type": {
+        "name": "Fixed",
+        "size": 2
+      }
+    },
+    {
+      "FRN": 12,
+      "dataItem": "I048/042",
+      "description": "Calculated Position in Cartesian Coordinates",
+      "type": {
+        "name": "Fixed",
+        "size": 4
+      }
+    },
+    {
+      "FRN": 13,
+      "dataItem": "I048/200",
+      "description": "Calculated Track Velocity in Polar Representation",
+      "type": {
+        "name": "Fixed",
+        "size": 4
+      }
+    },
+    {
+      "FRN": 14,
+      "dataItem": "I048/170",
+      "description": "Track Status",
+      "type": {
+        "name": "Extended"
+      }
+    },
+    {
+      "FRN": 15,
+      "dataItem": "I048/210",
+      "description": "Track Quality",
+      "type": {
+        "name": "Fixed",
+        "size": 4
+      }
+    },
+    {
+      "FRN": 16,
+      "dataItem": "I048/030",
+      "description": "Warning/Error Conditions/Target Classification",
+      "type": {
+        "name": "Extended"
+      }
+    },
+    {
+      "FRN": 17,
+      "dataItem": "I048/080",
+      "description": "Mode-3/A Code Confidence Indicator",
+      "type": {
+        "name": "Fixed",
+        "size": 2
+      }
+    },
+    {
+      "FRN": 18,
+      "dataItem": "I048/100",
+      "description": "Mode-C Code and Confidence Indicator",
+      "type": {
+        "name": "Fixed",
+        "size": 4
+      }
+    },
+    {
+      "FRN": 19,
+      "dataItem": "I048/110",
+      "description": "Height Measured by 3D Radar",
+      "type": {
+        "name": "Fixed",
+        "size": 2
+      }
+    },
+    {
+      "FRN": 20,
+      "dataItem": "I048/120",
+      "description": "Radial Doppler Speed",
+      "type": {
+        "name": "Compound",
+        "subfields":{
+          "8": 2, "7":7, "6":0, "5":0, "4":0, "3":0, "2":0
+        }
+      }
+    },
+    {
+      "FRN": 21,
+      "dataItem": "I048/230",
+      "description": "Communications / ACAS Capability and Flight Status",
+      "type": {
+        "name": "Fixed",
+        "size": 2
+      }
+    },
+    {
+      "FRN": 22,
+      "dataItem": "I048/260",
+      "description": "ACAS Resolution Advisory Report",
+      "type": {
+        "name": "Fixed",
+        "size": 7
+      }
+    },
+    {
+      "FRN": 23,
+      "dataItem": "I048/055",
+      "description": "Mode-1 Code in Octal Representation",
+      "type": {
+        "name": "Fixed",
+        "size": 1
+      }
+    },
+    {
+      "FRN": 24,
+      "dataItem": "I048/050",
+      "description": "Mode-2 Code in Octal Representation",
+      "type": {
+        "name": "Fixed",
+        "size": 2
+      }
+    },
+    {
+      "FRN": 25,
+      "dataItem": "I048/065",
+      "description": "Mode-1 Code Confidence Indicator",
+      "type": {
+        "name": "Fixed",
+        "size": 1
+      }
+    },
+    {
+      "FRN": 26,
+      "dataItem": "I048/060",
+      "description": "Mode-2 Code Confidence Indicator",
+      "type": {
+        "name": "Fixed",
+        "size": 2
+      }
+    },
+    {
+      "FRN": 27,
+      "dataItem": "SP-Data Item",
+      "description": "Special Purpose Field",
+      "type": {
+        "name": "SP"
+      }
+    },
+    {
+      "FRN": 28,
+      "dataItem": "RE-Data Item",
+      "description": "Reserved Expansion Field",
+      "type": {
+        "name": "RE"
+      }
+    }
+  ]
+}

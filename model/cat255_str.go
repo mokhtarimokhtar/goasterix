@@ -2,7 +2,7 @@ package model
 
 import (
 	"errors"
-	"goasterix/uap"
+	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 var (
 	ErrCartOrdUnknown = errors.New("[ASTERIX Error] CART ORD Unknown")

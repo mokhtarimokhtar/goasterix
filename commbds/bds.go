@@ -2,7 +2,7 @@ package commbds
 
 import (
 	"encoding/hex"
-	. "goasterix/commbds/bdscode"
+	. "github.com/mokhtarimokhtar/goasterix/commbds/bdscode"
 	"strconv"
 	"strings"
 )

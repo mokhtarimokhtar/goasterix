@@ -5,7 +5,7 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"errors"
-	"goasterix/uap"
+	"github.com/mokhtarimokhtar/goasterix/uap"
 	"io"
 	"math/bits"
 	"strings"

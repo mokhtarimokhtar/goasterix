@@ -4,8 +4,8 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"goasterix/commbds"
-	"goasterix/uap"
+	"github.com/mokhtarimokhtar/goasterix/commbds"
+	"github.com/mokhtarimokhtar/goasterix/uap"
 	"strconv"
 	"strings"
 )

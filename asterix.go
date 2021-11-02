@@ -10,7 +10,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"errors"
-	"goasterix/uap"
+	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
 const (

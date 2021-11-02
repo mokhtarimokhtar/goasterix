@@ -3,8 +3,8 @@ package model
 import (
 	"encoding/json"
 	"errors"
-	"goasterix"
-	"goasterix/uap"
+	"github.com/mokhtarimokhtar/goasterix"
+	"github.com/mokhtarimokhtar/goasterix/uap"
 	"reflect"
 	"testing"
 )

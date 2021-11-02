@@ -3,7 +3,7 @@ package model
 import (
 	"encoding/json"
 	"encoding/xml"
-	"goasterix/uap"
+	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
 type Writer interface {

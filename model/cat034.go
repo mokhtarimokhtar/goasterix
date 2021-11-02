@@ -3,8 +3,8 @@ package model
 import (
 	"encoding/hex"
 	"errors"
-	"goasterix"
-	"goasterix/uap"
+	"github.com/mokhtarimokhtar/goasterix"
+	"github.com/mokhtarimokhtar/goasterix/uap"
 	"strconv"
 )
 

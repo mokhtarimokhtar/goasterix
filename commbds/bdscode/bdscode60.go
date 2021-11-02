@@ -1,7 +1,7 @@
 package bdscode
 
 import (
-	"goasterix"
+	"github.com/mokhtarimokhtar/goasterix"
 	"math"
 )
 

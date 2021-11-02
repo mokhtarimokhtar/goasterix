@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"goasterix"
+	"github.com/mokhtarimokhtar/goasterix"
 	"io/ioutil"
 	"log"
 )

@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"goasterix"
-	"goasterix/model"
+	"github.com/mokhtarimokhtar/goasterix"
+	"github.com/mokhtarimokhtar/goasterix/model"
 	"io/ioutil"
 	"log"
 )

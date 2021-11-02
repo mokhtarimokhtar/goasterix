@@ -2,7 +2,7 @@ package goasterix
 
 import (
 	"bytes"
-	"goasterix/uap"
+	"github.com/mokhtarimokhtar/goasterix/uap"
 	"io"
 	"testing"
 )

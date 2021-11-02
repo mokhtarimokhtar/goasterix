@@ -1,7 +1,5 @@
 # GoAsterix
-[![Test Status](https://github.com/mokhtarimokhtar/goasterix/actions/workflows/test/badge.svg)](https://github.com/mokhtarimokhtar/goasterix/actions?workflow=test)
-
-[![Build Status](https://github.com/jandelgado/golang-ci-template-github-actions/workflows/test%20and%20build/badge.svg)](https://github.com/jandelgado/golang-ci-template-github-actions/actions?workflow=test%20and%20build)
+[![Test Status](https://github.com/mokhtarimokhtar/goasterix/actions/workflows/test.yml/badge.svg)](https://github.com/mokhtarimokhtar/goasterix/actions?workflow=test)
 
 This library provides an ASTERIX Frame(binary data) decoding/parsing(json,xml) capabilities for Go.
 

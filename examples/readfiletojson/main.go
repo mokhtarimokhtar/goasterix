@@ -16,6 +16,9 @@ func main() {
 
 	w := new(goasterix.WrapperDataBlock) // wrapper of asterix datablock, it contains one or more datablocks
 	_, err = w.Decode(data)              // decode method one or more datablocks
+	if err != nil {
+		fmt.Println("ERROR Wrapper: ", err)
+	}
 
 	for _, dataB := range w.DataBlocks {
 		fmt.Printf("Category: %v, Len: %v\n", dataB.Category, dataB.Len)

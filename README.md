@@ -1,5 +1,6 @@
 # GoAsterix
 [![made-with-Go](https://img.shields.io/badge/Made%20with-Go-1f425f.svg)](http://golang.org)
+[![Go Reference](https://pkg.go.dev/badge/github.com/mokhtarimokhtar/goasterix.svg)](https://pkg.go.dev/github.com/mokhtarimokhtar/goasterix)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 [![Build-Test Status](https://github.com/mokhtarimokhtar/goasterix/actions/workflows/test.yml/badge.svg)](https://github.com/mokhtarimokhtar/goasterix/actions?workflow=test)

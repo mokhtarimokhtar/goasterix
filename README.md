@@ -1,5 +1,6 @@
 # GoAsterix
 [![Test Status](https://github.com/mokhtarimokhtar/goasterix/actions/workflows/test.yml/badge.svg)](https://github.com/mokhtarimokhtar/goasterix/actions?workflow=test)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 This library provides an ASTERIX Frame(binary data) decoding/parsing(json,xml) capabilities for Go.
 

@@ -45,7 +45,7 @@ func Test_StringToHex_valid(t *testing.T) {
 	output := []byte{0x01, 0x02, 0x03, 0x04}
 
 	// Act
-	data := StringToHex(input)
+	data := HexStringToByte(input)
 
 	// Assert
 	if bytes.Equal(data, output) == false {
@@ -61,7 +61,7 @@ func Test_StringToHex_empty(t *testing.T) {
 	var output []byte
 
 	// Act
-	data := StringToHex(input)
+	data := HexStringToByte(input)
 
 	// Assert
 	if bytes.Equal(data, output) == false {

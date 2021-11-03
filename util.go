@@ -6,9 +6,9 @@ import (
 	"strings"
 )
 
-// StringToHex converts a hexadecimal string format to an array of byte.
+// HexStringToByte converts a hexadecimal string format to an array of byte.
 // It is used to facilitate the testing.
-func StringToHex(s string) (data []byte) {
+func HexStringToByte(s string) (data []byte) {
 	s = strings.ReplaceAll(s, " ", "")
 	data, err := hex.DecodeString(s)
 	if err != nil {

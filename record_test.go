@@ -2,6 +2,7 @@ package goasterix
 
 import (
 	"bytes"
+	"fmt"
 	"github.com/mokhtarimokhtar/goasterix/uap"
 	"io"
 	"testing"
@@ -738,6 +739,70 @@ func Test_Record_Decode_CAT255_STR_record(t *testing.T) {
 
 	// Act
 	unRead, err := rec.Decode(data, uap255)
+
+	// Assert
+	if err != nil {
+		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+	} else {
+		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+	}
+	if unRead != 0 {
+		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
+	} else {
+		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
+	}
+	for i, item := range rec.Items {
+		if bytes.Equal(item.Payload, output[i]) == false {
+			t.Errorf("FAIL: %s = % X; Expected: % X", item.DataItem, item.Payload, output[i])
+		} else {
+			t.Logf("SUCCESS: %s = % X; Expected: % X", item.DataItem, item.Payload, output[i])
+		}
+	}
+}
+
+func Test_Record_Decode_CAT030_ARTAS_record(t *testing.T) {
+	// Arrange
+	// cat 30 multi record "1e00f3afbbf317f1300883040070a8bcf3ff07070723f0a8800713feb7022b0389038b140704012c080811580000001e7004f04aa004b0012400544e49413531313206c84c45424c48454c584d413332300101a5389075c71ca0afbbf317f130088304002aa8bcf3ff04040447fda703f7d2008f0df705280528140700000008171158000000087002f0c3c00528012d006955414c3931202007314c4c42474b4557524842373757a290f3541339c60820afbbf31101300883040335a8bcf3ff0b0b0b2be9a9b5fffefffa0fff08c008c01d0e070000001484115800000200700400ffffffffffffffff344045df7df76021d3"
+	input := "afbbf317f130 0883 04 0070 a8bcf3 ff070707 23f0a880 0713feb7 022b 0389 038b 14 07 04 012c 0808 " +
+		"115800 00001e7004f04a a004 " +
+		"b0012400 544e4941 35 31313206 " +
+		"c84c45 424c48454c58"
+
+	output := [][]byte{
+		{0x08, 0x83},
+		{0x04},
+		{0x00, 0x70},
+		{0xa8, 0xbc, 0xf3},
+		{0xff, 0x07, 0x07, 0x07},
+		{0x23, 0xf0, 0xa8, 0x80},
+		{0x07, 0x13, 0xfe, 0xb7},
+		{0x02, 0x2b},
+		{0x03, 0x89},
+		{0x03, 0x8b},
+		{0x14},
+		{0x07},
+		{0x04},
+		{0x01, 0x2c},
+		{0x08, 0x08},
+		{0x11, 0x58, 0x00},
+		{0x00, 0x00, 0x1e, 0x70, 0x04, 0xf0, 0x4a},
+		{0xa0, 0x04},
+		{0xb0, 0x01, 0x24, 0x00},
+		{0x54, 0x4e, 0x49, 0x41},
+		{0x35},
+		{0x31, 0x31, 0x32, 0x06},
+		{0xc8, 0x4c, 0x45},
+		{0x42, 0x4c, 0x48, 0x45, 0x4c, 0x58},
+	}
+
+	uap030 := uap.Cat030ArtasV70.Items
+	data := HexStringToByte(input)
+	fmt.Println(len(data))
+	rec := new(Record)
+
+	// Act
+	unRead, err := rec.Decode(data, uap030)
+	fmt.Printf("Fspec: %x\n",rec.Fspec)
 
 	// Assert
 	if err != nil {

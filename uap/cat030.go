@@ -4,7 +4,7 @@ package uap
 // version 5.1
 var Cat030StrV51 = StandardUAP{
 	Name:     "STR",
-	Category: 1,
+	Category: 30,
 	Version:  5.1,
 	Items: []DataField{
 		{
@@ -101,7 +101,7 @@ var Cat030StrV51 = StandardUAP{
 // version 7.0
 var Cat030ArtasV70 = StandardUAP{
 	Name:     "ARTAS",
-	Category: 1,
+	Category: 30,
 	Version:  7.0,
 	Items: []DataField{
 		{

@@ -3,7 +3,7 @@ package uap
 // Cat255StrV51 User Application Profile
 // version 5.1
 var Cat255StrV51 = StandardUAP{
-	Category: 30,
+	Category: 255,
 	Version:  5.1,
 	Items: []DataField{
 		{

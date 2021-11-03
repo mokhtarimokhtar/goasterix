@@ -3,7 +3,7 @@ package uap
 // Cat032StrV70 User Application Profile
 // version 5.1
 var Cat032StrV70 = StandardUAP{
-	Category: 1,
+	Category: 32,
 	Version:  7.0,
 	Items: []DataField{
 		{

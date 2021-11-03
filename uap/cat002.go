@@ -3,7 +3,7 @@ package uap
 // Cat002V10 User Application Profile CAT002
 // version 1.0
 var Cat002V10 = StandardUAP{
-	Category: 1,
+	Category: 2,
 	Version:  1.0,
 	Items: []DataField{
 		{

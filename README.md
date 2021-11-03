@@ -2,7 +2,7 @@
 [![made-with-Go](https://img.shields.io/badge/Made%20with-Go-1f425f.svg)](http://golang.org)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-[![Test Status](https://github.com/mokhtarimokhtar/goasterix/actions/workflows/test.yml/badge.svg)](https://github.com/mokhtarimokhtar/goasterix/actions?workflow=test)
+[![Build-Test Status](https://github.com/mokhtarimokhtar/goasterix/actions/workflows/test.yml/badge.svg)](https://github.com/mokhtarimokhtar/goasterix/actions?workflow=test)
 [![GitHub issues](https://img.shields.io/github/issues/mokhtarimokhtar/goasterix)](https://github.com/mokhtarimokhtar/goasterix/issues)
 
 This library provides an ASTERIX Frame(binary data) decoding/parsing(json,xml) capabilities for Go.

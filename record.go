@@ -47,7 +47,7 @@ func (rec *Record) Decode(data []byte, uap []uap.DataField) (unRead int, err err
 	frnIndex, _ := FspecIndex(rec.Fspec)
 
 	for _, frn := range frnIndex {
-		dataItem := uap[frn-1]  // here the index corresponds to the FRN
+		dataItem := uap[frn-1] // here the index corresponds to the FRN
 		var tmp []byte
 
 		switch strings.ToLower(dataItem.Type.Name) {

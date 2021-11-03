@@ -49,8 +49,7 @@ func sacSic(data [2]byte) (src SourceIdentifier, err error) {
 // expressed as a number of 1/128 s elapsed since last midnight.
 // The time of day value is reset to 0 each day at midnight.
 func timeOfDay(data [3]byte) (tod float64, err error) {
-	var tmp uint32
-	tmp = uint32(data[0])<<16 + uint32(data[1])<<8 + uint32(data[2])
+	tmp := uint32(data[0])<<16 + uint32(data[1])<<8 + uint32(data[2])
 	tod = float64(tmp) / 128
 	return tod, nil
 }

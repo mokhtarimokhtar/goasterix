@@ -9,24 +9,24 @@ import (
 )
 
 const (
-	sysIn string = "system_inhibited"
-	sysOp string = "system_operational"
-	antenna1 string = "antenna_1"
-	antenna2 string = "antenna_2"
+	sysIn          string = "system_inhibited"
+	sysOp          string = "system_operational"
+	antenna1       string = "antenna_1"
+	antenna2       string = "antenna_2"
 	noChanSelected string = "no_channel_selected"
-	chanASelected string = "channel_a_only_selected"
-	chanBSelected string = "channel_b_only_selected"
+	chanASelected  string = "channel_a_only_selected"
+	chanBSelected  string = "channel_b_only_selected"
 	chanABSelected string = "channel_a_and_b_selected"
-	chanIllCombi string = "illegal_combinaison"
-	overload string = "overload"
-	noOverload string = "no_overload"
-	mscC string = "monitoring_system_connected"
-	mscD string = "monitoring_system_disconnected"
-	chanAuse string = "channel_a_in_use"
-	chanBuse string = "channel_b_in_use"
+	chanIllCombi   string = "illegal_combinaison"
+	overload       string = "overload"
+	noOverload     string = "no_overload"
+	mscC           string = "monitoring_system_connected"
+	mscD           string = "monitoring_system_disconnected"
+	chanAuse       string = "channel_a_in_use"
+	chanBuse       string = "channel_b_in_use"
 )
 
-var ErrTypeUnknown   = errors.New("[ASTERIX Error CAT034] Message TYPE Unknown")
+var ErrTypeUnknown = errors.New("[ASTERIX Error CAT034] Message TYPE Unknown")
 
 type collimationError struct {
 	RangeError   float64 `json:"rangeError"`
@@ -124,13 +124,13 @@ func (data *Cat034Model) write(items []uap.DataField) {
 			// SectorNumber returns a float.
 			// Ref: 5.2.3 Records Item I034/020.
 			// Eight most significant bits of the antenna azimuth defining a particular azimuth sector.
-			data.SectorNumber = float64(item.Payload[0])*1.40625
+			data.SectorNumber = float64(item.Payload[0]) * 1.40625
 		case 5:
 			// AntennaRotationSpeed returns a float in second.
 			// Antenna rotation period as measured between two consecutive
 			// North crossings or as averaged during a period of time.
 			// Ref: 5.2.3 Records Item I034/041.
-			data.AntennaRotationSpeed = float64(uint16(item.Payload[0]) << 8 + uint16(item.Payload[1]))/128
+			data.AntennaRotationSpeed = float64(uint16(item.Payload[0])<<8+uint16(item.Payload[1])) / 128
 		case 6:
 			tmp, _ := systemConfiguration(item.Payload)
 			data.SystemConfiguration = &tmp
@@ -159,13 +159,13 @@ func (data *Cat034Model) write(items []uap.DataField) {
 			// RANGE ERROR and AZIMUTH ERROR
 			// Ref: 5.2.9 Records Item I034/090.
 			tmp := new(collimationError)
-			tmp.RangeError = float64(int8(item.Payload[0]))/128
-			tmp.AzimuthError = float64(int8(item.Payload[1]))*0.021972656
+			tmp.RangeError = float64(int8(item.Payload[0])) / 128
+			tmp.AzimuthError = float64(int8(item.Payload[1])) * 0.021972656
 			data.CollimationError = tmp
 		case 13:
-			data.REDataItem =  hex.EncodeToString(item.Payload)
+			data.REDataItem = hex.EncodeToString(item.Payload)
 		case 14:
-			data.SPDataItem =  hex.EncodeToString(item.Payload)
+			data.SPDataItem = hex.EncodeToString(item.Payload)
 		}
 	}
 }
@@ -205,40 +205,40 @@ func systemConfiguration(data []byte) (sysConf SysConf, err error) {
 	// secondary
 	offset := 0
 
-	if primary & 0x80 != 0 {
+	if primary&0x80 != 0 {
 		com := new(ComSysConf)
 		offset += 1
-		if data[offset] & 0x80 == 0 {
+		if data[offset]&0x80 == 0 {
 			com.Nogo = sysIn
 		} else {
 			com.Nogo = sysOp
 		}
-		if data[offset] & 0x40 == 0 {
+		if data[offset]&0x40 == 0 {
 			com.Rdpc = "radar_data_processor_chain1"
 		} else {
 			com.Rdpc = "radar_data_processor_chain2"
 		}
-		if data[offset] & 0x20 == 0 {
+		if data[offset]&0x20 == 0 {
 			com.Rdpr = "default_situation"
 		} else {
 			com.Rdpr = "reset_of_rdpc"
 		}
-		if data[offset] & 0x10 == 0 {
+		if data[offset]&0x10 == 0 {
 			com.Ovlrdp = noOverload
 		} else {
 			com.Ovlrdp = overload
 		}
-		if data[offset] & 0x08 == 0 {
+		if data[offset]&0x08 == 0 {
 			com.Ovlxmt = noOverload
 		} else {
 			com.Ovlxmt = overload
 		}
-		if data[offset] & 0x04 == 0 {
+		if data[offset]&0x04 == 0 {
 			com.Msc = mscC
 		} else {
 			com.Msc = mscD
 		}
-		if data[offset] & 0x02 == 0 {
+		if data[offset]&0x02 == 0 {
 			com.Tsv = "time_source_valid"
 		} else {
 			com.Tsv = "time_source_invalid"
@@ -247,11 +247,11 @@ func systemConfiguration(data []byte) (sysConf SysConf, err error) {
 		sysConf.Com = com
 	}
 
-	if primary & 0x10 != 0 {
+	if primary&0x10 != 0 {
 		psr := new(PsrSsrSysConf)
 		offset += 1
 
-		if data[offset] & 0x80 == 0 {
+		if data[offset]&0x80 == 0 {
 			psr.Ant = antenna1
 		} else {
 			psr.Ant = antenna2
@@ -267,12 +267,12 @@ func systemConfiguration(data []byte) (sysConf SysConf, err error) {
 		} else if tmpChAB == 3 {
 			psr.ChAB = chanABSelected
 		}
-		if data[offset] & 0x10 == 0 {
+		if data[offset]&0x10 == 0 {
 			psr.Ovl = noOverload
 		} else {
 			psr.Ovl = overload
 		}
-		if data[offset] & 0x08 == 0 {
+		if data[offset]&0x08 == 0 {
 			psr.Msc = mscC
 		} else {
 			psr.Msc = mscD
@@ -280,11 +280,11 @@ func systemConfiguration(data []byte) (sysConf SysConf, err error) {
 		sysConf.Psr = psr
 	}
 
-	if primary & 0x08 != 0 {
+	if primary&0x08 != 0 {
 		ssr := new(PsrSsrSysConf)
 		offset += 1
 
-		if data[offset] & 0x80 == 0 {
+		if data[offset]&0x80 == 0 {
 			ssr.Ant = antenna1
 		} else {
 			ssr.Ant = antenna2
@@ -300,12 +300,12 @@ func systemConfiguration(data []byte) (sysConf SysConf, err error) {
 		} else if tmpChAB == 3 {
 			ssr.ChAB = chanABSelected
 		}
-		if data[offset] & 0x10 == 0 {
+		if data[offset]&0x10 == 0 {
 			ssr.Ovl = noOverload
 		} else {
 			ssr.Ovl = overload
 		}
-		if data[offset] & 0x08 == 0 {
+		if data[offset]&0x08 == 0 {
 			ssr.Msc = mscC
 		} else {
 			ssr.Msc = mscD
@@ -313,11 +313,11 @@ func systemConfiguration(data []byte) (sysConf SysConf, err error) {
 		sysConf.Ssr = ssr
 	}
 
-	if primary & 0x04 != 0 {
+	if primary&0x04 != 0 {
 		mds := new(MdsSysConf)
 		offset += 2
 
-		if data[offset-1] & 0x80 == 0 {
+		if data[offset-1]&0x80 == 0 {
 			mds.Ant = antenna1
 		} else {
 			mds.Ant = antenna2
@@ -334,32 +334,32 @@ func systemConfiguration(data []byte) (sysConf SysConf, err error) {
 			mds.ChAB = chanIllCombi
 		}
 
-		if data[offset-1] & 0x10 == 0 {
+		if data[offset-1]&0x10 == 0 {
 			mds.Ovlsur = noOverload
 		} else {
 			mds.Ovlsur = overload
 		}
-		if data[offset-1] & 0x08 == 0 {
+		if data[offset-1]&0x08 == 0 {
 			mds.Msc = mscC
 		} else {
 			mds.Msc = mscD
 		}
-		if data[offset-1] & 0x04 == 0 {
+		if data[offset-1]&0x04 == 0 {
 			mds.Scf = chanAuse
 		} else {
 			mds.Scf = chanBuse
 		}
-		if data[offset-1] & 0x02 == 0 {
+		if data[offset-1]&0x02 == 0 {
 			mds.Dlf = chanAuse
 		} else {
 			mds.Dlf = chanBuse
 		}
-		if data[offset-1] & 0x01 == 0 {
+		if data[offset-1]&0x01 == 0 {
 			mds.Ovlscf = noOverload
 		} else {
 			mds.Ovlscf = overload
 		}
-		if data[offset] & 0x80 == 0 {
+		if data[offset]&0x80 == 0 {
 			mds.Ovldlf = noOverload
 		} else {
 			mds.Ovldlf = overload
@@ -392,6 +392,7 @@ type SysProcess struct {
 	Ssr       *SsrSysPro `json:"ssr,omitempty"`
 	Mds       *MdsSysPro `json:"mds,omitempty"`
 }
+
 // systemProcessingMode returns map of map string.
 // Ref: Data Item I034/060, System Processing Mode
 func systemProcessingMode(data []byte) (sysProc SysProcess, err error) {
@@ -399,7 +400,7 @@ func systemProcessingMode(data []byte) (sysProc SysProcess, err error) {
 
 	// secondary
 	offset := 0
-	if primary & 0x80 != 0 {
+	if primary&0x80 != 0 {
 		tmp := new(ComSysPro)
 		offset += 1
 
@@ -420,11 +421,11 @@ func systemProcessingMode(data []byte) (sysProc SysProcess, err error) {
 		sysProc.ComSysPro = tmp
 	}
 
-	if primary & 0x10 != 0 {
+	if primary&0x10 != 0 {
 		tmp := new(PsrSysPro)
 		offset += 1
 
-		if data[offset] & 0x80 == 0 {
+		if data[offset]&0x80 == 0 {
 			tmp.Pol = "linear_polarization"
 		} else {
 			tmp.Pol = "circular_polarization"
@@ -443,7 +444,7 @@ func systemProcessingMode(data []byte) (sysProc SysProcess, err error) {
 		sysProc.Psr = tmp
 	}
 
-	if primary & 0x08 != 0 {
+	if primary&0x08 != 0 {
 		tmp := new(SsrSysPro)
 		offset += 1
 
@@ -457,7 +458,7 @@ func systemProcessingMode(data []byte) (sysProc SysProcess, err error) {
 		sysProc.Ssr = tmp
 	}
 
-	if primary & 0x04 != 0 {
+	if primary&0x04 != 0 {
 		tmp := new(MdsSysPro)
 		offset += 1
 
@@ -468,7 +469,7 @@ func systemProcessingMode(data []byte) (sysProc SysProcess, err error) {
 			tmp.Redrad = "reduction_step" + strconv.Itoa(int(tmpRedrad)) + "_active"
 		}
 
-		if data[offset] & 0x10 == 0 {
+		if data[offset]&0x10 == 0 {
 			tmp.Clu = "autonomous"
 		} else {
 			tmp.Clu = "no_autonomous"
@@ -486,9 +487,9 @@ func systemProcessingMode(data []byte) (sysProc SysProcess, err error) {
 func messageCountValues(data []byte) (mcv []MessageCounter, err error) {
 	rep := data[0]
 
-	for i:=0; i < int(rep*2); i = i + 2 {
+	for i := 0; i < int(rep*2); i = i + 2 {
 		m := MessageCounter{}
-		m.Counter = uint16(data[i+1] & 0x07) << 8 + uint16(data[i+2])
+		m.Counter = uint16(data[i+1]&0x07)<<8 + uint16(data[i+2])
 		typeMCtmp := uint16(data[i+1] & 0xF8 >> 3)
 
 		switch typeMCtmp {
@@ -540,17 +541,17 @@ func messageCountValues(data []byte) (mcv []MessageCounter, err error) {
 		}
 		mcv = append(mcv, m)
 	}
-	return mcv, nil
+	return mcv, err
 }
 
 // genericPolarWindow returns a map of float64.
 // rhoStart and rhoEnd (NM),  thetaStart and thetaEnd degrees
 // Ref: 5.2.10 Data Item I034/100
 func genericPolarWindow(data [8]byte) (g GenericPolarWindow, err error) {
-	g.RhoStart = float64(uint16(data[0]) << 8 + uint16(data[1]))/256
-	g.RhoEnd = float64(uint16(data[2]) << 8 + uint16(data[3]))/256
-	g.ThetaStart = float64(uint16(data[4]) << 8 + uint16(data[5]))*0.0055
-	g.ThetaEnd = float64(uint16(data[6]) << 8 + uint16(data[7]))*0.0055
+	g.RhoStart = float64(uint16(data[0])<<8+uint16(data[1])) / 256
+	g.RhoEnd = float64(uint16(data[2])<<8+uint16(data[3])) / 256
+	g.ThetaStart = float64(uint16(data[4])<<8+uint16(data[5])) * 0.0055
+	g.ThetaEnd = float64(uint16(data[6])<<8+uint16(data[7])) * 0.0055
 	return g, nil
 }
 
@@ -591,18 +592,13 @@ func dataFilter(data [1]byte) (df string, err error) {
 // 3D-Position of Data Source in WGS 84 Co-ordinates.
 // Ref: 5.2.12 Data Item I034/120 3D-Position Of Data Source
 func position3DofDataSource(data [8]byte) (pos Pos3D, err error) {
-	pos.Height = float64(uint16(data[0]) << 8 + uint16(data[1]))
+	pos.Height = float64(uint16(data[0])<<8 + uint16(data[1]))
 
-	tmpLatitude := uint32(data[2]) << 16 + uint32(data[3]) << 8 + uint32(data[4])
+	tmpLatitude := uint32(data[2])<<16 + uint32(data[3])<<8 + uint32(data[4])
 	pos.Latitude = float64(goasterix.TwoComplement32(23, tmpLatitude)) * 0.000021458
 
-	tmpLongitude := uint32(data[5]) << 16 + uint32(data[6]) << 8 + uint32(data[7])
+	tmpLongitude := uint32(data[5])<<16 + uint32(data[6])<<8 + uint32(data[7])
 	pos.Longitude = float64(goasterix.TwoComplement32(23, tmpLongitude)) * 0.000021458
 
 	return pos, nil
 }
-
-
-
-
-

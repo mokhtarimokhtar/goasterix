@@ -28,9 +28,9 @@ func (c *Code50) Decode(data [7]byte) (err error) {
 	raStatus := data[0] & 0x80 >> 7
 	if raStatus == 1 {
 		c.RollAngleStatus = true
-		ra := uint16(data[0] & 0x7F) << 3 + uint16(data[1] & 0xE0) >> 5
-		tmpRa :=  goasterix.TwoComplement16(10, ra)
-		c.RollAngle = int8(float64(tmpRa) * 45/256)
+		ra := uint16(data[0]&0x7F)<<3 + uint16(data[1]&0xE0)>>5
+		tmpRa := goasterix.TwoComplement16(10, ra)
+		c.RollAngle = int8(float64(tmpRa) * 45 / 256)
 
 	} else {
 		c.RollAngleStatus = false
@@ -41,9 +41,9 @@ func (c *Code50) Decode(data [7]byte) (err error) {
 	ttaStatus := data[1] & 0x10 >> 4
 	if ttaStatus == 1 {
 		c.TrueTrackAngleStatus = true
-		tta := uint16(data[1] & 0x0F) << 7 + uint16(data[2] & 0xFE) >> 1
-		tmpTta :=  goasterix.TwoComplement16(11, tta)
-		c.TrueTrackAngle = int8(float64(tmpTta) * 90/512)
+		tta := uint16(data[1]&0x0F)<<7 + uint16(data[2]&0xFE)>>1
+		tmpTta := goasterix.TwoComplement16(11, tta)
+		c.TrueTrackAngle = int8(float64(tmpTta) * 90 / 512)
 
 	} else {
 		c.TrueTrackAngleStatus = false
@@ -54,7 +54,7 @@ func (c *Code50) Decode(data [7]byte) (err error) {
 	gsStatus := data[2] & 0x01
 	if gsStatus == 1 {
 		c.GroundSpeedStatus = true
-		gs := uint16(data[3] & 0xFF) << 2 + uint16(data[4] & 0xC0) >> 6
+		gs := uint16(data[3]&0xFF)<<2 + uint16(data[4]&0xC0)>>6
 		c.GroundSpeed = gs * 2
 
 	} else {
@@ -66,9 +66,9 @@ func (c *Code50) Decode(data [7]byte) (err error) {
 	tarStatus := data[4] & 0x20 >> 5
 	if tarStatus == 1 {
 		c.TrackAngleRateStatus = true
-		tar := uint16(data[4] & 0x1F) << 5 + uint16(data[5] & 0xF8) >> 3
-		tmpTar :=  goasterix.TwoComplement16(10, tar)
-		c.TrackAngleRate = int8(float64(tmpTar) * 8/256)
+		tar := uint16(data[4]&0x1F)<<5 + uint16(data[5]&0xF8)>>3
+		tmpTar := goasterix.TwoComplement16(10, tar)
+		c.TrackAngleRate = int8(float64(tmpTar) * 8 / 256)
 
 	} else {
 		c.TrackAngleRateStatus = false
@@ -79,7 +79,7 @@ func (c *Code50) Decode(data [7]byte) (err error) {
 	tasStatus := data[5] & 0x04 >> 2
 	if tasStatus == 1 {
 		c.TrueAirSpeedStatus = true
-		tas := uint16(data[5] & 0x03) << 8 + uint16(data[6] & 0xFF)
+		tas := uint16(data[5]&0x03)<<8 + uint16(data[6]&0xFF)
 		c.TrueAirSpeed = tas * 2
 
 	} else {

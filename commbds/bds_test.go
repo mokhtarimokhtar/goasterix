@@ -1,12 +1,10 @@
 package commbds
 
-
 import (
 	"encoding/hex"
 	"strings"
 	"testing"
 )
-
 
 func Test_BDS_Decode_msg_commB_Code60(t *testing.T) {
 	// Arrange

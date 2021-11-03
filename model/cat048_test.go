@@ -17,7 +17,7 @@ func Test_Model_Cat048_to_JSON_Record(t *testing.T) {
 
 	uap048 := uap.Cat048V127.Items
 	data := goasterix.StringToHex(input)
-	rec :=  new(goasterix.Record)
+	rec := new(goasterix.Record)
 	_, err := rec.Decode(data, uap048)
 
 	cat048Model := new(Cat048Model)
@@ -28,37 +28,37 @@ func Test_Model_Cat048_to_JSON_Record(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v",  err, nil)
+		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v",  err, nil)
+		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
 	}
 
 	if reflect.DeepEqual(recJson, output) == false {
-		t.Errorf("FAIL: %s; \nExpected: %s",  recJson, output)
+		t.Errorf("FAIL: %s; \nExpected: %s", recJson, output)
 	} else {
-		t.Logf("SUCCESS: %s; Expected: %s",  recJson, output)
+		t.Logf("SUCCESS: %s; Expected: %s", recJson, output)
 	}
 }
 
 func Test_Model_Cat048_RhoTheta(t *testing.T) {
 	// Arrange
 	input := [4]byte{0xFF, 0xFF, 0xFF, 0xFF}
-	output := PolarPosition{ Rho: float64(0xFFFF)/256, Theta: float64(0xFFFF)*0.0055}
+	output := PolarPosition{Rho: float64(0xFFFF) / 256, Theta: float64(0xFFFF) * 0.0055}
 
 	// Act
 	res, err := rhoTheta(input)
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v",  err, nil)
+		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v",  err, nil)
+		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
 	}
 
 	if reflect.DeepEqual(res, output) == false {
-		t.Errorf("FAIL: %v; Expected: %v",  res, output)
+		t.Errorf("FAIL: %v; Expected: %v", res, output)
 	} else {
-		t.Logf("SUCCESS: %v; Expected: %v",  res, output)
+		t.Logf("SUCCESS: %v; Expected: %v", res, output)
 	}
 
 }
@@ -77,15 +77,15 @@ func Test_Model_Cat048_Mode3ACodeVGL(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v",  err, nil)
+		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v",  err, nil)
+		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
 	}
 
 	if reflect.DeepEqual(res, output) == false {
-		t.Errorf("FAIL: %v; Expected: %v",  res, output)
+		t.Errorf("FAIL: %v; Expected: %v", res, output)
 	} else {
-		t.Logf("SUCCESS: %v; Expected: %v",  res, output)
+		t.Logf("SUCCESS: %v; Expected: %v", res, output)
 	}
 
 }
@@ -96,7 +96,7 @@ func Test_Model_Cat048_FlightLevel(t *testing.T) {
 	output := FL{
 		V:     "code_validated",
 		G:     "default",
-		Level: uint16(0x3FFF)/4,
+		Level: uint16(0x3FFF) / 4,
 	}
 
 	// Act
@@ -104,15 +104,15 @@ func Test_Model_Cat048_FlightLevel(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v",  err, nil)
+		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v",  err, nil)
+		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
 	}
 
 	if reflect.DeepEqual(res, output) == false {
-		t.Errorf("FAIL: %v; Expected: %v",  res, output)
+		t.Errorf("FAIL: %v; Expected: %v", res, output)
 	} else {
-		t.Logf("SUCCESS: %v; Expected: %v",  res, output)
+		t.Logf("SUCCESS: %v; Expected: %v", res, output)
 	}
 
 }
@@ -176,15 +176,15 @@ func Test_Model_Cat048_TrackNumber(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v",  err, nil)
+		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v",  err, nil)
+		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
 	}
 
 	if reflect.DeepEqual(res, output) == false {
-		t.Errorf("FAIL: %v; Expected: %v",  res, output)
+		t.Errorf("FAIL: %v; Expected: %v", res, output)
 	} else {
-		t.Logf("SUCCESS: %v; Expected: %v",  res, output)
+		t.Logf("SUCCESS: %v; Expected: %v", res, output)
 	}
 
 }
@@ -193,8 +193,8 @@ func Test_Model_Cat048_CartesianXY(t *testing.T) {
 	// Arrange
 	input := [4]byte{0x01, 0x00, 0xFF, 0x00}
 	output := CartesianXYPosition{
-		X: float64(int16(256))/128,
-		Y: float64(int16(-256))/128,
+		X: float64(int16(256)) / 128,
+		Y: float64(int16(-256)) / 128,
 	}
 
 	// Act
@@ -202,15 +202,15 @@ func Test_Model_Cat048_CartesianXY(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v",  err, nil)
+		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v",  err, nil)
+		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
 	}
 
 	if reflect.DeepEqual(res, output) == false {
-		t.Errorf("FAIL: %v; Expected: %v",  res, output)
+		t.Errorf("FAIL: %v; Expected: %v", res, output)
 	} else {
-		t.Logf("SUCCESS: %v; Expected: %v",  res, output)
+		t.Logf("SUCCESS: %v; Expected: %v", res, output)
 	}
 }
 
@@ -227,15 +227,15 @@ func Test_Model_Cat048_TrackVelocity(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v",  err, nil)
+		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v",  err, nil)
+		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
 	}
 
 	if reflect.DeepEqual(res, output) == false {
-		t.Errorf("FAIL: %v; Expected: %v",  res, output)
+		t.Errorf("FAIL: %v; Expected: %v", res, output)
 	} else {
-		t.Logf("SUCCESS: %v; Expected: %v",  res, output)
+		t.Logf("SUCCESS: %v; Expected: %v", res, output)
 	}
 }
 
@@ -255,24 +255,14 @@ func Test_Model_Cat048_TrackStatus(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v",  err, nil)
+		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v",  err, nil)
+		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
 	}
 
 	if reflect.DeepEqual(res, output) == false {
-		t.Errorf("FAIL: %v; Expected: %v",  res, output)
+		t.Errorf("FAIL: %v; Expected: %v", res, output)
 	} else {
-		t.Logf("SUCCESS: %v; Expected: %v",  res, output)
+		t.Logf("SUCCESS: %v; Expected: %v", res, output)
 	}
 }
-
-
-
-
-
-
-
-
-
-

@@ -25,37 +25,34 @@ func (c *Code40) Decode(data [7]byte) (err error) {
 	mcpStatus := data[0] & 0x80 >> 7
 	if mcpStatus == 1 {
 		c.MCPSelectAltitudeStatus = true
-		mcp := uint16(data[0] & 0x7F) << 5 + uint16(data[1] & 0xF8) >> 3
+		mcp := uint16(data[0]&0x7F)<<5 + uint16(data[1]&0xF8)>>3
 		c.MCPSelectAltitude = mcp * 16
 	} else {
 		c.MCPSelectAltitudeStatus = false
 		c.MCPSelectAltitude = 0
 	}
 
-
 	// Extract FMSSelectAltitude
 	fmsStatus := data[1] & 0x04 >> 2
 	if fmsStatus == 1 {
 		c.FMSSelectAltitudeStatus = true
-		fms := uint16(data[1] & 0x03) << 10 + uint16(data[2] & 0xFF) << 2 + uint16(data[3] & 0xC0) >> 6
+		fms := uint16(data[1]&0x03)<<10 + uint16(data[2]&0xFF)<<2 + uint16(data[3]&0xC0)>>6
 		c.FMSSelectAltitude = fms * 16
 	} else {
 		c.FMSSelectAltitudeStatus = false
 		c.FMSSelectAltitude = 0
 	}
 
-
 	// Extract BarometricPressureSetting
 	bpsStatus := data[3] & 0x20 >> 5
 	if bpsStatus == 1 {
 		c.BarometricPressureSettingStatus = true
-		bps := uint16(data[3] & 0x1F) << 7 + uint16(data[4] & 0xFE) >> 1
-		c.BarometricPressureSetting = uint16(float64(bps) * 0.1) + 800
+		bps := uint16(data[3]&0x1F)<<7 + uint16(data[4]&0xFE)>>1
+		c.BarometricPressureSetting = uint16(float64(bps)*0.1) + 800
 	} else {
 		c.BarometricPressureSettingStatus = false
 		c.BarometricPressureSetting = 0
 	}
-
 
 	// Extract ModeBits
 	mbStatus := data[5] & 0x01

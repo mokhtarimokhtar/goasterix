@@ -23,4 +23,3 @@ var Cat032StrV70 = StandardUAP{
 		},
 	},
 }
-

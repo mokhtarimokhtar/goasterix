@@ -71,7 +71,6 @@ func Test_TableAI5_invalid(t *testing.T) {
 	tableInvalidSixBit := []uint8{0, 27, 45, 58, 31, 33}
 	output := "" // empty string
 
-
 	for _, ch := range tableInvalidSixBit {
 
 		// Act

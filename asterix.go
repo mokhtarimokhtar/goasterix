@@ -15,7 +15,7 @@ import (
 
 const (
 	track string = "track"
-	plot string = "plot"
+	plot  string = "plot"
 )
 
 var (
@@ -26,7 +26,6 @@ var (
 	ErrCategoryUnknown = errors.New("[ASTERIX Error] Category Unknown or not processed")
 )
 
-
 // WrapperDataBlock
 // a Wrapper DataBlock correspond to one or more category and contains one or more Records.
 // DataBlock = CAT + LEN + [FSPEC + items...] + [...] + ...
@@ -34,6 +33,7 @@ var (
 type WrapperDataBlock struct {
 	DataBlocks []*DataBlock
 }
+
 func (w *WrapperDataBlock) Decode(data []byte) (unRead int, err error) {
 	offset := uint16(0)
 
@@ -58,9 +58,10 @@ func (w *WrapperDataBlock) Decode(data []byte) (unRead int, err error) {
 // DataBlock = CAT + LEN + [FSPEC + items...] + [...] + ...
 type DataBlock struct {
 	Category uint8
-	Len uint16
-	Records []*Record
+	Len      uint16
+	Records  []*Record
 }
+
 func (db *DataBlock) Decode(data []byte) (unRead int, err error) {
 	rb := bytes.NewReader(data)
 
@@ -87,7 +88,7 @@ func (db *DataBlock) Decode(data []byte) (unRead int, err error) {
 	}
 
 	// retrieve records
-	tmp := make([]byte, db.Len - 3)
+	tmp := make([]byte, db.Len-3)
 	_ = binary.Read(rb, binary.BigEndian, tmp) // ignore explicity error because it's detect before
 	unRead = rb.Len()
 
@@ -119,7 +120,7 @@ func (db *DataBlock) Decode(data []byte) (unRead int, err error) {
 	}
 
 	if db.Category != 1 {
-LoopRecords:
+	LoopRecords:
 		for {
 			rec := new(Record)
 			unRead, err := rec.Decode(tmp[offset:], uapSelected)
@@ -133,11 +134,11 @@ LoopRecords:
 				break LoopRecords
 			}
 		}
-		return unRead,nil
+		return unRead, nil
 	} else {
-LoopRecords2:
-	// special use case for CAT001
-	// uap can change in different records
+	LoopRecords2:
+		// special use case for CAT001
+		// uap can change in different records
 		for {
 			rec := new(Record)
 			typeTarget, _ := SelectUAPCat001(tmp[offset:])
@@ -165,7 +166,7 @@ LoopRecords2:
 				}
 			}
 		}
-		return unRead,nil
+		return unRead, nil
 	}
 }
 
@@ -183,7 +184,7 @@ func (db *DataBlock) Payload() (b [][]byte) {
 	return b
 }
 
-func SelectUAPCat001(data []byte) (uap string, err error)  {
+func SelectUAPCat001(data []byte) (uap string, err error) {
 	rb := bytes.NewReader(data)
 
 	fspec, err := FspecReader(rb, 1)
@@ -218,12 +219,3 @@ func SelectUAPCat001(data []byte) (uap string, err error)  {
 
 	return uap, nil
 }
-
-
-
-
-
-
-
-
-

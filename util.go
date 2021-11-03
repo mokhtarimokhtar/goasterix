@@ -19,8 +19,8 @@ func StringToHex(s string) (data []byte) {
 
 // TwoComplement16 returns an int16 (signed).
 // sizebits is the number of bit complement.
-func TwoComplement16(sizeBits uint8, data uint16) (v int16)  {
-	n := float64(sizeBits-1)
+func TwoComplement16(sizeBits uint8, data uint16) (v int16) {
+	n := float64(sizeBits - 1)
 	p := math.Pow(2, n) // 2^(N-1)
 	mask := uint16(p)
 
@@ -31,8 +31,8 @@ func TwoComplement16(sizeBits uint8, data uint16) (v int16)  {
 	return v
 }
 
-func TwoComplement32(sizeBits uint8, data uint32) (v int32)  {
-	n := float64(sizeBits-1)
+func TwoComplement32(sizeBits uint8, data uint32) (v int32) {
+	n := float64(sizeBits - 1)
 	p := math.Pow(2, n) // 2^(N-1)
 	mask := uint32(p)
 

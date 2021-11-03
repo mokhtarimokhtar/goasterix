@@ -5,11 +5,11 @@ import (
 	"testing"
 )
 
-func Test_TwoComplement16_positive_number(t *testing.T)  {
+func Test_TwoComplement16_positive_number(t *testing.T) {
 	// Arrange
 	input := uint16(0x010F) // 0000 0001 0000 1111
-	size := uint8(10)		// ---- --01 0000 1111  -> tenth bit
-	output := int16(271)   // 01 0000 1111 = 271
+	size := uint8(10)       // ---- --01 0000 1111  -> tenth bit
+	output := int16(271)    // 01 0000 1111 = 271
 
 	// Act
 	result := TwoComplement16(size, input)
@@ -22,10 +22,10 @@ func Test_TwoComplement16_positive_number(t *testing.T)  {
 	}
 }
 
-func Test_TwoComplement16_negative_number(t *testing.T)  {
+func Test_TwoComplement16_negative_number(t *testing.T) {
 	// Arrange
 	input := uint16(0x040F) // 0000 0100 0000 1111
-	size := uint8(11)		// ---- -100 0000 1111  -> tenth bit
+	size := uint8(11)       // ---- -100 0000 1111  -> tenth bit
 	output := int16(-1009)  // ---- -011 1111 0001 = -1009
 
 	// Act

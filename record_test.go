@@ -7,12 +7,11 @@ import (
 	"testing"
 )
 
-
 func Test_Record_Payload(t *testing.T) {
 	// Arrange
 	data := StringToHex("ff df 02 93 19 37 8d 3d a2 05 6f 13 2d 0f ff 00 94 60 02 de 50 6f 84 4c c3 c3 51 23 31 00 17 01 3b 02 6c 00 0c 74 a7 40 20 a0")
 	nbOfBytes := 42
-	rec :=  new(Record)
+	rec := new(Record)
 	_, _ = rec.Decode(data, uap.Cat048V127.Items)
 
 	// Act
@@ -30,7 +29,7 @@ func Test_Record_String(t *testing.T) {
 	// Arrange
 	data := StringToHex("ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020a0")
 	nbOfItems := 15
-	rec :=  new(Record)
+	rec := new(Record)
 	_, _ = rec.Decode(data, uap.Cat048V127.Items)
 
 	// Act
@@ -48,7 +47,7 @@ func Test_Record_String(t *testing.T) {
 func Test_FspecReader_valid(t *testing.T) {
 	// Arrange
 	input := []byte{0xFF, 0x01, 0xF2, 0xFF}
-	output := []byte{0xFF, 0x01, 0xF2 }
+	output := []byte{0xFF, 0x01, 0xF2}
 	rb := bytes.NewReader(input)
 
 	// Act
@@ -233,13 +232,13 @@ func Test_DataFieldCompoundReader(t *testing.T) {
 	input := StringToHex("94 00 80 00")
 	output := []byte{0x94, 0x00, 0x80, 0x00}
 	item034060 := uap.MetaField{
-		8: { Name: "Fixed", Size: 1},
-		7: { Name: "Spare"},
-		6: { Name: "Spare"},
-		5: { Name: "Fixed", Size: 1},
-		4: { Name: "Fixed", Size: 1},
-		3: { Name: "Fixed", Size: 1},
-		2: { Name: "Spare"},
+		8: {Name: "Fixed", Size: 1},
+		7: {Name: "Spare"},
+		6: {Name: "Spare"},
+		5: {Name: "Fixed", Size: 1},
+		4: {Name: "Fixed", Size: 1},
+		3: {Name: "Fixed", Size: 1},
+		2: {Name: "Spare"},
 	}
 
 	rb := bytes.NewReader(input)
@@ -351,65 +350,65 @@ func Test_DataFieldExtendedReader_valid_size3(t *testing.T) {
 }
 
 /**
- Testing by record
- */
+Testing by record
+*/
 type DataRecordTest struct {
-	input      string // data test one record = fspec + items
-	uap        []uap.DataField  // Items of category corresponding to data test input
-	nbOfItems  int
-	err        error // error expected
+	input     string          // data test one record = fspec + items
+	uap       []uap.DataField // Items of category corresponding to data test input
+	nbOfItems int
+	err       error // error expected
 }
 
 func Test_Record_Decode_nbOfItems(t *testing.T) {
 	// setup
 	dataSetRecordTests := []DataRecordTest{
 		{
-			input: "f6083602429b7110940028200094008000",
-			uap: uap.Cat034V127.Items,
-			err: nil,
+			input:     "f6083602429b7110940028200094008000",
+			uap:       uap.Cat034V127.Items,
+			err:       nil,
 			nbOfItems: 6,
 		},
 		{
-			input: "f6083602429b71109400282000940080",
-			uap: uap.Cat034V127.Items,
-			err: io.EOF,
+			input:     "f6083602429b71109400282000940080",
+			uap:       uap.Cat034V127.Items,
+			err:       io.EOF,
 			nbOfItems: 5,
 		},
 		{
-			input: "ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020a0",
-			uap: uap.Cat048V127.Items,
-			err: nil,
+			input:     "ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020a0",
+			uap:       uap.Cat048V127.Items,
+			err:       nil,
 			nbOfItems: 14,
 		},
 		{
 			// 0xA0 last byte is removed
-			input: "ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020",
-			uap: uap.Cat048V127.Items,
-			err: io.EOF,
+			input:     "ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020",
+			uap:       uap.Cat048V127.Items,
+			err:       io.EOF,
 			nbOfItems: 13,
 		},
 		{
-			input: "f0 0831 00 0a8abb2e 3802",
-			uap: uap.CatT001PlotV12.Items,
-			err: nil,
+			input:     "f0 0831 00 0a8abb2e 3802",
+			uap:       uap.CatT001PlotV12.Items,
+			err:       nil,
 			nbOfItems: 4,
 		},
 		{
-			input: "f0 0831 00 0a8abb2e 38",
-			uap: uap.CatT001PlotV12.Items,
-			err: io.EOF,
+			input:     "f0 0831 00 0a8abb2e 38",
+			uap:       uap.CatT001PlotV12.Items,
+			err:       io.EOF,
 			nbOfItems: 3,
 		},
 		{
-			input: "f502 0831 98 01bf 0a1ebb43 022538e2 00",
-			uap: uap.Cat001TrackV12.Items,
-			err: nil,
+			input:     "f502 0831 98 01bf 0a1ebb43 022538e2 00",
+			uap:       uap.Cat001TrackV12.Items,
+			err:       nil,
 			nbOfItems: 6,
 		},
 		{
-			input: "f502 0831 98 01bf 0a1ebb43 022538e2",
-			uap: uap.Cat001TrackV12.Items,
-			err: io.EOF,
+			input:     "f502 0831 98 01bf 0a1ebb43 022538e2",
+			uap:       uap.Cat001TrackV12.Items,
+			err:       io.EOF,
 			nbOfItems: 5,
 		},
 	}
@@ -417,7 +416,7 @@ func Test_Record_Decode_nbOfItems(t *testing.T) {
 	for _, row := range dataSetRecordTests {
 		// Arrange
 		data := StringToHex(row.input)
-		rec :=  new(Record)
+		rec := new(Record)
 
 		// Act
 		unRead, err := rec.Decode(data, row.uap)
@@ -462,27 +461,27 @@ func Test_Record_Decode_CAT048_record(t *testing.T) {
 	}
 	uap048 := uap.Cat048V127.Items
 	data := StringToHex(input)
-	rec :=  new(Record)
+	rec := new(Record)
 
 	// Act
 	unRead, err := rec.Decode(data, uap048)
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v",  err, nil)
+		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v",  err, nil)
+		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
 	}
 	if unRead != 0 {
-		t.Errorf("FAIL: unRead = %v; Expected: %v",  unRead, 0)
+		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
 	} else {
-		t.Logf("SUCCESS: unRead = %v; Expected: %v",  unRead, 0)
+		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
 	}
 	for i, item := range rec.Items {
 		if bytes.Equal(item.Payload, output[i]) == false {
-			t.Errorf("FAIL: %s = % X; Expected: % X",  item.DataItem, item.Payload, output[i])
+			t.Errorf("FAIL: %s = % X; Expected: % X", item.DataItem, item.Payload, output[i])
 		} else {
-			t.Logf("SUCCESS: %s = % X; Expected: % X",  item.DataItem, item.Payload, output[i])
+			t.Logf("SUCCESS: %s = % X; Expected: % X", item.DataItem, item.Payload, output[i])
 		}
 	}
 }
@@ -501,27 +500,27 @@ func Test_Record_Decode_CAT001_Track_record(t *testing.T) {
 
 	uap001 := uap.Cat001TrackV12.Items
 	data := StringToHex(input)
-	rec :=  new(Record)
+	rec := new(Record)
 
 	// Act
 	unRead, err := rec.Decode(data, uap001)
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v",  err, nil)
+		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v",  err, nil)
+		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
 	}
 	if unRead != 0 {
-		t.Errorf("FAIL: unRead = %v; Expected: %v",  unRead, 0)
+		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
 	} else {
-		t.Logf("SUCCESS: unRead = %v; Expected: %v",  unRead, 0)
+		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
 	}
 	for i, item := range rec.Items {
 		if bytes.Equal(item.Payload, output[i]) == false {
-			t.Errorf("FAIL: %s = % X; Expected: % X",  item.DataItem, item.Payload, output[i])
+			t.Errorf("FAIL: %s = % X; Expected: % X", item.DataItem, item.Payload, output[i])
 		} else {
-			t.Logf("SUCCESS: %s = % X; Expected: % X",  item.DataItem, item.Payload, output[i])
+			t.Logf("SUCCESS: %s = % X; Expected: % X", item.DataItem, item.Payload, output[i])
 		}
 	}
 }
@@ -539,27 +538,27 @@ func Test_Record_Decode_CAT001_Plot_record(t *testing.T) {
 
 	uap001 := uap.CatT001PlotV12.Items
 	data := StringToHex(input)
-	rec :=  new(Record)
+	rec := new(Record)
 
 	// Act
 	unRead, err := rec.Decode(data, uap001)
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v",  err, nil)
+		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v",  err, nil)
+		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
 	}
 	if unRead != 0 {
-		t.Errorf("FAIL: unRead = %v; Expected: %v",  unRead, 0)
+		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
 	} else {
-		t.Logf("SUCCESS: unRead = %v; Expected: %v",  unRead, 0)
+		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
 	}
 	for i, item := range rec.Items {
 		if bytes.Equal(item.Payload, output[i]) == false {
-			t.Errorf("FAIL: %s = % X; Expected: % X",  item.DataItem, item.Payload, output[i])
+			t.Errorf("FAIL: %s = % X; Expected: % X", item.DataItem, item.Payload, output[i])
 		} else {
-			t.Logf("SUCCESS: %s = % X; Expected: % X",  item.DataItem, item.Payload, output[i])
+			t.Logf("SUCCESS: %s = % X; Expected: % X", item.DataItem, item.Payload, output[i])
 		}
 	}
 }
@@ -577,27 +576,27 @@ func Test_Record_Decode_CAT002_record(t *testing.T) {
 
 	uap002 := uap.Cat002V10.Items
 	data := StringToHex(input)
-	rec :=  new(Record)
+	rec := new(Record)
 
 	// Act
 	unRead, err := rec.Decode(data, uap002)
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v",  err, nil)
+		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v",  err, nil)
+		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
 	}
 	if unRead != 0 {
-		t.Errorf("FAIL: unRead = %v; Expected: %v",  unRead, 0)
+		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
 	} else {
-		t.Logf("SUCCESS: unRead = %v; Expected: %v",  unRead, 0)
+		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
 	}
 	for i, item := range rec.Items {
 		if bytes.Equal(item.Payload, output[i]) == false {
-			t.Errorf("FAIL: %s = % X; Expected: % X",  item.DataItem, item.Payload, output[i])
+			t.Errorf("FAIL: %s = % X; Expected: % X", item.DataItem, item.Payload, output[i])
 		} else {
-			t.Logf("SUCCESS: %s = % X; Expected: % X",  item.DataItem, item.Payload, output[i])
+			t.Logf("SUCCESS: %s = % X; Expected: % X", item.DataItem, item.Payload, output[i])
 		}
 	}
 }
@@ -625,27 +624,27 @@ func Test_Record_Decode_CAT030_STR_record(t *testing.T) {
 	}
 	uap030 := uap.Cat030StrV51.Items
 	data := StringToHex(input)
-	rec :=  new(Record)
+	rec := new(Record)
 
 	// Act
 	unRead, err := rec.Decode(data, uap030)
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v",  err, nil)
+		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v",  err, nil)
+		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
 	}
 	if unRead != 0 {
-		t.Errorf("FAIL: unRead = %v; Expected: %v",  unRead, 0)
+		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
 	} else {
-		t.Logf("SUCCESS: unRead = %v; Expected: %v",  unRead, 0)
+		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
 	}
 	for i, item := range rec.Items {
 		if bytes.Equal(item.Payload, output[i]) == false {
-			t.Errorf("FAIL: %s = % X; Expected: % X",  item.DataItem, item.Payload, output[i])
+			t.Errorf("FAIL: %s = % X; Expected: % X", item.DataItem, item.Payload, output[i])
 		} else {
-			t.Logf("SUCCESS: %s = % X; Expected: % X",  item.DataItem, item.Payload, output[i])
+			t.Logf("SUCCESS: %s = % X; Expected: % X", item.DataItem, item.Payload, output[i])
 		}
 	}
 }
@@ -661,27 +660,27 @@ func Test_Record_Decode_CAT032_STR_record_valid(t *testing.T) {
 
 	uap030 := uap.Cat032StrV70.Items
 	data := StringToHex(input)
-	rec :=  new(Record)
+	rec := new(Record)
 
 	// Act
 	unRead, err := rec.Decode(data, uap030)
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v",  err, nil)
+		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v",  err, nil)
+		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
 	}
 	if unRead != 0 {
-		t.Errorf("FAIL: unRead = %v; Expected: %v",  unRead, 0)
+		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
 	} else {
-		t.Logf("SUCCESS: unRead = %v; Expected: %v",  unRead, 0)
+		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
 	}
 	for i, item := range rec.Items {
 		if bytes.Equal(item.Payload, output[i]) == false {
-			t.Errorf("FAIL: %s = % X; Expected: % X",  item.DataItem, item.Payload, output[i])
+			t.Errorf("FAIL: %s = % X; Expected: % X", item.DataItem, item.Payload, output[i])
 		} else {
-			t.Logf("SUCCESS: %s = % X; Expected: % X",  item.DataItem, item.Payload, output[i])
+			t.Logf("SUCCESS: %s = % X; Expected: % X", item.DataItem, item.Payload, output[i])
 		}
 	}
 }
@@ -699,27 +698,27 @@ func Test_Record_Decode_CAT034_record(t *testing.T) {
 	}
 	uap048 := uap.Cat034V127.Items
 	data := StringToHex(input)
-	rec :=  new(Record)
+	rec := new(Record)
 
 	// Act
 	unRead, err := rec.Decode(data, uap048)
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v",  err, nil)
+		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v",  err, nil)
+		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
 	}
 	if unRead != 0 {
-		t.Errorf("FAIL: unRead = %v; Expected: %v",  unRead, 0)
+		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
 	} else {
-		t.Logf("SUCCESS: unRead = %v; Expected: %v",  unRead, 0)
+		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
 	}
 	for i, item := range rec.Items {
 		if bytes.Equal(item.Payload, output[i]) == false {
-			t.Errorf("FAIL: %s = % X; Expected: % X",  item.DataItem, item.Payload, output[i])
+			t.Errorf("FAIL: %s = % X; Expected: % X", item.DataItem, item.Payload, output[i])
 		} else {
-			t.Logf("SUCCESS: %s = % X; Expected: % X",  item.DataItem, item.Payload, output[i])
+			t.Logf("SUCCESS: %s = % X; Expected: % X", item.DataItem, item.Payload, output[i])
 		}
 	}
 }
@@ -735,36 +734,27 @@ func Test_Record_Decode_CAT255_STR_record(t *testing.T) {
 
 	uap255 := uap.Cat255StrV51.Items
 	data := StringToHex(input)
-	rec :=  new(Record)
+	rec := new(Record)
 
 	// Act
 	unRead, err := rec.Decode(data, uap255)
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v",  err, nil)
+		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v",  err, nil)
+		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
 	}
 	if unRead != 0 {
-		t.Errorf("FAIL: unRead = %v; Expected: %v",  unRead, 0)
+		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
 	} else {
-		t.Logf("SUCCESS: unRead = %v; Expected: %v",  unRead, 0)
+		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
 	}
 	for i, item := range rec.Items {
 		if bytes.Equal(item.Payload, output[i]) == false {
-			t.Errorf("FAIL: %s = % X; Expected: % X",  item.DataItem, item.Payload, output[i])
+			t.Errorf("FAIL: %s = % X; Expected: % X", item.DataItem, item.Payload, output[i])
 		} else {
-			t.Logf("SUCCESS: %s = % X; Expected: % X",  item.DataItem, item.Payload, output[i])
+			t.Logf("SUCCESS: %s = % X; Expected: % X", item.DataItem, item.Payload, output[i])
 		}
 	}
 }
-
-
-
-
-
-
-
-
-

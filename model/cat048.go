@@ -17,8 +17,8 @@ var (
 
 // FL Flight Level, unit of altitude (expressed in 100's of feet)
 type FL struct {
-	V string `json:"v"`
-	G string `json:"g"`
+	V     string `json:"v"`
+	G     string `json:"g"`
 	Level uint16 `json:"level"`
 }
 
@@ -188,8 +188,8 @@ func (data *Cat048Model) write(items []uap.DataField) {
 // Rho NM (1 bit = 1/256 NM). Theta deg (1 bit = approx. 0.0055°)
 // Measured position of an aircraft in local polar co-ordinates.
 func rhoTheta(data [4]byte) (rt PolarPosition, err error) {
-	rt.Rho = float64(uint16(data[0])<<8 + uint16(data[1]))/256
-	rt.Theta = float64(uint16(data[2])<<8 + uint16(data[3]))*0.0055
+	rt.Rho = float64(uint16(data[0])<<8+uint16(data[1])) / 256
+	rt.Theta = float64(uint16(data[2])<<8+uint16(data[3])) * 0.0055
 	return rt, nil
 }
 
@@ -199,25 +199,25 @@ func rhoTheta(data [4]byte) (rt PolarPosition, err error) {
 // Mode-3/A code converted into octal representation.
 // Ref: 5.2.10 Records Item I048/070, Mode-3/A TransponderRegisterNumber in Octal Representation.
 func mode3ACodeVGL(data [2]byte) (mode3A Mode3A, err error) {
-	if data[0] & 0x80 != 0 {
+	if data[0]&0x80 != 0 {
 		mode3A.V = "code_not_validated"
 	} else {
 		mode3A.V = "code_validated"
 	}
 
-	if data[0] & 0x40 != 0 {
+	if data[0]&0x40 != 0 {
 		mode3A.G = "garbled_code"
 	} else {
 		mode3A.G = "default"
 	}
 
-	if data[0] & 0x20 != 0 {
+	if data[0]&0x20 != 0 {
 		mode3A.L = "code_not_extracted"
 	} else {
 		mode3A.L = "code_derived_from_transponder"
 	}
 
-	tmp :=  uint16(data[0]) & 0x000F << 8 + uint16(data[1]) & 0x00FF
+	tmp := uint16(data[0])&0x000F<<8 + uint16(data[1])&0x00FF
 	mode3A.Squawk = strconv.FormatUint(uint64(tmp), 8)
 
 	return mode3A, nil
@@ -226,18 +226,18 @@ func mode3ACodeVGL(data [2]byte) (mode3A Mode3A, err error) {
 // flightLevel returns an integer (1 bit = 1/4 FL).
 // Flight Level into binary representation converted in an integer (16bits).
 func flightLevel(data [2]byte) (fl FL, err error) {
-	if data[0] & 0x80 != 0 {
+	if data[0]&0x80 != 0 {
 		fl.V = "code_not_validated"
 	} else {
 		fl.V = "code_validated"
 	}
-	if data[0] & 0x40 != 0 {
+	if data[0]&0x40 != 0 {
 		fl.G = "garbled_code"
 	} else {
 		fl.G = "default"
 	}
 
-	fl.Level = (uint16(data[0])<<8 + uint16(data[1]) & 0x3FFF)/4
+	fl.Level = (uint16(data[0])<<8 + uint16(data[1])&0x3FFF) / 4
 	return fl, nil
 }
 
@@ -252,36 +252,35 @@ func flightLevel(data [2]byte) (fl FL, err error) {
 // APD: Difference in Azimuth between PSR and SSR plot, two's complement form.
 // Additional information on the quality of the target report.
 // 5.2.16 Records Item I048/130, Radar Plot Characteristics
-func radarPlotCharacteristics(data []byte) (rpc PlotCharacteristics, err error){
+func radarPlotCharacteristics(data []byte) (rpc PlotCharacteristics, err error) {
 	offset := 1
 
-	if data[0] & 0x80 != 0 {
-		rpc.SRL = float64(data[offset])*0.044
+	if data[0]&0x80 != 0 {
+		rpc.SRL = float64(data[offset]) * 0.044
 		offset++
 	}
-	if data[0] & 0x40 != 0 {
+	if data[0]&0x40 != 0 {
 		rpc.SRR = float64(data[offset])
 		offset++
 	}
-	if data[0] & 0x20 != 0 {
+	if data[0]&0x20 != 0 {
 		rpc.SAM = float64(int8(data[offset]))
 		offset++
 	}
-	if data[0] & 0x10 != 0 {
-		rpc.PRL = float64(data[offset])*0.044
+	if data[0]&0x10 != 0 {
+		rpc.PRL = float64(data[offset]) * 0.044
 		offset++
 	}
-	if data[0] & 0x08 != 0 {
+	if data[0]&0x08 != 0 {
 		rpc.PAM = float64(int8(data[offset]))
 		offset++
 	}
-	if data[0] & 0x04 != 0 {
-		rpc.RPD = float64(int8(data[offset]))/256
+	if data[0]&0x04 != 0 {
+		rpc.RPD = float64(int8(data[offset])) / 256
 		offset++
 	}
-	if data[0] & 0x02 != 0 {
-		rpc.APD = float64(int8(data[offset]))*0.021972656
-		offset++
+	if data[0]&0x02 != 0 {
+		rpc.APD = float64(int8(data[offset])) * 0.021972656
 	}
 
 	return rpc, nil
@@ -297,49 +296,49 @@ func modeSIdentification(data [6]byte) (s string, err error) {
 
 	ch1 := data[0] & 0xFC >> 2
 	str1, found := TableIA5[ch1]
-	if found == false {
+	if !found {
 		err = ErrCharUnknown
 	}
 
-	ch2 := data[0] & 0x03 << 4 + data[1] & 0xF0 >> 4
+	ch2 := data[0]&0x03<<4 + data[1]&0xF0>>4
 	str2, found := TableIA5[ch2]
-	if found == false {
+	if !found {
 		err = ErrCharUnknown
 	}
 
-	ch3 := data[1] & 0x0F << 2 + data[2] & 0xC0 >> 6
+	ch3 := data[1]&0x0F<<2 + data[2]&0xC0>>6
 	str3, found := TableIA5[ch3]
-	if found == false {
+	if !found {
 		err = ErrCharUnknown
 	}
 
 	ch4 := data[2] & 0x3F
 	str4, found := TableIA5[ch4]
-	if found == false {
+	if !found {
 		err = ErrCharUnknown
 	}
 
 	ch5 := data[3] & 0xFC >> 2
 	str5, found := TableIA5[ch5]
-	if found == false {
+	if !found {
 		err = ErrCharUnknown
 	}
 
-	ch6 := data[3] & 0x03 << 4 + data[4] & 0xF0 >> 4
+	ch6 := data[3]&0x03<<4 + data[4]&0xF0>>4
 	str6, found := TableIA5[ch6]
-	if found == false {
+	if !found {
 		err = ErrCharUnknown
 	}
 
-	ch7 := data[4] & 0x0F << 2 + data[5] & 0xC0 >> 6
+	ch7 := data[4]&0x0F<<2 + data[5]&0xC0>>6
 	str7, found := TableIA5[ch7]
-	if found == false {
+	if !found {
 		err = ErrCharUnknown
 	}
 
 	ch8 := data[5] & 0x3F
 	str8, found := TableIA5[ch8]
-	if found == false {
+	if !found {
 		err = ErrCharUnknown
 	}
 
@@ -353,15 +352,16 @@ func modeSIdentification(data [6]byte) (s string, err error) {
 }
 
 type ModeSMB struct {
-	Rep uint8
+	Rep  uint8
 	BDSs []*commbds.Bds
 }
-func (mb *ModeSMB) Decode(data []byte) (err error)  {
+
+func (mb *ModeSMB) Decode(data []byte) (err error) {
 	rep := data[0]
 	mb.Rep = rep
 
-	for i:=0; i < int(rep*8); i = i + 8 {
-		mbData := data[i+1:i+9]
+	for i := 0; i < int(rep*8); i = i + 8 {
+		mbData := data[i+1 : i+9]
 		var data [8]byte
 		copy(data[:], mbData) // convert slice to array of 8 bytes
 		bds := new(commbds.Bds)
@@ -384,15 +384,15 @@ func modeSMBData(data []byte) (msb []*commbds.Bds, err error) {
 // trackNumber returns an integer.
 // An integer value representing a unique reference to a track record within a particular track file.
 func trackNumber(data [2]byte) (tn uint16, err error) {
-	tn = uint16(data[0]) << 8 + uint16(data[1])
+	tn = uint16(data[0])<<8 + uint16(data[1])
 	return tn, nil
 }
 
 // cartesianXY returns a slice [X,Y] of float64 NM (1 bit = 1/128 NM) Max range = ±256 NM.
 // Calculated position of an aircraft in cartesianXY co-ordinates.
 func cartesianXY(data [4]byte) (pos CartesianXYPosition, err error) {
-	pos.X = float64(int16(data[0]) << 8 + int16(data[1]))/128
-	pos.Y = float64(int16(data[2]) << 8 + int16(data[3]))/128
+	pos.X = float64(int16(data[0])<<8+int16(data[1])) / 128
+	pos.Y = float64(int16(data[2])<<8+int16(data[3])) / 128
 	return pos, nil
 }
 
@@ -401,8 +401,8 @@ func cartesianXY(data [4]byte) (pos CartesianXYPosition, err error) {
 // Heading returns a float64 deg (1 bit = approx. 0.0055°).
 // Calculated track Velocity expressed in polar co-ordinates.
 func trackVelocity(data [4]byte) (v Velocity, err error) {
-	v.GroundSpeed = float64(uint16(data[0]) << 8 + uint16(data[1]))*0.000061035
-	v.Heading = float64(uint16(data[2]) << 8 + uint16(data[3]))*0.0055
+	v.GroundSpeed = float64(uint16(data[0])<<8+uint16(data[1])) * 0.000061035
+	v.Heading = float64(uint16(data[2])<<8+uint16(data[3])) * 0.0055
 	return v, nil
 }
 
@@ -410,7 +410,7 @@ func trackVelocity(data [4]byte) (v Velocity, err error) {
 // Status of monoradar track (PSR and/or SSR updated).
 func trackStatus(data []byte) (ts Status, err error) {
 
-	if data[0] & 0x80 != 0 {
+	if data[0]&0x80 != 0 {
 		ts.CNF = "tentative_track"
 	} else {
 		ts.CNF = "confirmed_track"
@@ -428,13 +428,13 @@ func trackStatus(data []byte) (ts Status, err error) {
 		ts.RAD = "invalid"
 	}
 
-	if data[0] & 0x10 != 0 {
+	if data[0]&0x10 != 0 {
 		ts.DOU = "low_confidence"
 	} else {
 		ts.DOU = "normal_confidence"
 	}
 
-	if data[0] & 0x08 != 0 {
+	if data[0]&0x08 != 0 {
 		ts.MAH = "horizontal_man_sensed"
 	} else {
 		ts.MAH = "no_horizontal_man_sensed"
@@ -452,25 +452,25 @@ func trackStatus(data []byte) (ts Status, err error) {
 		ts.CDM = "unknown"
 	}
 
-	if data[0] & 0x01 != 0 {
-		if data[1] & 0x80 != 0 {
+	if data[0]&0x01 != 0 {
+		if data[1]&0x80 != 0 {
 			ts.TRE = "end_of_track_lifetime"
 		} else {
 			ts.TRE = "track_still_alive"
 		}
 
-		if data[1] & 0x40 != 0 {
+		if data[1]&0x40 != 0 {
 			ts.GHO = "ghost_target_track"
 		} else {
 			ts.GHO = "true_target_track"
 		}
 
-		if data[1] & 0x20 != 0 {
+		if data[1]&0x20 != 0 {
 			ts.SUP = "yes"
 		} else {
 			ts.SUP = "no"
 		}
-		if data[1] & 0x10 != 0 {
+		if data[1]&0x10 != 0 {
 			ts.TCC = "slant_range_correction_used"
 		} else {
 			ts.TCC = "radar_plane"
@@ -479,7 +479,6 @@ func trackStatus(data []byte) (ts Status, err error) {
 
 	return ts, nil
 }
-
 
 // todo: targetReportDescriptor
 
@@ -580,23 +579,3 @@ func comACASCapabilityFlightStatus(data [2]byte) (a ACASCapaFlightStatus, err er
 
 	return a, nil
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

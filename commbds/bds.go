@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	//ErrCodeUndefined = errors.New("BDS Error: Code CodeNotProcessed")
+//ErrCodeUndefined = errors.New("BDS Error: Code CodeNotProcessed")
 )
 
 // Bds Comm-B Data Selector.
@@ -32,6 +32,7 @@ type Bds struct {
 	Code60                    *Code60 `json:"code60,omitempty"`
 	CodeNotProcessed          *string `json:"codeNotProcessed,omitempty"`
 }
+
 // Decode reads a BDS fields
 // data of 8 bytes = BDS fields 7 bytes + code 1 byte
 func (ds *Bds) Decode(data [8]byte) (err error) {

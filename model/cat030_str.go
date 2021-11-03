@@ -40,18 +40,18 @@ type Pist struct {
 }
 
 type Spe struct {
-	SY uint8 `json:"sy"`
-	M  uint8 `json:"m"`
-	S  uint8 `json:"s"`
-	O1 uint8 `json:"o1"`
-	O2 uint8 `json:"o2"`
-	O3 uint8 `json:"o3"`
-	O4 uint8 `json:"o4"`
-	O5 uint8 `json:"o5"`
-	O6 uint8 `json:"o6"`
-	O7 uint8 `json:"o7"`
-	O8 uint8 `json:"o8"`
-	O9 uint8 `json:"o9"`
+	SY  uint8 `json:"sy"`
+	M   uint8 `json:"m"`
+	S   uint8 `json:"s"`
+	O1  uint8 `json:"o1"`
+	O2  uint8 `json:"o2"`
+	O3  uint8 `json:"o3"`
+	O4  uint8 `json:"o4"`
+	O5  uint8 `json:"o5"`
+	O6  uint8 `json:"o6"`
+	O7  uint8 `json:"o7"`
+	O8  uint8 `json:"o8"`
+	O9  uint8 `json:"o9"`
 	O10 uint8 `json:"o10"`
 	O11 uint8 `json:"o11"`
 	O12 uint8 `json:"o12"`
@@ -62,8 +62,8 @@ type Spe struct {
 	O17 uint8 `json:"o17"`
 	O18 uint8 `json:"o18"`
 	O19 uint8 `json:"o19"`
-	R uint8 `json:"r"`
-	C uint8 `json:"c"`
+	R   uint8 `json:"r"`
+	C   uint8 `json:"c"`
 }
 
 type FLSTR struct {
@@ -454,7 +454,7 @@ func pist(data []byte) (piste Pist, err error) {
 		}
 	}
 
-	return piste, nil
+	return piste, err
 }
 
 // alis : Mode A lissé piste
@@ -532,7 +532,7 @@ func spe(data []byte) (spe Spe, err error) {
 	spe.M = data[0] & 0x04 >> 2
 	spe.S = data[0] & 0x02 >> 1
 
-	if data[0] & 0x01 != 0 {
+	if data[0]&0x01 != 0 {
 		spe.O19 = data[1] & 0x80 >> 7
 		spe.O18 = data[1] & 0x40 >> 6
 		spe.O17 = data[1] & 0x20 >> 5
@@ -541,7 +541,7 @@ func spe(data []byte) (spe Spe, err error) {
 		spe.O14 = data[1] & 0x04 >> 2
 		spe.O13 = data[1] & 0x02 >> 1
 
-		if data[1] & 0x01 != 0 {
+		if data[1]&0x01 != 0 {
 			spe.O12 = data[2] & 0x80 >> 7
 			spe.O11 = data[2] & 0x40 >> 6
 			spe.O10 = data[2] & 0x20 >> 5
@@ -550,7 +550,7 @@ func spe(data []byte) (spe Spe, err error) {
 			spe.O7 = data[2] & 0x04 >> 2
 			spe.O6 = data[2] & 0x02 >> 1
 
-			if data[2] & 0x01 != 0 {
+			if data[2]&0x01 != 0 {
 				spe.O5 = data[3] & 0x80 >> 7
 				spe.O4 = data[3] & 0x40 >> 6
 				spe.O3 = data[3] & 0x20 >> 5

@@ -13,8 +13,8 @@ func Test_BDS_Code50_Decode_all_status_true(t *testing.T) {
 	outputRollAngle := int8(-88)
 	outputTrueTrackAngle := int8(-88)
 	outputGroundSpeed := uint16(1144)
-	outputTrackAngleRate:= int8(-15)
-	outputTrueAirSpeed:= uint16(1054)
+	outputTrackAngleRate := int8(-15)
+	outputTrueAirSpeed := uint16(1054)
 
 	tmp, err := hex.DecodeString(input)
 	if err != nil {
@@ -90,7 +90,6 @@ func Test_BDS_Code50_Decode_all_status_true(t *testing.T) {
 	}
 }
 
-
 func Test_BDS_Code50_Decode_all_status_false(t *testing.T) {
 	// Arrange
 	input := "7F EF FE FF DF FB FF"
@@ -98,8 +97,8 @@ func Test_BDS_Code50_Decode_all_status_false(t *testing.T) {
 	outputRollAngle := int8(0)
 	outputTrueTrackAngle := int8(0)
 	outputGroundSpeed := uint16(0)
-	outputTrackAngleRate:= int8(0)
-	outputTrueAirSpeed:= uint16(0)
+	outputTrackAngleRate := int8(0)
+	outputTrueAirSpeed := uint16(0)
 
 	tmp, err := hex.DecodeString(input)
 	if err != nil {

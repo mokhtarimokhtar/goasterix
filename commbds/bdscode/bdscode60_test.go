@@ -96,8 +96,8 @@ func Test_BDS_Code60_Decode_all_fields(t *testing.T) {
 	outputMagneticHeading := int16(-177)
 	outputIndicatedAirspeed := uint16(519)
 	outputMach := 2.288
-	outputBarometricAltitudeRate := int16(-482*32)
-	outputInertialVerticalVelocity := int16(-497*32)
+	outputBarometricAltitudeRate := int16(-482 * 32)
+	outputInertialVerticalVelocity := int16(-497 * 32)
 
 	tmp, err := hex.DecodeString(input)
 	if err != nil {
@@ -173,4 +173,3 @@ func Test_BDS_Code60_Decode_all_fields(t *testing.T) {
 		t.Logf("SUCCESS: InertialVerticalVelocity: %v; Expected: %v", code60.InertialVerticalVelocity, outputInertialVerticalVelocity)
 	}
 }
-

@@ -4,13 +4,14 @@ import (
 	"errors"
 	"github.com/mokhtarimokhtar/goasterix/uap"
 )
+
 var (
 	ErrCartOrdUnknown = errors.New("[ASTERIX Error] CART ORD Unknown")
 )
 
 type BiaisRadar struct {
-	SacSic       SourceIdentifier `json:"SourceIdentifier"`
-	GainDistance float64          `json:"gainDistance"`
+	SacSic        SourceIdentifier `json:"SourceIdentifier"`
+	GainDistance  float64          `json:"gainDistance"`
 	BiaisDistance float64          `json:"biaisDistance"`
 	BiaisAzimut   float64          `json:"biaisAzimut"`
 	BiaisDatation float64          `json:"biaisDatation"`
@@ -95,13 +96,13 @@ func speStpv(data []byte) (spe PresenceSTPV, err error) {
 	case 2:
 		spe.NS = "test"
 	}
-	if data[0] & 0x01 != 0 {
-		if data[1] & 0x80 != 0 {
+	if data[0]&0x01 != 0 {
+		if data[1]&0x80 != 0 {
 			spe.ST = "evaluation"
 		} else {
 			spe.ST = "operational"
 		}
-		if data[1] & 0x40 != 0 {
+		if data[1]&0x40 != 0 {
 			spe.PS = "stpv_deconnecte_str"
 		} else {
 			spe.PS = "stpv_connecte_str"
@@ -129,20 +130,20 @@ func carte(data [9]byte) (cart CarteActive, err error) {
 		cart.Ord = "unknowm"
 		err = ErrCartOrdUnknown
 	}
-	return cart, nil
+	return cart, err
 }
 
 func biaisExtract(data []byte) (biais []BiaisRadar, err error) {
 	n := int(data[0])
-	for i:=0; i < n; i++ {
+	for i := 0; i < n; i++ {
 		b := BiaisRadar{}
 		var sacsic [2]byte
 		copy(sacsic[:], data[i+1:i+3])
-		b.SacSic,_ = sacSic(sacsic)
-		b.GainDistance = float64(uint16(data[i+3])<<8 + uint16(data[i+4]))/6384
+		b.SacSic, _ = sacSic(sacsic)
+		b.GainDistance = float64(uint16(data[i+3])<<8+uint16(data[i+4])) / 6384
 		b.BiaisDistance = float64(int16(data[i+5])<<8 + int16(data[i+6]))
-		b.BiaisAzimut = float64(int16(data[i+7])<<8 + int16(data[i+8]))*0.0055
-		b.BiaisDatation = float64(int16(data[i+8])<<8 + int16(data[i+9]))/1024
+		b.BiaisAzimut = float64(int16(data[i+7])<<8+int16(data[i+8])) * 0.0055
+		b.BiaisDatation = float64(int16(data[i+8])<<8+int16(data[i+9])) / 1024
 		biais = append(biais, b)
 	}
 	return biais, nil

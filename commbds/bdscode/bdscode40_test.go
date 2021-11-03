@@ -12,7 +12,7 @@ func Test_BDS_Code40_Decode_all_status_true(t *testing.T) {
 	input = strings.ReplaceAll(input, " ", "")
 	outputMCPSelectAltitude := uint16(18000)
 	outputFMSSelectAltitude := uint16(960)
-	outputBarometricPressureSetting := uint16(213+800)
+	outputBarometricPressureSetting := uint16(213 + 800)
 	outputVNAVMode := uint8(1)
 	outputALTHOLDMode := uint8(1)
 	outputAPPROACHMode := uint8(1)
@@ -101,7 +101,6 @@ func Test_BDS_Code40_Decode_all_status_true(t *testing.T) {
 	}
 
 }
-
 
 func Test_BDS_Code40_Decode_all_status_false(t *testing.T) {
 	// Arrange

@@ -50,4 +50,3 @@ var Cat002V10 = StandardUAP{
 		},
 	},
 }
-

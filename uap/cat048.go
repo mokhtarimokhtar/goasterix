@@ -3,7 +3,7 @@ package uap
 // Cat048V127 User Application Profile
 // version 1.27
 var Cat048V127 = StandardUAP{
-	Name: "CAT048",
+	Name:     "CAT048",
 	Category: 48,
 	Version:  1.27,
 	Items: []DataField{
@@ -43,7 +43,7 @@ var Cat048V127 = StandardUAP{
 			FRN: 5, DataItem: "I048/070", Type: TypeField{Name: "Fixed", Size: 2},
 		},
 		{
-			FRN: 6,
+			FRN:      6,
 			DataItem: "I048/090",
 			Type: TypeField{
 				Name: "Fixed",
@@ -51,18 +51,18 @@ var Cat048V127 = StandardUAP{
 			},
 		},
 		{
-			FRN: 7,
+			FRN:      7,
 			DataItem: "I048/130",
 			Type: TypeField{
-				Name:      "Compound",
+				Name: "Compound",
 				Meta: MetaField{
-					8: { Name: "Fixed", Size: 1},
-					7: { Name: "Fixed", Size: 1},
-					6: { Name: "Fixed", Size: 1},
-					5: { Name: "Fixed", Size: 1},
-					4: { Name: "Fixed", Size: 1},
-					3: { Name: "Fixed", Size: 1},
-					2: { Name: "Fixed", Size: 1},
+					8: {Name: "Fixed", Size: 1},
+					7: {Name: "Fixed", Size: 1},
+					6: {Name: "Fixed", Size: 1},
+					5: {Name: "Fixed", Size: 1},
+					4: {Name: "Fixed", Size: 1},
+					3: {Name: "Fixed", Size: 1},
+					2: {Name: "Fixed", Size: 1},
 				},
 			},
 		},
@@ -73,7 +73,7 @@ var Cat048V127 = StandardUAP{
 			FRN: 9, DataItem: "I048/240", Type: TypeField{Name: "Fixed", Size: 6},
 		},
 		{
-			FRN: 10,
+			FRN:      10,
 			DataItem: "I048/250",
 			Type: TypeField{
 				Name: "Repetitive",
@@ -108,18 +108,18 @@ var Cat048V127 = StandardUAP{
 			FRN: 19, DataItem: "I048/110", Type: TypeField{Name: "Fixed", Size: 2},
 		},
 		{
-			FRN: 20,
+			FRN:      20,
 			DataItem: "I048/120",
 			Type: TypeField{
 				Name: "Compound",
 				Meta: MetaField{
-					8: { Name: "Fixed", Size: 2},
-					7: { Name: "Repetitive", Size: 6},
-					6: { Name: "Spare"},
-					5: { Name: "Spare"},
-					4: { Name: "Spare"},
-					3: { Name: "Spare"},
-					2: { Name: "Spare"},
+					8: {Name: "Fixed", Size: 2},
+					7: {Name: "Repetitive", Size: 6},
+					6: {Name: "Spare"},
+					5: {Name: "Spare"},
+					4: {Name: "Spare"},
+					3: {Name: "Spare"},
+					2: {Name: "Spare"},
 				},
 			},
 		},

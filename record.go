@@ -5,10 +5,11 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"errors"
-	"github.com/mokhtarimokhtar/goasterix/uap"
 	"io"
 	"math/bits"
 	"strings"
+
+	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
 const (
@@ -245,7 +246,7 @@ func RepetitiveDataFieldReader(rb *bytes.Reader, size uint8) (item []byte, err e
 	return item, err
 }
 
-// CompoundDataFieldReader todo: subfield different type
+// CompoundDataFieldReader
 // Compound Data Fields, being of a variable length, shall comprise a primary subfield, followed by data subfields.
 // The primary subfield determines the presence or absence of the subsequent data subfields. It comprises a first part
 // of one octet extendable using the Field Extension (FX) mechanism.

@@ -252,7 +252,6 @@ func RepetitiveDataFieldReader(rb *bytes.Reader, size uint8) (item []byte, err e
 // of one octet extendable using the Field Extension (FX) mechanism.
 // The definition, structure and format of the data subfields are part of the description of the relevant Compound Data
 // Item. Data subfields shall be either fixed length, extended length, explicit length or repetitive, but not compound.
-//func CompoundDataFieldReader(rb *bytes.Reader, prm uap.PrimaryField) (item []byte, err error) {
 func CompoundDataFieldReader(rb *bytes.Reader, sub uap.MetaField) (item []byte, err error) {
 	var primaries []byte
 	for {

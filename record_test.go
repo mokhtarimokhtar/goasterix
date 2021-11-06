@@ -232,13 +232,13 @@ func Test_DataFieldCompoundReader(t *testing.T) {
 	input := HexStringToByte("94 00 80 00")
 	output := []byte{0x94, 0x00, 0x80, 0x00}
 	item034060 := uap.MetaField{
-		8: {Name: "Fixed", Size: 1},
-		7: {Name: "Spare"},
-		6: {Name: "Spare"},
-		5: {Name: "Fixed", Size: 1},
-		4: {Name: "Fixed", Size: 1},
-		3: {Name: "Fixed", Size: 1},
-		2: {Name: "Spare"},
+		8: {Name: uap.Fixed, Size: 1},
+		7: {Name: uap.Spare},
+		6: {Name: uap.Spare},
+		5: {Name: uap.Fixed, Size: 1},
+		4: {Name: uap.Fixed, Size: 1},
+		3: {Name: uap.Fixed, Size: 1},
+		2: {Name: uap.Fixed},
 	}
 
 	rb := bytes.NewReader(input)

@@ -5,27 +5,14 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"errors"
+	"github.com/mokhtarimokhtar/goasterix/uap"
 	"io"
 	"math/bits"
-	"strings"
-
-	"github.com/mokhtarimokhtar/goasterix/uap"
-)
-
-const (
-	fixed      string = "fixed"
-	extended   string = "extended"
-	compound   string = "compound"
-	repetitive string = "repetitive"
-	explicit   string = "explicit"
-	sp         string = "sp"
-	re         string = "re"
-	rfs        string = "rfs"
 )
 
 var (
 	// ErrDatafieldUnknown reports which ErrDatafield Unknown.
-	ErrDatafieldUnknown = errors.New("[Items] Type of Datafield Not found")
+	ErrDatafieldUnknown = errors.New("type of Datafield Not found")
 )
 
 type Record struct {
@@ -36,7 +23,7 @@ type Record struct {
 // Decode extracts a Record of asterix data block (only one record).
 // An asterix data block can contain a or more records.
 // It returns the number of bytes unread and fills the Record Struct(Fspec, Items array) in byte.
-func (rec *Record) Decode(data []byte, uap []uap.DataField) (unRead int, err error) {
+func (rec *Record) Decode(data []byte, items []uap.DataField) (unRead int, err error) {
 	rb := bytes.NewReader(data)
 
 	rec.Fspec, err = FspecReader(rb, 1)
@@ -48,54 +35,56 @@ func (rec *Record) Decode(data []byte, uap []uap.DataField) (unRead int, err err
 	frnIndex, _ := FspecIndex(rec.Fspec)
 
 	for _, frn := range frnIndex {
-		dataItem := uap[frn-1] // here the index corresponds to the FRN
+		dataItem := items[frn-1] // here the index corresponds to the FRN
 		var tmp []byte
 
-		switch strings.ToLower(dataItem.Type.Name) {
-		case fixed:
+
+		//switch strings.ToLower(dataItem.Type.Name) {
+		switch dataItem.Type.Name {
+		case uap.Fixed:
 			tmp, err = FixedDataFieldReader(rb, dataItem.Type.Size)
 			if err != nil {
 				unRead = rb.Len()
 				return unRead, err
 			}
 
-		case extended:
+		case uap.Extended:
 			tmp, err = ExtendedDataFieldReader(rb, dataItem.Type.Size)
 			if err != nil {
 				unRead = rb.Len()
 				return unRead, err
 			}
 
-		case compound:
+		case uap.Compound:
 			tmp, err = CompoundDataFieldReader(rb, dataItem.Type.Meta)
 			if err != nil {
 				unRead = rb.Len()
 				return unRead, err
 			}
 
-		case repetitive:
+		case uap.Repetitive:
 			tmp, err = RepetitiveDataFieldReader(rb, dataItem.Type.Size)
 			if err != nil {
 				unRead = rb.Len()
 				return unRead, err
 			}
 
-		case explicit:
+		case uap.Explicit:
 			tmp, err = ExplicitDataFieldReader(rb)
 			if err != nil {
 				unRead = rb.Len()
 				return unRead, err
 			}
 
-		case sp, re:
+		case uap.SP, uap.RE:
 			tmp, err = SPAndREDataFieldReader(rb)
 			if err != nil {
 				unRead = rb.Len()
 				return unRead, err
 			}
 
-		case rfs:
-			tmp, err = RFSDataFieldReader(rb, uap)
+		case uap.RFS:
+			tmp, err = RFSDataFieldReader(rb, items)
 			if err != nil {
 				unRead = rb.Len()
 				return unRead, err
@@ -325,24 +314,24 @@ func CompoundDataFieldReader(rb *bytes.Reader, sub uap.MetaField) (item []byte, 
 
 func SelectTypeFieldReader(rb *bytes.Reader, sub uap.Subfield) (item []byte, err error) {
 
-	typeOfField := strings.ToLower(sub.Name)
+	typeOfField := sub.Name
 	switch typeOfField {
-	case fixed:
+	case uap.Fixed:
 		item, err = FixedDataFieldReader(rb, sub.Size)
 		if err != nil {
 			return nil, err
 		}
-	case repetitive:
+	case uap.Repetitive:
 		item, err = RepetitiveDataFieldReader(rb, sub.Size)
 		if err != nil {
 			return nil, err
 		}
-	case extended:
+	case uap.Extended:
 		item, err = ExtendedDataFieldReader(rb, sub.Size)
 		if err != nil {
 			return nil, err
 		}
-	case explicit:
+	case uap.Explicit:
 		item, err = ExplicitDataFieldReader(rb)
 		if err != nil {
 			return nil, err

@@ -26,4 +26,4 @@ _testmain.go
 /.idea/*
 coverage.out
 
-/benchresult/
+/benchoutput/

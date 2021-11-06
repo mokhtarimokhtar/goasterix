@@ -1,5 +1,19 @@
 package uap
 
+type NameTypeField int
+
+const (
+	Fixed NameTypeField = iota
+	Extended
+	Compound
+	Repetitive
+	Explicit
+	SP
+	RE
+	RFS
+	Spare
+)
+
 // DataField describes FRN(Field Reference Number)
 type DataField struct {
 	FRN         uint8
@@ -10,7 +24,8 @@ type DataField struct {
 }
 
 type TypeField struct {
-	Name string
+	//Name string
+	Name NameTypeField
 	Size uint8
 	Meta MetaField
 }
@@ -21,7 +36,8 @@ type Size uint8                 // It is the number of bytes (size) of the corre
 type MetaField map[Bit]Subfield // It is used for compound data type
 
 type Subfield struct {
-	Name string
+	//Name string
+	Name NameTypeField
 	Size uint8
 }
 

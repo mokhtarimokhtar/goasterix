@@ -3,7 +3,7 @@ package uap
 // Cat048V127 User Application Profile
 // version 1.27
 var Cat048V127 = StandardUAP{
-	Name:     "CAT048",
+	Name:     "cat048_1.27",
 	Category: 48,
 	Version:  1.27,
 	Items: []DataField{

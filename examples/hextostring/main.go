@@ -18,8 +18,10 @@ func main() {
 		// cat 048 with bds
 		goasterix.HexStringToByte("30 003a fff702 0836 429b52 a0 94c70181 0913 02d0 6002b7 490d01 38a178cf4220 02e79a5d27a00c0060a3280030a4000040 063a 0743ce5b 40 20f5"),
 	}
+
 	for _, data := range dataSet {
-		w := new(goasterix.WrapperDataBlock)
+		//w := new(goasterix.WrapperDataBlock)
+		w,_ := goasterix.NewWrapperDataBlock()
 		_, err := w.Decode(data)  // data contains a set of DataBlocks
 		if err != nil {
 			fmt.Println("ERROR Wrapper: ", err)
@@ -37,4 +39,9 @@ func main() {
 			}
 		}
 	}
+
+	/*for cat, uap := range uap.Profiles{
+		fmt.Println(cat, "=>", uap.Name)
+	}*/
+
 }

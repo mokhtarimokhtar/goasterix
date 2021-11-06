@@ -75,9 +75,9 @@ var Cat001TrackV12 = StandardUAP{
 	},
 }
 
-// CatT001PlotV12 User Application Profile
+// Cat001PlotV12 User Application Profile
 // version 1.2
-var CatT001PlotV12 = StandardUAP{
+var Cat001PlotV12 = StandardUAP{
 	Category: 1,
 	Version:  1.2,
 	Items: []DataField{

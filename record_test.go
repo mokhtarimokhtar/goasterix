@@ -2,7 +2,6 @@ package goasterix
 
 import (
 	"bytes"
-	"fmt"
 	"github.com/mokhtarimokhtar/goasterix/uap"
 	"io"
 	"testing"
@@ -390,13 +389,13 @@ func Test_Record_Decode_nbOfItems(t *testing.T) {
 		},
 		{
 			input:     "f0 0831 00 0a8abb2e 3802",
-			uap:       uap.CatT001PlotV12.Items,
+			uap:       uap.Cat001PlotV12.Items,
 			err:       nil,
 			nbOfItems: 4,
 		},
 		{
 			input:     "f0 0831 00 0a8abb2e 38",
-			uap:       uap.CatT001PlotV12.Items,
+			uap:       uap.Cat001PlotV12.Items,
 			err:       io.EOF,
 			nbOfItems: 3,
 		},
@@ -537,7 +536,7 @@ func Test_Record_Decode_CAT001_Plot_record(t *testing.T) {
 		{0x38, 0x02},
 	}
 
-	uap001 := uap.CatT001PlotV12.Items
+	uap001 := uap.Cat001PlotV12.Items
 	data := HexStringToByte(input)
 	rec := new(Record)
 
@@ -797,12 +796,10 @@ func Test_Record_Decode_CAT030_ARTAS_record(t *testing.T) {
 
 	uap030 := uap.Cat030ArtasV70.Items
 	data := HexStringToByte(input)
-	fmt.Println(len(data))
 	rec := new(Record)
 
 	// Act
 	unRead, err := rec.Decode(data, uap030)
-	fmt.Printf("Fspec: %x\n",rec.Fspec)
 
 	// Assert
 	if err != nil {

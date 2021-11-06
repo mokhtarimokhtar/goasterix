@@ -36,21 +36,26 @@ type WrapperDataBlock struct {
 
 func (w *WrapperDataBlock) Decode(data []byte) (unRead int, err error) {
 	offset := uint16(0)
-
 	for {
-		db := new(DataBlock)
+		//db := new(DataBlock)
+		db, _ := NewDataBlock()
 		unRead, err := db.Decode(data[offset:])
 		offset += db.Len
-
 		if err != nil {
 			return unRead, err
 		}
+
 		w.DataBlocks = append(w.DataBlocks, db)
 		if unRead == 0 {
 			break
 		}
 	}
 	return unRead, err
+}
+
+func NewWrapperDataBlock() (*WrapperDataBlock, error) {
+	w := &WrapperDataBlock{}
+	return w, nil
 }
 
 // DataBlock
@@ -61,7 +66,10 @@ type DataBlock struct {
 	Len      uint16
 	Records  []*Record
 }
-
+func NewDataBlock() (*DataBlock, error) {
+	db := &DataBlock{}
+	return db, nil
+}
 func (db *DataBlock) Decode(data []byte) (unRead int, err error) {
 	rb := bytes.NewReader(data)
 
@@ -101,7 +109,8 @@ func (db *DataBlock) Decode(data []byte) (unRead int, err error) {
 
 	switch db.Category {
 	case 1:
-		uapSelected = uap.CatT001PlotV12.Items
+		//uap.Profiles[1].Items
+		uapSelected = uap.Cat001PlotV12.Items
 	case 2:
 		uapSelected = uap.Cat002V10.Items
 	case 30:
@@ -154,7 +163,7 @@ func (db *DataBlock) Decode(data []byte) (unRead int, err error) {
 					break LoopRecords2
 				}
 			} else if typeTarget == plot {
-				unRead, err := rec.Decode(tmp[offset:], uap.CatT001PlotV12.Items)
+				unRead, err := rec.Decode(tmp[offset:], uap.Cat001PlotV12.Items)
 				db.Records = append(db.Records, rec)
 				offset = lenData - unRead
 

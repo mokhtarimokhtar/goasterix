@@ -11,11 +11,6 @@ import (
 	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
-const (
-	track string = "track"
-	plot  string = "plot"
-)
-
 var (
 	// ErrUndersized reports that the data byte source is too small.
 	ErrUndersized = errors.New("[ASTERIX Error] undersized packet")

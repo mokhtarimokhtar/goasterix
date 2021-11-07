@@ -11,7 +11,6 @@ var Cat048V127 = StandardUAP{
 			FRN:      1,
 			DataItem: "I048/010",
 			Type: TypeField{
-				//Name: Fixed,
 				Name: Fixed,
 				Size: 2,
 			},

@@ -23,7 +23,8 @@ type Record struct {
 // Decode extracts a Record of asterix data block (only one record).
 // An asterix data block can contain a or more records.
 // It returns the number of bytes unread and fills the Record Struct(Fspec, Items array) in byte.
-func (rec *Record) Decode(data []byte, items []uap.DataField) (unRead int, err error) {
+func (rec *Record) Decode(data []byte, stdUAP uap.StandardUAP) (unRead int, err error) {
+	items := stdUAP.Items
 	rb := bytes.NewReader(data)
 
 	rec.Fspec, err = FspecReader(rb, 1)
@@ -33,13 +34,12 @@ func (rec *Record) Decode(data []byte, items []uap.DataField) (unRead int, err e
 	}
 
 	frnIndex, _ := FspecIndex(rec.Fspec)
-
+	offset := uint8(0) // offset shifts the index for a conditional UAP
 	for _, frn := range frnIndex {
-		dataItem := items[frn-1] // here the index corresponds to the FRN
+		dataItem := items[frn-1-offset] // here the index corresponds to the FRN
+
 		var tmp []byte
 
-
-		//switch strings.ToLower(dataItem.Type.Name) {
 		switch dataItem.Type.Name {
 		case uap.Fixed:
 			tmp, err = FixedDataFieldReader(rb, dataItem.Type.Size)
@@ -98,9 +98,28 @@ func (rec *Record) Decode(data []byte, items []uap.DataField) (unRead int, err e
 		dataItem.Payload = tmp
 		rec.Items = append(rec.Items, dataItem)
 		unRead = rb.Len()
+
+		if dataItem.Conditional {
+			items = selectUAPConditional(stdUAP.Category, tmp)
+			offset = frn
+		}
 	}
 
 	return unRead, nil
+}
+
+func selectUAPConditional(category uint8, field []byte) []uap.DataField {
+	var selectedUAP []uap.DataField
+	switch category {
+	case 1:
+		tmp := field[0] & 0x80 >> 7
+		if tmp == 1 {
+			selectedUAP = uap.Cat001TrackV12
+		} else {
+			selectedUAP = uap.Cat001PlotV12
+		}
+	}
+	return selectedUAP
 }
 
 // Payload returns a slice of byte for one asterix record.

@@ -12,7 +12,7 @@ func Test_Record_Payload(t *testing.T) {
 	data := HexStringToByte("ff df 02 93 19 37 8d 3d a2 05 6f 13 2d 0f ff 00 94 60 02 de 50 6f 84 4c c3 c3 51 23 31 00 17 01 3b 02 6c 00 0c 74 a7 40 20 a0")
 	nbOfBytes := 42
 	rec := new(Record)
-	_, _ = rec.Decode(data, uap.Cat048V127.Items)
+	_, _ = rec.Decode(data, uap.Cat048V127)
 
 	// Act
 	items := rec.Payload()
@@ -30,7 +30,7 @@ func Test_Record_String(t *testing.T) {
 	data := HexStringToByte("ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020a0")
 	nbOfItems := 15
 	rec := new(Record)
-	_, _ = rec.Decode(data, uap.Cat048V127.Items)
+	_, _ = rec.Decode(data, uap.Cat048V127)
 
 	// Act
 	items := rec.String()
@@ -264,7 +264,7 @@ func Test_DataFieldRFSReader_valid(t *testing.T) {
 	// Arrange
 	// N = 2, FRN = 3, FRN = 17
 	input := HexStringToByte("02 03 FFFF 11 FFFFFFFF")
-	uap001 := uap.Cat001TrackV12.Items
+	uap001 := uap.Cat001TrackV12
 	rb := bytes.NewReader(input)
 	output := []byte{0x02, 0x03, 0xFF, 0xFF, 0x11, 0xFF, 0xFF, 0xFF, 0xFF}
 
@@ -354,7 +354,7 @@ Testing by record
 */
 type DataRecordTest struct {
 	input     string          // data test one record = fspec + items
-	uap       []uap.DataField // Items of category corresponding to data test input
+	uap       uap.StandardUAP // Items of category corresponding to data test input
 	nbOfItems int
 	err       error // error expected
 }
@@ -364,50 +364,50 @@ func Test_Record_Decode_nbOfItems(t *testing.T) {
 	dataSetRecordTests := []DataRecordTest{
 		{
 			input:     "f6083602429b7110940028200094008000",
-			uap:       uap.Cat034V127.Items,
+			uap:       uap.Cat034V127,
 			err:       nil,
 			nbOfItems: 6,
 		},
 		{
 			input:     "f6083602429b71109400282000940080",
-			uap:       uap.Cat034V127.Items,
+			uap:       uap.Cat034V127,
 			err:       io.EOF,
 			nbOfItems: 5,
 		},
 		{
 			input:     "ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020a0",
-			uap:       uap.Cat048V127.Items,
+			uap:       uap.Cat048V127,
 			err:       nil,
 			nbOfItems: 14,
 		},
 		{
 			// 0xA0 last byte is removed
 			input:     "ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020",
-			uap:       uap.Cat048V127.Items,
+			uap:       uap.Cat048V127,
 			err:       io.EOF,
 			nbOfItems: 13,
 		},
 		{
 			input:     "f0 0831 00 0a8abb2e 3802",
-			uap:       uap.Cat001PlotV12.Items,
+			uap:       uap.Cat001V12,
 			err:       nil,
 			nbOfItems: 4,
 		},
 		{
 			input:     "f0 0831 00 0a8abb2e 38",
-			uap:       uap.Cat001PlotV12.Items,
+			uap:       uap.Cat001V12,
 			err:       io.EOF,
 			nbOfItems: 3,
 		},
 		{
 			input:     "f502 0831 98 01bf 0a1ebb43 022538e2 00",
-			uap:       uap.Cat001TrackV12.Items,
+			uap:       uap.Cat001V12,
 			err:       nil,
 			nbOfItems: 6,
 		},
 		{
 			input:     "f502 0831 98 01bf 0a1ebb43 022538e2",
-			uap:       uap.Cat001TrackV12.Items,
+			uap:       uap.Cat001V12,
 			err:       io.EOF,
 			nbOfItems: 5,
 		},
@@ -459,7 +459,7 @@ func Test_Record_Decode_CAT048_record(t *testing.T) {
 		{0x40},
 		{0x20, 0xf5},
 	}
-	uap048 := uap.Cat048V127.Items
+	uap048 := uap.Cat048V127
 	data := HexStringToByte(input)
 	rec := new(Record)
 
@@ -498,7 +498,7 @@ func Test_Record_Decode_CAT001_Track_record(t *testing.T) {
 		{0x00},
 	}
 
-	uap001 := uap.Cat001TrackV12.Items
+	uap001 := uap.Cat001V12
 	data := HexStringToByte(input)
 	rec := new(Record)
 
@@ -536,7 +536,7 @@ func Test_Record_Decode_CAT001_Plot_record(t *testing.T) {
 		{0x38, 0x02},
 	}
 
-	uap001 := uap.Cat001PlotV12.Items
+	uap001 := uap.Cat001V12
 	data := HexStringToByte(input)
 	rec := new(Record)
 
@@ -574,7 +574,7 @@ func Test_Record_Decode_CAT002_record(t *testing.T) {
 		{0x02},
 	}
 
-	uap002 := uap.Cat002V10.Items
+	uap002 := uap.Cat002V10
 	data := HexStringToByte(input)
 	rec := new(Record)
 
@@ -622,7 +622,7 @@ func Test_Record_Decode_CAT030_STR_record(t *testing.T) {
 		{0x48, 0x45, 0x5b},
 		{0x2c, 0xc3, 0x71, 0xcf, 0x1d, 0xe0},
 	}
-	uap030 := uap.Cat030StrV51.Items
+	uap030 := uap.Cat030StrV51
 	data := HexStringToByte(input)
 	rec := new(Record)
 
@@ -658,7 +658,7 @@ func Test_Record_Decode_CAT032_STR_record_valid(t *testing.T) {
 		{0x00, 0x13, 0x00, 0x00, 0x00, 0x8f, 0x00, 0x2f, 0x00, 0x89, 0x48, 0x00, 0x6a, 0x00, 0x7c},
 	}
 
-	uap030 := uap.Cat032StrV70.Items
+	uap030 := uap.Cat032StrV70
 	data := HexStringToByte(input)
 	rec := new(Record)
 
@@ -696,7 +696,7 @@ func Test_Record_Decode_CAT034_record(t *testing.T) {
 		{0x94, 0x00, 0x28, 0x20, 0x00},
 		{0x94, 0x00, 0x80, 0x00},
 	}
-	uap048 := uap.Cat034V127.Items
+	uap048 := uap.Cat034V127
 	data := HexStringToByte(input)
 	rec := new(Record)
 
@@ -732,7 +732,7 @@ func Test_Record_Decode_CAT255_STR_record(t *testing.T) {
 		{0x58},
 	}
 
-	uap255 := uap.Cat255StrV51.Items
+	uap255 := uap.Cat255StrV51
 	data := HexStringToByte(input)
 	rec := new(Record)
 
@@ -794,7 +794,7 @@ func Test_Record_Decode_CAT030_ARTAS_record(t *testing.T) {
 		{0x42, 0x4c, 0x48, 0x45, 0x4c, 0x58},
 	}
 
-	uap030 := uap.Cat030ArtasV70.Items
+	uap030 := uap.Cat030ArtasV70
 	data := HexStringToByte(input)
 	rec := new(Record)
 

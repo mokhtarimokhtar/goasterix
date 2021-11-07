@@ -1,5 +1,3 @@
-// Copyright 2019 DSNA-DTI, Mokhtar Mokhtari. All rights reserved.
-
 // Package goasterix parses ASTERIX binary data Format,
 // (All Purpose Structured EUROCONTROL Surveillance Information Exchange)
 // For information about ASTERIX, see https://www.eurocontrol.int/asterix
@@ -34,10 +32,14 @@ type WrapperDataBlock struct {
 	DataBlocks []*DataBlock
 }
 
+func NewWrapperDataBlock() (*WrapperDataBlock, error) {
+	w := &WrapperDataBlock{}
+	return w, nil
+}
+
 func (w *WrapperDataBlock) Decode(data []byte) (unRead int, err error) {
 	offset := uint16(0)
 	for {
-		//db := new(DataBlock)
 		db, _ := NewDataBlock()
 		unRead, err := db.Decode(data[offset:])
 		offset += db.Len
@@ -53,11 +55,6 @@ func (w *WrapperDataBlock) Decode(data []byte) (unRead int, err error) {
 	return unRead, err
 }
 
-func NewWrapperDataBlock() (*WrapperDataBlock, error) {
-	w := &WrapperDataBlock{}
-	return w, nil
-}
-
 // DataBlock
 // a DataBlock correspond to one (only) category and contains one or more Records.
 // DataBlock = CAT + LEN + [FSPEC + items...] + [...] + ...
@@ -66,10 +63,12 @@ type DataBlock struct {
 	Len      uint16
 	Records  []*Record
 }
+
 func NewDataBlock() (*DataBlock, error) {
 	db := &DataBlock{}
 	return db, nil
 }
+
 func (db *DataBlock) Decode(data []byte) (unRead int, err error) {
 	rb := bytes.NewReader(data)
 
@@ -105,78 +104,44 @@ func (db *DataBlock) Decode(data []byte) (unRead int, err error) {
 	lenData := len(tmp)
 
 	// retrieve its Items
-	var uapSelected []uap.DataField
+	var uapSelected uap.StandardUAP
 
 	switch db.Category {
 	case 1:
 		//uap.Profiles[1].Items
-		uapSelected = uap.Cat001PlotV12.Items
+		uapSelected = uap.Cat001V12
 	case 2:
-		uapSelected = uap.Cat002V10.Items
+		uapSelected = uap.Cat002V10
 	case 30:
-		uapSelected = uap.Cat030StrV51.Items
+		uapSelected = uap.Cat030StrV51
 	case 32:
-		uapSelected = uap.Cat032StrV70.Items
+		uapSelected = uap.Cat032StrV70
 	case 34:
-		uapSelected = uap.Cat034V127.Items
+		uapSelected = uap.Cat034V127
 	case 48:
-		uapSelected = uap.Cat048V127.Items
+		uapSelected = uap.Cat048V127
 	case 255:
-		uapSelected = uap.Cat255StrV51.Items
+		uapSelected = uap.Cat255StrV51
 	default:
 		err = ErrCategoryUnknown
 		return unRead, err
 	}
 
-	if db.Category != 1 {
-	LoopRecords:
-		for {
-			rec := new(Record)
-			unRead, err := rec.Decode(tmp[offset:], uapSelected)
-			db.Records = append(db.Records, rec)
-			offset = lenData - unRead
+LoopRecords:
+	for {
+		rec := new(Record)
+		unRead, err := rec.Decode(tmp[offset:], uapSelected)
+		db.Records = append(db.Records, rec)
+		offset = lenData - unRead
 
-			if err != nil {
-				return unRead, err
-			}
-			if unRead == 0 {
-				break LoopRecords
-			}
+		if err != nil {
+			return unRead, err
 		}
-		return unRead, nil
-	} else {
-	LoopRecords2:
-		// special use case for CAT001
-		// uap can change in different records
-		for {
-			rec := new(Record)
-			typeTarget, _ := SelectUAPCat001(tmp[offset:])
-			if typeTarget == track {
-				unRead, err := rec.Decode(tmp[offset:], uap.Cat001TrackV12.Items)
-				db.Records = append(db.Records, rec)
-				offset = lenData - unRead
-
-				if err != nil {
-					return unRead, err
-				}
-				if unRead == 0 {
-					break LoopRecords2
-				}
-			} else if typeTarget == plot {
-				unRead, err := rec.Decode(tmp[offset:], uap.Cat001PlotV12.Items)
-				db.Records = append(db.Records, rec)
-				offset = lenData - unRead
-
-				if err != nil {
-					return unRead, err
-				}
-				if unRead == 0 {
-					break LoopRecords2
-				}
-			}
+		if unRead == 0 {
+			break LoopRecords
 		}
-		return unRead, nil
 	}
+	return unRead, nil
 }
 
 func (db *DataBlock) String() (records [][]string) {
@@ -191,40 +156,4 @@ func (db *DataBlock) Payload() (b [][]byte) {
 		b = append(b, record.Payload())
 	}
 	return b
-}
-
-func SelectUAPCat001(data []byte) (uap string, err error) {
-	rb := bytes.NewReader(data)
-
-	fspec, err := FspecReader(rb, 1)
-	if err != nil {
-		return "", err
-	}
-
-	// Item010
-	if fspec[0]&0x80 != 0 {
-		tmp := make([]byte, 2)
-		err = binary.Read(rb, binary.BigEndian, &tmp)
-		if err != nil {
-			return "", err
-		}
-	}
-
-	// Item020
-	if fspec[0]&0x40 != 0 {
-		b := make([]byte, 1)
-		err = binary.Read(rb, binary.BigEndian, &b)
-		if err != nil {
-			return "", err
-		}
-		// retrieve type of Items (plot or Track information)
-		typeTarget := b[0] & 0x80 >> 7
-		if typeTarget == 1 {
-			uap = track
-		} else {
-			uap = plot
-		}
-	}
-
-	return uap, nil
 }

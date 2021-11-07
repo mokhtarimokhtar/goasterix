@@ -6,7 +6,7 @@ import (
 )
 
 
-func benchmarkRecordDecode(input string, items []uap.DataField, b *testing.B) {
+func benchmarkRecordDecode(input string, items uap.StandardUAP, b *testing.B) {
 	data := HexStringToByte(input)
 	for n := 0; n < b.N; n++ {
 		rec := new(Record)
@@ -23,43 +23,43 @@ func benchmarkRecordDecode(input string, items []uap.DataField, b *testing.B) {
 func BenchmarkRecordDecodeLen7(b *testing.B)  {
 	benchmarkRecordDecode(
 		"e008837dfd9c58",
-		uap.Cat255StrV51.Items,
+		uap.Cat255StrV51,
 		b)
 }
 func BenchmarkRecordDecodeLen9(b *testing.B)  {
 	benchmarkRecordDecode(
 		"f4083902105fb35b02",
-		uap.Cat002V10.Items,
+		uap.Cat002V10,
 		b)
 }
 func BenchmarkRecordDecodeLen17(b *testing.B)  {
 	benchmarkRecordDecode(
 		"f6083602429b7110940028200094008000",
-		uap.Cat034V127.Items,
+		uap.Cat034V127,
 		b)
 }
 func BenchmarkRecordDecodeLen16(b *testing.B)  {
 	benchmarkRecordDecode(
 		"f50208319801bf0a1ebb43022538e200",
-		uap.Cat001TrackV12.Items,
+		uap.Cat001V12,
 		b)
 }
 func BenchmarkRecordDecodeLen21(b *testing.B)  {
 	benchmarkRecordDecode(
 		"d008843b549400130000008f002f008948006a007c",
-		uap.Cat032StrV70.Items,
+		uap.Cat032StrV70,
 		b)
 }
 func BenchmarkRecordDecodeLen55(b *testing.B)  {
 	benchmarkRecordDecode(
 		"fff702 0836 429b52 a0 94c70181 0913 02d0 6002b7 490d01 38a178cf4220 02e79a5d27a00c0060a3280030a4000040 063a 0743ce5b 40 20f5",
-		uap.Cat048V127.Items,
+		uap.Cat048V127,
 		b)
 }
 func BenchmarkRecordDecodeLen73(b *testing.B)  {
 	benchmarkRecordDecode(
 		"afbbf317f1300883040070a8bcf3ff07070723f0a8800713feb7022b0389038b140704012c080811580000001e7004f04aa004b0012400544e49413531313206c84c45424c48454c58",
-		uap.Cat030ArtasV70.Items,
+		uap.Cat030ArtasV70,
 		b)
 }
 

@@ -1,6 +1,6 @@
 package uap
 
-type NameTypeField int
+type NameTypeField uint8
 
 const (
 	Fixed NameTypeField = iota
@@ -13,18 +13,26 @@ const (
 	RFS
 	Spare
 )
-
+// StandardUAP is User Application Profile
+// Cat is ASTERIX Category number (integer)
+// Version is ASTERIX version for a category
+type StandardUAP struct {
+	Name     string
+	Category uint8
+	Version  float64
+	Items    []DataField
+}
 // DataField describes FRN(Field Reference Number)
 type DataField struct {
 	FRN         uint8
 	DataItem    string
 	Description string
 	Type        TypeField
+	Conditional bool
 	Payload     []byte
 }
 
 type TypeField struct {
-	//Name string
 	Name NameTypeField
 	Size uint8
 	Meta MetaField
@@ -41,15 +49,7 @@ type Subfield struct {
 	Size uint8
 }
 
-// StandardUAP is User Application Profile
-// Cat is ASTERIX Category number (integer)
-// Version is ASTERIX version for a category
-type StandardUAP struct {
-	Name     string
-	Category uint8
-	Version  float64
-	Items    []DataField
-}
+
 
 type UAP struct {
 	Name string

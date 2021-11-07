@@ -58,17 +58,19 @@ type UAP struct {
 }
 type Category uint8
 type Version float32
-/*
+
 // Profiles contains the defaults User Application Profiles version.
-var Profiles = map[uint8]StandardUAP{
+/*var Profiles = map[uint8]StandardUAP{
+	1:Cat001V12,
 	2:Cat002V10,
 	21:Cat021v10,
-	48:Cat048V127,
-	34:Cat034V127,
 	30:Cat032StrV70,
 	32:Cat032StrV70,
+	34:Cat034V127,
+	48:Cat048V127,
 	255:Cat255StrV51,
-}
+}*/
+/*
 //func NewUAProfiles(confUAP map[uint8]string) (map[uint8]StandardUAP) {
 //
 //	return nil

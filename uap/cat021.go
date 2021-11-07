@@ -3,9 +3,9 @@ package uap
 // Cat021v10 User Application Profile
 // version 2.5
 var Cat021v10 = StandardUAP{
-	Name: "cat021_1.0",
+	Name: "cat021_2.5",
 	Category: 21,
-	Version:  1.0,
+	Version:  2.5,
 	Items: []DataField{
 		{
 			FRN:      1,

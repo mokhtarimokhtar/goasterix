@@ -2,6 +2,7 @@ package uap
 
 // Cat030StrV51 User Application Profile
 // version 5.1
+// French ANSP specific category
 var Cat030StrV51 = StandardUAP{
 	Name:     "STR",
 	Category: 30,

@@ -2,6 +2,7 @@ package uap
 
 // Cat255StrV51 User Application Profile
 // version 5.1
+// French ANSP specific category
 var Cat255StrV51 = StandardUAP{
 	Category: 255,
 	Version:  5.1,

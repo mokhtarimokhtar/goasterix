@@ -178,9 +178,9 @@ func Test_DataBlock_Decode(t *testing.T) {
 			t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, row.unRead)
 		}
 		if row.nbOfRecords != len(dataB.Records) {
-			t.Errorf("FAIL: nbOfRecords = %v; Expected: %v", row.nbOfRecords, len(dataB.Records))
+			t.Errorf("FAIL: nbOfRecords = %v; Expected: %v", len(dataB.Records), row.nbOfRecords)
 		} else {
-			t.Logf("SUCCESS: nbOfRecords = %v; Expected: %v", row.nbOfRecords, len(dataB.Records))
+			t.Logf("SUCCESS: nbOfRecords = %v; Expected: %v", len(dataB.Records), row.nbOfRecords)
 		}
 	}
 }
@@ -220,3 +220,48 @@ func Test_DataBlock_String(t *testing.T) {
 		t.Logf("SUCCESS: len(items) = %v; Expected: %v", len(records), nbOfRecords)
 	}
 }
+
+/*
+func Test_DataBlock_Decode_ARTAS(t *testing.T) {
+	// setup
+	dataSet := []DataBlockTest{
+		{
+			// CAT030 ARTAS
+			input:       "1e00f3afbbf317f1300883040070a8bcf3ff07070723f0a8800713feb7022b0389038b140704012c080811580000001e7004f04aa004b0012400544e49413531313206c84c45424c48454c584d413332300101a5389075c71ca0afbbf317f130088304002aa8bcf3ff04040447fda703f7d2008f0df705280528140700000008171158000000087002f0c3c00528012d006955414c3931202007314c4c42474b4557524842373757a290f3541339c60820afbbf31101300883040335a8bcf3ff0b0b0b2be9a9b5fffefffa0fff08c008c01d0e070000001484115800000200700400ffffffffffffffff344045df7df76021d3",
+			err:         nil,
+			nbOfRecords: 7,
+			unRead:      0,
+		},
+	}
+	uap.Profiles[30] = uap.Cat030ArtasV70
+
+	for _, row := range dataSet {
+		// Arrange
+		data := HexStringToByte(row.input)
+		dataB, _ := NewDataBlock()
+
+		fmt.Println(len(data))
+
+		// Act
+		unRead, err := dataB.Decode(data)
+
+		// Assert
+		if err != row.err {
+			t.Errorf("FAIL: error: %s; Expected: %v", err, row.err)
+		} else {
+			t.Logf("SUCCESS: error: %v; Expected: %v", err, row.err)
+		}
+		if unRead != row.unRead {
+			t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, row.unRead)
+		} else {
+			t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, row.unRead)
+		}
+		if row.nbOfRecords != len(dataB.Records) {
+			t.Errorf("FAIL: nbOfRecords = %v; Expected: %v", len(dataB.Records), row.nbOfRecords)
+		} else {
+			t.Logf("SUCCESS: nbOfRecords = %v; Expected: %v", len(dataB.Records), row.nbOfRecords)
+		}
+	}
+}
+*/
+

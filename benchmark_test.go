@@ -5,7 +5,6 @@ import (
 	"testing"
 )
 
-
 func benchmarkRecordDecode(input string, items uap.StandardUAP, b *testing.B) {
 	data := HexStringToByte(input)
 	for n := 0; n < b.N; n++ {
@@ -20,6 +19,7 @@ func benchmarkRecordDecode(input string, items uap.StandardUAP, b *testing.B) {
 	}
 }
 
+// benchmark some records
 func BenchmarkRecordDecodeLen7(b *testing.B)  {
 	benchmarkRecordDecode(
 		"e008837dfd9c58",
@@ -63,6 +63,7 @@ func BenchmarkRecordDecodeLen73(b *testing.B)  {
 		b)
 }
 
+
 func benchmarkDataBlockDecode(input string, b *testing.B) {
 	data := HexStringToByte(input)
 	for n := 0; n < b.N; n++ {
@@ -77,6 +78,8 @@ func benchmarkDataBlockDecode(input string, b *testing.B) {
 		}
 	}
 }
+
+// benchmark one cat048 datablock
 func BenchmarkDataBlockLen280(b *testing.B)  {
 	benchmarkDataBlockDecode(
 		"300118fff7020836429b52a094c70181091302d06002b7490d0138a178cf422002e79a5d27a00c0060a3280030a4000040063a0743ce5b4020f5fff7020836429b54e000bc020901a2005c7802e800263946e50464b1cb6ca0029ea9491062a4546093880032d4000040059602f639590220f5fff7020836429b58a0909703ff026405a26002bb4066740815f6e795e002e56a0530ffdff860b0d80032fc00004003cf0810c9ef4020fdfff7020836429b56a0775d03700ec205786002be4060910815f9c363a002a49a0f30bfffff60c4600030a4000040057207674a004020fdfff7020836429b55a0468c029804b105786002c57101124d6070d3282002adfa3333a0140060c4600030a4000040026e07d75fc04020f5",

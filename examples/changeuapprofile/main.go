@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/mokhtarimokhtar/goasterix"
+	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
 func main() {
@@ -38,4 +39,6 @@ func main() {
 			}
 		}
 	}
+	fmt.Println(uap.Profiles)
+
 }

@@ -13,10 +13,10 @@ import (
 
 var (
 	// ErrUndersized reports that the data byte source is too small.
-	ErrUndersized = errors.New("[ASTERIX Error] undersized packet")
+	ErrUndersized = errors.New("[ASTERIX] undersized packet")
 
 	// ErrCategoryUnknown reports which Category Unknown or not processed.
-	ErrCategoryUnknown = errors.New("[ASTERIX Error] Category Unknown or not processed")
+	ErrCategoryUnknown = errors.New("[ASTERIX] category unknown or not processed")
 )
 
 // WrapperDataBlock
@@ -91,33 +91,16 @@ func (db *DataBlock) Decode(data []byte) (unRead int, err error) {
 
 	// retrieve records
 	tmp := make([]byte, db.Len-3)
-	_ = binary.Read(rb, binary.BigEndian, tmp) // ignore explicity error because it's detect before
+	_ = binary.Read(rb, binary.BigEndian, tmp) // ignore explicit error because it's detect before
 	unRead = rb.Len()
 
 	// decode N * records
 	offset := 0
 	lenData := len(tmp)
 
-	// retrieve its Items
-	var uapSelected uap.StandardUAP
-
-	switch db.Category {
-	case 1:
-		//uap.Profiles[1].Items
-		uapSelected = uap.Cat001V12
-	case 2:
-		uapSelected = uap.Cat002V10
-	case 30:
-		uapSelected = uap.Cat030StrV51
-	case 32:
-		uapSelected = uap.Cat032StrV70
-	case 34:
-		uapSelected = uap.Cat034V127
-	case 48:
-		uapSelected = uap.Cat048V127
-	case 255:
-		uapSelected = uap.Cat255StrV51
-	default:
+	// selection of the appropriate UAP
+	uapSelected, found := uap.Profiles[db.Category]
+	if !found {
 		err = ErrCategoryUnknown
 		return unRead, err
 	}

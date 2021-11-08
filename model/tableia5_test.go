@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func Test_TableAI5(t *testing.T) {
+func TestTableAI5_ValidChar(t *testing.T) {
 	// Arrange
 	//A - Z = 1 - 26, 0 - 9 = 48 - 57, _ :  32
 	tableSixBit := map[uint8]string{
@@ -65,7 +65,7 @@ func Test_TableAI5(t *testing.T) {
 
 }
 
-func Test_TableAI5_invalid(t *testing.T) {
+func TestTableAI5_OneInvalidChar(t *testing.T) {
 	// Arrange
 	// A - Z = 1 - 26, 0 - 9 = 48 - 57, _ :  32
 	tableInvalidSixBit := []uint8{0, 27, 45, 58, 31, 33}

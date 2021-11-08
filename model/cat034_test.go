@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func Test_Model_Cat034_MessageType(t *testing.T) {
+func TestCat034Model_MessageType(t *testing.T) {
 	// Arrange
 	type dataTest struct {
 		input  [1]byte
@@ -40,7 +40,7 @@ func Test_Model_Cat034_MessageType(t *testing.T) {
 	}
 }
 
-func Test_Model_Cat034_SystemConfiguration(t *testing.T) {
+func TestCat034Model_SystemConfiguration(t *testing.T) {
 	// Arrange
 	input := []byte{0x84, 0x00, 0x20, 0x00}
 	output := SysConf{
@@ -84,7 +84,7 @@ func Test_Model_Cat034_SystemConfiguration(t *testing.T) {
 	}
 }
 
-func Test_Model_Cat034_DataFilter(t *testing.T) {
+func TestCat034Model_DataFilter(t *testing.T) {
 	// Arrange
 	type dataTest struct {
 		input  [1]byte

@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func Test_Record_Payload(t *testing.T) {
+func TestRecord_Payload(t *testing.T) {
 	// Arrange
 	data := HexStringToByte("ff df 02 93 19 37 8d 3d a2 05 6f 13 2d 0f ff 00 94 60 02 de 50 6f 84 4c c3 c3 51 23 31 00 17 01 3b 02 6c 00 0c 74 a7 40 20 a0")
 	nbOfBytes := 42
@@ -25,7 +25,7 @@ func Test_Record_Payload(t *testing.T) {
 	}
 }
 
-func Test_Record_String(t *testing.T) {
+func TestRecord_String(t *testing.T) {
 	// Arrange
 	data := HexStringToByte("ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020a0")
 	nbOfItems := 15
@@ -44,7 +44,7 @@ func Test_Record_String(t *testing.T) {
 
 }
 
-func Test_FspecReader_valid(t *testing.T) {
+func TestFspecReader_valid(t *testing.T) {
 	// Arrange
 	input := []byte{0xFF, 0x01, 0xF2, 0xFF}
 	output := []byte{0xFF, 0x01, 0xF2}
@@ -67,7 +67,7 @@ func Test_FspecReader_valid(t *testing.T) {
 	}
 }
 
-func Test_FspecReader_invalid(t *testing.T) {
+func TestFspecReader_invalid(t *testing.T) {
 	// Arrange
 	input := []byte{0xFF, 0x01}
 	var output []byte
@@ -90,7 +90,7 @@ func Test_FspecReader_invalid(t *testing.T) {
 	}
 }
 
-func Test_DataFieldSPAndREReader_valid(t *testing.T) {
+func TestDataFieldSPAndREReader_valid(t *testing.T) {
 	// Arrange
 	input := HexStringToByte("03 FF FF")
 	output := []byte{0x03, 0xFF, 0xFF}
@@ -113,7 +113,7 @@ func Test_DataFieldSPAndREReader_valid(t *testing.T) {
 	}
 }
 
-func Test_DataFieldSPAndREReader_invalid(t *testing.T) {
+func TestDataFieldSPAndREReader_invalid(t *testing.T) {
 	// Arrange
 	input := HexStringToByte("03 FF")
 	var output []byte
@@ -136,7 +136,7 @@ func Test_DataFieldSPAndREReader_invalid(t *testing.T) {
 	}
 }
 
-func Test_DataFieldRepetitiveReader_valid(t *testing.T) {
+func TestDataFieldRepetitiveReader_valid(t *testing.T) {
 	// Arrange
 	input := HexStringToByte("03 01 02 03 04 05 06 07 08 09")
 	nb := uint8(3)
@@ -159,7 +159,7 @@ func Test_DataFieldRepetitiveReader_valid(t *testing.T) {
 	}
 }
 
-func Test_DataFieldRepetitiveReader_invalid(t *testing.T) {
+func TestDataFieldRepetitiveReader_invalid(t *testing.T) {
 	// Arrange
 	input := HexStringToByte("04 01 02 03 04 05 06 07 08 09")
 	nb := uint8(3)
@@ -181,7 +181,7 @@ func Test_DataFieldRepetitiveReader_invalid(t *testing.T) {
 	}
 }
 
-func Test_DataFieldFixedReader_valid(t *testing.T) {
+func TestDataFieldFixedReader_valid(t *testing.T) {
 	// Arrange
 	input := HexStringToByte("FF FE FD BF 00 01 02 03")
 	nb := uint8(8)
@@ -204,7 +204,7 @@ func Test_DataFieldFixedReader_valid(t *testing.T) {
 	}
 }
 
-func Test_DataFieldFixedReader_invalid(t *testing.T) {
+func TestDataFieldFixedReader_invalid(t *testing.T) {
 	// Arrange
 	input := HexStringToByte("FF FE BF 00 01 02")
 	nb := uint8(7)
@@ -226,7 +226,7 @@ func Test_DataFieldFixedReader_invalid(t *testing.T) {
 	}
 }
 
-func Test_DataFieldCompoundReader(t *testing.T) {
+func TestDataFieldCompoundReader(t *testing.T) {
 	// Arrange
 	// todo: make a tab for different cat
 	input := HexStringToByte("94 00 80 00")
@@ -260,7 +260,7 @@ func Test_DataFieldCompoundReader(t *testing.T) {
 
 }
 
-func Test_DataFieldRFSReader_valid(t *testing.T) {
+func TestDataFieldRFSReader_valid(t *testing.T) {
 	// Arrange
 	// N = 2, FRN = 3, FRN = 17
 	input := HexStringToByte("02 03 FFFF 11 FFFFFFFF")
@@ -327,7 +327,7 @@ func Test_DataFieldExtendedReader_invalid(t *testing.T) {
 	}
 }
 
-func Test_DataFieldExtendedReader_valid_size3(t *testing.T) {
+func Test_DataFieldExtendedReader_validSize3(t *testing.T) {
 	// Arrange
 	input := HexStringToByte("FFFFFE")
 	rb := bytes.NewReader(input)
@@ -359,7 +359,7 @@ type DataRecordTest struct {
 	err       error // error expected
 }
 
-func Test_Record_Decode_nbOfItems(t *testing.T) {
+func TestRecordDecode_NbOfItems(t *testing.T) {
 	// setup
 	dataSetRecordTests := []DataRecordTest{
 		{
@@ -440,7 +440,7 @@ func Test_Record_Decode_nbOfItems(t *testing.T) {
 	}
 }
 
-func Test_Record_Decode_CAT048_record(t *testing.T) {
+func TestRecordDecode_CAT048(t *testing.T) {
 	// Arrange
 	input := "fff702 0836 429b52 a0 94c70181 0913 02d0 6002b7 490d01 38a178cf4220 02e79a5d27a00c0060a3280030a4000040 063a 0743ce5b 40 20f5"
 	output := [][]byte{
@@ -486,7 +486,7 @@ func Test_Record_Decode_CAT048_record(t *testing.T) {
 	}
 }
 
-func Test_Record_Decode_CAT001_Track_record(t *testing.T) {
+func TestRecordDecode_CAT001Track(t *testing.T) {
 	// Arrange
 	input := "f502 0831 98 01bf 0a1ebb43 022538e2 00"
 	output := [][]byte{
@@ -525,7 +525,7 @@ func Test_Record_Decode_CAT001_Track_record(t *testing.T) {
 	}
 }
 
-func Test_Record_Decode_CAT001_Plot_record(t *testing.T) {
+func TestRecordDecode_CAT001Plot(t *testing.T) {
 	// Arrange
 	//input := "F0 08 31 08 0A 8A BB 2E 38 02"
 	input := "f0 0831 00 0a8abb2e 3802"
@@ -563,7 +563,7 @@ func Test_Record_Decode_CAT001_Plot_record(t *testing.T) {
 	}
 }
 
-func Test_Record_Decode_CAT002_record(t *testing.T) {
+func TestRecordDecode_CAT002(t *testing.T) {
 	// Arrange
 	input := "f4 0839 02105fb35b02"
 	output := [][]byte{
@@ -601,7 +601,7 @@ func Test_Record_Decode_CAT002_record(t *testing.T) {
 	}
 }
 
-func Test_Record_Decode_CAT030_STR_record(t *testing.T) {
+func TestRecordDecode_CAT030STR(t *testing.T) {
 	// Arrange
 	input := "bfff0160 0885 5801b8 6092fc 010e 0200 0925f483 0c 04e6 04ea " +
 		"fb5ff9c4 f8 fd9a 0d0174 48455b 2cc371cf1de0"
@@ -649,7 +649,7 @@ func Test_Record_Decode_CAT030_STR_record(t *testing.T) {
 	}
 }
 
-func Test_Record_Decode_CAT032_STR_record_valid(t *testing.T) {
+func TestRecordDecode_CAT032STR(t *testing.T) {
 	// Arrange
 	input := "d0 0884 3b5494 00130000008f002f008948006a007c"
 	output := [][]byte{
@@ -685,7 +685,7 @@ func Test_Record_Decode_CAT032_STR_record_valid(t *testing.T) {
 	}
 }
 
-func Test_Record_Decode_CAT034_record(t *testing.T) {
+func TestRecordDecode_CAT034(t *testing.T) {
 	// Arrange
 	input := "f6 0836 02 429b61 08 9400282000 94008000"
 	output := [][]byte{
@@ -723,7 +723,7 @@ func Test_Record_Decode_CAT034_record(t *testing.T) {
 	}
 }
 
-func Test_Record_Decode_CAT255_STR_record(t *testing.T) {
+func TestRecordDecode_CAT255STR(t *testing.T) {
 	// Arrange
 	input := "e0 08 83 7dfd9c 58"
 	output := [][]byte{
@@ -759,7 +759,7 @@ func Test_Record_Decode_CAT255_STR_record(t *testing.T) {
 	}
 }
 
-func Test_Record_Decode_CAT030_ARTAS_record(t *testing.T) {
+func TestRecordDecode_CAT030ARTAS(t *testing.T) {
 	// Arrange
 	input := "afbbf317f130 0883 04 0070 a8bcf3 ff070707 23f0a880 0713feb7 022b 0389 038b 14 07 04 012c 0808 " +
 		"11580000001e7004f04aa004b001240054 4e494135313132 06c8 4c45424c 48454c58 4d413332300101a5389075c71ca0"

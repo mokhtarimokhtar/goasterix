@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func Test_BDS_Code40_Decode_all_status_true(t *testing.T) {
+func TestBDSCode40Decode_AllStatusTrue(t *testing.T) {
 	// Arrange
 	input := "A3 2C 0F 30 A4 01 E7"
 	input = strings.ReplaceAll(input, " ", "")
@@ -102,7 +102,7 @@ func Test_BDS_Code40_Decode_all_status_true(t *testing.T) {
 
 }
 
-func Test_BDS_Code40_Decode_all_status_false(t *testing.T) {
+func TestBDSCode40Decode_AllStatusFalse(t *testing.T) {
 	// Arrange
 	input := "7F FB FF DF FF FE FB"
 	input = strings.ReplaceAll(input, " ", "")

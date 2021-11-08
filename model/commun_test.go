@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func Test_Model_SacSic(t *testing.T) {
+func TestModelSacSic(t *testing.T) {
 	// Arrange
 	input := [2]byte{0xFF, 0xFF}
 	output := SourceIdentifier{Sac: 0xFF, Sic: 0xFF}
@@ -30,7 +30,7 @@ func Test_Model_SacSic(t *testing.T) {
 
 }
 
-func Test_Model_SacSic_JSON(t *testing.T) {
+func TestModelSacSic_JSON(t *testing.T) {
 	// Arrange
 	input := [2]byte{0xFF, 0xFF}
 	output := []byte(`{"sac":255,"sic":255}`)
@@ -53,7 +53,7 @@ func Test_Model_SacSic_JSON(t *testing.T) {
 	}
 }
 
-func Test_Model_TimeOfDay(t *testing.T) {
+func TestModelTimeOfDay(t *testing.T) {
 	// Arrange
 	input := [3]byte{0xa8, 0xbf, 0x38}
 	output := float64(0x00a8bf38) / 128

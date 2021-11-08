@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func Test_BDS_Code60_Decode_no_fields(t *testing.T) {
+func TestBDSCode60Decode_NoFields(t *testing.T) {
 	// Arrange
 	input := "7F F7 FE FF DF FB FF"
 	input = strings.ReplaceAll(input, " ", "")
@@ -89,7 +89,7 @@ func Test_BDS_Code60_Decode_no_fields(t *testing.T) {
 	}
 }
 
-func Test_BDS_Code60_Decode_all_fields(t *testing.T) {
+func TestBDSCode60Decode_AllFields(t *testing.T) {
 	// Arrange
 	input := "C0 FC 0F 8F 30 F6 0F"
 	input = strings.ReplaceAll(input, " ", "")

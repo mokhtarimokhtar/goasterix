@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func Test_TwoComplement16_positive_number(t *testing.T) {
+func TestTwoComplement16_positiveNumber(t *testing.T) {
 	// Arrange
 	input := uint16(0x010F) // 0000 0001 0000 1111
 	size := uint8(10)       // ---- --01 0000 1111  -> tenth bit
@@ -22,7 +22,7 @@ func Test_TwoComplement16_positive_number(t *testing.T) {
 	}
 }
 
-func Test_TwoComplement16_negative_number(t *testing.T) {
+func TestTwoComplement16_negativeNumber(t *testing.T) {
 	// Arrange
 	input := uint16(0x040F) // 0000 0100 0000 1111
 	size := uint8(11)       // ---- -100 0000 1111  -> tenth bit
@@ -39,7 +39,7 @@ func Test_TwoComplement16_negative_number(t *testing.T) {
 	}
 }
 
-func Test_StringToHex_valid(t *testing.T) {
+func TestHexStringToByte_valid(t *testing.T) {
 	// Arrange
 	input := "01 0203 04"
 	output := []byte{0x01, 0x02, 0x03, 0x04}
@@ -55,7 +55,7 @@ func Test_StringToHex_valid(t *testing.T) {
 	}
 }
 
-func Test_StringToHex_empty(t *testing.T) {
+func TestHexStringToByte_empty(t *testing.T) {
 	// Arrange
 	input := ""
 	var output []byte

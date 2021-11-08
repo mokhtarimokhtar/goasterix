@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-func Test_Model_Cat048_to_JSON_Record(t *testing.T) {
+func TestCat048Model_ToJsonRecord(t *testing.T) {
 	// Arrange
 	// bds 02 e79a5d27a00c00 60 a3280030a40000 40
 	input := "fff702 0836 429b52 a0 94c70181 0913 02d0 6002b7 490d01 38a178cf4220 02e79a5d27a00c0060a3280030a4000040 063a 0743ce5b 40 20f5"
@@ -40,7 +40,7 @@ func Test_Model_Cat048_to_JSON_Record(t *testing.T) {
 	}
 }
 
-func Test_Model_Cat048_RhoTheta(t *testing.T) {
+func TestCat048Model_RhoTheta(t *testing.T) {
 	// Arrange
 	input := [4]byte{0xFF, 0xFF, 0xFF, 0xFF}
 	output := PolarPosition{Rho: float64(0xFFFF) / 256, Theta: float64(0xFFFF) * 0.0055}
@@ -63,7 +63,7 @@ func Test_Model_Cat048_RhoTheta(t *testing.T) {
 
 }
 
-func Test_Model_Cat048_Mode3ACodeVGL(t *testing.T) {
+func TestCat048Model_Mode3ACodeVGL(t *testing.T) {
 	// Arrange
 	input := [2]byte{0x1F, 0xFF}
 	output := Mode3A{
@@ -90,7 +90,7 @@ func Test_Model_Cat048_Mode3ACodeVGL(t *testing.T) {
 
 }
 
-func Test_Model_Cat048_FlightLevel(t *testing.T) {
+func TestCat048Model_FlightLevel(t *testing.T) {
 	// Arrange
 	input := [2]byte{0x3F, 0xFF}
 	output := FL{
@@ -117,7 +117,7 @@ func Test_Model_Cat048_FlightLevel(t *testing.T) {
 
 }
 
-func Test_Model_Cat048_ModeSIdentification_valid_char(t *testing.T) {
+func TestCat048Model_ModeSIdentificationValidChar(t *testing.T) {
 	// Arrange
 	// AFR1234
 	// 1 		6 		18 		49 		50 		51 		52		_ 		= IA5
@@ -144,7 +144,7 @@ func Test_Model_Cat048_ModeSIdentification_valid_char(t *testing.T) {
 	}
 }
 
-func Test_Model_Cat048_ModeSIdentification_invalid_char(t *testing.T) {
+func TestCat048Model_ModeSIdentificationInvalidChar(t *testing.T) {
 	// Arrange
 	input := [6]byte{0x04, 0x64, 0xB1, 0xCB, 0x3D, 0x3A}
 	output := "AFR1234"
@@ -166,7 +166,7 @@ func Test_Model_Cat048_ModeSIdentification_invalid_char(t *testing.T) {
 	}
 }
 
-func Test_Model_Cat048_TrackNumber(t *testing.T) {
+func TestCat048Model_TrackNumber(t *testing.T) {
 	// Arrange
 	input := [2]byte{0x0F, 0xFF}
 	output := uint16(4095)
@@ -189,7 +189,7 @@ func Test_Model_Cat048_TrackNumber(t *testing.T) {
 
 }
 
-func Test_Model_Cat048_CartesianXY(t *testing.T) {
+func TestCat048Model_CartesianXY(t *testing.T) {
 	// Arrange
 	input := [4]byte{0x01, 0x00, 0xFF, 0x00}
 	output := CartesianXYPosition{
@@ -214,7 +214,7 @@ func Test_Model_Cat048_CartesianXY(t *testing.T) {
 	}
 }
 
-func Test_Model_Cat048_TrackVelocity(t *testing.T) {
+func TestCat048Model_TrackVelocity(t *testing.T) {
 	// Arrange
 	input := [4]byte{0x07, 0xc3, 0xdf, 0xc6}
 	output := Velocity{
@@ -239,7 +239,7 @@ func Test_Model_Cat048_TrackVelocity(t *testing.T) {
 	}
 }
 
-func Test_Model_Cat048_TrackStatus(t *testing.T) {
+func TestCat048Model_TrackStatus(t *testing.T) {
 	// Arrange
 	input := []byte{0x40}
 	output := Status{

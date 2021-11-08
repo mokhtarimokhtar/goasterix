@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func Test_BDS_Decode_msg_commB_Code60(t *testing.T) {
+func TestBDSDecode_MsgCommBCode60(t *testing.T) {
 	// Arrange
 	input := "FF FF FF FF FF FF FF 60"
 	input = strings.ReplaceAll(input, " ", "")
@@ -35,7 +35,7 @@ func Test_BDS_Decode_msg_commB_Code60(t *testing.T) {
 	}
 }
 
-func Test_BDS_Decode_msg_commB_Code40(t *testing.T) {
+func TestBDSDecode_MsgCommBCode40(t *testing.T) {
 	// Arrange
 	input := "FF FF FF FF FF FF FF 40"
 	input = strings.ReplaceAll(input, " ", "")
@@ -64,7 +64,7 @@ func Test_BDS_Decode_msg_commB_Code40(t *testing.T) {
 	}
 }
 
-func Test_BDS_Decode_msg_commB_Code50(t *testing.T) {
+func TestBDSDecode_MsgCommBCode50(t *testing.T) {
 	// Arrange
 	input := "FF FF FF FF FF FF FF 50"
 	input = strings.ReplaceAll(input, " ", "")
@@ -93,7 +93,7 @@ func Test_BDS_Decode_msg_commB_Code50(t *testing.T) {
 	}
 }
 
-func Test_BDS_Decode_msg_commB_Code00(t *testing.T) {
+func TestBDSDecode_MsgCommBCode00(t *testing.T) {
 	// Arrange
 	input := "FF FF FF FF FF FF FF 00"
 	input = strings.ReplaceAll(input, " ", "")
@@ -128,7 +128,7 @@ func Test_BDS_Decode_msg_commB_Code00(t *testing.T) {
 	}
 }
 
-func Test_BDS_Decode_msg_commB_Code_Other(t *testing.T) {
+func TestBDSDecode_MsgCommBCode_Other(t *testing.T) {
 	// Arrange
 	input := "FF FF FF FF FF FF FF FF"
 	input = strings.ReplaceAll(input, " ", "")

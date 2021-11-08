@@ -164,6 +164,7 @@ func TwoComplement16(sizeBits uint8, data uint16) (v int16) {
 	v = tmp1 + tmp2
 	return v
 }
+
 // TwoComplement32 returns an int32 (signed).
 // sizebits is the number of bit complement.
 func TwoComplement32(sizeBits uint8, data uint32) (v int32) {

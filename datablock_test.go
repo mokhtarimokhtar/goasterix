@@ -3,9 +3,10 @@ package goasterix
 import (
 	"bytes"
 	"fmt"
-	"github.com/mokhtarimokhtar/goasterix/uap"
 	"io"
 	"testing"
+
+	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
 /**
@@ -299,6 +300,42 @@ func TestTwoComplement16_NegativeNumber(t *testing.T) {
 		t.Logf("SUCCESS: result = %v; Expected: %v", result, output)
 	}
 }
+
+func TestTwoComplement32_PositiveNumber(t *testing.T) {
+	// Arrange
+	input := uint32(0x0007EE0F) // 0000 0000 0000 0111 1110 1110 0000 1111
+	size := uint8(20)       // 	   ---- ---- ---- 0111 1110 1110 0000 1111  -> twentieth bit
+	output := int32(519695)    
+
+	// Act
+	result := TwoComplement32(size, input)
+
+	// Assert
+	if result != output {
+		t.Errorf("FAIL: result = %v; Expected: %v", result, output)
+	} else {
+		t.Logf("SUCCESS: result = %v; Expected: %v", result, output)
+	}
+}
+
+
+func TestTwoComplement32_NegativeNumber(t *testing.T) {
+	// Arrange
+	input := uint32(0x000FEE0F) // 0000 0000 0000 0111 1110 1110 0000 1111
+	size := uint8(20)       // 	   ---- ---- ---- 0111 1110 1110 0000 1111  -> twentieth bit
+	output := int32(-4593)    
+
+	// Act
+	result := TwoComplement32(size, input)
+
+	// Assert
+	if result != output {
+		t.Errorf("FAIL: result = %v; Expected: %v", result, output)
+	} else {
+		t.Logf("SUCCESS: result = %v; Expected: %v", result, output)
+	}
+}
+
 
 func TestHexStringToByte_Valid(t *testing.T) {
 	// Arrange

@@ -5,7 +5,7 @@ asterix.go and record.go contain the logic built into goasterix for decoding pac
 
 goasterix contains some sub-packages including:
  * uap: This contains all definition ASTERIX Profile (User Application Profile).
- * model: This contains of the logic marshalling in JSON or XML format.
+ * transform: This contains of the logic marshalling in JSON or XML format.
  * commbds: It is for decoding Comm-B Data Selector of transponder (ICAO Doc 9871:Technical Provisions for Mode S
 	Services and Extended Squitter)
 

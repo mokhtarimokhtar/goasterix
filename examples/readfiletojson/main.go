@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/mokhtarimokhtar/goasterix"
-	"github.com/mokhtarimokhtar/goasterix/model"
+	"github.com/mokhtarimokhtar/goasterix/transform"
 	"io/ioutil"
 	"log"
 )
@@ -26,26 +26,26 @@ func main() {
 
 		if dataB.Category == 48 {
 			for _, record := range dataB.Records {
-				catModel := new(model.Cat048Model)
-				catJson, _ := model.WriteModelJSON(catModel, record.Items)
+				catModel := new(transform.Cat048Model)
+				catJson, _ := transform.WriteModelJSON(catModel, record.Items)
 				fmt.Println(string(catJson))
 			}
 		} else if dataB.Category == 34 {
 			for _, record := range dataB.Records {
-				catModel := new(model.Cat034Model)
-				catJson, _ := model.WriteModelJSON(catModel, record.Items)
+				catModel := new(transform.Cat034Model)
+				catJson, _ := transform.WriteModelJSON(catModel, record.Items)
 				fmt.Println(string(catJson))
 			}
 		} else if dataB.Category == 30 {
 			for _, record := range dataB.Records {
-				catModel := new(model.Cat030STRModel)
-				catJson, _ := model.WriteModelJSON(catModel, record.Items)
+				catModel := new(transform.Cat030STRModel)
+				catJson, _ := transform.WriteModelJSON(catModel, record.Items)
 				fmt.Println(string(catJson))
 			}
 		} else if dataB.Category == 255 {
 			for _, record := range dataB.Records {
-				catModel := new(model.Cat255STRModel)
-				catJson, _ := model.WriteModelJSON(catModel, record.Items)
+				catModel := new(transform.Cat255STRModel)
+				catJson, _ := transform.WriteModelJSON(catModel, record.Items)
 				fmt.Println(string(catJson))
 			}
 		}

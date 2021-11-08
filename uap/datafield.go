@@ -3,7 +3,7 @@ package uap
 type NameTypeField uint8
 
 const (
-	Fixed NameTypeField = iota
+	Fixed NameTypeField = iota + 1
 	Extended
 	Compound
 	Repetitive

@@ -69,7 +69,7 @@ type Spe struct {
 type FLSTR struct {
 	Vc        string `json:"vc"`
 	Gc        string `json:"gc"`
-	NiveauVol int16  `json:"niveauVol"`
+	NiveauVol float64  `json:"niveauVol"`
 }
 
 type Vit struct {
@@ -98,7 +98,7 @@ type NumPiste struct {
 }
 
 type Cat030STRModel struct {
-	SacSic    *SourceIdentifier    `json:"SourceIdentifier,omitempty"`
+	SacSic    *SourceIdentifier    `json:"sourceIdentifier,omitempty"`
 	Num       *NumPiste            `json:"num,omitempty"`
 	Hptu      float64              `json:"hptu,omitempty"`
 	Pist      *Pist                `json:"pist,omitempty"`
@@ -269,7 +269,7 @@ func flp(data [2]byte) (flpm FLSTR, err error) {
 
 	tmp := uint16(data[0])<<8 + uint16(data[1])&0x3FFF
 	niveauVol := goasterix.TwoComplement16(13, tmp)
-	flpm.NiveauVol = niveauVol / 4 // divide by 4 is in 100's feet
+	flpm.NiveauVol = float64(niveauVol) / 4 // divide by 4 is in 100's feet
 
 	return flpm, nil
 }

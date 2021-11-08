@@ -96,7 +96,7 @@ func TestCat048Model_FlightLevel(t *testing.T) {
 	output := FL{
 		V:     "code_validated",
 		G:     "default",
-		Level: uint16(0x3FFF) / 4,
+		Level: float64(uint16(0x3FFF)) / 4,
 	}
 
 	// Act

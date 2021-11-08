@@ -19,7 +19,7 @@ var (
 type FL struct {
 	V     string `json:"v"`
 	G     string `json:"g"`
-	Level uint16 `json:"level"`
+	Level float64 `json:"level"`
 }
 
 type Mode3A struct {
@@ -237,7 +237,7 @@ func flightLevel(data [2]byte) (fl FL, err error) {
 		fl.G = "default"
 	}
 
-	fl.Level = (uint16(data[0])<<8 + uint16(data[1])&0x3FFF) / 4
+	fl.Level = float64(uint16(data[0])<<8 + uint16(data[1])&0x3FFF) / 4
 	return fl, nil
 }
 

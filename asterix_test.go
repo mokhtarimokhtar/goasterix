@@ -1,6 +1,8 @@
 package goasterix
 
 import (
+	"fmt"
+	"github.com/mokhtarimokhtar/goasterix/uap"
 	"io"
 	"testing"
 )
@@ -221,7 +223,6 @@ func Test_DataBlock_String(t *testing.T) {
 	}
 }
 
-/*
 func Test_DataBlock_Decode_ARTAS(t *testing.T) {
 	// setup
 	dataSet := []DataBlockTest{
@@ -229,11 +230,11 @@ func Test_DataBlock_Decode_ARTAS(t *testing.T) {
 			// CAT030 ARTAS
 			input:       "1e00f3afbbf317f1300883040070a8bcf3ff07070723f0a8800713feb7022b0389038b140704012c080811580000001e7004f04aa004b0012400544e49413531313206c84c45424c48454c584d413332300101a5389075c71ca0afbbf317f130088304002aa8bcf3ff04040447fda703f7d2008f0df705280528140700000008171158000000087002f0c3c00528012d006955414c3931202007314c4c42474b4557524842373757a290f3541339c60820afbbf31101300883040335a8bcf3ff0b0b0b2be9a9b5fffefffa0fff08c008c01d0e070000001484115800000200700400ffffffffffffffff344045df7df76021d3",
 			err:         nil,
-			nbOfRecords: 7,
+			nbOfRecords: 3,
 			unRead:      0,
 		},
 	}
-	uap.Profiles[30] = uap.Cat030ArtasV70
+	uap.Profiles[30] = uap.Cat030ArtasV62
 
 	for _, row := range dataSet {
 		// Arrange
@@ -263,5 +264,5 @@ func Test_DataBlock_Decode_ARTAS(t *testing.T) {
 		}
 	}
 }
-*/
+
 

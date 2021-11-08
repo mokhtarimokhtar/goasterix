@@ -1,7 +1,7 @@
 /*
 Package goasterix provides an ASTERIX (All Purpose Structured EUROCONTROL Surveillance Information Exchange)
 packet decoding and marshalling JSON/XML for the Go language.
-asterix.go and record.go contain the logic built into goasterix for decoding packet datagram.
+datablock.go and record.go contain the logic built into goasterix for decoding packet datagram.
 
 goasterix contains some sub-packages including:
  * uap: This contains all definition ASTERIX Profile (User Application Profile).

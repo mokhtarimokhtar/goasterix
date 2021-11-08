@@ -6,7 +6,12 @@ var Cat001V12 = StandardUAP{
 	Version:  1.2,
 	Items: []DataField{
 		{
-			FRN: 1, DataItem: "I001/010", Type: TypeField{Name: Fixed, Size: 2},
+			FRN: 1,
+			DataItem: "I001/010",
+			Type: TypeField{
+				Name: Fixed,
+				Size: 2,
+			},
 		},
 		{
 			FRN:         2,

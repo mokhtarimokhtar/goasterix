@@ -32,16 +32,16 @@ func BenchmarkRecordDecode_Len9(b *testing.B)  {
 		uap.Cat002V10,
 		b)
 }
-func BenchmarkRecordDecode_Len17(b *testing.B)  {
-	benchmarkRecordDecode(
-		"f6083602429b7110940028200094008000",
-		uap.Cat034V127,
-		b)
-}
 func BenchmarkRecordDecode_Len16(b *testing.B)  {
 	benchmarkRecordDecode(
 		"f50208319801bf0a1ebb43022538e200",
 		uap.Cat001V12,
+		b)
+}
+func BenchmarkRecordDecode_Len17(b *testing.B)  {
+	benchmarkRecordDecode(
+		"f6083602429b7110940028200094008000",
+		uap.Cat034V127,
 		b)
 }
 func BenchmarkRecordDecode_Len21(b *testing.B)  {

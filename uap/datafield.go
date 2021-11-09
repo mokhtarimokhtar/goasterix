@@ -68,4 +68,5 @@ var Profiles = map[uint8]StandardUAP{
 	34:  Cat034V127,
 	48:  Cat048V127,
 	255: Cat255StrV51,
+	26:  Cat4Test, // Category for testing not exist
 }

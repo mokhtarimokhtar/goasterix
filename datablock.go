@@ -110,7 +110,7 @@ func (db *DataBlock) Decode(data []byte) (unRead int, err error) {
 
 LoopRecords:
 	for {
-		rec := new(Record)
+		rec, _ := NewRecord()
 		unRead, err := rec.Decode(tmp[offset:], uapSelected)
 		db.Records = append(db.Records, rec)
 		offset = lenData - unRead
@@ -141,13 +141,13 @@ func (db *DataBlock) Payload() (b [][]byte) {
 
 // HexStringToByte converts a hexadecimal string format to an array of byte.
 // It is used to facilitate the testing.
-func HexStringToByte(s string) (data []byte) {
+func HexStringToByte(s string) ([]byte, error) {
 	s = strings.ReplaceAll(s, " ", "")
 	data, err := hex.DecodeString(s)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	return data
+	return data, nil
 }
 
 // TwoComplement16 returns an int16 (signed).

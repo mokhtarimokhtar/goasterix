@@ -6,7 +6,7 @@ import (
 )
 
 func benchmarkRecordDecode(input string, items uap.StandardUAP, b *testing.B) {
-	data := HexStringToByte(input)
+	data, _ := HexStringToByte(input)
 	for n := 0; n < b.N; n++ {
 		rec := new(Record)
 		unRead, err := rec.Decode(data, items)
@@ -64,7 +64,7 @@ func BenchmarkRecordDecode_Len73(b *testing.B) {
 }
 
 func benchmarkDataBlockDecode(input string, b *testing.B) {
-	data := HexStringToByte(input)
+	data, _ := HexStringToByte(input)
 	for n := 0; n < b.N; n++ {
 		dataB, _ := NewDataBlock()
 		unRead, err := dataB.Decode(data)

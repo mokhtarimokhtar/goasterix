@@ -11,7 +11,7 @@ import (
 
 func TestRecord_Payload(t *testing.T) {
 	// Arrange
-	data := HexStringToByte("ff df 02 93 19 37 8d 3d a2 05 6f 13 2d 0f ff 00 94 60 02 de 50 6f 84 4c c3 c3 51 23 31 00 17 01 3b 02 6c 00 0c 74 a7 40 20 a0")
+	data, _ := HexStringToByte("ff df 02 93 19 37 8d 3d a2 05 6f 13 2d 0f ff 00 94 60 02 de 50 6f 84 4c c3 c3 51 23 31 00 17 01 3b 02 6c 00 0c 74 a7 40 20 a0")
 	nbOfBytes := 42
 	rec := new(Record)
 	_, _ = rec.Decode(data, uap.Cat048V127)
@@ -29,7 +29,7 @@ func TestRecord_Payload(t *testing.T) {
 
 func TestRecord_String(t *testing.T) {
 	// Arrange
-	data := HexStringToByte("ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020a0")
+	data, _ := HexStringToByte("ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020a0")
 	nbOfItems := 15
 	rec := new(Record)
 	_, _ = rec.Decode(data, uap.Cat048V127)
@@ -95,7 +95,7 @@ func TestFspecReader_Invalid(t *testing.T) {
 // DataFieldExplicit
 func TestDataFieldExplicitReader_Valid(t *testing.T) {
 	// Arrange
-	input := HexStringToByte("03 FF FF")
+	input, _ := HexStringToByte("03 FF FF")
 	output := []byte{0x03, 0xFF, 0xFF}
 	rb := bytes.NewReader(input)
 
@@ -118,7 +118,7 @@ func TestDataFieldExplicitReader_Valid(t *testing.T) {
 
 func TestDataFieldExplicitReader_Invalid(t *testing.T) {
 	// Arrange
-	input := HexStringToByte("03 FF")
+	input, _ := HexStringToByte("03 FF")
 	var output []byte
 	rb := bytes.NewReader(input)
 
@@ -141,7 +141,7 @@ func TestDataFieldExplicitReader_Invalid(t *testing.T) {
 
 func TestExplicitDataFieldReader_Empty(t *testing.T) {
 	// Arrange
-	input := HexStringToByte("")
+	input, _ := HexStringToByte("")
 	var output []byte
 	rb := bytes.NewReader(input)
 
@@ -165,7 +165,7 @@ func TestExplicitDataFieldReader_Empty(t *testing.T) {
 // DataFieldSPAndRE
 func TestDataFieldSPAndREReader_Valid(t *testing.T) {
 	// Arrange
-	input := HexStringToByte("03 FF FF")
+	input, _ := HexStringToByte("03 FF FF")
 	output := []byte{0x03, 0xFF, 0xFF}
 	rb := bytes.NewReader(input)
 
@@ -188,7 +188,7 @@ func TestDataFieldSPAndREReader_Valid(t *testing.T) {
 
 func TestDataFieldSPAndREReader_Invalid(t *testing.T) {
 	// Arrange
-	input := HexStringToByte("03 FF")
+	input, _ := HexStringToByte("03 FF")
 	var output []byte
 	rb := bytes.NewReader(input)
 
@@ -211,7 +211,7 @@ func TestDataFieldSPAndREReader_Invalid(t *testing.T) {
 
 func TestDataFieldSPAndREReader_Empty(t *testing.T) {
 	// Arrange
-	input := HexStringToByte("")
+	input, _ := HexStringToByte("")
 	var output []byte
 	rb := bytes.NewReader(input)
 
@@ -235,7 +235,7 @@ func TestDataFieldSPAndREReader_Empty(t *testing.T) {
 // DataFieldRepetitive
 func TestDataFieldRepetitiveReader_Valid(t *testing.T) {
 	// Arrange
-	input := HexStringToByte("03 01 02 03 04 05 06 07 08 09")
+	input, _ := HexStringToByte("03 01 02 03 04 05 06 07 08 09")
 	nb := uint8(3)
 	rb := bytes.NewReader(input)
 	output := []byte{0x03, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09}
@@ -258,7 +258,7 @@ func TestDataFieldRepetitiveReader_Valid(t *testing.T) {
 
 func TestDataFieldRepetitiveReader_Invalid(t *testing.T) {
 	// Arrange
-	input := HexStringToByte("04 01 02 03 04 05 06 07 08 09")
+	input, _ := HexStringToByte("04 01 02 03 04 05 06 07 08 09")
 	nb := uint8(3)
 	rb := bytes.NewReader(input)
 
@@ -280,7 +280,7 @@ func TestDataFieldRepetitiveReader_Invalid(t *testing.T) {
 
 func TestDataFieldRepetitiveReader_Empty(t *testing.T) {
 	// Arrange
-	input := HexStringToByte("")
+	input, _ := HexStringToByte("")
 	nb := uint8(3)
 	rb := bytes.NewReader(input)
 
@@ -303,7 +303,7 @@ func TestDataFieldRepetitiveReader_Empty(t *testing.T) {
 // DataFieldFixed
 func TestDataFieldFixedReader_Valid(t *testing.T) {
 	// Arrange
-	input := HexStringToByte("FF FE FD BF 00 01 02 03")
+	input, _ := HexStringToByte("FF FE FD BF 00 01 02 03")
 	nb := uint8(8)
 	rb := bytes.NewReader(input)
 	output := []byte{0xFF, 0xFE, 0xFD, 0xBF, 0x00, 0x01, 0x02, 0x03}
@@ -326,7 +326,7 @@ func TestDataFieldFixedReader_Valid(t *testing.T) {
 
 func TestDataFieldFixedReader_Invalid(t *testing.T) {
 	// Arrange
-	input := HexStringToByte("FF FE BF 00 01 02")
+	input, _ := HexStringToByte("FF FE BF 00 01 02")
 	nb := uint8(7)
 	rb := bytes.NewReader(input)
 
@@ -469,7 +469,7 @@ func TestDataFieldCompoundReader(t *testing.T) {
 
 	for _, row := range dataSetDataFieldTests {
 		// Arrange
-		input := HexStringToByte(row.input)
+		input, _ := HexStringToByte(row.input)
 		rb := bytes.NewReader(input)
 
 		// Act
@@ -565,7 +565,7 @@ func TestSelectTypeFieldReader(t *testing.T) {
 	}
 	for _, row := range dataSetDataFieldTests {
 		// Arrange
-		input := HexStringToByte(row.input)
+		input, _ := HexStringToByte(row.input)
 		rb := bytes.NewReader(input)
 
 		// Act
@@ -588,7 +588,7 @@ func TestSelectTypeFieldReader(t *testing.T) {
 func TestDataFieldRFSReader_FrnValid(t *testing.T) {
 	// Arrange
 	// N = 2, FRN = 3, FRN = 17
-	input := HexStringToByte("02 03 FFFF 11 FFFFFFFF")
+	input, _ := HexStringToByte("02 03 FFFF 11 FFFFFFFF")
 	uap001 := uap.Cat001TrackV12
 	rb := bytes.NewReader(input)
 	output := []byte{0x02, 0x03, 0xFF, 0xFF, 0x11, 0xFF, 0xFF, 0xFF, 0xFF}
@@ -612,7 +612,7 @@ func TestDataFieldRFSReader_FrnValid(t *testing.T) {
 func TestDataFieldRFSReader_FrnNotExist(t *testing.T) {
 	// Arrange
 	// N = 2, the following binary not exist
-	input := HexStringToByte("02")
+	input, _ := HexStringToByte("02")
 	uap001 := uap.Cat001TrackV12
 	rb := bytes.NewReader(input)
 	var output []byte
@@ -636,7 +636,7 @@ func TestDataFieldRFSReader_FrnNotExist(t *testing.T) {
 func TestDataFieldRFSReader_FrnInValid(t *testing.T) {
 	// Arrange
 	// N = 2, FRN = 3, FRN = 17
-	input := HexStringToByte("02 03 FFFF 11 FFFFFF")
+	input, _ := HexStringToByte("02 03 FFFF 11 FFFFFF")
 	uap001 := uap.Cat001TrackV12
 	rb := bytes.NewReader(input)
 	var output []byte
@@ -659,7 +659,7 @@ func TestDataFieldRFSReader_FrnInValid(t *testing.T) {
 
 func TestDataFieldRFSReader_Empty(t *testing.T) {
 	// Arrange
-	input := HexStringToByte("")
+	input, _ := HexStringToByte("")
 	uap001 := uap.Cat001TrackV12
 	rb := bytes.NewReader(input)
 	var output []byte
@@ -682,7 +682,7 @@ func TestDataFieldRFSReader_Empty(t *testing.T) {
 
 func TestDataFieldExtendedReader_Valid(t *testing.T) {
 	// Arrange
-	input := HexStringToByte("01 03 07 09 0B 0D 0F 0E")
+	input, _ := HexStringToByte("01 03 07 09 0B 0D 0F 0E")
 	rb := bytes.NewReader(input)
 	output := []byte{0x01, 0x03, 0x07, 0x09, 0x0B, 0x0D, 0x0F, 0x0E}
 
@@ -704,7 +704,7 @@ func TestDataFieldExtendedReader_Valid(t *testing.T) {
 
 func TestDataFieldExtendedReader_Vnvalid(t *testing.T) {
 	// Arrange
-	input := HexStringToByte("")
+	input, _ := HexStringToByte("")
 	rb := bytes.NewReader(input)
 
 	// Act
@@ -725,7 +725,7 @@ func TestDataFieldExtendedReader_Vnvalid(t *testing.T) {
 
 func TestDataFieldExtendedReader_ValidSize3(t *testing.T) {
 	// Arrange
-	input := HexStringToByte("FFFFFE")
+	input, _ := HexStringToByte("FFFFFE")
 	rb := bytes.NewReader(input)
 	output := []byte{0xFF, 0xFF, 0xFE}
 
@@ -811,7 +811,7 @@ func TestRecordDecode_NbOfItems(t *testing.T) {
 
 	for _, row := range dataSetRecordTests {
 		// Arrange
-		data := HexStringToByte(row.input)
+		data, _ := HexStringToByte(row.input)
 		rec := new(Record)
 
 		// Act
@@ -841,7 +841,7 @@ func TestRecordDecode_Empty(t *testing.T) {
 	input := ""
 	var output []uap.DataField
 	uap048 := uap.Cat048V127
-	data := HexStringToByte(input)
+	data, _ := HexStringToByte(input)
 	rec, _ := NewRecord()
 
 	// Act
@@ -879,7 +879,7 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 		{0x04, 0xff, 0xff, 0xff},
 	}
 	uap4Test := uap.Cat4Test
-	data := HexStringToByte(input)
+	data, _ := HexStringToByte(input)
 	rec, _ := NewRecord()
 
 	// Act
@@ -955,7 +955,7 @@ func TestRecordDecode_Cat4TestError(t *testing.T) {
 	for _, row := range dataSetTest {
 		// Arrange
 		uap4Test := uap.Cat4Test
-		data := HexStringToByte(row.input)
+		data, _ := HexStringToByte(row.input)
 		rec, _ := NewRecord()
 
 		// Act
@@ -1001,7 +1001,7 @@ func TestRecordDecode_CAT048(t *testing.T) {
 		{0x20, 0xf5},
 	}
 	uap048 := uap.Cat048V127
-	data := HexStringToByte(input)
+	data, _ := HexStringToByte(input)
 	rec := new(Record)
 
 	// Act
@@ -1040,7 +1040,7 @@ func TestRecordDecode_CAT001Track(t *testing.T) {
 	}
 
 	uap001 := uap.Cat001V12
-	data := HexStringToByte(input)
+	data, _ := HexStringToByte(input)
 	rec := new(Record)
 
 	// Act
@@ -1078,7 +1078,7 @@ func TestRecordDecode_CAT001Plot(t *testing.T) {
 	}
 
 	uap001 := uap.Cat001V12
-	data := HexStringToByte(input)
+	data, _ := HexStringToByte(input)
 	rec := new(Record)
 
 	// Act
@@ -1116,7 +1116,7 @@ func TestRecordDecode_CAT002(t *testing.T) {
 	}
 
 	uap002 := uap.Cat002V10
-	data := HexStringToByte(input)
+	data, _ := HexStringToByte(input)
 	rec := new(Record)
 
 	// Act
@@ -1164,7 +1164,7 @@ func TestRecordDecode_CAT030STR(t *testing.T) {
 		{0x2c, 0xc3, 0x71, 0xcf, 0x1d, 0xe0},
 	}
 	uap030 := uap.Cat030StrV51
-	data := HexStringToByte(input)
+	data, _ := HexStringToByte(input)
 	rec := new(Record)
 
 	// Act
@@ -1200,7 +1200,7 @@ func TestRecordDecode_CAT032STR(t *testing.T) {
 	}
 
 	uap030 := uap.Cat032StrV70
-	data := HexStringToByte(input)
+	data, _ := HexStringToByte(input)
 	rec := new(Record)
 
 	// Act
@@ -1238,7 +1238,7 @@ func TestRecordDecode_CAT034(t *testing.T) {
 		{0x94, 0x00, 0x80, 0x00},
 	}
 	uap048 := uap.Cat034V127
-	data := HexStringToByte(input)
+	data, _ := HexStringToByte(input)
 	rec := new(Record)
 
 	// Act
@@ -1274,7 +1274,7 @@ func TestRecordDecode_CAT255STR(t *testing.T) {
 	}
 
 	uap255 := uap.Cat255StrV51
-	data := HexStringToByte(input)
+	data, _ := HexStringToByte(input)
 	rec := new(Record)
 
 	// Act
@@ -1333,7 +1333,7 @@ func TestRecordDecode_CAT030ARTAS(t *testing.T) {
 	}
 
 	uap030 := uap.Cat030ArtasV62
-	data := HexStringToByte(input)
+	data, _ := HexStringToByte(input)
 	rec := new(Record)
 
 	// Act

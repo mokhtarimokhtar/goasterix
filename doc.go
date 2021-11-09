@@ -12,7 +12,7 @@ goasterix contains some sub-packages including:
 Data Block corresponds at general message structure.
 It contains:
   * a one-octet field Data Category (CAT) indicating to which Category the data transmitted belongs;
-  * wo-octet field Length Indicator (LEN) indicating the total length (in octets) of the Data Block, including
+  * two-octet field Length Indicator (LEN) indicating the total length (in octets) of the Data Block, including
   	the CAT and LEN fields;
   * one or more Record(s) containing data of the same Category.
 

@@ -10,7 +10,7 @@ var (
 )
 
 type BiaisRadar struct {
-	SacSic        SourceIdentifier `json:"SourceIdentifier"`
+	SacSic        SourceIdentifier `json:"sourceIdentifier"`
 	GainDistance  float64          `json:"gainDistance"`
 	BiaisDistance float64          `json:"biaisDistance"`
 	BiaisAzimut   float64          `json:"biaisAzimut"`

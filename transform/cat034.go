@@ -84,7 +84,7 @@ type Pos3D struct {
 }
 
 type Cat034Model struct {
-	SacSic                 *SourceIdentifier   `json:"SourceIdentifier,omitempty"`
+	SacSic                 *SourceIdentifier   `json:"sourceIdentifier,omitempty"`
 	MessageType            string              `json:"messageType,omitempty"`
 	TimeOfDay              float64             `json:"timeOfDay,omitempty"`
 	SectorNumber           float64             `json:"sectorNumber,omitempty"`

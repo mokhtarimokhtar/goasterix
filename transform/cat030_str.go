@@ -67,9 +67,9 @@ type Spe struct {
 }
 
 type FLSTR struct {
-	Vc        string `json:"vc"`
-	Gc        string `json:"gc"`
-	NiveauVol float64  `json:"niveauVol"`
+	Vc        string  `json:"vc"`
+	Gc        string  `json:"gc"`
+	NiveauVol float64 `json:"niveauVol"`
 }
 
 type Vit struct {

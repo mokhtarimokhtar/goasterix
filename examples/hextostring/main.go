@@ -20,8 +20,8 @@ func main() {
 	}
 
 	for _, data := range dataSet {
-		w,_ := goasterix.NewWrapperDataBlock()
-		_, err := w.Decode(data)  // data contains a set of DataBlocks
+		w, _ := goasterix.NewWrapperDataBlock()
+		_, err := w.Decode(data) // data contains a set of DataBlocks
 		if err != nil {
 			fmt.Println("ERROR Wrapper: ", err)
 		}
@@ -33,7 +33,7 @@ func main() {
 				// records contains one or more records = N * items
 				fmt.Println("Record: ", i+1)
 				for _, record := range records {
-					fmt.Println(record)  // it displays its items in Hexadecimal
+					fmt.Println(record) // it displays its items in Hexadecimal
 				}
 			}
 		}

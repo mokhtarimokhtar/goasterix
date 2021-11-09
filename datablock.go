@@ -139,7 +139,6 @@ func (db *DataBlock) Payload() (b [][]byte) {
 	return b
 }
 
-
 // HexStringToByte converts a hexadecimal string format to an array of byte.
 // It is used to facilitate the testing.
 func HexStringToByte(s string) (data []byte) {

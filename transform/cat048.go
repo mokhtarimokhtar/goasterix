@@ -17,8 +17,8 @@ var (
 
 // FL Flight Level, unit of altitude (expressed in 100's of feet)
 type FL struct {
-	V     string `json:"v"`
-	G     string `json:"g"`
+	V     string  `json:"v"`
+	G     string  `json:"g"`
 	Level float64 `json:"level"`
 }
 
@@ -237,7 +237,7 @@ func flightLevel(data [2]byte) (fl FL, err error) {
 		fl.G = "default"
 	}
 
-	fl.Level = float64(uint16(data[0])<<8 + uint16(data[1])&0x3FFF) / 4
+	fl.Level = float64(uint16(data[0])<<8+uint16(data[1])&0x3FFF) / 4
 	return fl, nil
 }
 

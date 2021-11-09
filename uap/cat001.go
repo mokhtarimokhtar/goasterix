@@ -6,7 +6,7 @@ var Cat001V12 = StandardUAP{
 	Version:  1.2,
 	Items: []DataField{
 		{
-			FRN: 1,
+			FRN:      1,
 			DataItem: "I001/010",
 			Type: TypeField{
 				Name: Fixed,
@@ -150,4 +150,3 @@ var Cat001PlotV12 = []DataField{
 		FRN: 21, DataItem: "Random Field Sequencing", Type: TypeField{Name: RFS},
 	},
 }
-

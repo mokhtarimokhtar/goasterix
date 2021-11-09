@@ -90,6 +90,52 @@ func TestFspecReader_invalid(t *testing.T) {
 	}
 }
 
+func TestExplicitDataFieldReader_valid(t *testing.T) {
+	// Arrange
+	input := HexStringToByte("03 FF FF")
+	output := []byte{0x03, 0xFF, 0xFF}
+	rb := bytes.NewReader(input)
+
+	// Act
+	sp, err := ExplicitDataFieldReader(rb)
+
+	// Assert
+	if err != nil {
+		t.Errorf("FAIL: error: %s; Expected: %v", err, nil)
+	} else {
+		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+	}
+
+	if bytes.Equal(sp, output) == false {
+		t.Errorf("FAIL: sp = % X; Expected: % X", sp, output)
+	} else {
+		t.Logf("SUCCESS: sp = % X; Expected: % X", sp, output)
+	}
+}
+
+func TestExplicitDataFieldReader_invalid(t *testing.T) {
+	// Arrange
+	input := HexStringToByte("03 FF")
+	var output []byte
+	rb := bytes.NewReader(input)
+
+	// Act
+	sp, err := ExplicitDataFieldReader(rb)
+
+	// Assert
+	if err != io.ErrUnexpectedEOF {
+		t.Errorf("FAIL: error: %s; Expected: %v", err, io.ErrUnexpectedEOF)
+	} else {
+		t.Logf("SUCCESS: error: %v; Expected: %v", err, io.ErrUnexpectedEOF)
+	}
+
+	if bytes.Equal(sp, output) == false {
+		t.Errorf("FAIL: sp = % X; Expected: % X", sp, output)
+	} else {
+		t.Logf("SUCCESS: sp = % X; Expected: % X", sp, output)
+	}
+}
+
 func TestDataFieldSPAndREReader_valid(t *testing.T) {
 	// Arrange
 	input := HexStringToByte("03 FF FF")
@@ -284,7 +330,7 @@ func TestDataFieldRFSReader_valid(t *testing.T) {
 	}
 }
 
-func Test_DataFieldExtendedReader_valid(t *testing.T) {
+func TestDataFieldExtendedReader_valid(t *testing.T) {
 	// Arrange
 	input := HexStringToByte("01 03 07 09 0B 0D 0F 0E")
 	rb := bytes.NewReader(input)
@@ -306,7 +352,7 @@ func Test_DataFieldExtendedReader_valid(t *testing.T) {
 	}
 }
 
-func Test_DataFieldExtendedReader_invalid(t *testing.T) {
+func TestDataFieldExtendedReader_invalid(t *testing.T) {
 	// Arrange
 	input := HexStringToByte("")
 	rb := bytes.NewReader(input)
@@ -327,7 +373,7 @@ func Test_DataFieldExtendedReader_invalid(t *testing.T) {
 	}
 }
 
-func Test_DataFieldExtendedReader_validSize3(t *testing.T) {
+func TestDataFieldExtendedReader_validSize3(t *testing.T) {
 	// Arrange
 	input := HexStringToByte("FFFFFE")
 	rb := bytes.NewReader(input)

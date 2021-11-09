@@ -24,6 +24,6 @@ _testmain.go
 *~
 
 /.idea/*
-coverage.out
+coverage.*
 
 /benchoutput/

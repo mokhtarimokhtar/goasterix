@@ -11,13 +11,18 @@ import (
 )
 
 var (
-	// ErrDatafieldUnknown reports which ErrDatafield Unknown.
-	ErrDatafieldUnknown = errors.New("type of Datafield Not found")
+	// ErrDataFieldUnknown reports which ErrDatafield Unknown.
+	ErrDataFieldUnknown = errors.New("type of datafield not found")
 )
 
 type Record struct {
 	Fspec []byte
 	Items []uap.DataField
+}
+
+func NewRecord() (*Record, error) {
+	r := &Record{}
+	return r, nil
 }
 
 // Decode extracts a Record of asterix data block (only one record).
@@ -91,7 +96,7 @@ func (rec *Record) Decode(data []byte, stdUAP uap.StandardUAP) (unRead int, err 
 			}
 
 		default:
-			err = ErrDatafieldUnknown
+			err = ErrDataFieldUnknown
 			return unRead, err
 		}
 
@@ -332,7 +337,6 @@ func CompoundDataFieldReader(rb *bytes.Reader, sub uap.MetaField) (item []byte, 
 }
 
 func SelectTypeFieldReader(rb *bytes.Reader, sub uap.Subfield) (item []byte, err error) {
-
 	typeOfField := sub.Name
 	switch typeOfField {
 	case uap.Fixed:
@@ -356,7 +360,7 @@ func SelectTypeFieldReader(rb *bytes.Reader, sub uap.Subfield) (item []byte, err
 			return nil, err
 		}
 	default:
-		return nil, ErrDatafieldUnknown
+		return nil, ErrDataFieldUnknown
 	}
 
 	return item, err

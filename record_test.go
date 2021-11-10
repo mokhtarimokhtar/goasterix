@@ -348,8 +348,8 @@ func TestDataFieldFixedReader_Invalid(t *testing.T) {
 
 // DataFieldCompound
 type CompoundDataFieldTest struct {
-	Name  string
-	input string
+	Name   string
+	input  string
 	output []byte
 	item   uap.Primary
 	err    error

@@ -3,7 +3,6 @@ package transform
 import (
 	"encoding/hex"
 	"errors"
-	"fmt"
 	"github.com/mokhtarimokhtar/goasterix/commbds"
 	"github.com/mokhtarimokhtar/goasterix/uap"
 	"strconv"
@@ -41,10 +40,10 @@ type PolarPosition struct {
 
 type PlotCharacteristics struct {
 	SRL float64 `json:"srl,omitempty"`
-	SRR float64 `json:"srr,omitempty"`
-	SAM float64 `json:"sam,omitempty"`
+	SRR uint8   `json:"srr,omitempty"`
+	SAM int8    `json:"sam,omitempty"`
 	PRL float64 `json:"prl,omitempty"`
-	PAM float64 `json:"pam,omitempty"`
+	PAM int8    `json:"pam,omitempty"`
 	RPD float64 `json:"rpd,omitempty"`
 	APD float64 `json:"apd,omitempty"`
 }
@@ -116,17 +115,17 @@ func (data *Cat048Model) write(items []uap.DataField) {
 			// decode Mode3aVGL
 			var payload [2]byte
 			copy(payload[:], item.Payload[:])
-			tmp, _ := mode3ACodeVGL(payload)
+			tmp := mode3ACodeVGL(payload)
 			data.Mode3ACode = &tmp
 		case 6:
 			// decode Flight Level
 			var payload [2]byte
 			copy(payload[:], item.Payload[:])
-			tmp, _ := flightLevel(payload)
+			tmp := flightLevel(payload)
 			data.FlightLevel = &tmp
 		case 7:
 			// decode Radar Plot Characteristics
-			tmp, _ := radarPlotCharacteristics(item.Payload)
+			tmp := radarPlotCharacteristics(item.Payload)
 			data.RadarPlotCharacteristics = &tmp
 		case 8:
 			// decode AircraftAddress
@@ -159,7 +158,7 @@ func (data *Cat048Model) write(items []uap.DataField) {
 			data.TrackVelocity = &tmp
 		case 14:
 			// decode Track Status
-			tmp, _ := trackStatus(item.Payload[:])
+			tmp := trackStatus(item.Payload[:])
 			data.TrackStatus = &tmp
 		// todo: case 15
 		// todo: case 16
@@ -171,7 +170,7 @@ func (data *Cat048Model) write(items []uap.DataField) {
 			// decode Communications/ACAS Capability and Flight Status
 			var payload [2]byte
 			copy(payload[:], item.Payload[:])
-			tmp, _ := comACASCapabilityFlightStatus(payload)
+			tmp := comACASCapabilityFlightStatus(payload)
 			data.ComACASCapabilityFlightStatus = &tmp
 		}
 		// todo: case 22
@@ -198,7 +197,8 @@ func rhoTheta(data [4]byte) (rt PolarPosition, err error) {
 // It converts Mode-3/A reply in octal representation to a string.
 // Mode-3/A code converted into octal representation.
 // Ref: 5.2.10 Records Item I048/070, Mode-3/A TransponderRegisterNumber in Octal Representation.
-func mode3ACodeVGL(data [2]byte) (mode3A Mode3A, err error) {
+func mode3ACodeVGL(data [2]byte) Mode3A {
+	var mode3A Mode3A
 	if data[0]&0x80 != 0 {
 		mode3A.V = "code_not_validated"
 	} else {
@@ -220,12 +220,13 @@ func mode3ACodeVGL(data [2]byte) (mode3A Mode3A, err error) {
 	tmp := uint16(data[0])&0x000F<<8 + uint16(data[1])&0x00FF
 	mode3A.Squawk = strconv.FormatUint(uint64(tmp), 8)
 
-	return mode3A, nil
+	return mode3A
 }
 
 // flightLevel returns an integer (1 bit = 1/4 FL).
 // Flight Level into binary representation converted in an integer (16bits).
-func flightLevel(data [2]byte) (fl FL, err error) {
+func flightLevel(data [2]byte) FL {
+	var fl FL
 	if data[0]&0x80 != 0 {
 		fl.V = "code_not_validated"
 	} else {
@@ -237,8 +238,8 @@ func flightLevel(data [2]byte) (fl FL, err error) {
 		fl.G = "default"
 	}
 
-	fl.Level = float64(uint16(data[0])<<8+uint16(data[1])&0x3FFF) / 4
-	return fl, nil
+	fl.Level = float64((uint16(data[0])<<8+uint16(data[1]))&0x3FFF) / 4
+	return fl
 }
 
 // radarPlotCharacteristics returns a map of float64,
@@ -252,7 +253,8 @@ func flightLevel(data [2]byte) (fl FL, err error) {
 // APD: Difference in Azimuth between PSR and SSR plot, two's complement form.
 // Additional information on the quality of the target report.
 // 5.2.16 Records Item I048/130, Radar Plot Characteristics
-func radarPlotCharacteristics(data []byte) (rpc PlotCharacteristics, err error) {
+func radarPlotCharacteristics(data []byte) PlotCharacteristics {
+	var rpc PlotCharacteristics
 	offset := 1
 
 	if data[0]&0x80 != 0 {
@@ -260,11 +262,11 @@ func radarPlotCharacteristics(data []byte) (rpc PlotCharacteristics, err error) 
 		offset++
 	}
 	if data[0]&0x40 != 0 {
-		rpc.SRR = float64(data[offset])
+		rpc.SRR = data[offset]
 		offset++
 	}
 	if data[0]&0x20 != 0 {
-		rpc.SAM = float64(int8(data[offset]))
+		rpc.SAM = int8(data[offset])
 		offset++
 	}
 	if data[0]&0x10 != 0 {
@@ -272,7 +274,7 @@ func radarPlotCharacteristics(data []byte) (rpc PlotCharacteristics, err error) 
 		offset++
 	}
 	if data[0]&0x08 != 0 {
-		rpc.PAM = float64(int8(data[offset]))
+		rpc.PAM = int8(data[offset])
 		offset++
 	}
 	if data[0]&0x04 != 0 {
@@ -283,7 +285,7 @@ func radarPlotCharacteristics(data []byte) (rpc PlotCharacteristics, err error) 
 		rpc.APD = float64(int8(data[offset])) * 0.021972656
 	}
 
-	return rpc, nil
+	return rpc
 }
 
 // modeSIdentification returns a string.
@@ -292,61 +294,39 @@ func radarPlotCharacteristics(data []byte) (rpc PlotCharacteristics, err error) 
 // Ref: 5.2.24 Records Item I048/240, Aircraft Identification.
 // The CALL SIGN shall consist of eight characters, which must contain only decimal digits 0-9, the capital letters A-Z,
 // and – as trailing pad characters only – the “space” character.
-func modeSIdentification(data [6]byte) (s string, err error) {
+func modeSIdentification(data [6]byte) (string, error) {
+	var s string
+	var err error
 
 	ch1 := data[0] & 0xFC >> 2
-	str1, found := TableIA5[ch1]
-	if !found {
-		err = ErrCharUnknown
-	}
+	str1, found1 := TableIA5[ch1]
 
 	ch2 := data[0]&0x03<<4 + data[1]&0xF0>>4
-	str2, found := TableIA5[ch2]
-	if !found {
-		err = ErrCharUnknown
-	}
+	str2, found2 := TableIA5[ch2]
 
 	ch3 := data[1]&0x0F<<2 + data[2]&0xC0>>6
-	str3, found := TableIA5[ch3]
-	if !found {
-		err = ErrCharUnknown
-	}
+	str3, found3 := TableIA5[ch3]
 
 	ch4 := data[2] & 0x3F
-	str4, found := TableIA5[ch4]
-	if !found {
-		err = ErrCharUnknown
-	}
+	str4, found4 := TableIA5[ch4]
 
 	ch5 := data[3] & 0xFC >> 2
-	str5, found := TableIA5[ch5]
-	if !found {
-		err = ErrCharUnknown
-	}
+	str5, found5 := TableIA5[ch5]
 
 	ch6 := data[3]&0x03<<4 + data[4]&0xF0>>4
-	str6, found := TableIA5[ch6]
-	if !found {
-		err = ErrCharUnknown
-	}
+	str6, found6 := TableIA5[ch6]
 
 	ch7 := data[4]&0x0F<<2 + data[5]&0xC0>>6
-	str7, found := TableIA5[ch7]
-	if !found {
-		err = ErrCharUnknown
-	}
+	str7, found7 := TableIA5[ch7]
 
 	ch8 := data[5] & 0x3F
-	str8, found := TableIA5[ch8]
-	if !found {
+	str8, found8 := TableIA5[ch8]
+
+	if !found1 || !found2 || !found3 || !found4 || !found5 || !found6 || !found7 || !found8 {
 		err = ErrCharUnknown
 	}
 
 	s = strings.TrimSpace(str1 + str2 + str3 + str4 + str5 + str6 + str7 + str8)
-
-	if err != nil {
-		return s, fmt.Errorf("%v: %v", err, strings.ToUpper(hex.EncodeToString(data[0:6])))
-	}
 
 	return s, err
 }
@@ -408,7 +388,8 @@ func trackVelocity(data [4]byte) (v Velocity, err error) {
 
 // trackStatus returns a map of uint8, CNF, RAD, DOU, MAH, CDM id exist: TRE, GHO, SUP, TCC.
 // Status of monoradar track (PSR and/or SSR updated).
-func trackStatus(data []byte) (ts Status, err error) {
+func trackStatus(data []byte) Status {
+	var ts Status
 
 	if data[0]&0x80 != 0 {
 		ts.CNF = "tentative_track"
@@ -477,7 +458,7 @@ func trackStatus(data []byte) (ts Status, err error) {
 		}
 	}
 
-	return ts, nil
+	return ts
 }
 
 // todo: targetReportDescriptor
@@ -504,38 +485,42 @@ func trackStatus(data []byte) (ts Status, err error) {
 // B1B is a byte of BDS 1,0 bits 37/40.
 // Communications capability of the transponder, capability of the on board ACAS equipment and flight Status.
 // Ref: 5.2.23 Records Item I048/230, Communications/ACAS Capability and Flight Status.
-func comACASCapabilityFlightStatus(data [2]byte) (a ACASCapaFlightStatus, err error) {
+func comACASCapabilityFlightStatus(data [2]byte) ACASCapaFlightStatus {
+	var a ACASCapaFlightStatus
+
 	com := data[0] & 0xE0 >> 5
-	if com == 0 {
+	switch com {
+	case 0:
 		a.COM = "no_communications_capability"
-	} else if com == 1 {
+	case 1:
 		a.COM = "comm_a_and_comm_b_capability"
-	} else if com == 2 {
+	case 2:
 		a.COM = "comm_a_and_comm_b_and_uplink_elm"
-	} else if com == 3 {
+	case 3:
 		a.COM = "comm_a_and_comm_b_and_uplink_elm_and_downlink_elm"
-	} else if com == 4 {
+	case 4:
 		a.COM = "level_5_transponder_capability"
-	} else if com == 5 || com == 6 || com == 7 {
+	case 5, 6, 7:
 		a.COM = "not_assigned"
 	}
 
 	stat := data[0] & 0x1C >> 2
-	if stat == 0 {
+	switch stat {
+	case 0:
 		a.STAT = "no_alert_no_spi_aircraft_airborne"
-	} else if stat == 1 {
+	case 1:
 		a.STAT = "no_alert_no_spi_aircraft_on_ground"
-	} else if stat == 2 {
+	case 2:
 		a.STAT = "alert_no_spi_aircraft_airborne"
-	} else if stat == 3 {
+	case 3:
 		a.STAT = "alert_no_spi_aircraft_on_ground"
-	} else if stat == 4 {
+	case 4:
 		a.STAT = "alert_spi_aircraft_airborne_or_on_ground"
-	} else if stat == 5 {
+	case 5:
 		a.STAT = "no_alert_spi_aircraft_airborne_or_on_ground"
-	} else if stat == 6 {
+	case 6:
 		a.STAT = "not_assigned"
-	} else if stat == 7 {
+	case 7:
 		a.STAT = "unknown"
 	}
 
@@ -577,5 +562,5 @@ func comACASCapabilityFlightStatus(data [2]byte) (a ACASCapaFlightStatus, err er
 	b1b := data[1] & 0x0F
 	a.B1B = strconv.Itoa(int(b1b))
 
-	return a, nil
+	return a
 }

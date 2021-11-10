@@ -118,3 +118,31 @@ func TestWriteModelJSON(t *testing.T) {
 		t.Logf("SUCCESS: %s; Expected: %s", recJson, output)
 	}
 }
+
+func TestWriteModelXML(t *testing.T) {
+	// Arrange
+	input := "fff702 0836 429b52 a0 94c70181 0913 02d0 6002b7 490d01 38a178cf4220 02e79a5d27a00c0060a3280030a4000040 063a 0743ce5b 40 20f5"
+	output := []byte(`<Cat048Model><SacSic><sac>8</sac><sic>54</sic></SacSic><AircraftAddress>490D01</AircraftAddress><AircraftIdentification>NJE834H</AircraftIdentification><TimeOfDay>34102.640625</TimeOfDay><RhoTheta><Rho>148.77734375</Rho><Theta>2.1174999999999997</Theta></RhoTheta><FlightLevel><V>code_validated</V><G>default</G><Level>180</Level></FlightLevel><RadarPlotCharacteristics><SRL>0</SRL><SRR>2</SRR><SAM>-73</SAM><PRL>0</PRL><PAM>0</PAM><RPD>0</RPD><APD>0</APD></RadarPlotCharacteristics><Mode3ACode><Squawk>4423</Squawk><V>code_validated</V><G>default</G><L>code_derived_from_transponder</L></Mode3ACode><TrackNumber>1594</TrackNumber><TrackVelocity><GroundSpeed>0.113464065</GroundSpeed><Heading>290.5485</Heading></TrackVelocity><TrackStatus><CNF>confirmed_track</CNF><RAD>ssr_modes_track</RAD><DOU>normal_confidence</DOU><MAH>no_horizontal_man_sensed</MAH><CDM>maintaining</CDM><TRE></TRE><GHO></GHO><SUP></SUP><TCC></TCC></TrackStatus><BDSRegisterData><TransponderRegisterNumber>60</TransponderRegisterNumber><Code60><MagneticHeading>-68</MagneticHeading><MagneticHeadingStatus>true</MagneticHeadingStatus><IndicatedAirspeed>302</IndicatedAirspeed><IndicatedAirspeedStatus>true</IndicatedAirspeedStatus><Mach>0.632</Mach><MachStatus>true</MachStatus><BarometricAltitudeRate>32</BarometricAltitudeRate><BarometricAltitudeRateStatus>true</BarometricAltitudeRateStatus><InertialVerticalVelocity>0</InertialVerticalVelocity><InertialVerticalVelocityStatus>true</InertialVerticalVelocityStatus></Code60></BDSRegisterData><BDSRegisterData><TransponderRegisterNumber>40</TransponderRegisterNumber><Code40><MCPSelectAltitudeStatus>true</MCPSelectAltitudeStatus><MCPSelectAltitude>18000</MCPSelectAltitude><FMSSelectAltitudeStatus>false</FMSSelectAltitudeStatus><FMSSelectAltitude>0</FMSSelectAltitude><BarometricPressureSettingStatus>true</BarometricPressureSettingStatus><BarometricPressureSetting>1013</BarometricPressureSetting><MCPModeBitsStatus>false</MCPModeBitsStatus><VNAVMode>0</VNAVMode><ALTHOLDMode>0</ALTHOLDMode><APPROACHMode>0</APPROACHMode><TargetAltSourceBitsStatus>false</TargetAltSourceBitsStatus><TargetAltSourceBits>0</TargetAltSourceBits></Code40></BDSRegisterData><ComACASCapabilityFlightStatus><COM>comm_a_and_comm_b_capability</COM><STAT>no_alert_no_spi_aircraft_airborne</STAT><SI>si_code_capable</SI><MSSC>yes</MSSC><ARC>25_ft_resolution</ARC><AIC>yes</AIC><B1A>1</B1A><B1B>5</B1B></ComACASCapabilityFlightStatus></Cat048Model>`)
+
+	uap048 := uap.Cat048V127
+	data, _ := goasterix.HexStringToByte(input)
+	rec := new(goasterix.Record)
+	_, _ = rec.Decode(data, uap048)
+	cat048Model := new(Cat048Model)
+
+	// Act
+	recJson, err := WriteModelXML(cat048Model, rec.Items)
+
+	// Assert
+	if err != nil {
+		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+	} else {
+		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+	}
+
+	if reflect.DeepEqual(recJson, output) == false {
+		t.Errorf("FAIL: %s; \nExpected: %s", recJson, output)
+	} else {
+		t.Logf("SUCCESS: %s; Expected: %s", recJson, output)
+	}
+}

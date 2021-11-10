@@ -348,8 +348,8 @@ func TestDataFieldFixedReader_Invalid(t *testing.T) {
 
 // DataFieldCompound
 type CompoundDataFieldTest struct {
-	name   string
-	input  string
+	Name  string
+	input string
 	output []byte
 	item   uap.Primary
 	err    error
@@ -359,7 +359,7 @@ func TestDataFieldCompoundReader(t *testing.T) {
 	// Setup
 	dataSet := []CompoundDataFieldTest{
 		{
-			name: "Compound type: two primaries subitems and follow valid subitems",
+			Name: "Compound type: two primaries subitems and follow valid subitems",
 			input: "FF FE " +
 				"FFFFFF  FFFFFFFFFFFF FFFF FFFF FFFF FFFF FFFF" +
 				"FF " +
@@ -392,7 +392,7 @@ func TestDataFieldCompoundReader(t *testing.T) {
 			err: nil,
 		},
 		{
-			name: "Compound type: one primary subitem and follow valid subitems",
+			Name: "Compound type: one primary subitem and follow valid subitems",
 			input: "FE " +
 				"FFFFFF  FFFFFFFFFFFF FFFF FFFF FFFF FFFF FFFF",
 			output: []byte{0xFE,
@@ -413,7 +413,7 @@ func TestDataFieldCompoundReader(t *testing.T) {
 			err: nil,
 		},
 		{
-			name:   "Compound type: empty",
+			Name:   "Compound type: empty",
 			input:  "",
 			output: []byte{},
 			item: uap.Primary{
@@ -430,7 +430,7 @@ func TestDataFieldCompoundReader(t *testing.T) {
 			err: io.EOF,
 		},
 		{
-			// ErrDataFieldUnknown
+			Name:   "Compound type: ErrDataFieldUnknown",
 			input:  "40 FF",
 			output: []byte{},
 			item: uap.Primary{
@@ -441,7 +441,7 @@ func TestDataFieldCompoundReader(t *testing.T) {
 			err: ErrDataFieldUnknown,
 		},
 		{
-			name:   "Compound type: error secondary part bit 8",
+			Name:   "Compound type: error secondary part bit 8",
 			input:  "80 FF",
 			output: []byte{},
 			item: uap.Primary{
@@ -452,7 +452,7 @@ func TestDataFieldCompoundReader(t *testing.T) {
 			err: io.EOF,
 		},
 		{
-			name:   "Compound type: error secondary part bit 7",
+			Name:   "Compound type: error secondary part bit 7",
 			input:  "40 FF",
 			output: []byte{},
 			item: uap.Primary{
@@ -463,9 +463,10 @@ func TestDataFieldCompoundReader(t *testing.T) {
 			err: io.EOF,
 		},
 		{
-			name:   "Compound type: error secondary part bit 6",
+			Name:   "Compound type: error secondary part bit 6",
 			input:  "20 FF",
 			output: []byte{},
+
 			item: uap.Primary{
 				uap.MetaField{
 					6: {NameType: uap.Fixed, Size: 2},
@@ -474,9 +475,10 @@ func TestDataFieldCompoundReader(t *testing.T) {
 			err: io.EOF,
 		},
 		{
-			name:   "Compound type: error secondary part bit 5",
+			Name:   "Compound type: error secondary part bit 5",
 			input:  "10 FF",
 			output: []byte{},
+
 			item: uap.Primary{
 				uap.MetaField{
 					5: {NameType: uap.Fixed, Size: 2},
@@ -485,9 +487,10 @@ func TestDataFieldCompoundReader(t *testing.T) {
 			err: io.EOF,
 		},
 		{
-			name:   "Compound type: error secondary bit 4",
+			Name:   "Compound type: error secondary bit 4",
 			input:  "08 FF",
 			output: []byte{},
+
 			item: uap.Primary{
 				uap.MetaField{
 					4: {NameType: uap.Fixed, Size: 2},
@@ -496,7 +499,7 @@ func TestDataFieldCompoundReader(t *testing.T) {
 			err: io.EOF,
 		},
 		{
-			name:   "Compound type: error secondary bit 3",
+			Name:   "Compound type: error secondary bit 3",
 			input:  "04 FF",
 			output: []byte{},
 			item: uap.Primary{
@@ -507,9 +510,10 @@ func TestDataFieldCompoundReader(t *testing.T) {
 			err: io.EOF,
 		},
 		{
-			name:   "Compound type: error secondary part bit 2",
+			Name:   "Compound type: error secondary part bit 2",
 			input:  "02 FF",
 			output: []byte{},
+
 			item: uap.Primary{
 				uap.MetaField{
 					2: {NameType: uap.Fixed, Size: 2},

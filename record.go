@@ -45,7 +45,7 @@ func (rec *Record) Decode(data []byte, stdUAP uap.StandardUAP) (unRead int, err 
 
 		var tmp []byte
 
-		switch dataItem.Type.Name {
+		switch dataItem.Type.NameType {
 		case uap.Fixed:
 			tmp, err = FixedDataFieldReader(rb, dataItem.Type.Size)
 			if err != nil {
@@ -61,7 +61,7 @@ func (rec *Record) Decode(data []byte, stdUAP uap.StandardUAP) (unRead int, err 
 			}
 
 		case uap.Compound:
-			tmp, err = CompoundDataFieldReader(rb, dataItem.Type.Meta)
+			tmp, err = CompoundDataFieldReader(rb, *dataItem.Type.Primary)
 			if err != nil {
 				unRead = rb.Len()
 				return unRead, err
@@ -265,7 +265,7 @@ func RepetitiveDataFieldReader(rb *bytes.Reader, size uint8) (item []byte, err e
 // of one octet extendable using the Field Extension (FX) mechanism.
 // The definition, structure and format of the data subfields are part of the description of the relevant Compound Data
 // Item. Data subfields shall be either fixed length, extended length, explicit length or repetitive, but not compound.
-func CompoundDataFieldReader(rb *bytes.Reader, sub uap.MetaField) (item []byte, err error) {
+func CompoundDataFieldReader(rb *bytes.Reader, subItem uap.Primary) (item []byte, err error) {
 	var primaries []byte
 	for {
 		tmp := make([]byte, 1)
@@ -280,52 +280,52 @@ func CompoundDataFieldReader(rb *bytes.Reader, sub uap.MetaField) (item []byte, 
 	}
 	item = append(item, primaries...)
 
-	for _, primary := range primaries {
+	for i, primary := range primaries {
 		var tmp []byte
 		if primary&0x80 != 0 {
-			tmp, err = SelectTypeFieldReader(rb, sub[8])
+			tmp, err = SelectTypeFieldReader(rb, subItem[i][8])
 			if err != nil {
 				return nil, err
 			}
 			item = append(item, tmp...)
 		}
 		if primary&0x40 != 0 {
-			tmp, err = SelectTypeFieldReader(rb, sub[7])
+			tmp, err = SelectTypeFieldReader(rb, subItem[i][7])
 			if err != nil {
 				return nil, err
 			}
 			item = append(item, tmp...)
 		}
 		if primary&0x20 != 0 {
-			tmp, err = SelectTypeFieldReader(rb, sub[6])
+			tmp, err = SelectTypeFieldReader(rb, subItem[i][6])
 			if err != nil {
 				return nil, err
 			}
 			item = append(item, tmp...)
 		}
 		if primary&0x10 != 0 {
-			tmp, err = SelectTypeFieldReader(rb, sub[5])
+			tmp, err = SelectTypeFieldReader(rb, subItem[i][5])
 			if err != nil {
 				return nil, err
 			}
 			item = append(item, tmp...)
 		}
 		if primary&0x08 != 0 {
-			tmp, err = SelectTypeFieldReader(rb, sub[4])
+			tmp, err = SelectTypeFieldReader(rb, subItem[i][4])
 			if err != nil {
 				return nil, err
 			}
 			item = append(item, tmp...)
 		}
 		if primary&0x04 != 0 {
-			tmp, err = SelectTypeFieldReader(rb, sub[3])
+			tmp, err = SelectTypeFieldReader(rb, subItem[i][3])
 			if err != nil {
 				return nil, err
 			}
 			item = append(item, tmp...)
 		}
 		if primary&0x02 != 0 {
-			tmp, err = SelectTypeFieldReader(rb, sub[2])
+			tmp, err = SelectTypeFieldReader(rb, subItem[i][2])
 			if err != nil {
 				return nil, err
 			}
@@ -337,7 +337,7 @@ func CompoundDataFieldReader(rb *bytes.Reader, sub uap.MetaField) (item []byte, 
 }
 
 func SelectTypeFieldReader(rb *bytes.Reader, sub uap.Subfield) (item []byte, err error) {
-	typeOfField := sub.Name
+	typeOfField := sub.NameType
 	switch typeOfField {
 	case uap.Fixed:
 		item, err = FixedDataFieldReader(rb, sub.Size)

@@ -348,42 +348,84 @@ func TestDataFieldFixedReader_Invalid(t *testing.T) {
 
 // DataFieldCompound
 type CompoundDataFieldTest struct {
+	name   string
 	input  string
 	output []byte
-	item   uap.MetaField
+	item   uap.Primary
 	err    error
 }
 
 func TestDataFieldCompoundReader(t *testing.T) {
 	// Setup
-	dataSetDataFieldTests := []CompoundDataFieldTest{
+	dataSet := []CompoundDataFieldTest{
 		{
-			// valid
-			input:  "EE FF FFFF FFFE 02 FFFFFF FFFFFF 04 FFFFFF FFFFFF FFFFFF",
-			output: []byte{0xEE, 0xFF, 0xFF, 0xFF, 0xFF, 0xFE, 0x02, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x04, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF},
-			item: uap.MetaField{
-				8: {Name: uap.Fixed, Size: 1},
-				7: {Name: uap.Extended, Size: 2},
-				6: {Name: uap.Repetitive, Size: 3},
-				5: {Name: uap.Spare},
-				4: {Name: uap.Explicit},
-				3: {Name: uap.Fixed, Size: 3},
-				2: {Name: uap.Fixed, Size: 1},
+			name: "Compound type: two primaries subitems and follow valid subitems",
+			input: "FF FE " +
+				"FFFFFF  FFFFFFFFFFFF FFFF FFFF FFFF FFFF FFFF" +
+				"FF " +
+				"02 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF " +
+				"FFFF FFFF FFFFFFFFFFFFFF FFFF FFFF",
+			output: []byte{0xFF, 0xFE,
+				0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+				0xFF, 0x02, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+				0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF},
+			item: uap.Primary{
+				uap.MetaField{
+					8: {NameType: uap.Fixed, Size: 3},
+					7: {NameType: uap.Fixed, Size: 6},
+					6: {NameType: uap.Fixed, Size: 2},
+					5: {NameType: uap.Fixed, Size: 2},
+					4: {NameType: uap.Fixed, Size: 2},
+					3: {NameType: uap.Fixed, Size: 2},
+					2: {NameType: uap.Fixed, Size: 2},
+				},
+				uap.MetaField{
+					8: {NameType: uap.Fixed, Size: 1},
+					7: {NameType: uap.Repetitive, Size: 15},
+					6: {NameType: uap.Fixed, Size: 2},
+					5: {NameType: uap.Fixed, Size: 2},
+					4: {NameType: uap.Fixed, Size: 7},
+					3: {NameType: uap.Fixed, Size: 2},
+					2: {NameType: uap.Fixed, Size: 2},
+				},
 			},
 			err: nil,
 		},
 		{
-			// empty
+			name: "Compound type: one primary subitem and follow valid subitems",
+			input: "FE " +
+				"FFFFFF  FFFFFFFFFFFF FFFF FFFF FFFF FFFF FFFF",
+			output: []byte{0xFE,
+				0xFF, 0xFF, 0xFF,
+				0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+				0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF},
+			item: uap.Primary{
+				uap.MetaField{
+					8: {NameType: uap.Fixed, Size: 3},
+					7: {NameType: uap.Fixed, Size: 6},
+					6: {NameType: uap.Fixed, Size: 2},
+					5: {NameType: uap.Fixed, Size: 2},
+					4: {NameType: uap.Fixed, Size: 2},
+					3: {NameType: uap.Fixed, Size: 2},
+					2: {NameType: uap.Fixed, Size: 2},
+				},
+			},
+			err: nil,
+		},
+		{
+			name:   "Compound type: empty",
 			input:  "",
 			output: []byte{},
-			item: uap.MetaField{
-				8: {Name: uap.Fixed, Size: 1},
-				7: {Name: uap.Spare},
-				6: {Name: uap.Spare},
-				5: {Name: uap.Fixed, Size: 3},
-				4: {Name: uap.Fixed, Size: 1},
-				3: {Name: uap.Fixed, Size: 1},
-				2: {Name: uap.Fixed, Size: 1},
+			item: uap.Primary{
+				uap.MetaField{
+					8: {NameType: uap.Fixed, Size: 3},
+					7: {NameType: uap.Fixed, Size: 6},
+					6: {NameType: uap.Fixed, Size: 2},
+					5: {NameType: uap.Fixed, Size: 2},
+					4: {NameType: uap.Fixed, Size: 2},
+					3: {NameType: uap.Fixed, Size: 2},
+					2: {NameType: uap.Fixed, Size: 2},
+				},
 			},
 			err: io.EOF,
 		},
@@ -391,83 +433,93 @@ func TestDataFieldCompoundReader(t *testing.T) {
 			// ErrDataFieldUnknown
 			input:  "40 FF",
 			output: []byte{},
-			item: uap.MetaField{
-				8: {Name: uap.Fixed, Size: 1},
-				7: {Name: uap.Spare, Size: 1},
-				6: {Name: uap.Spare},
-				5: {Name: uap.Fixed, Size: 3},
-				4: {Name: uap.Fixed, Size: 1},
-				3: {Name: uap.Fixed, Size: 1},
-				2: {Name: uap.Fixed, Size: 1},
+			item: uap.Primary{
+				uap.MetaField{
+					7: {NameType: uap.Spare, Size: 2},
+				},
 			},
 			err: ErrDataFieldUnknown,
 		},
 		{
-			// error secondary bit 8
+			name:   "Compound type: error secondary part bit 8",
 			input:  "80 FF",
 			output: []byte{},
-			item: uap.MetaField{
-				8: {Name: uap.Fixed, Size: 2},
+			item: uap.Primary{
+				uap.MetaField{
+					8: {NameType: uap.Fixed, Size: 2},
+				},
 			},
 			err: io.EOF,
 		},
 		{
-			// error secondary bit 7
+			name:   "Compound type: error secondary part bit 7",
 			input:  "40 FF",
 			output: []byte{},
-			item: uap.MetaField{
-				7: {Name: uap.Fixed, Size: 2},
+			item: uap.Primary{
+				uap.MetaField{
+					7: {NameType: uap.Fixed, Size: 2},
+				},
 			},
 			err: io.EOF,
 		},
 		{
-			// error secondary bit 6
+			name:   "Compound type: error secondary part bit 6",
 			input:  "20 FF",
 			output: []byte{},
-			item: uap.MetaField{
-				6: {Name: uap.Fixed, Size: 2},
+			item: uap.Primary{
+				uap.MetaField{
+					6: {NameType: uap.Fixed, Size: 2},
+				},
 			},
 			err: io.EOF,
 		},
 		{
-			// error secondary bit 5
+			name:   "Compound type: error secondary part bit 5",
 			input:  "10 FF",
 			output: []byte{},
-			item: uap.MetaField{
-				5: {Name: uap.Fixed, Size: 2},
+			item: uap.Primary{
+				uap.MetaField{
+					5: {NameType: uap.Fixed, Size: 2},
+				},
 			},
 			err: io.EOF,
 		},
 		{
-			// error secondary bit 4
+			name:   "Compound type: error secondary bit 4",
 			input:  "08 FF",
 			output: []byte{},
-			item: uap.MetaField{
-				4: {Name: uap.Fixed, Size: 2},
+			item: uap.Primary{
+				uap.MetaField{
+					4: {NameType: uap.Fixed, Size: 2},
+				},
 			},
 			err: io.EOF,
 		},
 		{
-			// error secondary bit 3
+			name:   "Compound type: error secondary bit 3",
 			input:  "04 FF",
 			output: []byte{},
-			item: uap.MetaField{
-				3: {Name: uap.Fixed, Size: 2},
+			item: uap.Primary{
+				uap.MetaField{
+					3: {NameType: uap.Fixed, Size: 2},
+				},
 			},
 			err: io.EOF,
 		},
 		{
-			// error secondary bit 2
+			name:   "Compound type: error secondary part bit 2",
 			input:  "02 FF",
 			output: []byte{},
-			item: uap.MetaField{
-				2: {Name: uap.Fixed, Size: 2},
+			item: uap.Primary{
+				uap.MetaField{
+					2: {NameType: uap.Fixed, Size: 2},
+				},
 			},
 			err: io.EOF,
 		},
 	}
 
-	for _, row := range dataSetDataFieldTests {
+	for _, row := range dataSet {
 		// Arrange
 		input, _ := HexStringToByte(row.input)
 		rb := bytes.NewReader(input)
@@ -503,63 +555,63 @@ func TestSelectTypeFieldReader(t *testing.T) {
 			// Fixed
 			input:  "FF",
 			output: []byte{0xFF},
-			item:   uap.Subfield{Name: uap.Fixed, Size: 1},
+			item:   uap.Subfield{NameType: uap.Fixed, Size: 1},
 			err:    nil,
 		},
 		{
 			// Error EOF
 			input:  "",
 			output: []byte{},
-			item:   uap.Subfield{Name: uap.Fixed, Size: 1},
+			item:   uap.Subfield{NameType: uap.Fixed, Size: 1},
 			err:    io.EOF,
 		},
 		{
 			// Extended
 			input:  "FF FF FE",
 			output: []byte{0xFF, 0xFF, 0xFE},
-			item:   uap.Subfield{Name: uap.Extended, Size: 1},
+			item:   uap.Subfield{NameType: uap.Extended, Size: 1},
 			err:    nil,
 		},
 		{
 			// Error EOF
 			input:  "",
 			output: []byte{},
-			item:   uap.Subfield{Name: uap.Extended, Size: 1},
+			item:   uap.Subfield{NameType: uap.Extended, Size: 1},
 			err:    io.EOF,
 		},
 		{
 			// Explicit
 			input:  "03 FF FF",
 			output: []byte{0x03, 0xFF, 0xFF},
-			item:   uap.Subfield{Name: uap.Explicit},
+			item:   uap.Subfield{NameType: uap.Explicit},
 			err:    nil,
 		},
 		{
 			// Error EOF
 			input:  "",
 			output: []byte{},
-			item:   uap.Subfield{Name: uap.Explicit, Size: 1},
+			item:   uap.Subfield{NameType: uap.Explicit, Size: 1},
 			err:    io.EOF,
 		},
 		{
 			// Repetitive
 			input:  "03 FFFFFF FFFFFF FFFFFF",
 			output: []byte{0x03, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF},
-			item:   uap.Subfield{Name: uap.Repetitive, Size: 3},
+			item:   uap.Subfield{NameType: uap.Repetitive, Size: 3},
 			err:    nil,
 		},
 		{
 			// Error EOF
 			input:  "",
 			output: []byte{},
-			item:   uap.Subfield{Name: uap.Repetitive, Size: 1},
+			item:   uap.Subfield{NameType: uap.Repetitive, Size: 1},
 			err:    io.EOF,
 		},
 		{
 			// ErrDataFieldUnknown
 			input:  "FF",
 			output: []byte{},
-			item:   uap.Subfield{Name: uap.Spare},
+			item:   uap.Subfield{NameType: uap.Spare},
 			err:    ErrDataFieldUnknown,
 		},
 	}

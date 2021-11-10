@@ -11,31 +11,33 @@ var Cat4Test = StandardUAP{
 			FRN:      1,
 			DataItem: "I026/001",
 			Type: TypeField{
-				Name: Fixed,
-				Size: 2,
+				NameType: Fixed,
+				Size:     2,
 			},
 		},
 		{
 			FRN:      2,
 			DataItem: "I026/002",
 			Type: TypeField{
-				Name: Extended,
-				Size: 1,
+				NameType: Extended,
+				Size:     1,
 			},
 		},
 		{
 			FRN:      3,
-			DataItem: "I026/003",
+			DataItem: "I026/0039",
 			Type: TypeField{
-				Name: Compound,
-				Meta: MetaField{
-					8: {Name: Fixed, Size: 1},
-					7: {Name: Spare},
-					6: {Name: Extended, Size: 1},
-					5: {Name: Spare},
-					4: {Name: Repetitive, Size: 2},
-					3: {Name: Spare},
-					2: {Name: Explicit},
+				NameType: Compound,
+				Primary: &Primary{
+					MetaField{
+						8: {NameType: Fixed, Size: 1},
+						7: {NameType: Spare},
+						6: {NameType: Extended, Size: 1},
+						5: {NameType: Spare},
+						4: {NameType: Repetitive, Size: 2},
+						3: {NameType: Spare},
+						2: {NameType: Explicit},
+					},
 				},
 			},
 		},
@@ -43,29 +45,29 @@ var Cat4Test = StandardUAP{
 			FRN:      4,
 			DataItem: "I026/004",
 			Type: TypeField{
-				Name: Repetitive,
-				Size: 2,
+				NameType: Repetitive,
+				Size:     2,
 			},
 		},
 		{
 			FRN:      5,
 			DataItem: "I026/005",
 			Type: TypeField{
-				Name: Explicit,
+				NameType: Explicit,
 			},
 		},
 		{
 			FRN:      6,
 			DataItem: "I026/006",
 			Type: TypeField{
-				Name: RFS,
+				NameType: RFS,
 			},
 		},
 		{
-			FRN: 7, DataItem: "NA", Type: TypeField{Name: Spare},
+			FRN: 7, DataItem: "NA", Type: TypeField{NameType: Spare},
 		},
 		{
-			FRN: 8, DataItem: "SP-Data Item", Type: TypeField{Name: SP},
+			FRN: 8, DataItem: "SP-Data Item", Type: TypeField{NameType: SP},
 		},
 	},
 }

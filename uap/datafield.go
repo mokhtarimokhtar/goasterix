@@ -35,19 +35,30 @@ type DataField struct {
 }
 
 type TypeField struct {
-	Name NameTypeField
-	Size uint8
-	Meta MetaField
+	NameType NameTypeField
+	Size     uint8
+	//Meta     MetaField
+	Primary *Primary
 }
-type Bit uint8 // It is the bit number
 
-type Size uint8 // It is the number of bytes (size) of the corresponding field
+// Bit is a bit number position
+type Bit uint8
 
-type MetaField map[Bit]Subfield // It is used for compound data type
+// Size is the number of bytes (size) of the corresponding field
+type Size uint8
 
+// Primary subitem, followed by data subitems.
+// The Compound Data Item primary subitem determines the presence or absence of the subsequent
+// data subitems and is made of a first part of one octet extendible using the Field Extension (FX) mechanism
+type Primary []MetaField
+
+// MetaField contains a hashmap [number of bit key] <=> [type of field and size]
+type MetaField map[Bit]Subfield
+
+// Subfield describes the type of field and the size if necessary
 type Subfield struct {
-	Name NameTypeField
-	Size uint8
+	NameType NameTypeField
+	Size     uint8
 }
 
 type UAP struct {

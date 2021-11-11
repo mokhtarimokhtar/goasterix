@@ -63,15 +63,14 @@ func TestCat048Model_RhoTheta(t *testing.T) {
 
 }
 
-type DataTestMode3A struct {
-	TestCaseName string
-	input        [2]byte
-	output       Mode3A
-}
-
 func TestCat048Model_Mode3ACodeVGL(t *testing.T) {
 	// setup
-	dataset := []DataTestMode3A{
+	type dataTest struct {
+		TestCaseName string
+		input        [2]byte
+		output       Mode3A
+	}
+	dataset := []dataTest{
 		{
 			TestCaseName: "validated",
 			input:        [2]byte{0x1F, 0xFF},
@@ -107,15 +106,14 @@ func TestCat048Model_Mode3ACodeVGL(t *testing.T) {
 	}
 }
 
-type DataTestFlightLevel struct {
-	TestCaseName string
-	input        [2]byte
-	output       FL
-}
-
 func TestCat048Model_FlightLevel(t *testing.T) {
 	// setup
-	dataset := []DataTestFlightLevel{
+	type dataTest struct {
+		TestCaseName string
+		input        [2]byte
+		output       FL
+	}
+	dataset := []dataTest{
 		{
 			TestCaseName: "validated",
 			input:        [2]byte{0x00, 0xFF},
@@ -149,16 +147,15 @@ func TestCat048Model_FlightLevel(t *testing.T) {
 	}
 }
 
-type DataTestModeSI struct {
-	TestCaseName string
-	input        [6]byte
-	output       string
-	err          error
-}
-
 func TestCat048Model_ModeSIdentification(t *testing.T) {
 	// setup
-	dataset := []DataTestModeSI{
+	type dataTest struct {
+		TestCaseName string
+		input        [6]byte
+		output       string
+		err          error
+	}
+	dataset := []dataTest{
 		{
 			TestCaseName: "valid chars",
 			input:        [6]byte{0x04, 0x64, 0xB1, 0xCB, 0x3D, 0x20},
@@ -273,15 +270,14 @@ func TestCat048Model_TrackVelocity(t *testing.T) {
 	}
 }
 
-type DataTestTrackStatus struct {
-	TestCaseName string
-	input        []byte
-	output       Status
-}
-
 func TestCat048Model_TrackStatus(t *testing.T) {
 	// setup
-	dataset := []DataTestTrackStatus{
+	type dataTest struct {
+		TestCaseName string
+		input        []byte
+		output       Status
+	}
+	dataset := []dataTest{
 		{
 			TestCaseName: "testcase 1",
 			input:        []byte{0x41, 0x00},
@@ -349,15 +345,14 @@ func TestCat048Model_TrackStatus(t *testing.T) {
 	}
 }
 
-type DataTestRadarPlot struct {
-	TestCaseName string
-	input        []byte
-	output       PlotCharacteristics
-}
-
 func TestCat048Model_RadarPlotCharacteristics(t *testing.T) {
 	// setup
-	dataset := []DataTestRadarPlot{
+	type dataTest struct {
+		TestCaseName string
+		input        []byte
+		output       PlotCharacteristics
+	}
+	dataset := []dataTest{
 		{
 			TestCaseName: "full subfield",
 			input:        []byte{0xFE, 0x64, 0x64, 0x64, 0x64, 0x64, 0x7F, 0x64},
@@ -386,15 +381,14 @@ func TestCat048Model_RadarPlotCharacteristics(t *testing.T) {
 	}
 }
 
-type DataTestComACAS struct {
-	TestCaseName string
-	input        [2]byte
-	output       ACASCapaFlightStatus
-}
-
 func TestCat048Model_ComACASCapabilityFlightStatus(t *testing.T) {
 	// setup
-	dataset := []DataTestComACAS{
+	type dataTest struct {
+		TestCaseName string
+		input        [2]byte
+		output       ACASCapaFlightStatus
+	}
+	dataset := []dataTest{
 		{
 			TestCaseName: "testcase 1",
 			input:        [2]byte{0x00, 0x00},

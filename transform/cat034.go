@@ -41,8 +41,8 @@ type GenericPolarWindow struct {
 }
 
 type MessageCounter struct {
-	Counter uint16 `json:"counter"`
 	Type    string `json:"type"`
+	Counter uint16 `json:"counter"`
 }
 
 type ComSysConf struct {
@@ -78,9 +78,9 @@ type SysConf struct {
 }
 
 type Pos3D struct {
-	Latitude  float64 `json:"latitude,omitempty"`
-	Longitude float64 `json:"longitude,omitempty"`
-	Height    float64 `json:"height,omitempty"`
+	Latitude  float32 `json:"latitude,omitempty"`
+	Longitude float32 `json:"longitude,omitempty"`
+	Height    uint16  `json:"height,omitempty"`
 }
 
 type Cat034Model struct {
@@ -113,7 +113,7 @@ func (data *Cat034Model) write(items []uap.DataField) {
 			//decode messageType
 			var payload [1]byte
 			copy(payload[:], item.Payload[:])
-			data.MessageType, _ = messageType(payload)
+			data.MessageType = messageType(payload)
 		case 3:
 			// decode timeOfDay
 			var payload [3]byte
@@ -135,7 +135,7 @@ func (data *Cat034Model) write(items []uap.DataField) {
 			tmp, _ := systemConfiguration(item.Payload)
 			data.SystemConfiguration = &tmp
 		case 7:
-			tmp, _ := systemProcessingMode(item.Payload)
+			tmp := systemProcessingMode(item.Payload)
 			data.SystemProcessingMode = &tmp
 		case 8:
 			tmp, _ := messageCountValues(item.Payload)
@@ -143,7 +143,7 @@ func (data *Cat034Model) write(items []uap.DataField) {
 		case 9:
 			var payload [8]byte
 			copy(payload[:], item.Payload[:])
-			tmp, _ := genericPolarWindow(payload)
+			tmp := genericPolarWindow(payload)
 			data.GenericPolarWindow = &tmp
 		case 10:
 			var payload [1]byte
@@ -152,7 +152,7 @@ func (data *Cat034Model) write(items []uap.DataField) {
 		case 11:
 			var payload [8]byte
 			copy(payload[:], item.Payload[:])
-			tmp, _ := position3DofDataSource(payload)
+			tmp := position3DofDataSource(payload)
 			data.Position3DofDataSource = &tmp
 		case 12:
 			// collimationError returns an array float64.
@@ -172,7 +172,8 @@ func (data *Cat034Model) write(items []uap.DataField) {
 
 // MessageType returns a string of message type.
 // Ref. 5.2.1 Data Item I034/000, Message Type
-func messageType(data [1]byte) (msg string, err error) {
+func messageType(data [1]byte) string {
+	var msg string
 	msgType := data[0]
 
 	switch msgType {
@@ -194,7 +195,7 @@ func messageType(data [1]byte) (msg string, err error) {
 		msg = "undefined_message_type"
 	}
 
-	return msg, nil
+	return msg
 }
 
 // systemConfiguration returns map of map string.
@@ -395,7 +396,8 @@ type SysProcess struct {
 
 // systemProcessingMode returns map of map string.
 // Ref: Data Item I034/060, System Processing Mode
-func systemProcessingMode(data []byte) (sysProc SysProcess, err error) {
+func systemProcessingMode(data []byte) SysProcess {
+	var sysProc SysProcess
 	primary := data[0]
 
 	// secondary
@@ -408,14 +410,14 @@ func systemProcessingMode(data []byte) (sysProc SysProcess, err error) {
 		if tmpRedrdp == 0 {
 			tmp.Redrdp = "no_reduction_active"
 		} else {
-			tmp.Redrdp = "reduction_step" + strconv.Itoa(int(tmpRedrdp)) + "_active"
+			tmp.Redrdp = "reduction_step_" + strconv.Itoa(int(tmpRedrdp)) + "_active"
 		}
 
 		tmpRedxmt := data[offset] & 0x0E >> 1
 		if tmpRedxmt == 0 {
 			tmp.Redxmt = "no_reduction_active"
 		} else {
-			tmp.Redxmt = "reduction_step" + strconv.Itoa(int(tmpRedxmt)) + "_active"
+			tmp.Redxmt = "reduction_step_" + strconv.Itoa(int(tmpRedxmt)) + "_active"
 		}
 
 		sysProc.ComSysPro = tmp
@@ -435,11 +437,11 @@ func systemProcessingMode(data []byte) (sysProc SysProcess, err error) {
 		if tmpRedrdp == 0 {
 			tmp.Redrad = "no_reduction_active"
 		} else {
-			tmp.Redrad = "reduction_step" + strconv.Itoa(int(tmpRedrdp)) + "_active"
+			tmp.Redrad = "reduction_step_" + strconv.Itoa(int(tmpRedrdp)) + "_active"
 		}
 
 		tmpStc := data[offset] & 0x0C >> 2
-		tmp.Stc = "stcMap" + strconv.Itoa(int(tmpStc)+1)
+		tmp.Stc = "stcMap_" + strconv.Itoa(int(tmpStc)+1)
 
 		sysProc.Psr = tmp
 	}
@@ -452,7 +454,7 @@ func systemProcessingMode(data []byte) (sysProc SysProcess, err error) {
 		if tmpRedrad == 0 {
 			tmp.Redrad = "no_reduction_active"
 		} else {
-			tmp.Redrad = "reduction_step" + strconv.Itoa(int(tmpRedrad)) + "_active"
+			tmp.Redrad = "reduction_step_" + strconv.Itoa(int(tmpRedrad)) + "_active"
 		}
 
 		sysProc.Ssr = tmp
@@ -466,7 +468,7 @@ func systemProcessingMode(data []byte) (sysProc SysProcess, err error) {
 		if tmpRedrad == 0 {
 			tmp.Redrad = "no_reduction_active"
 		} else {
-			tmp.Redrad = "reduction_step" + strconv.Itoa(int(tmpRedrad)) + "_active"
+			tmp.Redrad = "reduction_step_" + strconv.Itoa(int(tmpRedrad)) + "_active"
 		}
 
 		if data[offset]&0x10 == 0 {
@@ -477,21 +479,23 @@ func systemProcessingMode(data []byte) (sysProc SysProcess, err error) {
 		sysProc.Mds = tmp
 	}
 
-	return sysProc, nil
+	return sysProc
 }
 
 // messageCountValues
 // Message Count values, according the various types of messages, for the last completed antenna revolution,
 // counted between two North crossings.
 // Ref. 5.2.8 Data Item I034/070, Message Count Values
-func messageCountValues(data []byte) (mcv []MessageCounter, err error) {
+func messageCountValues(data []byte) ([]MessageCounter, error) {
+	var mcv []MessageCounter
+	var err error
 	rep := data[0]
 
 	for i := 0; i < int(rep*2); i = i + 2 {
 		m := MessageCounter{}
 		m.Counter = uint16(data[i+1]&0x07)<<8 + uint16(data[i+2])
-		typeMCtmp := uint16(data[i+1] & 0xF8 >> 3)
 
+		typeMCtmp := uint16(data[i+1] & 0xF8 >> 3)
 		switch typeMCtmp {
 		case 0:
 			m.Type = "no_detection"
@@ -502,13 +506,13 @@ func messageCountValues(data []byte) (mcv []MessageCounter, err error) {
 		case 3:
 			m.Type = "ssr_psr_target_reports"
 		case 4:
-			m.Type = "single_all-call_target_reports"
+			m.Type = "single_all_call_target_reports"
 		case 5:
-			m.Type = "single_roll-call_target_reports"
+			m.Type = "single_roll_call_target_reports"
 		case 6:
-			m.Type = "all-call_psr_target_reports"
+			m.Type = "all_call_psr_target_reports"
 		case 7:
-			m.Type = "roll-call_psr_target_reports"
+			m.Type = "roll_call_psr_target_reports"
 		case 8:
 			m.Type = "filter_for_weather_data"
 		case 9:
@@ -528,7 +532,7 @@ func messageCountValues(data []byte) (mcv []MessageCounter, err error) {
 		case 16:
 			m.Type = "filter_for_psr_enhanced_surveillance__all_ssr_mode_s_data"
 		case 17:
-			m.Type = "re-interrogations_per_sector"
+			m.Type = "re_interrogations_per_sector"
 		case 18:
 			m.Type = "bds_swap_and_wrong_df_replies_per_sector"
 		case 19:
@@ -547,12 +551,13 @@ func messageCountValues(data []byte) (mcv []MessageCounter, err error) {
 // genericPolarWindow returns a map of float64.
 // rhoStart and rhoEnd (NM),  thetaStart and thetaEnd degrees
 // Ref: 5.2.10 Data Item I034/100
-func genericPolarWindow(data [8]byte) (g GenericPolarWindow, err error) {
+func genericPolarWindow(data [8]byte) GenericPolarWindow {
+	var g GenericPolarWindow
 	g.RhoStart = float64(uint16(data[0])<<8+uint16(data[1])) / 256
 	g.RhoEnd = float64(uint16(data[2])<<8+uint16(data[3])) / 256
 	g.ThetaStart = float64(uint16(data[4])<<8+uint16(data[5])) * 0.0055
 	g.ThetaEnd = float64(uint16(data[6])<<8+uint16(data[7])) * 0.0055
-	return g, nil
+	return g
 }
 
 // dataFilter returns an integer.
@@ -591,14 +596,15 @@ func dataFilter(data [1]byte) (df string, err error) {
 // height in metre, latitude and longitude WGS84.
 // 3D-Position of Data Source in WGS 84 Co-ordinates.
 // Ref: 5.2.12 Data Item I034/120 3D-Position Of Data Source
-func position3DofDataSource(data [8]byte) (pos Pos3D, err error) {
-	pos.Height = float64(uint16(data[0])<<8 + uint16(data[1]))
+func position3DofDataSource(data [8]byte) Pos3D {
+	var pos Pos3D
+	pos.Height = uint16(data[0])<<8 + uint16(data[1])
 
 	tmpLatitude := uint32(data[2])<<16 + uint32(data[3])<<8 + uint32(data[4])
-	pos.Latitude = float64(goasterix.TwoComplement32(23, tmpLatitude)) * 0.000021458
+	pos.Latitude = float32(goasterix.TwoComplement32(23, tmpLatitude)) * 0.000021458
 
 	tmpLongitude := uint32(data[5])<<16 + uint32(data[6])<<8 + uint32(data[7])
-	pos.Longitude = float64(goasterix.TwoComplement32(23, tmpLongitude)) * 0.000021458
+	pos.Longitude = float32(goasterix.TwoComplement32(23, tmpLongitude)) * 0.000021458
 
-	return pos, nil
+	return pos
 }

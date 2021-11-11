@@ -1,6 +1,9 @@
 package transform
 
 import (
+	"encoding/json"
+	"github.com/mokhtarimokhtar/goasterix"
+	"github.com/mokhtarimokhtar/goasterix/uap"
 	"reflect"
 	"testing"
 )
@@ -328,5 +331,35 @@ func TestCat034Model_SystemProcessingMode(t *testing.T) {
 			}
 		}
 
+	}
+}
+
+func TestCat034Model_ToJsonRecord(t *testing.T) {
+	// Arrange
+	input := "f6083602429b7110940028200094008000"
+	output := []byte(`{"sourceIdentifier":{"sac":8,"sic":54},"messageType":"sector_crossing_message","timeOfDay":34102.8828125,"sectorNumber":22.5,"systemConfiguration":{"com":{"nogo":"system_inhibited","rdpc":"radar_data_processor_chain1","rdpr":"default_situation","ovlrdp":"no_overload","ovlxmt":"no_overload","msc":"monitoring_system_connected","tsv":"time_source_valid"},"psr":{"ant":"antenna_1","chAB":"channel_a_only_selected","ovl":"no_overload","msc":"monitoring_system_disconnected"},"mds":{"ant":"antenna_1","chAB":"channel_a_only_selected","ovlsur":"no_overload","msc":"monitoring_system_connected","scf":"channel_a_in_use","dlf":"channel_a_in_use","ovlscf":"no_overload","ovldlf":"no_overload"}},"systemProcessingMode":{"com":{"redrdp":"no_reduction_active","redxmt":"no_reduction_active"},"psr":{"pol":"circular_polarization","redrad":"no_reduction_active","stc":"stcMap_1"},"mds":{"redrad":"no_reduction_active","clu":"autonomous"}}}`)
+
+	uap034 := uap.Cat034V127
+	data, _ := goasterix.HexStringToByte(input)
+	rec := new(goasterix.Record)
+	_, err := rec.Decode(data, uap034)
+
+	model := new(Cat034Model)
+	model.write(rec.Items)
+
+	// Act
+	recJson, _ := json.Marshal(model)
+
+	// Assert
+	if err != nil {
+		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+	} else {
+		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+	}
+
+	if reflect.DeepEqual(recJson, output) == false {
+		t.Errorf("FAIL: %s; \nExpected: %s", recJson, output)
+	} else {
+		t.Logf("SUCCESS: %s; Expected: %s", recJson, output)
 	}
 }

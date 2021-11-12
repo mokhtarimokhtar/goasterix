@@ -17,7 +17,7 @@ const (
 	chanASelected  string = "channel_a_only_selected"
 	chanBSelected  string = "channel_b_only_selected"
 	chanABSelected string = "channel_a_and_b_selected"
-	chanIllCombi   string = "illegal_combinaison"
+	chanIllCombi   string = "illegal_combination"
 	overload       string = "overload"
 	noOverload     string = "no_overload"
 	mscC           string = "monitoring_system_connected"
@@ -132,7 +132,7 @@ func (data *Cat034Model) write(items []uap.DataField) {
 			// Ref: 5.2.3 Records Item I034/041.
 			data.AntennaRotationSpeed = float64(uint16(item.Payload[0])<<8+uint16(item.Payload[1])) / 128
 		case 6:
-			tmp, _ := systemConfiguration(item.Payload)
+			tmp := systemConfiguration(item.Payload)
 			data.SystemConfiguration = &tmp
 		case 7:
 			tmp := systemProcessingMode(item.Payload)
@@ -200,7 +200,8 @@ func messageType(data [1]byte) string {
 
 // systemConfiguration returns map of map string.
 // Ref: 5.2.6 Data Item I034/050, System Configuration and Status
-func systemConfiguration(data []byte) (sysConf SysConf, err error) {
+func systemConfiguration(data []byte) SysConf {
+	var sysConf SysConf
 	primary := data[0]
 
 	// secondary
@@ -368,7 +369,7 @@ func systemConfiguration(data []byte) (sysConf SysConf, err error) {
 		sysConf.Mds = mds
 	}
 
-	return sysConf, nil
+	return sysConf
 }
 
 type ComSysPro struct {

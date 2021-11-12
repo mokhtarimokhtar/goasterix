@@ -38,46 +38,163 @@ func TestCat034Model_MessageType(t *testing.T) {
 }
 
 func TestCat034Model_SystemConfiguration(t *testing.T) {
-	// Arrange
-	input := []byte{0x84, 0x00, 0x20, 0x00}
-	output := SysConf{
-		Com: &ComSysConf{
-			Nogo:   "system_inhibited",
-			Rdpc:   "radar_data_processor_chain1",
-			Rdpr:   "default_situation",
-			Ovlrdp: "no_overload",
-			Ovlxmt: "no_overload",
-			Msc:    "monitoring_system_connected",
-			Tsv:    "time_source_valid",
+	// setup
+	type dataTest struct {
+		Name   string
+		input  []byte
+		output SysConf
+	}
+	dataset := []dataTest{
+		{
+			Name:  "testcase 1: full subfield",
+			input: []byte{0x9c, 0x00, 0x00, 0x00, 0x00, 0x00},
+			output: SysConf{
+				Com: &ComSysConf{
+					Nogo:   "system_inhibited",
+					Rdpc:   "radar_data_processor_chain1",
+					Rdpr:   "default_situation",
+					Ovlrdp: "no_overload",
+					Ovlxmt: "no_overload",
+					Msc:    "monitoring_system_connected",
+					Tsv:    "time_source_valid",
+				},
+				Psr: &PsrSsrSysConf{
+					Ant:  "antenna_1",
+					ChAB: "no_channel_selected",
+					Ovl:  "no_overload",
+					Msc:  "monitoring_system_connected",
+				},
+				Ssr: &PsrSsrSysConf{
+					Ant:  "antenna_1",
+					ChAB: "no_channel_selected",
+					Ovl:  "no_overload",
+					Msc:  "monitoring_system_connected",
+				},
+				Mds: &MdsSysConf{
+					Ant:    "antenna_1",
+					ChAB:   "no_channel_selected",
+					Ovlsur: "no_overload",
+					Msc:    "monitoring_system_connected",
+					Scf:    "channel_a_in_use",
+					Dlf:    "channel_a_in_use",
+					Ovlscf: "no_overload",
+					Ovldlf: "no_overload",
+				},
+			},
 		},
-		Psr: nil,
-		Ssr: nil,
-		Mds: &MdsSysConf{
-			Ant:    "antenna_1",
-			ChAB:   "channel_a_only_selected",
-			Ovlsur: "no_overload",
-			Msc:    "monitoring_system_connected",
-			Scf:    "channel_a_in_use",
-			Dlf:    "channel_a_in_use",
-			Ovlscf: "no_overload",
-			Ovldlf: "no_overload",
+		{
+			Name:  "testcase 2: full subfield",
+			input: []byte{0x9c, 0xfe, 0xb8, 0xb8, 0xbf, 0x80},
+			output: SysConf{
+				Com: &ComSysConf{
+					Nogo:   "system_operational",
+					Rdpc:   "radar_data_processor_chain2",
+					Rdpr:   "reset_of_rdpc",
+					Ovlrdp: "overload",
+					Ovlxmt: "overload",
+					Msc:    "monitoring_system_disconnected",
+					Tsv:    "time_source_invalid",
+				},
+				Psr: &PsrSsrSysConf{
+					Ant:  "antenna_2",
+					ChAB: "channel_a_only_selected",
+					Ovl:  "overload",
+					Msc:  "monitoring_system_disconnected",
+				},
+				Ssr: &PsrSsrSysConf{
+					Ant:  "antenna_2",
+					ChAB: "channel_a_only_selected",
+					Ovl:  "overload",
+					Msc:  "monitoring_system_disconnected",
+				},
+				Mds: &MdsSysConf{
+					Ant:    "antenna_2",
+					ChAB:   "channel_a_only_selected",
+					Ovlsur: "overload",
+					Msc:    "monitoring_system_disconnected",
+					Scf:    "channel_b_in_use",
+					Dlf:    "channel_b_in_use",
+					Ovlscf: "overload",
+					Ovldlf: "overload",
+				},
+			},
+		},
+		{
+			Name:  "testcase 3: full subfield",
+			input: []byte{0x1c, 0x40, 0x40, 0x40, 0x00},
+			output: SysConf{
+				Com: nil,
+				Psr: &PsrSsrSysConf{
+					Ant:  "antenna_1",
+					ChAB: "channel_b_only_selected",
+					Ovl:  "no_overload",
+					Msc:  "monitoring_system_connected",
+				},
+				Ssr: &PsrSsrSysConf{
+					Ant:  "antenna_1",
+					ChAB: "channel_b_only_selected",
+					Ovl:  "no_overload",
+					Msc:  "monitoring_system_connected",
+				},
+				Mds: &MdsSysConf{
+					Ant:    "antenna_1",
+					ChAB:   "channel_b_only_selected",
+					Ovlsur: "no_overload",
+					Msc:    "monitoring_system_connected",
+					Scf:    "channel_a_in_use",
+					Dlf:    "channel_a_in_use",
+					Ovlscf: "no_overload",
+					Ovldlf: "no_overload",
+				},
+			},
+		},
+		{
+			Name:  "testcase 4: full subfield",
+			input: []byte{0x1c, 0x60, 0x60, 0x60, 0x00},
+			output: SysConf{
+				Com: nil,
+				Psr: &PsrSsrSysConf{
+					Ant:  "antenna_1",
+					ChAB: "channel_a_and_b_selected",
+					Ovl:  "no_overload",
+					Msc:  "monitoring_system_connected",
+				},
+				Ssr: &PsrSsrSysConf{
+					Ant:  "antenna_1",
+					ChAB: "channel_a_and_b_selected",
+					Ovl:  "no_overload",
+					Msc:  "monitoring_system_connected",
+				},
+				Mds: &MdsSysConf{
+					Ant:    "antenna_1",
+					ChAB:   "illegal_combination",
+					Ovlsur: "no_overload",
+					Msc:    "monitoring_system_connected",
+					Scf:    "channel_a_in_use",
+					Dlf:    "channel_a_in_use",
+					Ovlscf: "no_overload",
+					Ovldlf: "no_overload",
+				},
+			},
 		},
 	}
 
-	// Act
-	res, err := systemConfiguration(input)
+	for _, row := range dataset {
+		// Act
+		res := systemConfiguration(row.input)
 
-	// Assert
-	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
-	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
-	}
+		// Assert
+		in := reflect.ValueOf(res)
+		out := reflect.ValueOf(row.output)
+		typeOfS := in.Type()
 
-	if reflect.DeepEqual(res, output) == false {
-		t.Errorf("FAIL: %v; Expected: %v", res, output)
-	} else {
-		t.Logf("SUCCESS: %v; Expected: %v", res, output)
+		for i := 0; i < in.NumField(); i++ {
+			if reflect.DeepEqual(in.Field(i).Interface(), out.Field(i).Interface()) == false {
+				t.Errorf("FAIL: %s: %s - %v; Expected: %v", row.Name, typeOfS.Field(i).Name, in.Field(i).Interface(), out.Field(i).Interface())
+			} else {
+				t.Logf("SUCCESS: %s - %v; Expected: %v", typeOfS.Field(i).Name, in.Field(i).Interface(), out.Field(i).Interface())
+			}
+		}
 	}
 }
 

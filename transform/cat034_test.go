@@ -458,7 +458,7 @@ func TestCat034Model_ToJsonRecord(t *testing.T) {
 
 	uap034 := uap.Cat034V127
 	data, _ := goasterix.HexStringToByte(input)
-	rec := new(goasterix.Record)
+	rec := goasterix.NewRecord()
 	_, err := rec.Decode(data, uap034)
 
 	model := new(Cat034Model)

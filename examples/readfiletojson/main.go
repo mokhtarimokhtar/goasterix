@@ -27,6 +27,7 @@ func main() {
 		if dataB.Category == 48 {
 			for _, record := range dataB.Records {
 				catModel := new(transform.Cat048Model)
+				transform.WriteModel(catModel, record.Items)
 				catJson, _ := transform.WriteModelJSON(catModel, record.Items)
 				fmt.Println(string(catJson))
 			}

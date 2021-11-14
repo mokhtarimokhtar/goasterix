@@ -194,7 +194,7 @@ func TestDataBlockDecode(t *testing.T) {
 	for _, row := range dataSet {
 		// Arrange
 		data, _ := HexStringToByte(row.input)
-		dataB, _ := NewDataBlock()
+		dataB := NewDataBlock()
 
 		// Act
 		unRead, err := dataB.Decode(data)
@@ -270,7 +270,7 @@ func TestDataBlockDecode_ARTAS(t *testing.T) {
 	for _, row := range dataSet {
 		// Arrange
 		data, _ := HexStringToByte(row.input)
-		dataB, _ := NewDataBlock()
+		dataB := NewDataBlock()
 
 		// Act
 		unRead, err := dataB.Decode(data)

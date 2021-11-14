@@ -1,7 +1,4 @@
-// Package goasterix parses ASTERIX binary data Format,
-// (All Purpose Structured EUROCONTROL Surveillance Information Exchange)
-// For information about ASTERIX, see https://www.eurocontrol.int/asterix
-
+// Package goasterix parses ASTERIX binary data Format.
 package goasterix
 
 import (
@@ -38,7 +35,7 @@ func NewWrapperDataBlock() (*WrapperDataBlock, error) {
 func (w *WrapperDataBlock) Decode(data []byte) (unRead int, err error) {
 	offset := uint16(0)
 	for {
-		db, _ := NewDataBlock()
+		db := NewDataBlock()
 		unRead, err := db.Decode(data[offset:])
 		offset += db.Len
 		if err != nil {
@@ -62,12 +59,16 @@ type DataBlock struct {
 	Records  []*Record
 }
 
-func NewDataBlock() (*DataBlock, error) {
-	db := &DataBlock{}
-	return db, nil
+func NewDataBlock() *DataBlock {
+	return &DataBlock{}
 }
 
-func (db *DataBlock) Decode(data []byte) (unRead int, err error) {
+// Decode extracts an asterix data block: CAT + LEN + N * RECORD(S).
+// An asterix data block can contain a or more records.
+// It returns the number of bytes unRead and fills the DataBlock Struct(Category, Len, Records array) in byte.
+func (db *DataBlock) Decode(data []byte) (int, error) {
+	var unRead int
+	var err error
 	rb := bytes.NewReader(data)
 
 	// retrieve category field
@@ -110,7 +111,7 @@ func (db *DataBlock) Decode(data []byte) (unRead int, err error) {
 
 LoopRecords:
 	for {
-		rec, _ := NewRecord()
+		rec := NewRecord()
 		unRead, err := rec.Decode(tmp[offset:], uapSelected)
 		db.Records = append(db.Records, rec)
 		offset = lenData - unRead

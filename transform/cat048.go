@@ -326,7 +326,8 @@ func modeSIdentification(data [6]byte) (string, error) {
 		err = ErrCharUnknown
 	}
 
-	s = strings.TrimSpace(str1 + str2 + str3 + str4 + str5 + str6 + str7 + str8)
+	//s = strings.TrimSpace(str1 + str2 + str3 + str4 + str5 + str6 + str7 + str8)
+	s = str1 + str2 + str3 + str4 + str5 + str6 + str7 + str8
 
 	return s, err
 }

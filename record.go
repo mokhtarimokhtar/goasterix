@@ -18,11 +18,12 @@ var (
 type Record struct {
 	Fspec []byte
 	Items []uap.DataField
+	Cat   uint8
 }
 
-func NewRecord() (*Record, error) {
+func NewRecord() *Record {
 	r := &Record{}
-	return r, nil
+	return r
 }
 
 // Decode extracts a Record of asterix data block (only one record).
@@ -30,15 +31,16 @@ func NewRecord() (*Record, error) {
 // It returns the number of bytes unread and fills the Record Struct(Fspec, Items array) in byte.
 func (rec *Record) Decode(data []byte, stdUAP uap.StandardUAP) (unRead int, err error) {
 	items := stdUAP.Items
+	rec.Cat = stdUAP.Category
 	rb := bytes.NewReader(data)
 
-	rec.Fspec, err = FspecReader(rb, 1)
+	rec.Fspec, err = FspecReader(rb)
 	unRead = rb.Len()
 	if err != nil {
 		return unRead, err
 	}
 
-	frnIndex, _ := FspecIndex(rec.Fspec)
+	frnIndex := FspecIndex(rec.Fspec)
 	offset := uint8(0) // offset shifts the index for a conditional UAP
 	for _, frn := range frnIndex {
 		dataItem := items[frn-1-offset] // here the index corresponds to the FRN
@@ -137,7 +139,8 @@ func (rec *Record) Payload() (b []byte) {
 }
 
 // String returns a string(hex) representation of one asterix record (only existing items).
-func (rec *Record) String() (items []string) {
+func (rec *Record) String() []string {
+	var items []string
 	tmp := "FSPEC: " + hex.EncodeToString(rec.Fspec)
 	items = append(items, tmp)
 
@@ -148,17 +151,18 @@ func (rec *Record) String() (items []string) {
 	return items
 }
 
-// FspecReader returns a slice of FSPEC asterix data.
-// The step parameter defines the read jumps of the FX field.
-func FspecReader(reader io.Reader, step uint8) (fspec []byte, err error) {
+// FspecReader returns a slice of FSPEC data record asterix.
+func FspecReader(reader io.Reader) ([]byte, error) {
+	var fspec []byte
+	var err error
 	for {
-		tmp := make([]byte, step)
+		var tmp uint8
 		err = binary.Read(reader, binary.BigEndian, &tmp)
 		if err != nil {
 			return nil, err
 		}
-		fspec = append(fspec, tmp[0])
-		if tmp[0]&0x01 == 0 {
+		fspec = append(fspec, tmp)
+		if tmp&0x01 == 0 {
 			break
 		}
 	}
@@ -167,7 +171,9 @@ func FspecReader(reader io.Reader, step uint8) (fspec []byte, err error) {
 
 // FspecIndex returns an array of uint8 corresponding to number FRN(Field Reference Number of Items).
 // In other words, it converts a fspec bits to an array FRNs.
-func FspecIndex(fspec []byte) (frnIndex []uint8, err error) {
+// e.g. fspec = 1010 1010 => frnIndex = []uint8{1, 3, 5, 7}
+func FspecIndex(fspec []byte) []uint8 {
+	var frnIndex []uint8
 	for j, val := range fspec {
 		for i := 0; i < 7; i++ {
 			frn := 7*j + i + 1
@@ -177,20 +183,21 @@ func FspecIndex(fspec []byte) (frnIndex []uint8, err error) {
 			}
 		}
 	}
-	return frnIndex, nil
+	return frnIndex
 }
 
 // FixedDataFieldReader extracts a number(nb) of bytes(size) and returns a slice of bytes(data of item).
 // Fixed length Data Fields shall comprise a fixed number of octets.
-func FixedDataFieldReader(rb *bytes.Reader, size uint8) (item []byte, err error) {
-	for i := uint8(0); i < size; i++ {
-		var tmp uint8
-		err := binary.Read(rb, binary.BigEndian, &tmp)
-		if err != nil {
-			return nil, err
-		}
-		item = append(item, tmp)
+func FixedDataFieldReader(rb *bytes.Reader, size uint8) ([]byte, error) {
+	var item []byte
+	var err error
+	tmp := make([]byte, size)
+	err = binary.Read(rb, binary.BigEndian, &tmp)
+	if err != nil {
+		return nil, err
 	}
+	item = append(item, tmp...)
+
 	return item, err
 }
 
@@ -220,19 +227,19 @@ func ExtendedDataFieldReader(rb *bytes.Reader, size uint8) (item []byte, err err
 // Explicit length Data Fields shall start with a one-octet length indicator giving
 // the total field length in octets including the length indicator itself.
 func ExplicitDataFieldReader(rb *bytes.Reader) (item []byte, err error) {
-	l := make([]byte, 1)
+	var l uint8
 	err = binary.Read(rb, binary.BigEndian, &l)
 	if err != nil {
 		return nil, err
 	}
 
-	tmp := make([]byte, l[0]-1)
+	tmp := make([]byte, l-1)
 	err = binary.Read(rb, binary.BigEndian, &tmp)
 	if err != nil {
 		return nil, err
 	}
 
-	item = append(item, l[0])
+	item = append(item, l)
 	item = append(item, tmp...)
 	return item, err
 }
@@ -242,18 +249,18 @@ func ExplicitDataFieldReader(rb *bytes.Reader) (item []byte, err error) {
 // Repetitive Data Fields, being of a variable length, shall comprise a one-octet Field Repetition Indicator (REP)
 // signalling the presence of N consecutive sub-fields each of the same pre-determined length.
 func RepetitiveDataFieldReader(rb *bytes.Reader, size uint8) (item []byte, err error) {
-	rep := make([]byte, 1)
+	var rep uint8
 	err = binary.Read(rb, binary.BigEndian, &rep)
 	if err != nil {
 		return nil, err
 	}
 
-	tmp := make([]byte, rep[0]*size)
+	tmp := make([]byte, rep*size)
 	err = binary.Read(rb, binary.BigEndian, &tmp)
 	if err != nil {
 		return nil, err
 	}
-	item = append(item, rep[0])
+	item = append(item, rep)
 	item = append(item, tmp...)
 
 	return item, err
@@ -268,7 +275,7 @@ func RepetitiveDataFieldReader(rb *bytes.Reader, size uint8) (item []byte, err e
 func CompoundDataFieldReader(rb *bytes.Reader, subItem uap.Primary) (item []byte, err error) {
 	var primaries []byte
 	for {
-		tmp := make([]byte, 1)
+		var tmp [1]byte
 		err = binary.Read(rb, binary.BigEndian, &tmp)
 		if err != nil {
 			return nil, err

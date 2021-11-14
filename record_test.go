@@ -11,9 +11,9 @@ import (
 
 func TestRecord_Payload(t *testing.T) {
 	// Arrange
-	data, _ := HexStringToByte("ff df 02 93 19 37 8d 3d a2 05 6f 13 2d 0f ff 00 94 60 02 de 50 6f 84 4c c3 c3 51 23 31 00 17 01 3b 02 6c 00 0c 74 a7 40 20 a0")
+	data, _ := HexStringToByte("ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020a0")
 	nbOfBytes := 42
-	rec := new(Record)
+	rec := NewRecord()
 	_, _ = rec.Decode(data, uap.Cat048V127)
 
 	// Act
@@ -31,7 +31,7 @@ func TestRecord_String(t *testing.T) {
 	// Arrange
 	data, _ := HexStringToByte("ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020a0")
 	nbOfItems := 15
-	rec := new(Record)
+	rec := NewRecord()
 	_, _ = rec.Decode(data, uap.Cat048V127)
 
 	// Act
@@ -53,7 +53,7 @@ func TestFspecReader_Valid(t *testing.T) {
 	rb := bytes.NewReader(input)
 
 	// Act
-	fspec, err := FspecReader(rb, 1)
+	fspec, err := FspecReader(rb)
 
 	// Assert
 	if err != nil {
@@ -76,7 +76,7 @@ func TestFspecReader_Invalid(t *testing.T) {
 	rb := bytes.NewReader(input)
 
 	// Act
-	fspec, err := FspecReader(rb, 1)
+	fspec, err := FspecReader(rb)
 
 	// Assert
 	if err != io.EOF {
@@ -90,6 +90,43 @@ func TestFspecReader_Invalid(t *testing.T) {
 	} else {
 		t.Logf("SUCCESS: sp = % X; Expected: % X", fspec, output)
 	}
+}
+
+func TestFspecIndex(t *testing.T) {
+	type frnIndexTest struct {
+		input  []byte
+		output []uint8
+	}
+	// Arrange
+	dataSet := []frnIndexTest{
+		{input: []byte{0x80}, output: []uint8{1}},
+		{input: []byte{0x40}, output: []uint8{2}},
+		{input: []byte{0x20}, output: []uint8{3}},
+		{input: []byte{0x10}, output: []uint8{4}},
+		{input: []byte{0x08}, output: []uint8{5}},
+		{input: []byte{0x04}, output: []uint8{6}},
+		{input: []byte{0x02}, output: []uint8{7}},
+		{input: []byte{0x01}, output: []uint8{}},
+		{input: []byte{0x01, 0x80}, output: []uint8{8}},
+		{input: []byte{0xfe}, output: []uint8{1, 2, 3, 4, 5, 6, 7}},
+		{input: []byte{0xff}, output: []uint8{1, 2, 3, 4, 5, 6, 7}},
+		{input: []byte{0xaa}, output: []uint8{1, 3, 5, 7}},
+		{input: []byte{0x55}, output: []uint8{2, 4, 6}},
+		{input: []byte{}, output: []uint8{}},
+	}
+
+	for _, row := range dataSet {
+		// Act
+		frnIndex := FspecIndex(row.input)
+
+		// Assert
+		if bytes.Equal(frnIndex, row.output) == false {
+			t.Errorf("FAIL: % X; Expected: % X", frnIndex, row.output)
+		} else {
+			t.Logf("SUCCESS: % X; Expected: % X", frnIndex, row.output)
+		}
+	}
+
 }
 
 // DataFieldExplicit
@@ -334,10 +371,10 @@ func TestDataFieldFixedReader_Invalid(t *testing.T) {
 	item, err := FixedDataFieldReader(rb, nb)
 
 	// Assert
-	if err != io.EOF {
-		t.Errorf("FAIL: error: %v; Expected: %v", err, nil)
+	if err != io.ErrUnexpectedEOF {
+		t.Errorf("FAIL: error: %v; Expected: %v", err, io.ErrUnexpectedEOF)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+		t.Logf("SUCCESS: error: %v; Expected: %v", err, io.ErrUnexpectedEOF)
 	}
 	if item != nil {
 		t.Errorf("FAIL: item = %v; Expected: %v", item, nil)
@@ -347,17 +384,17 @@ func TestDataFieldFixedReader_Invalid(t *testing.T) {
 }
 
 // DataFieldCompound
-type CompoundDataFieldTest struct {
-	Name   string
-	input  string
-	output []byte
-	item   uap.Primary
-	err    error
-}
 
 func TestDataFieldCompoundReader(t *testing.T) {
 	// Setup
-	dataSet := []CompoundDataFieldTest{
+	type compoundDataFieldTest struct {
+		Name   string
+		input  string
+		output []byte
+		item   uap.Primary
+		err    error
+	}
+	dataSet := []compoundDataFieldTest{
 		{
 			Name: "Compound type: two primaries subitems and follow valid subitems",
 			input: "FF FE " +
@@ -449,7 +486,7 @@ func TestDataFieldCompoundReader(t *testing.T) {
 					8: {NameType: uap.Fixed, Size: 2},
 				},
 			},
-			err: io.EOF,
+			err: io.ErrUnexpectedEOF,
 		},
 		{
 			Name:   "Compound type: error secondary part bit 7",
@@ -460,7 +497,7 @@ func TestDataFieldCompoundReader(t *testing.T) {
 					7: {NameType: uap.Fixed, Size: 2},
 				},
 			},
-			err: io.EOF,
+			err: io.ErrUnexpectedEOF,
 		},
 		{
 			Name:   "Compound type: error secondary part bit 6",
@@ -472,7 +509,7 @@ func TestDataFieldCompoundReader(t *testing.T) {
 					6: {NameType: uap.Fixed, Size: 2},
 				},
 			},
-			err: io.EOF,
+			err: io.ErrUnexpectedEOF,
 		},
 		{
 			Name:   "Compound type: error secondary part bit 5",
@@ -484,7 +521,7 @@ func TestDataFieldCompoundReader(t *testing.T) {
 					5: {NameType: uap.Fixed, Size: 2},
 				},
 			},
-			err: io.EOF,
+			err: io.ErrUnexpectedEOF,
 		},
 		{
 			Name:   "Compound type: error secondary bit 4",
@@ -496,7 +533,7 @@ func TestDataFieldCompoundReader(t *testing.T) {
 					4: {NameType: uap.Fixed, Size: 2},
 				},
 			},
-			err: io.EOF,
+			err: io.ErrUnexpectedEOF,
 		},
 		{
 			Name:   "Compound type: error secondary bit 3",
@@ -507,7 +544,7 @@ func TestDataFieldCompoundReader(t *testing.T) {
 					3: {NameType: uap.Fixed, Size: 2},
 				},
 			},
-			err: io.EOF,
+			err: io.ErrUnexpectedEOF,
 		},
 		{
 			Name:   "Compound type: error secondary part bit 2",
@@ -519,7 +556,7 @@ func TestDataFieldCompoundReader(t *testing.T) {
 					2: {NameType: uap.Fixed, Size: 2},
 				},
 			},
-			err: io.EOF,
+			err: io.ErrUnexpectedEOF,
 		},
 	}
 
@@ -545,16 +582,15 @@ func TestDataFieldCompoundReader(t *testing.T) {
 	}
 }
 
-type SelectTypeFieldTest struct {
-	input  string
-	output []byte
-	item   uap.Subfield
-	err    error
-}
-
 func TestSelectTypeFieldReader(t *testing.T) {
+	type SelectTypeFieldTest struct {
+		input  string
+		output []byte
+		item   uap.Subfield
+		err    error
+	}
 	// Setup
-	dataSetDataFieldTests := []SelectTypeFieldTest{
+	dataSet := []SelectTypeFieldTest{
 		{
 			// Fixed
 			input:  "FF",
@@ -619,7 +655,7 @@ func TestSelectTypeFieldReader(t *testing.T) {
 			err:    ErrDataFieldUnknown,
 		},
 	}
-	for _, row := range dataSetDataFieldTests {
+	for _, row := range dataSet {
 		// Arrange
 		input, _ := HexStringToByte(row.input)
 		rb := bytes.NewReader(input)
@@ -804,16 +840,16 @@ func TestDataFieldExtendedReader_ValidSize3(t *testing.T) {
 /**
 Testing by record
 */
-type DataRecordTest struct {
-	input     string          // data test one record = fspec + items
-	uap       uap.StandardUAP // Items of category corresponding to data test input
-	nbOfItems int
-	err       error // error expected
-}
 
 func TestRecordDecode_NbOfItems(t *testing.T) {
 	// setup
-	dataSetRecordTests := []DataRecordTest{
+	type dataRecordTest struct {
+		input     string          // data test one record = fspec + items
+		uap       uap.StandardUAP // Items of category corresponding to data test input
+		nbOfItems int
+		err       error // error expected
+	}
+	dataSetRecordTests := []dataRecordTest{
 		{
 			input:     "f6083602429b7110940028200094008000",
 			uap:       uap.Cat034V127,
@@ -836,7 +872,7 @@ func TestRecordDecode_NbOfItems(t *testing.T) {
 			// 0xA0 last byte is removed
 			input:     "ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020",
 			uap:       uap.Cat048V127,
-			err:       io.EOF,
+			err:       io.ErrUnexpectedEOF,
 			nbOfItems: 13,
 		},
 		{
@@ -848,7 +884,7 @@ func TestRecordDecode_NbOfItems(t *testing.T) {
 		{
 			input:     "f0 0831 00 0a8abb2e 38",
 			uap:       uap.Cat001V12,
-			err:       io.EOF,
+			err:       io.ErrUnexpectedEOF,
 			nbOfItems: 3,
 		},
 		{
@@ -898,7 +934,7 @@ func TestRecordDecode_Empty(t *testing.T) {
 	var output []uap.DataField
 	uap048 := uap.Cat048V127
 	data, _ := HexStringToByte(input)
-	rec, _ := NewRecord()
+	rec := NewRecord()
 
 	// Act
 	unRead, err := rec.Decode(data, uap048)
@@ -936,7 +972,7 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 	}
 	uap4Test := uap.Cat4Test
 	data, _ := HexStringToByte(input)
-	rec, _ := NewRecord()
+	rec := NewRecord()
 
 	// Act
 	unRead, err := rec.Decode(data, uap4Test)
@@ -961,16 +997,15 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 	}
 }
 
-type DataCat4ErrTest struct {
-	input  string
-	output []uap.DataField
-	unRead int
-	err    error
-}
-
 func TestRecordDecode_Cat4TestError(t *testing.T) {
 	// Setup
-	dataSetTest := []DataCat4ErrTest{
+	type dataCat4ErrTest struct {
+		input  string
+		output []uap.DataField
+		unRead int
+		err    error
+	}
+	dataSetTest := []dataCat4ErrTest{
 		{
 			// ErrDataFieldUnknown
 			input:  "02 FFFF",
@@ -1012,7 +1047,7 @@ func TestRecordDecode_Cat4TestError(t *testing.T) {
 		// Arrange
 		uap4Test := uap.Cat4Test
 		data, _ := HexStringToByte(row.input)
-		rec, _ := NewRecord()
+		rec := NewRecord()
 
 		// Act
 		remaining, err := rec.Decode(data, uap4Test)

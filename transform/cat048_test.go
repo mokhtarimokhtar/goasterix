@@ -45,15 +45,9 @@ func TestCat048Model_RhoTheta(t *testing.T) {
 	output := PolarPosition{Rho: float64(0xFFFF) / 256, Theta: float64(0xFFFF) * 0.0055}
 
 	// Act
-	res, err := rhoTheta(input)
+	res := rhoTheta(input)
 
 	// Assert
-	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
-	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
-	}
-
 	if reflect.DeepEqual(res, output) == false {
 		t.Errorf("FAIL: %v; Expected: %v", res, output)
 	} else {

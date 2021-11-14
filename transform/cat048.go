@@ -109,7 +109,7 @@ func (data *Cat048Model) write(items []uap.DataField) {
 			// decode PolarPosition
 			var payload [4]byte
 			copy(payload[:], item.Payload[:])
-			tmp, _ := rhoTheta(payload)
+			tmp := rhoTheta(payload)
 			data.RhoTheta = &tmp
 		case 5:
 			// decode Mode3aVGL
@@ -186,10 +186,11 @@ func (data *Cat048Model) write(items []uap.DataField) {
 // rhoTheta returns a slice [Rho,Theta] of float64,
 // Rho NM (1 bit = 1/256 NM). Theta deg (1 bit = approx. 0.0055°)
 // Measured position of an aircraft in local polar co-ordinates.
-func rhoTheta(data [4]byte) (rt PolarPosition, err error) {
+func rhoTheta(data [4]byte) PolarPosition {
+	var rt PolarPosition
 	rt.Rho = float64(uint16(data[0])<<8+uint16(data[1])) / 256
 	rt.Theta = float64(uint16(data[2])<<8+uint16(data[3])) * 0.0055
-	return rt, nil
+	return rt
 }
 
 // mode3ACodeVGL returns codes VGL in order.

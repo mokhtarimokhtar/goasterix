@@ -66,7 +66,7 @@ type Spe struct {
 	C   uint8 `json:"c"`
 }
 
-type FLSTR struct {
+type Flstr struct {
 	Vc        string  `json:"vc"`
 	Gc        string  `json:"gc"`
 	NiveauVol float64 `json:"niveauVol"`
@@ -105,8 +105,8 @@ type Cat030STRModel struct {
 	Alis      *ModeA               `json:"alis,omitempty"`
 	Pos       *CartesianXYPosition `json:"pos,omitempty"`
 	Qual      uint8                `json:"qual,omitempty"`
-	Flpc      *FLSTR               `json:"flpc,omitempty"`
-	Flpm      *FLSTR               `json:"flpm,omitempty"`
+	Flpc      *Flstr               `json:"flpc,omitempty"`
+	Flpm      *Flstr               `json:"flpm,omitempty"`
 	Vit       *Vit                 `json:"vit,omitempty"`
 	Mov       *Mov                 `json:"mov,omitempty"`
 	Taux      float64              `json:"taux,omitempty"`
@@ -139,7 +139,7 @@ func (data *Cat030STRModel) write(items []uap.DataField) {
 			//Numéro de Piste STR
 			var payload [3]byte
 			copy(payload[:], item.Payload[:])
-			tmp, _ := num(payload)
+			tmp := num(payload)
 			data.Num = &tmp
 		case 4:
 			// HPTU returns a float64 in second (1 bit = 1/128 s)
@@ -164,7 +164,7 @@ func (data *Cat030STRModel) write(items []uap.DataField) {
 			// Position cartésienne calculée
 			var payload [4]byte
 			copy(payload[:], item.Payload[:])
-			tmp, _ := pos(payload)
+			tmp := pos(payload)
 			data.Pos = &tmp
 		case 8:
 			// QUAL returns an integer of track quality range = 0 to 7(best).
@@ -173,25 +173,25 @@ func (data *Cat030STRModel) write(items []uap.DataField) {
 		case 9:
 			var payload [2]byte
 			copy(payload[:], item.Payload[:])
-			tmp, _ := flp(payload)
+			tmp := flp(payload)
 			data.Flpc = &tmp
 		case 10:
 			// Niveau de vol mesuré de la piste
 			var payload [2]byte
 			copy(payload[:], item.Payload[:])
-			tmp, _ := flp(payload)
+			tmp := flp(payload)
 			data.Flpm = &tmp
 		case 11:
 			// VIT : Vitesse calculée dans le plan (coordonnées cartésiennes)
 			var payload [4]byte
 			copy(payload[:], item.Payload[:])
-			tmp, _ := vitCal(payload)
+			tmp := vitCal(payload)
 			data.Vit = &tmp
 		case 12:
 			// mov : Mode de vol, tendance verticale
 			var payload [1]byte
 			copy(payload[:], item.Payload[:])
-			tmp, _ := mov(payload)
+			tmp := mov(payload)
 			data.Mov = &tmp
 		case 13:
 			// Taux returns Rate of ascent / descent in float64 FL/min
@@ -228,7 +228,7 @@ func (data *Cat030STRModel) write(items []uap.DataField) {
 			// altic : Altitude calculée de la piste
 			var payload [2]byte
 			copy(payload[:], item.Payload[:])
-			tmp, _ := altic(payload)
+			tmp := altic(payload)
 			data.Altic = &tmp
 		case 23:
 			// ADRS : Adresse mode S
@@ -245,16 +245,18 @@ func (data *Cat030STRModel) write(items []uap.DataField) {
 // vitCal returns a slice [X,Y] of float64 NM/s.
 // Calculated track Velocity expressed in Cartesian coordinates.
 // Ref: 7.3.11 VIT : Vitesse calculée dans le plan (coordonnées cartésiennes)
-func vitCal(data [4]byte) (vit Vit, err error) {
+func vitCal(data [4]byte) Vit {
+	var vit Vit
 	vit.X = float64(int16(data[0])<<8+int16(data[1])) * 0.000061035
 	vit.Y = float64(int16(data[2])<<8+int16(data[3])) * 0.000061035
-	return vit, nil
+	return vit
 }
 
 // flp returns a integer (1 bit = 1/4 FL), range = -15 to 1500 FL
 // Flight Level into binary representation converted in a integer (16bits).
 // Ref: 7.3.10 FLPM : Niveau de vol mesuré de la piste
-func flp(data [2]byte) (flpm FLSTR, err error) {
+func flp(data [2]byte) Flstr {
+	var flpm Flstr
 	if data[0]&0x80 != 0 {
 		flpm.Vc = "code_not_validated"
 	} else {
@@ -267,21 +269,23 @@ func flp(data [2]byte) (flpm FLSTR, err error) {
 		flpm.Gc = "default"
 	}
 
-	tmp := uint16(data[0])<<8 + uint16(data[1])&0x3FFF
+	tmp := uint16(data[0])<<8 + uint16(data[1])
+	tmp = tmp & 0x3FFF
 	niveauVol := goasterix.TwoComplement16(13, tmp)
 	flpm.NiveauVol = float64(niveauVol) / 4 // divide by 4 is in 100's feet
 
-	return flpm, nil
+	return flpm
 }
 
 // pos returns a slice [X,Y] of float64 NM (1 bit = 1/64 NM),
 // range = - 512 NM .. 511.984 NM.
 // Calculated position of an aircraft expressed in Cartesian coordinates.
 // Ref: 7.3.7 POS : Position cartésienne calculée
-func pos(data [4]byte) (pos CartesianXYPosition, err error) {
+func pos(data [4]byte) CartesianXYPosition {
+	var pos CartesianXYPosition
 	pos.X = float64(int16(data[0])<<8+int16(data[1])) / 64
 	pos.Y = float64(int16(data[2])<<8+int16(data[3])) / 64
-	return pos, nil
+	return pos
 }
 
 // num returns a map
@@ -290,7 +294,8 @@ func pos(data [4]byte) (pos CartesianXYPosition, err error) {
 // NAP: Numéro du calculateur
 // ST: Statut du serveur
 // N/S: Mode du serveur.
-func num(data [3]byte) (num NumPiste, err error) {
+func num(data [3]byte) NumPiste {
+	var num NumPiste
 	num.Version = data[0] & 0xE0 >> 5
 	num.Nap = data[0] & 0x18 >> 3
 
@@ -314,7 +319,7 @@ func num(data [3]byte) (num NumPiste, err error) {
 	tmpPiste = tmpPiste & 0x1FFE >> 1
 	num.Numero = tmpPiste
 
-	return num, nil
+	return num
 }
 
 // pist return a map
@@ -485,8 +490,8 @@ func alis(data [2]byte) (alis ModeA, err error) {
 }
 
 // mov : Mode de vol, tendance verticale
-func mov(data [1]byte) (mov Mov, err error) {
-
+func mov(data [1]byte) Mov {
+	var mov Mov
 	tmpTrans := data[0] & 0xC0 >> 6
 	switch tmpTrans {
 	case 0:
@@ -523,7 +528,7 @@ func mov(data [1]byte) (mov Mov, err error) {
 		mov.Verti = "tendance_indeterminee"
 	}
 
-	return mov, nil
+	return mov
 }
 
 // spe : Marquage spécial (Special purpose)
@@ -566,8 +571,9 @@ func spe(data []byte) (spe Spe, err error) {
 
 // altic : Altitude calculée de la piste
 // jamais transmis (obsolete).
-func altic(data [2]byte) (altic Altic, err error) {
+func altic(data [2]byte) Altic {
+	var altic Altic
 	altic.QNC = int16(data[0] & 0x80 >> 7)
 	altic.Alt = int16(data[0])&0x007F<<8 + int16(data[1])&0x00FF
-	return altic, nil
+	return altic
 }

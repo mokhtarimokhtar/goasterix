@@ -158,7 +158,7 @@ func (data *Cat030STRModel) write(items []uap.DataField) {
 			// alis : Mode A lissé piste
 			var payload [2]byte
 			copy(payload[:], item.Payload[:])
-			tmp, _ := alis(payload)
+			tmp := alis(payload)
 			data.Alis = &tmp
 		case 7:
 			// Position cartésienne calculée
@@ -224,12 +224,13 @@ func (data *Cat030STRModel) write(items []uap.DataField) {
 		case 21:
 			// Tera Terrain d’arrivée (arrival)
 			data.Tera = string(item.Payload)
-		case 22:
-			// altic : Altitude calculée de la piste
-			var payload [2]byte
-			copy(payload[:], item.Payload[:])
-			tmp := altic(payload)
-			data.Altic = &tmp
+		//case 22:
+		// obsolete for this version
+		// altic : Altitude calculée de la piste
+		//var payload [2]byte
+		//copy(payload[:], item.Payload[:])
+		//tmp := altic(payload)
+		//data.Altic = &tmp
 		case 23:
 			// ADRS : Adresse mode S
 			data.Adrs = strings.ToUpper(hex.EncodeToString(item.Payload[:]))
@@ -464,7 +465,8 @@ func pist(data []byte) (piste Pist, err error) {
 
 // alis : Mode A lissé piste
 // Mode A : Ce champ correspond au code mode A lissé de la piste.
-func alis(data [2]byte) (alis ModeA, err error) {
+func alis(data [2]byte) ModeA {
+	var alis ModeA
 	if data[0]&0x80 != 0 {
 		alis.V = "code_invalide"
 	} else {
@@ -486,7 +488,7 @@ func alis(data [2]byte) (alis ModeA, err error) {
 	modeA, _ := strconv.ParseInt(tmpModeA, 10, 16)
 	alis.Code = uint16(modeA)
 
-	return alis, nil
+	return alis
 }
 
 // mov : Mode de vol, tendance verticale

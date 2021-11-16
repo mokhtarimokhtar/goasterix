@@ -1,8 +1,8 @@
 package uap
 
-// Cat048V127 User Application Profile
-// version 1.27
-var Cat062V116 = StandardUAP{
+// Cat062V119 User Application Profile
+// version 1.19
+var Cat062V119 = StandardUAP{
 	Name:     "cat062_1.19",
 	Category: 62,
 	Version:  1.19,

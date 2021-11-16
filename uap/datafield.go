@@ -57,8 +57,10 @@ type MetaField map[Bit]Subfield
 
 // Subfield describes the type of field and the size if necessary
 type Subfield struct {
-	NameType NameTypeField
-	Size     uint8
+	NameType    NameTypeField
+	Size        uint8
+	Item        string
+	Description string
 }
 
 type UAP struct {
@@ -80,4 +82,5 @@ var Profiles = map[uint8]StandardUAP{
 	48:  Cat048V127,
 	255: Cat255StrV51,
 	26:  Cat4Test, // Category for testing not exist
+	62:  Cat062V119,
 }

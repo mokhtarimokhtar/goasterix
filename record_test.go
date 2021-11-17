@@ -3,10 +3,11 @@ package goasterix
 import (
 	"bytes"
 	"fmt"
-	"github.com/mokhtarimokhtar/goasterix/uap"
 	"io"
 	"reflect"
 	"testing"
+
+	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
 func TestRecord_Payload(t *testing.T) {
@@ -1355,6 +1356,38 @@ func TestRecordDecode_CAT034(t *testing.T) {
 	}
 }
 
+func TestRecordDecode_CAT062(t *testing.T) {
+	// Arrange
+	input := "80 0836"
+	output := [][]byte{
+		{0x08, 0x36},
+	}
+	uap062 := uap.Cat062V119
+	data, _ := HexStringToByte(input)
+	rec := new(Record)
+
+	// Act
+	unRead, err := rec.Decode(data, uap062)
+
+	// Assert
+	if err != nil {
+		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+	} else {
+		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+	}
+	if unRead != 0 {
+		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
+	} else {
+		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
+	}
+	for i, item := range rec.Items {
+		if bytes.Equal(item.Payload, output[i]) == false {
+			t.Errorf("FAIL: %s = % X; Expected: % X", item.DataItem, item.Payload, output[i])
+		} else {
+			t.Logf("SUCCESS: %s = % X; Expected: % X", item.DataItem, item.Payload, output[i])
+		}
+	}
+}
 func TestRecordDecode_CAT255STR(t *testing.T) {
 	// Arrange
 	input := "e0 08 83 7dfd9c 58"

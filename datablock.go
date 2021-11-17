@@ -6,9 +6,10 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"errors"
-	"github.com/mokhtarimokhtar/goasterix/uap"
 	"math"
 	"strings"
+
+	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
 var (
@@ -51,7 +52,7 @@ func (w *WrapperDataBlock) Decode(data []byte) (unRead int, err error) {
 }
 
 // DataBlock
-// a DataBlock correspond to one (only) category and contains one or more Records.
+// a DataBlock corresponds to one (only) category and contains one or more Records.
 // DataBlock = CAT + LEN + [FSPEC + items...] + [...] + ...
 type DataBlock struct {
 	Category uint8

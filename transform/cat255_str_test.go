@@ -71,7 +71,7 @@ func TestCat255STRModel_SpeStpv(t *testing.T) {
 		},
 		{
 			TestCaseName: "testcase 2",
-			input: []byte{0x2b, 0xc0},
+			input:        []byte{0x2b, 0xc0},
 			output: PresenceSTPV{
 				Version: 1,
 				Nap:     1,
@@ -181,9 +181,9 @@ func TestCat255STRModel_Carte(t *testing.T) {
 
 		// Assert
 		if err != row.err {
-			t.Errorf("FAIL: %s - error = %v; Expected: %v", row.TestCaseName, err, row.err )
+			t.Errorf("FAIL: %s - error = %v; Expected: %v", row.TestCaseName, err, row.err)
 		} else {
-			t.Logf("SUCCESS: error: %v; Expected: %v", err, row.err )
+			t.Logf("SUCCESS: error: %v; Expected: %v", err, row.err)
 		}
 
 		if reflect.DeepEqual(res, row.output) == false {
@@ -204,7 +204,7 @@ func TestCat255STRModel_BiaisExtract(t *testing.T) {
 	dataSet := []dataTest{
 		{
 			TestCaseName: "testcase 1",
-			input:        []byte{0x01,
+			input: []byte{0x01,
 				0x08, 0x81,
 				0x18, 0xf0,
 				0x00, 0xff,
@@ -212,7 +212,7 @@ func TestCat255STRModel_BiaisExtract(t *testing.T) {
 				0x04, 0x00},
 			output: []BiaisRadar{
 				{
-					SacSic:        SourceIdentifier{
+					SacSic: SourceIdentifier{
 						Sac: 8,
 						Sic: 129,
 					},
@@ -237,5 +237,3 @@ func TestCat255STRModel_BiaisExtract(t *testing.T) {
 		}
 	}
 }
-
-

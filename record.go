@@ -56,7 +56,8 @@ func (rec *Record) Decode(data []byte, stdUAP uap.StandardUAP) (unRead int, err 
 			}
 
 		case uap.Extended:
-			tmp, err = ExtendedDataFieldReader(rb, dataItem.Type.Size)
+			//tmp, err = ExtendedDataFieldReader(rb, dataItem.Type.Size)
+			tmp, err = ExtendedDataFieldReader(rb, dataItem.Type.PrimarySize, dataItem.Type.SecondarySize)
 			if err != nil {
 				unRead = rb.Len()
 				return unRead, err
@@ -202,22 +203,32 @@ func FixedDataFieldReader(rb *bytes.Reader, size uint8) ([]byte, error) {
 }
 
 // ExtendedDataFieldReader extracts data item type Extended (FX: last bit = 1).
-// Size parameter defines the size of extended field.
+// primarySize parameter defines the Primary Subitem of extended field.
+// secondarySize parameter defines the Secondary Subitem of extended field.
 // Extended length Data Fields, being of a variable length, shall contain a primary part of predetermined length,
 // immediately followed by a number of secondary parts, each of predetermined length.
 // The presence of the next following secondary part shall be indicated by the setting to one of the
 // Least Significant Bit (LSB) of the last octet of the preceding part (either the primary part or a secondary part).
 // This bit which is reserved for that purpose is called the Field Extension Indicator (FX).
-func ExtendedDataFieldReader(rb *bytes.Reader, size uint8) (item []byte, err error) {
-	for {
-		tmp := make([]byte, size)
-		err = binary.Read(rb, binary.BigEndian, &tmp)
-		if err != nil {
-			return nil, err
-		}
-		item = append(item, tmp...)
-		if tmp[size-1]&0x01 == 0 {
-			break
+func ExtendedDataFieldReader(rb *bytes.Reader, primarySize uint8, secondarySize uint8) (item []byte, err error) {
+	tmp := make([]byte, primarySize)
+	err = binary.Read(rb, binary.BigEndian, &tmp)
+	if err != nil {
+		return nil, err
+	}
+	item = append(item, tmp...)
+
+	if tmp[primarySize-1]&0x01 != 0 {
+		for {
+			tmp := make([]byte, secondarySize)
+			err = binary.Read(rb, binary.BigEndian, &tmp)
+			if err != nil {
+				return nil, err
+			}
+			item = append(item, tmp...)
+			if tmp[secondarySize-1]&0x01 == 0 {
+				break
+			}
 		}
 	}
 	return item, err
@@ -357,7 +368,7 @@ func SelectTypeFieldReader(rb *bytes.Reader, sub uap.Subfield) (item []byte, err
 			return nil, err
 		}
 	case uap.Extended:
-		item, err = ExtendedDataFieldReader(rb, sub.Size)
+		item, err = ExtendedDataFieldReader(rb, sub.PrimarySize, sub.SecondarySize)
 		if err != nil {
 			return nil, err
 		}

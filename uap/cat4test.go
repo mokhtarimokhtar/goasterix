@@ -19,8 +19,9 @@ var Cat4Test = StandardUAP{
 			FRN:      2,
 			DataItem: "I026/002",
 			Type: TypeField{
-				NameType: Extended,
-				Size:     1,
+				NameType:      Extended,
+				PrimarySize:   1,
+				SecondarySize: 1,
 			},
 		},
 		{
@@ -32,7 +33,7 @@ var Cat4Test = StandardUAP{
 					MetaField{
 						8: {NameType: Fixed, Size: 1},
 						7: {NameType: Spare},
-						6: {NameType: Extended, Size: 1},
+						6: {NameType: Extended, PrimarySize: 1, SecondarySize: 1},
 						5: {NameType: Spare},
 						4: {NameType: Repetitive, Size: 2},
 						3: {NameType: Spare},

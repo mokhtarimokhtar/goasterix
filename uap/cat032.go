@@ -20,7 +20,13 @@ var Cat032StrV70 = StandardUAP{
 			FRN: 4, DataItem: "I032/070", Type: TypeField{NameType: Fixed, Size: 15},
 		},
 		{
-			FRN: 5, DataItem: "I032/080", Type: TypeField{NameType: Fixed, Size: 12}, //todo: add field extended
+			FRN:      5,
+			DataItem: "I032/080",
+			Type: TypeField{
+				NameType:      Extended,
+				PrimarySize:   12,
+				SecondarySize: 1,
+			},
 		},
 	},
 }

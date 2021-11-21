@@ -21,7 +21,13 @@ var Cat030StrV51 = StandardUAP{
 			FRN: 4, DataItem: "I030/020", Type: TypeField{NameType: Fixed, Size: 3},
 		},
 		{
-			FRN: 5, DataItem: "I030/080", Type: TypeField{NameType: Extended, Size: 1},
+			FRN:      5,
+			DataItem: "I030/080",
+			Type: TypeField{
+				NameType:      Extended,
+				PrimarySize:   1,
+				SecondarySize: 1,
+			},
 		},
 		{
 			FRN: 6, DataItem: "I030/060", Type: TypeField{NameType: Fixed, Size: 2},
@@ -51,8 +57,9 @@ var Cat030StrV51 = StandardUAP{
 			FRN:      14,
 			DataItem: "I030/SPE",
 			Type: TypeField{
-				NameType: Extended,
-				Size:     1,
+				NameType:      Extended,
+				PrimarySize:   1,
+				SecondarySize: 1,
 			},
 		},
 		{
@@ -128,8 +135,9 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/030",
 			Description: "SERVICE IDENTIFICATION",
 			Type: TypeField{
-				NameType: Extended,
-				Size:     1,
+				NameType:      Extended,
+				PrimarySize:   1,
+				SecondarySize: 1,
 			},
 		},
 		{
@@ -236,8 +244,9 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/080",
 			Description: "ARTAS TRACK STATUS",
 			Type: TypeField{
-				NameType: Extended,
-				Size:     1,
+				NameType:      Extended,
+				PrimarySize:   1,
+				SecondarySize: 1,
 			},
 		},
 		{
@@ -551,8 +560,9 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/050",
 			Description: "ARTAS TRACK NUMBER",
 			Type: TypeField{
-				NameType: Extended,
-				Size:     3,
+				NameType:      Extended,
+				PrimarySize:   3,
+				SecondarySize: 3,
 			},
 		},
 		{
@@ -622,8 +632,9 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/030",
 			Description: "SERVICE IDENTIFICATION",
 			Type: TypeField{
-				NameType: Extended,
-				Size:     1,
+				NameType:      Extended,
+				PrimarySize:   1,
+				SecondarySize: 1,
 			},
 		},
 		{
@@ -730,8 +741,9 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/080",
 			Description: "ARTAS TRACK STATUS",
 			Type: TypeField{
-				NameType: Extended,
-				Size:     1,
+				NameType:      Extended,
+				PrimarySize:   1,
+				SecondarySize: 1,
 			},
 		},
 		{
@@ -1044,8 +1056,9 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/050",
 			Description: "ARTAS TRACK NUMBER",
 			Type: TypeField{
-				NameType: Extended,
-				Size:     3,
+				NameType:      Extended,
+				PrimarySize:   3,
+				SecondarySize: 3,
 			},
 		},
 		{

@@ -18,8 +18,9 @@ var Cat001V12 = StandardUAP{
 			DataItem:    "I001/020",
 			Conditional: true,
 			Type: TypeField{
-				NameType: Extended,
-				Size:     1,
+				NameType:      Extended,
+				PrimarySize:   1,
+				SecondarySize: 1,
 			},
 		},
 	},
@@ -48,7 +49,13 @@ var Cat001TrackV12 = []DataField{
 		FRN: 9, DataItem: "I001/141", Type: TypeField{NameType: Fixed, Size: 2},
 	},
 	{
-		FRN: 10, DataItem: "I001/130", Type: TypeField{NameType: Extended, Size: 1},
+		FRN:      10,
+		DataItem: "I001/130",
+		Type: TypeField{
+			NameType:      Extended,
+			PrimarySize:   1,
+			SecondarySize: 1,
+		},
 	},
 	{
 		FRN: 11, DataItem: "I001/131", Type: TypeField{NameType: Fixed, Size: 1},
@@ -57,10 +64,22 @@ var Cat001TrackV12 = []DataField{
 		FRN: 12, DataItem: "I001/120", Type: TypeField{NameType: Fixed, Size: 1},
 	},
 	{
-		FRN: 13, DataItem: "I001/170", Type: TypeField{NameType: Extended, Size: 1},
+		FRN:      13,
+		DataItem: "I001/170",
+		Type: TypeField{
+			NameType:      Extended,
+			PrimarySize:   1,
+			SecondarySize: 1,
+		},
 	},
 	{
-		FRN: 14, DataItem: "I001/210", Type: TypeField{NameType: Extended, Size: 1},
+		FRN:      14,
+		DataItem: "I001/210",
+		Type: TypeField{
+			NameType:      Extended,
+			PrimarySize:   1,
+			SecondarySize: 1,
+		},
 	},
 	{
 		FRN: 15, DataItem: "I001/050", Type: TypeField{NameType: Fixed, Size: 2},
@@ -75,7 +94,13 @@ var Cat001TrackV12 = []DataField{
 		FRN: 18, DataItem: "I001/060", Type: TypeField{NameType: Fixed, Size: 2},
 	},
 	{
-		FRN: 19, DataItem: "I001/030", Type: TypeField{NameType: Extended, Size: 1},
+		FRN:      19,
+		DataItem: "I001/030",
+		Type: TypeField{
+			NameType:      Extended,
+			PrimarySize:   1,
+			SecondarySize: 1,
+		},
 	},
 	{
 		FRN: 20, DataItem: "SP-Data Item", Type: TypeField{NameType: SP},
@@ -99,7 +124,13 @@ var Cat001PlotV12 = []DataField{
 		FRN: 5, DataItem: "I001/090", Type: TypeField{NameType: Fixed, Size: 2},
 	},
 	{
-		FRN: 6, DataItem: "I001/130", Type: TypeField{NameType: Extended, Size: 1},
+		FRN:      6,
+		DataItem: "I001/130",
+		Type: TypeField{
+			NameType:      Extended,
+			PrimarySize:   1,
+			SecondarySize: 1,
+		},
 	},
 	{
 		FRN: 7, DataItem: "I001/141", Type: TypeField{NameType: Fixed, Size: 2},
@@ -123,7 +154,13 @@ var Cat001PlotV12 = []DataField{
 		FRN: 13, DataItem: "I001/060", Type: TypeField{NameType: Fixed, Size: 2},
 	},
 	{
-		FRN: 14, DataItem: "I001/030", Type: TypeField{NameType: Extended, Size: 1},
+		FRN:      14,
+		DataItem: "I001/030",
+		Type: TypeField{
+			NameType:      Extended,
+			PrimarySize:   1,
+			SecondarySize: 1,
+		},
 	},
 	{
 		FRN: 15, DataItem: "I001/150", Type: TypeField{NameType: Fixed, Size: 1},

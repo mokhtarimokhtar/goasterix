@@ -35,9 +35,11 @@ type DataField struct {
 }
 
 type TypeField struct {
-	NameType NameTypeField
-	Size     uint8
-	Primary  *Primary
+	NameType      NameTypeField
+	Size          uint8
+	PrimarySize   uint8
+	SecondarySize uint8
+	Primary       *Primary
 }
 
 // Bit is a bit number position
@@ -56,10 +58,12 @@ type MetaField map[Bit]Subfield
 
 // Subfield describes the type of field and the size if necessary
 type Subfield struct {
-	NameType    NameTypeField
-	Size        uint8
-	Item        string
-	Description string
+	NameType      NameTypeField
+	Size          uint8
+	PrimarySize   uint8
+	SecondarySize uint8
+	Item          string
+	Description   string
 }
 
 type UAP struct {

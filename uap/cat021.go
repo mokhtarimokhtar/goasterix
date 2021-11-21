@@ -20,8 +20,9 @@ var Cat021v10 = StandardUAP{
 			DataItem:    "I021/040",
 			Description: "Target Report Descriptor",
 			Type: TypeField{
-				NameType: Extended,
-				Size:     1,
+				NameType:      Extended,
+				PrimarySize:   1,
+				SecondarySize: 1,
 			},
 		},
 		{
@@ -155,8 +156,9 @@ var Cat021v10 = StandardUAP{
 			DataItem:    "I021/090",
 			Description: "Quality Indicators",
 			Type: TypeField{
-				NameType: Extended,
-				Size:     1,
+				NameType:      Extended,
+				PrimarySize:   1,
+				SecondarySize: 1,
 			},
 		},
 		{
@@ -355,8 +357,9 @@ var Cat021v10 = StandardUAP{
 			DataItem:    "I021/271",
 			Description: "Surface Capabilities and Characteristics",
 			Type: TypeField{
-				NameType: Extended,
-				Size:     1,
+				NameType:      Extended,
+				PrimarySize:   1,
+				SecondarySize: 1,
 			},
 		},
 		{

@@ -139,10 +139,11 @@ var Cat062V119 = StandardUAP{
 					},
 					MetaField{
 						8: {
-							NameType:    Extended,
-							Size:        1,
-							Item:        "TIS",
-							Description: "Trajectory Intent Status",
+							NameType:      Extended,
+							PrimarySize:   1,
+							SecondarySize: 1,
+							Item:          "TIS",
+							Description:   "Trajectory Intent Status",
 						},
 						7: {
 							NameType:    Repetitive,
@@ -287,8 +288,10 @@ var Cat062V119 = StandardUAP{
 			FRN:      13,
 			DataItem: "I062/080",
 			Type: TypeField{
-				NameType: Extended,
-				Size:     1}, //à verifier
+				NameType:      Extended,
+				PrimarySize:   1,
+				SecondarySize: 1,
+			},
 		},
 		{
 			FRN:         14,
@@ -793,8 +796,10 @@ var Cat062V119 = StandardUAP{
 			FRN:      22,
 			DataItem: "I062/270",
 			Type: TypeField{
-				NameType: Extended,
-				Size:     1},
+				NameType:      Extended,
+				PrimarySize:   1,
+				SecondarySize: 1,
+			},
 		},
 		{
 			FRN:      23,
@@ -869,8 +874,10 @@ var Cat062V119 = StandardUAP{
 			FRN:      26,
 			DataItem: "I062/510",
 			Type: TypeField{
-				NameType: Extended,
-				Size:     3}, // *** A discuter parce que : "Structure of the next extents : 3 Octets"
+				NameType:      Extended,
+				PrimarySize:   3,
+				SecondarySize: 3,
+			},
 		},
 		{
 			FRN:         27,

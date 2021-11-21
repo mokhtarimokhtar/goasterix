@@ -22,10 +22,22 @@ var Cat002V10 = StandardUAP{
 			FRN: 5, DataItem: "I002/041", Type: TypeField{NameType: Fixed, Size: 2},
 		},
 		{
-			FRN: 6, DataItem: "I002/050", Type: TypeField{NameType: Extended, Size: 1},
+			FRN:      6,
+			DataItem: "I002/050",
+			Type: TypeField{
+				NameType:      Extended,
+				PrimarySize:   1,
+				SecondarySize: 1,
+			},
 		},
 		{
-			FRN: 7, DataItem: "I002/060", Type: TypeField{NameType: Extended, Size: 1},
+			FRN:      7,
+			DataItem: "I002/060",
+			Type: TypeField{
+				NameType:      Extended,
+				PrimarySize:   1,
+				SecondarySize: 1,
+			},
 		},
 		{
 			FRN: 8, DataItem: "I002/070", Type: TypeField{NameType: Repetitive, Size: 2},
@@ -37,7 +49,13 @@ var Cat002V10 = StandardUAP{
 			FRN: 10, DataItem: "I002/090", Type: TypeField{NameType: Fixed, Size: 2},
 		},
 		{
-			FRN: 11, DataItem: "I002/080", Type: TypeField{NameType: Extended, Size: 1},
+			FRN:      11,
+			DataItem: "I002/080",
+			Type: TypeField{
+				NameType:      Extended,
+				PrimarySize:   1,
+				SecondarySize: 1,
+			},
 		},
 		{
 			FRN: 12, DataItem: "NA", Type: TypeField{NameType: Spare},

@@ -610,14 +610,14 @@ func TestSelectTypeFieldReader(t *testing.T) {
 			// Extended
 			input:  "FF FF FE",
 			output: []byte{0xFF, 0xFF, 0xFE},
-			item:   uap.Subfield{NameType: uap.Extended, Size: 1},
+			item:   uap.Subfield{NameType: uap.Extended, PrimarySize: 1, SecondarySize: 1},
 			err:    nil,
 		},
 		{
 			// Error EOF
 			input:  "",
 			output: []byte{},
-			item:   uap.Subfield{NameType: uap.Extended, Size: 1},
+			item:   uap.Subfield{NameType: uap.Extended, PrimarySize: 1, SecondarySize: 1},
 			err:    io.EOF,
 		},
 		{
@@ -773,68 +773,93 @@ func TestDataFieldRFSReader_Empty(t *testing.T) {
 	}
 }
 
-func TestDataFieldExtendedReader_Valid(t *testing.T) {
-	// Arrange
-	input, _ := HexStringToByte("01 03 07 09 0B 0D 0F 0E")
-	rb := bytes.NewReader(input)
-	output := []byte{0x01, 0x03, 0x07, 0x09, 0x0B, 0x0D, 0x0F, 0x0E}
-
-	// Act
-	item, err := ExtendedDataFieldReader(rb, 1)
-
-	// Assert
-	if err != nil {
-		t.Errorf("FAIL: error: %v; Expected: %v", err, nil)
-	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+func TestDataFieldExtendedReader(t *testing.T) {
+	// setup
+	type dataTest struct {
+		TestCaseName  string
+		input         string
+		primarySize   uint8
+		secondarySize uint8
+		output        []byte
+		err           error
 	}
-	if bytes.Equal(item, output) == false {
-		t.Errorf("FAIL: item = % X; Expected: % X", item, output)
-	} else {
-		t.Logf("SUCCESS: item = % X; Expected: % X", item, output)
+	dataSet := []dataTest{
+		{
+			TestCaseName:  "testcase 1",
+			input:         "01 03 07 09 0B 0D 0F 0E",
+			primarySize:   1,
+			secondarySize: 1,
+			output:        []byte{0x01, 0x03, 0x07, 0x09, 0x0B, 0x0D, 0x0F, 0x0E},
+			err:           nil,
+		},
+		{
+			TestCaseName:  "testcase 2",
+			input:         "FE",
+			primarySize:   1,
+			secondarySize: 1,
+			output:        []byte{0xFE},
+			err:           nil,
+		},
+		{
+			TestCaseName:  "testcase 3",
+			input:         "",
+			primarySize:   1,
+			secondarySize: 1,
+			output:        []byte{},
+			err:           io.EOF,
+		},
+		{
+			TestCaseName:  "testcase 4",
+			input:         "FF",
+			primarySize:   1,
+			secondarySize: 1,
+			output:        []byte{},
+			err:           io.EOF,
+		},
+		{
+			TestCaseName:  "testcase 5",
+			input:         "FF",
+			primarySize:   2,
+			secondarySize: 1,
+			output:        []byte{},
+			err:           io.ErrUnexpectedEOF,
+		},
+		{
+			TestCaseName:  "testcase 6",
+			input:         "0001 000001 FFFFFE",
+			primarySize:   2,
+			secondarySize: 3,
+			output:        []byte{0x00, 0x01, 0x00, 0x00, 0x01, 0xFF, 0xFF, 0xFE},
+			err:           nil,
+		},
+		{
+			TestCaseName:  "testcase 7",
+			input:         "0001 000001 FFFF",
+			primarySize:   2,
+			secondarySize: 3,
+			output:        []byte{},
+			err:           io.ErrUnexpectedEOF,
+		},
 	}
-}
+	for _, row := range dataSet {
+		// Arrange
+		input, _ := HexStringToByte(row.input)
+		rb := bytes.NewReader(input)
 
-func TestDataFieldExtendedReader_Vnvalid(t *testing.T) {
-	// Arrange
-	input, _ := HexStringToByte("")
-	rb := bytes.NewReader(input)
+		// Act
+		item, err := ExtendedDataFieldReader(rb, row.primarySize, row.secondarySize)
 
-	// Act
-	item, err := ExtendedDataFieldReader(rb, 1)
-
-	// Assert
-	if err != io.EOF {
-		t.Errorf("FAIL: error: %v; Expected: %v", err, nil)
-	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
-	}
-	if item != nil {
-		t.Errorf("FAIL: item = %v; Expected: %v", item, nil)
-	} else {
-		t.Logf("SUCCESS: item = %v; Expected: %v", item, nil)
-	}
-}
-
-func TestDataFieldExtendedReader_ValidSize3(t *testing.T) {
-	// Arrange
-	input, _ := HexStringToByte("FFFFFE")
-	rb := bytes.NewReader(input)
-	output := []byte{0xFF, 0xFF, 0xFE}
-
-	// Act
-	item, err := ExtendedDataFieldReader(rb, 3)
-
-	// Assert
-	if err != nil {
-		t.Errorf("FAIL: error: %v; Expected: %v", err, nil)
-	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
-	}
-	if bytes.Equal(item, output) == false {
-		t.Errorf("FAIL: item = % X; Expected: % X", item, output)
-	} else {
-		t.Logf("SUCCESS: item = % X; Expected: % X", item, output)
+		// Assert
+		if err != row.err {
+			t.Errorf("FAIL: %s - error: %v; Expected: %v", row.TestCaseName, err, row.err)
+		} else {
+			t.Logf("SUCCESS: error: %v; Expected: %v", err, row.err)
+		}
+		if bytes.Equal(item, row.output) == false {
+			t.Errorf("FAIL: %s - item = % X; Expected: % X", row.TestCaseName, item, row.output)
+		} else {
+			t.Logf("SUCCESS: item = % X; Expected: % X", item, row.output)
+		}
 	}
 }
 
@@ -1407,6 +1432,7 @@ func TestRecordDecode_CAT062(t *testing.T) {
 		}
 	}
 }
+
 func TestRecordDecode_CAT255STR(t *testing.T) {
 	// Arrange
 	input := "e0 08 83 7dfd9c 58"

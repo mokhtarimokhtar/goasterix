@@ -27,8 +27,9 @@ var Cat048V127 = StandardUAP{
 			FRN:      3,
 			DataItem: "I048/020",
 			Type: TypeField{
-				NameType: Extended,
-				Size:     1,
+				NameType:      Extended,
+				PrimarySize:   1,
+				SecondarySize: 1,
 			},
 		},
 		{
@@ -93,13 +94,25 @@ var Cat048V127 = StandardUAP{
 			FRN: 13, DataItem: "I048/200", Type: TypeField{NameType: Fixed, Size: 4},
 		},
 		{
-			FRN: 14, DataItem: "I048/170", Type: TypeField{NameType: Extended, Size: 1},
+			FRN:      14,
+			DataItem: "I048/170",
+			Type: TypeField{
+				NameType:      Extended,
+				PrimarySize:   1,
+				SecondarySize: 1,
+			},
 		},
 		{
 			FRN: 15, DataItem: "I048/210", Type: TypeField{NameType: Fixed, Size: 4},
 		},
 		{
-			FRN: 16, DataItem: "I048/030", Type: TypeField{NameType: Extended, Size: 1},
+			FRN:      16,
+			DataItem: "I048/030",
+			Type: TypeField{
+				NameType:      Extended,
+				PrimarySize:   1,
+				SecondarySize: 1,
+			},
 		},
 		{
 			FRN: 17, DataItem: "I048/080", Type: TypeField{NameType: Fixed, Size: 2},

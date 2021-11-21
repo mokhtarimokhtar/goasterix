@@ -21,7 +21,7 @@ func main() {
 	}
 
 	// change User Application Profile STR by UAP ARTAS V7.0
-	uap.Profiles[30] = uap.Cat030ArtasV62
+	uap.DefaultProfiles[30] = uap.Cat030ArtasV62
 
 	for _, data := range dataSet {
 		w, _ := goasterix.NewWrapperDataBlock()

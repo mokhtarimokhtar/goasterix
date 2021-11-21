@@ -37,7 +37,7 @@ type DataField struct {
 type TypeField struct {
 	NameType NameTypeField
 	Size     uint8
-	Primary *Primary
+	Primary  *Primary
 }
 
 // Bit is a bit number position
@@ -70,8 +70,8 @@ type UAP struct {
 type Category uint8
 type Version float32
 
-// Profiles contains the defaults User Application Profiles version.
-var Profiles = map[uint8]StandardUAP{
+// DefaultProfiles contains the defaults User Application Profiles version.
+var DefaultProfiles = map[uint8]StandardUAP{
 	1:   Cat001V12,
 	2:   Cat002V10,
 	21:  Cat021v10,
@@ -80,6 +80,7 @@ var Profiles = map[uint8]StandardUAP{
 	34:  Cat034V127,
 	48:  Cat048V127,
 	255: Cat255StrV51,
-	26:  Cat4Test, // Category for testing not exist
 	62:  Cat062V119,
+	// Category for testing not exist
+	26: Cat4Test,
 }

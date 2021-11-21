@@ -104,7 +104,7 @@ func (db *DataBlock) Decode(data []byte) (int, error) {
 	lenData := len(tmp)
 
 	// selection of the appropriate UAP
-	uapSelected, found := uap.Profiles[db.Category]
+	uapSelected, found := uap.DefaultProfiles[db.Category]
 	if !found {
 		err = ErrCategoryUnknown
 		return unRead, err

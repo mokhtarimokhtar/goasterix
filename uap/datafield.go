@@ -37,7 +37,6 @@ type DataField struct {
 type TypeField struct {
 	NameType NameTypeField
 	Size     uint8
-	//Meta     MetaField
 	Primary *Primary
 }
 

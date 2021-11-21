@@ -152,7 +152,7 @@ func (data *Cat030STRModel) write(items []uap.DataField) {
 			data.Hptu, _ = timeOfDay(payload)
 		case 5:
 			// Etat piste
-			tmp, _ := pist(item.Payload)
+			tmp := pist(item.Payload)
 			data.Pist = &tmp
 		case 6:
 			// alis : Mode A lissé piste
@@ -199,7 +199,7 @@ func (data *Cat030STRModel) write(items []uap.DataField) {
 			data.Taux = float64(int16(item.Payload[0])<<8+int16(item.Payload[1])) * 5.859375
 		case 14:
 			// spe : Marquage spécial (Special purpose)
-			tmp, _ := spe(item.Payload)
+			tmp := spe(item.Payload)
 			data.Spe = &tmp
 		case 15:
 			// RAD : Numéro de radar
@@ -325,7 +325,8 @@ func num(data [3]byte) NumPiste {
 
 // pist return a map
 // Etat piste
-func pist(data []byte) (piste Pist, err error) {
+func pist(data []byte) Pist {
+	var piste Pist
 
 	if data[0]&0x80 != 0 {
 		piste.Liv = "simule_ou_plot_test"
@@ -366,9 +367,6 @@ func pist(data []byte) (piste Pist, err error) {
 		piste.Type = "undefined"
 	case 7:
 		piste.Type = "piste_en_manque"
-	default:
-		piste.Type = "unknowm"
-		err = ErrPistTypeUnknown
 	}
 
 	if data[0]&0x01 != 0 {
@@ -393,9 +391,6 @@ func pist(data []byte) (piste Pist, err error) {
 			piste.Slr = "coordonnees_projetees_niveau_forfaitaire"
 		case 3:
 			piste.Slr = "coordonnees_rabattues"
-		default:
-			piste.Slr = "unknowm"
-			err = ErrPistSlrUnknown
 		}
 
 		cor := data[1] & 0x0E >> 1
@@ -416,9 +411,6 @@ func pist(data []byte) (piste Pist, err error) {
 			piste.Cor = "undefined"
 		case 7:
 			piste.Cor = "piste_non_correlee_plan_vol"
-		default:
-			piste.Cor = "unknowm"
-			err = ErrPistCorUnknown
 		}
 
 		if data[1]&0x01 != 0 {
@@ -432,9 +424,6 @@ func pist(data []byte) (piste Pist, err error) {
 				piste.Ds1ds2 = "panne_radio_code_7600"
 			case 3:
 				piste.Ds1ds2 = "detresse_code_7700"
-			default:
-				piste.Ds1ds2 = "unknowm"
-				err = ErrPistDs1ds2Unknown
 			}
 
 			if data[2]&0x20 != 0 {
@@ -460,7 +449,7 @@ func pist(data []byte) (piste Pist, err error) {
 		}
 	}
 
-	return piste, err
+	return piste
 }
 
 // alis : Mode A lissé piste
@@ -534,7 +523,8 @@ func mov(data [1]byte) Mov {
 }
 
 // spe : Marquage spécial (Special purpose)
-func spe(data []byte) (spe Spe, err error) {
+func spe(data []byte) Spe {
+	var spe Spe
 	spe.SY = data[0] & 0xF8 >> 3
 	spe.M = data[0] & 0x04 >> 2
 	spe.S = data[0] & 0x02 >> 1
@@ -568,7 +558,7 @@ func spe(data []byte) (spe Spe, err error) {
 			}
 		}
 	}
-	return spe, nil
+	return spe
 }
 
 // altic : Altitude calculée de la piste

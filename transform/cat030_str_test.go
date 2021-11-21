@@ -197,6 +197,69 @@ func TestCat030STRModel_Num(t *testing.T) {
 	}
 }
 
+func TestCat030STRModel_Pist(t *testing.T) {
+	// setup
+	type dataTest struct {
+		TestCaseName string
+		input        []byte
+		output       Pist
+	}
+	dataset := []dataTest{
+		{
+			TestCaseName: "testcase 1",
+			input:        []byte{0x01, 0x01, 0x01},
+			output: Pist{
+				Liv:    "trafic_reel",
+				Cnf:    "piste_confirmee",
+				Man:    "defaut",
+				Tva:    "defaut",
+				Type:   "piste_association_multiple_primaire_secondaire",
+				Mort:   "defaut",
+				Cre:    "defaut",
+				Slr:    "coordonnees_projetees_niveau_calcule",
+				Cor:    "piste_correlation_plan_vol_confirmee",
+				Ds1ds2: "defaut",
+				For:    "defaut",
+				Ama:    "piste_amalgamee",
+				Spi:    "defaut",
+				Me:     "defaut",
+			},
+		},
+		{
+			TestCaseName: "testcase 2",
+			input:        []byte{0xf3, 0xd3, 0x7c},
+			output: Pist{
+				Liv:    "simule_ou_plot_test",
+				Cnf:    "piste_initialisation",
+				Man:    "piste_virage",
+				Tva:    "piste_pas_niveau_vol_valide",
+				Type:   "piste_association_primaire_pure",
+				Mort:   "mort_de_piste",
+				Cre:    "creation_de_piste",
+				Slr:    "coordonnees_projetees_niveau_mesure",
+				Cor:    "piste_correlation_plan_vol_associee",
+				Ds1ds2: "detournement_code_75000",
+				For:    "vol_en_formation",
+				Ama:    "piste_non_amalgamee",
+				Spi:    "special_pulse_ident",
+				Me:     "detresse_militaire",
+			},
+		},
+	}
+
+	for _, row := range dataset {
+		// Act
+		res := pist(row.input)
+
+		// Assert
+		if reflect.DeepEqual(res, row.output) == false {
+			t.Errorf("FAIL: %s - %v; Expected: %v", row.TestCaseName, res, row.output)
+		} else {
+			t.Logf("SUCCESS: %v; Expected: %v", res, row.output)
+		}
+	}
+}
+
 func TestCat030STRModel_Alis(t *testing.T) {
 	// setup
 	type dataTest struct {
@@ -293,6 +356,89 @@ func TestCat030STRModel_Mov(t *testing.T) {
 		// Assert
 		if reflect.DeepEqual(res, row.output) == false {
 			t.Errorf("FAIL: %v; Expected: %v", res, row.output)
+		} else {
+			t.Logf("SUCCESS: %v; Expected: %v", res, row.output)
+		}
+	}
+}
+
+func TestCat030STRModel_Spe(t *testing.T) {
+	// setup
+	type dataTest struct {
+		TestCaseName string
+		input        []byte
+		output       Spe
+	}
+	dataset := []dataTest{
+		{
+			TestCaseName: "testcase 1",
+			input:        []byte{0x00, 0x00, 0x00, 0x00},
+			output: Spe{
+				SY:  0,
+				M:   0,
+				S:   0,
+				O1:  0,
+				O2:  0,
+				O3:  0,
+				O4:  0,
+				O5:  0,
+				O6:  0,
+				O7:  0,
+				O8:  0,
+				O9:  0,
+				O10: 0,
+				O11: 0,
+				O12: 0,
+				O13: 0,
+				O14: 0,
+				O15: 0,
+				O16: 0,
+				O17: 0,
+				O18: 0,
+				O19: 0,
+				R:   0,
+				C:   0,
+			},
+		},
+		{
+			TestCaseName: "testcase 2",
+			input:        []byte{0x7f, 0xff, 0xff, 0xff},
+			output: Spe{
+				SY:  15,
+				M:   1,
+				S:   1,
+				O1:  1,
+				O2:  1,
+				O3:  1,
+				O4:  1,
+				O5:  1,
+				O6:  1,
+				O7:  1,
+				O8:  1,
+				O9:  1,
+				O10: 1,
+				O11: 1,
+				O12: 1,
+				O13: 1,
+				O14: 1,
+				O15: 1,
+				O16: 1,
+				O17: 1,
+				O18: 1,
+				O19: 1,
+				R:   1,
+				C:   1,
+			},
+		},
+	}
+
+	for _, row := range dataset {
+		// Act
+		res := spe(row.input)
+
+		// Assert
+		if reflect.DeepEqual(res, row.output) == false {
+			t.Errorf("FAIL: %s - %v; Expected: %v", row.TestCaseName, res, row.output)
 		} else {
 			t.Logf("SUCCESS: %v; Expected: %v", res, row.output)
 		}

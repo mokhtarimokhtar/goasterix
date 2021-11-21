@@ -59,13 +59,13 @@ func (data *Cat255STRModel) write(items []uap.DataField) {
 			data.Hem, _ = timeOfDay(payload)
 		case 3:
 			// SPE : Présence STR-STPV
-			tmp, _ := speStpv(item.Payload)
+			tmp := speStpv(item.Payload)
 			data.Spe = &tmp
 		case 4:
 			// NIVC : Niveaux optionnels assignés à la carte dynamique
 			var payload [4]byte
 			copy(payload[:], item.Payload[:])
-			tmp, _ := nivCarte(payload)
+			tmp := nivCarte(payload)
 			data.Nivc = &tmp
 		case 5:
 			// TXTC : Texte optionnel de la carte dynamique
@@ -78,16 +78,17 @@ func (data *Cat255STRModel) write(items []uap.DataField) {
 			data.Cart = &tmp
 		case 7:
 			// BIAIS : Valeurs des biais courants radars
-			data.Biais, _ = biaisExtract(item.Payload)
+			data.Biais = biaisExtract(item.Payload)
 		}
 	}
 }
 
-func speStpv(data []byte) (spe PresenceSTPV, err error) {
+func speStpv(data []byte) PresenceSTPV {
+	var spe PresenceSTPV
 	spe.Version = data[0] & 0xE0 >> 5
 	spe.Nap = data[0] & 0x18 >> 3
 
-	tmpNs := data[0] & 0x06
+	tmpNs := data[0] & 0x06 >> 1
 	switch tmpNs {
 	case 0:
 		spe.NS = "principal"
@@ -109,16 +110,19 @@ func speStpv(data []byte) (spe PresenceSTPV, err error) {
 		}
 	}
 
-	return spe, nil
+	return spe
 }
 
-func nivCarte(data [4]byte) (nivc NivC, err error) {
+func nivCarte(data [4]byte) NivC {
+	var nivc NivC
 	nivc.NivInf = int16(data[0])<<8 + int16(data[1])
 	nivc.NivSup = int16(data[2])<<8 + int16(data[3])
-	return nivc, nil
+	return nivc
 }
 
-func carte(data [9]byte) (cart CarteActive, err error) {
+func carte(data [9]byte) (CarteActive, error) {
+	var cart CarteActive
+	var err error
 	cart.Nom = string(data[:8])
 	tmpOrd := data[8] & 0xE0 >> 5
 	switch tmpOrd {
@@ -133,7 +137,8 @@ func carte(data [9]byte) (cart CarteActive, err error) {
 	return cart, err
 }
 
-func biaisExtract(data []byte) (biais []BiaisRadar, err error) {
+func biaisExtract(data []byte) []BiaisRadar {
+	var biais []BiaisRadar
 	n := int(data[0])
 	for i := 0; i < n; i++ {
 		b := BiaisRadar{}
@@ -143,8 +148,8 @@ func biaisExtract(data []byte) (biais []BiaisRadar, err error) {
 		b.GainDistance = float64(uint16(data[i+3])<<8+uint16(data[i+4])) / 6384
 		b.BiaisDistance = float64(int16(data[i+5])<<8 + int16(data[i+6]))
 		b.BiaisAzimut = float64(int16(data[i+7])<<8+int16(data[i+8])) * 0.0055
-		b.BiaisDatation = float64(int16(data[i+8])<<8+int16(data[i+9])) / 1024
+		b.BiaisDatation = float64(int16(data[i+9])<<8+int16(data[i+10])) / 1024
 		biais = append(biais, b)
 	}
-	return biais, nil
+	return biais
 }

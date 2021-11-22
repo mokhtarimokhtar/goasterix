@@ -74,3 +74,70 @@ func TestModelTimeOfDay(t *testing.T) {
 		t.Logf("SUCCESS: %v; Expected: %v", res, output)
 	}
 }
+
+func TestModeSIdentification(t *testing.T) {
+	// setup
+	type dataTest struct {
+		TestCaseName string
+		input        [6]byte
+		output       string
+		err          error
+	}
+	dataset := []dataTest{
+		{
+			TestCaseName: "valid chars",
+			input:        [6]byte{0x04, 0x64, 0xB1, 0xCB, 0x3D, 0x20},
+			output:       "AFR1234 ",
+			err:          nil,
+		},
+		{
+			TestCaseName: "chars 6 unknown",
+			input:        [6]byte{0x04, 0x64, 0xB1, 0xCB, 0x3D, 0x3A},
+			output:       "AFR1234",
+			err:          ErrCharUnknown,
+		},
+		{
+			TestCaseName: "chars unknown",
+			input:        [6]byte{},
+			output:       "",
+			err:          ErrCharUnknown,
+		},
+	}
+
+	for _, row := range dataset {
+		// Arrange
+		// Act
+		s, err := modeSIdentification(row.input)
+
+		// Assert
+		if err != row.err {
+			//if errors.Is(err, row.err) {
+			t.Errorf("FAIL: error: %v; Expected: %v", err, row.err)
+		} else {
+			t.Logf("SUCCESS: error: %v; Expected: %v", err, row.err)
+		}
+
+		if s != row.output {
+			t.Errorf("FAIL: s = %s; Expected: %s", s, row.output)
+		} else {
+			t.Logf("SUCCESS: s = %s; Expected: %s", s, row.output)
+		}
+	}
+}
+
+func TestTrackNumber(t *testing.T) {
+	// Arrange
+	input := [2]byte{0x0F, 0xFF}
+	output := uint16(4095)
+
+	// Act
+	res := trackNumber(input)
+
+	// Assert
+	if reflect.DeepEqual(res, output) == false {
+		t.Errorf("FAIL: %v; Expected: %v", res, output)
+	} else {
+		t.Logf("SUCCESS: %v; Expected: %v", res, output)
+	}
+
+}

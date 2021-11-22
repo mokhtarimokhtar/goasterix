@@ -602,10 +602,10 @@ func position3DofDataSource(data [8]byte) Pos3D {
 	pos.Height = uint16(data[0])<<8 + uint16(data[1])
 
 	tmpLatitude := uint32(data[2])<<16 + uint32(data[3])<<8 + uint32(data[4])
-	pos.Latitude = float32(goasterix.TwoComplement32(23, tmpLatitude)) * 0.000021458
+	pos.Latitude = float32(goasterix.TwoComplement32(24, tmpLatitude)) * 0.000021458
 
 	tmpLongitude := uint32(data[5])<<16 + uint32(data[6])<<8 + uint32(data[7])
-	pos.Longitude = float32(goasterix.TwoComplement32(23, tmpLongitude)) * 0.000021458
+	pos.Longitude = float32(goasterix.TwoComplement32(24, tmpLongitude)) * 0.000021458
 
 	return pos
 }

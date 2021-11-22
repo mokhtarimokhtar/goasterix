@@ -143,7 +143,7 @@ func (data *Cat048Model) write(items []uap.DataField) {
 			// decode trackNumber
 			var payload [2]byte
 			copy(payload[:], item.Payload[:])
-			data.TrackNumber, _ = trackNumber(payload)
+			data.TrackNumber = trackNumber(payload)
 		case 12:
 			// decode Cartesian Coordinates
 			var payload [4]byte
@@ -224,7 +224,7 @@ func mode3ACodeVGL(data [2]byte) Mode3A {
 	return mode3A
 }
 
-// flightLevel returns an integer (1 bit = 1/4 FL).
+// flightLevel returns a float64 (1 bit = 1/4 FL).
 // Flight Level into binary representation converted in an integer (16bits).
 func flightLevel(data [2]byte) FL {
 	var fl FL
@@ -289,50 +289,6 @@ func radarPlotCharacteristics(data []byte) PlotCharacteristics {
 	return rpc
 }
 
-// modeSIdentification returns a string.
-// It converts each char into ASCII char.
-// Aircraft identification (in 8 characters) obtained from an aircraft equipped with a Mode S transponder.
-// Ref: 5.2.24 Records Item I048/240, Aircraft Identification.
-// The CALL SIGN shall consist of eight characters, which must contain only decimal digits 0-9, the capital letters A-Z,
-// and – as trailing pad characters only – the “space” character.
-func modeSIdentification(data [6]byte) (string, error) {
-	var s string
-	var err error
-
-	ch1 := data[0] & 0xFC >> 2
-	str1, found1 := TableIA5[ch1]
-
-	ch2 := data[0]&0x03<<4 + data[1]&0xF0>>4
-	str2, found2 := TableIA5[ch2]
-
-	ch3 := data[1]&0x0F<<2 + data[2]&0xC0>>6
-	str3, found3 := TableIA5[ch3]
-
-	ch4 := data[2] & 0x3F
-	str4, found4 := TableIA5[ch4]
-
-	ch5 := data[3] & 0xFC >> 2
-	str5, found5 := TableIA5[ch5]
-
-	ch6 := data[3]&0x03<<4 + data[4]&0xF0>>4
-	str6, found6 := TableIA5[ch6]
-
-	ch7 := data[4]&0x0F<<2 + data[5]&0xC0>>6
-	str7, found7 := TableIA5[ch7]
-
-	ch8 := data[5] & 0x3F
-	str8, found8 := TableIA5[ch8]
-
-	if !found1 || !found2 || !found3 || !found4 || !found5 || !found6 || !found7 || !found8 {
-		err = ErrCharUnknown
-	}
-
-	//s = strings.TrimSpace(str1 + str2 + str3 + str4 + str5 + str6 + str7 + str8)
-	s = str1 + str2 + str3 + str4 + str5 + str6 + str7 + str8
-
-	return s, err
-}
-
 type ModeSMB struct {
 	Rep  uint8
 	BDSs []*commbds.Bds
@@ -365,10 +321,10 @@ func modeSMBData(data []byte) (msb []*commbds.Bds, err error) {
 
 // trackNumber returns an integer.
 // An integer value representing a unique reference to a track record within a particular track file.
-func trackNumber(data [2]byte) (tn uint16, err error) {
-	tn = uint16(data[0])<<8 + uint16(data[1])
-	return tn, nil
-}
+//func trackNumber(data [2]byte) (tn uint16, err error) {
+//	tn = uint16(data[0])<<8 + uint16(data[1])
+//	return tn, nil
+//}
 
 // cartesianXY returns a slice [X,Y] of float64 NM (1 bit = 1/128 NM) Max range = ±256 NM.
 // Calculated position of an aircraft in cartesianXY co-ordinates.

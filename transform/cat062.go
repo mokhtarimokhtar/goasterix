@@ -25,7 +25,7 @@ type TrackMode3A struct {
 	CH     string `json:"ch"`
 	Squawk string `json:"squawk"`
 }
-type TargetIdentification struct {
+type TargetIdent struct {
 	Target string `json:"target,omitempty"`
 	STI    string `json:"sti,omitempty"`
 }
@@ -34,20 +34,20 @@ type BarometricAltitude struct {
 	Altitude float64 `json:"altitude,omitempty"`
 }
 type Cat062Model struct {
-	SacSic                *SourceIdentifier     `json:"sourceIdentifier,omitempty"`
-	ServiceIdentification uint8                 `json:"serviceIdentification,omitempty"`
-	TimeOfDay             float64               `json:"timeOfDay,omitempty"`
-	TrackPositionWGS84    *PositionWGS84        `json:"trackPositionWGS84"`
-	CartesianXY           *CartesianXYPosition  `json:"cartesianXY,omitempty"`
-	TrackVelocity         *TrackVelocity        `json:"trackVelocity,omitempty"`
-	Acceleration          *Acceleration         `json:"acceleration,omitempty"`
-	Mode3ACode            *TrackMode3A          `json:"mode3ACode,omitempty"`
-	TargetIdentification  *TargetIdentification `json:"targetIdentification,omitempty"`
-	TrackNumber           uint16                `json:"trackNumber,omitempty"`
-	FlightLevel           float32               `json:"flightLevel,omitempty"`
-	GeometricAltitude     float32               `json:"geometricAltitude,omitempty"`
-	BarometricAltitude    *BarometricAltitude   `json:"barometricAltitude,omitempty"`
-	RateOfClimbDescent    float32               `json:"rateOfClimbDescent,omitempty"`
+	SacSic                *SourceIdentifier    `json:"sourceIdentifier,omitempty"`
+	ServiceIdentification uint8                `json:"serviceIdentification,omitempty"`
+	TimeOfDay             float64              `json:"timeOfDay,omitempty"`
+	TrackPositionWGS84    *PositionWGS84       `json:"trackPositionWGS84"`
+	CartesianXY           *CartesianXYPosition `json:"cartesianXY,omitempty"`
+	TrackVelocity         *TrackVelocity       `json:"trackVelocity,omitempty"`
+	Acceleration          *Acceleration        `json:"acceleration,omitempty"`
+	Mode3ACode            *TrackMode3A         `json:"mode3ACode,omitempty"`
+	TargetIdentification  *TargetIdent         `json:"targetIdentification,omitempty"`
+	TrackNumber           uint16               `json:"trackNumber,omitempty"`
+	FlightLevel           float32              `json:"flightLevel,omitempty"`
+	GeometricAltitude     float32              `json:"geometricAltitude,omitempty"`
+	BarometricAltitude    *BarometricAltitude  `json:"barometricAltitude,omitempty"`
+	RateOfClimbDescent    float32              `json:"rateOfClimbDescent,omitempty"`
 }
 
 // Write writes a single ASTERIX Record to Cat062Model.
@@ -223,8 +223,9 @@ func mode3ACode(data [2]byte) TrackMode3A {
 	return mode3A
 }
 
-func targetIdentification(data [7]byte) TargetIdentification {
-	var target TargetIdentification
+// Target (aircraft or vehicle) identification in 8 characters
+func targetIdentification(data [7]byte) TargetIdent {
+	var target TargetIdent
 	tmp := data[0] & 0xc0 >> 6
 
 	switch tmp {
@@ -261,12 +262,12 @@ func trackGeometricAltitude(data [2]byte) float32 {
 // Calculated Barometric Altitude of the track
 func trackBarometricAltitude(data [2]byte) BarometricAltitude {
 	var ba BarometricAltitude
-	ba.Altitude = float64((uint16(data[0])<<8+uint16(data[1]))&0x7FFF) / 4
 	if data[0]&0x80 != 0 {
 		ba.QNH = "qnh_correction_applied"
 	} else {
 		ba.QNH = "no_qnh_correction_applied"
 	}
+	ba.Altitude = float64((uint16(data[0])<<8+uint16(data[1]))&0x7FFF) / 4
 	return ba
 }
 

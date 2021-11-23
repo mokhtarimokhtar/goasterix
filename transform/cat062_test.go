@@ -37,3 +37,162 @@ func TestCat062Model_ToJsonRecord(t *testing.T) {
 		t.Logf("SUCCESS: %s; Expected: %s", recJson, output)
 	}
 }
+
+func TestCat062Model_CalculatedAccelerationCartesian(t *testing.T) {
+	// Arrange
+	input := [2]byte{0x80, 0x10}
+	output := Acceleration{
+		Ax: -32,
+		Ay: 4,
+	}
+
+	// Act
+	res := calculatedAccelerationCartesian(input)
+
+	// Assert
+	if reflect.DeepEqual(res, output) == false {
+		t.Errorf("FAIL: %v; Expected: %v", res, output)
+	} else {
+		t.Logf("SUCCESS: %v; Expected: %v", res, output)
+	}
+}
+
+func TestCat062Model_TargetIdentification(t *testing.T) {
+	// setup
+	type dataTest struct {
+		TestCaseName string
+		input        [7]byte
+		output       TargetIdent
+	}
+	dataset := []dataTest{
+		{
+			TestCaseName: "testcase 1",
+			input:        [7]byte{0x00, 0x04, 0x64, 0xB1, 0xCB, 0x3D, 0x20},
+			output: TargetIdent{
+				Target: "AFR1234 ",
+				STI:    "downlinked_target",
+			},
+		},
+		{
+			TestCaseName: "testcase 2",
+			input:        [7]byte{0x40, 0x04, 0x64, 0xB1, 0xCB, 0x3D, 0x20},
+			output: TargetIdent{
+				Target: "AFR1234 ",
+				STI:    "callsign_not_downlinked_target",
+			},
+		},
+		{
+			TestCaseName: "testcase 3",
+			input:        [7]byte{0x80, 0x04, 0x64, 0xB1, 0xCB, 0x3D, 0x20},
+			output: TargetIdent{
+				Target: "AFR1234 ",
+				STI:    "registration_not_downlinked_target",
+			},
+		},
+		{
+			TestCaseName: "testcase 4",
+			input:        [7]byte{0xc0, 0x04, 0x64, 0xB1, 0xCB, 0x3D, 0x20},
+			output: TargetIdent{
+				Target: "AFR1234 ",
+				STI:    "invalid",
+			},
+		},
+	}
+
+	for _, row := range dataset {
+		// Arrange
+		// Act
+		s := targetIdentification(row.input)
+
+		// Assert
+		if s != row.output {
+			t.Errorf("FAIL: %s - s = %s; Expected: %s", row.TestCaseName, s, row.output)
+		} else {
+			t.Logf("SUCCESS: s = %s; Expected: %s", s, row.output)
+		}
+	}
+}
+
+func TestCat062Model_TrackBarometricAltitude(t *testing.T) {
+	// setup
+	type dataTest struct {
+		TestCaseName string
+		input        [2]byte
+		output       BarometricAltitude
+	}
+	dataset := []dataTest{
+		{
+			TestCaseName: "testcase 1",
+			input:        [2]byte{0x00, 0x00},
+			output: BarometricAltitude{
+				QNH:      "no_qnh_correction_applied",
+				Altitude: 0,
+			},
+		},
+		{
+			TestCaseName: "testcase 2",
+			input:        [2]byte{0x80, 0xff},
+			output: BarometricAltitude{
+				QNH:      "qnh_correction_applied",
+				Altitude: 63.75,
+			},
+		},
+	}
+
+	for _, row := range dataset {
+		// Arrange
+		// Act
+		res := trackBarometricAltitude(row.input)
+
+		// Assert
+		if res != row.output {
+			t.Errorf("FAIL: %s - res = %v; Expected: %v", row.TestCaseName, res, row.output)
+		} else {
+			t.Logf("SUCCESS: s = %v; Expected: %v", res, row.output)
+		}
+	}
+}
+
+func TestCat062Model_Mode3ACode(t *testing.T) {
+	// setup
+	type dataTest struct {
+		TestCaseName string
+		input        [2]byte
+		output       TrackMode3A
+	}
+	dataset := []dataTest{
+		{
+			TestCaseName: "testcase 1",
+			input:        [2]byte{0x0F, 0xFF},
+			output: TrackMode3A{
+				V:      "code_validated",
+				G:      "default",
+				CH:     "no_change",
+				Squawk: "7777",
+			},
+		},
+		{
+			TestCaseName: "testcase 2",
+			input:        [2]byte{0xEF, 0xFF},
+			output: TrackMode3A{
+				V:      "code_not_validated",
+				G:      "garbled_code",
+				CH:     "changed",
+				Squawk: "7777",
+			},
+		},
+	}
+
+	for _, row := range dataset {
+		// Arrange
+		// Act
+		res := mode3ACode(row.input)
+
+		// Assert
+		if res != row.output {
+			t.Errorf("FAIL: %s - res = %v; Expected: %v", row.TestCaseName, res, row.output)
+		} else {
+			t.Logf("SUCCESS: s = %v; Expected: %v", res, row.output)
+		}
+	}
+}

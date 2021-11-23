@@ -5,9 +5,10 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"errors"
-	"github.com/mokhtarimokhtar/goasterix/uap"
 	"io"
 	"math/bits"
+
+	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
 var (

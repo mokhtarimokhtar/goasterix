@@ -37,9 +37,9 @@ type DataField struct {
 type TypeField struct {
 	NameType      NameTypeField
 	Size          uint8
-	PrimarySize   uint8
-	SecondarySize uint8
-	Primary       *Primary
+	PrimarySize   uint8    // used for extended
+	SecondarySize uint8    // used for extended
+	Primary       *Primary // used for compound
 }
 
 // Bit is a bit number position
@@ -64,28 +64,4 @@ type Subfield struct {
 	SecondarySize uint8
 	Item          string
 	Description   string
-}
-
-type UAP struct {
-	Name     string
-	Category uint8
-	Version  float64
-}
-type Category uint8
-type Version float32
-
-// DefaultProfiles contains the defaults User Application Profiles version.
-var DefaultProfiles = map[uint8]StandardUAP{
-	1:   Cat001V12,
-	2:   Cat002V10,
-	21:  Cat021v10,
-	30:  Cat030StrV51,
-	32:  Cat032StrV70,
-	34:  Cat034V127,
-	48:  Cat048V127,
-	255: Cat255StrV51,
-	62:  Cat062V119,
-	63:  Cat063V16,
-	// Category for testing not exist
-	26: Cat4Test,
 }

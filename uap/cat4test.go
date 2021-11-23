@@ -26,7 +26,7 @@ var Cat4Test = StandardUAP{
 		},
 		{
 			FRN:      3,
-			DataItem: "I026/0039",
+			DataItem: "I026/003",
 			Type: TypeField{
 				NameType: Compound,
 				Primary: &Primary{
@@ -70,5 +70,51 @@ var Cat4Test = StandardUAP{
 		{
 			FRN: 8, DataItem: "SP-Data Item", Type: TypeField{NameType: SP},
 		},
+		/*
+			{
+				FRN:      9,
+				DataItem: "I026/008",
+				Type:     TypeField{NameType: Compound2},
+				CompoundItems: &[]DataField{
+					{
+						FRN:         1,
+						DataItem:    "Compound001",
+						Description: "",
+						Type:        TypeField{NameType: Fixed, Size: 1},
+					},
+					{
+						FRN:  2,
+						Type: TypeField{NameType: Spare},
+					},
+					{
+						FRN:         3,
+						DataItem:    "Compound003",
+						Description: "",
+						Type:        TypeField{NameType: Extended, PrimarySize: 1, SecondarySize: 1},
+					},
+					{
+						FRN:  4,
+						Type: TypeField{NameType: Spare},
+					},
+					{
+						FRN:         5,
+						DataItem:    "Compound005",
+						Description: "",
+						Type:        TypeField{NameType: Repetitive, Size: 2},
+					},
+					{
+						FRN:  6,
+						Type: TypeField{NameType: Spare},
+					},
+					{
+						FRN:         7,
+						DataItem:    "Compound005",
+						Description: "",
+						Type:        TypeField{NameType: Explicit, Size: 2},
+					},
+				},
+			},
+
+		*/
 	},
 }

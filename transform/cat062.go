@@ -1,10 +1,12 @@
 package transform
 
 import (
+	"encoding/hex"
 	"github.com/mokhtarimokhtar/goasterix"
 	"github.com/mokhtarimokhtar/goasterix/uap"
 	"math"
 	"strconv"
+	"strings"
 )
 
 type TrackVelocity struct {
@@ -33,6 +35,19 @@ type BarometricAltitude struct {
 	QNH      string  `json:"qnh,omitempty"`
 	Altitude float64 `json:"altitude,omitempty"`
 }
+
+type IAS struct {
+	IM string `json:"im"`
+	AirSpeed float64 `json:"airSpeed"`
+}
+type DerivedData struct {
+	TargetAddress        string  `json:"targetAddress,omitempty"`
+	TargetIdentification string  `json:"targetIdentification,omitempty"`
+	MagneticHeading      float64 `json:"magneticHeading,omitempty"`
+	IndicatedAirspeed    *IAS    `json:"indicatedAirspeed,omitempty"`
+	AirSpeed             uint16  `json:"airSpeed,omitempty"`
+}
+
 type Cat062Model struct {
 	SacSic                *SourceIdentifier    `json:"sourceIdentifier,omitempty"`
 	ServiceIdentification uint8                `json:"serviceIdentification,omitempty"`
@@ -43,6 +58,7 @@ type Cat062Model struct {
 	Acceleration          *Acceleration        `json:"acceleration,omitempty"`
 	Mode3ACode            *TrackMode3A         `json:"mode3ACode,omitempty"`
 	TargetIdentification  *TargetIdent         `json:"targetIdentification,omitempty"`
+	AircraftDerivedData   *DerivedData         `json:"aircraftDerivedData,omitempty"`
 	TrackNumber           uint16               `json:"trackNumber,omitempty"`
 	FlightLevel           float32              `json:"flightLevel,omitempty"`
 	GeometricAltitude     float32              `json:"geometricAltitude,omitempty"`
@@ -51,7 +67,7 @@ type Cat062Model struct {
 }
 
 // Write writes a single ASTERIX Record to Cat062Model.
-// Items is a slice of Items DataField.
+// CompoundItems is a slice of CompoundItems DataField.
 func (data *Cat062Model) write(items []uap.DataField) {
 	for _, item := range items {
 		switch item.FRN {
@@ -106,7 +122,11 @@ func (data *Cat062Model) write(items []uap.DataField) {
 			copy(payload[:], item.Payload[:])
 			tmp := targetIdentification(payload)
 			data.TargetIdentification = &tmp
-		// todo case 11
+		case 11:
+			// Aircraft Derived Data
+			tmp := extractDerivedData(item.Payload)
+			data.AircraftDerivedData = &tmp
+
 		case 12:
 			// Track Number
 			var payload [2]byte
@@ -149,6 +169,50 @@ func (data *Cat062Model) write(items []uap.DataField) {
 			// todo case 35
 		}
 	}
+}
+
+
+// extractDerivedData returns Data derived directly by the aircraft.
+func extractDerivedData(data []byte) DerivedData {
+	var dd DerivedData
+	offset := uint8(1)
+	for {
+		if data[offset-1]&0x01 == 0 {
+			break
+		}
+		offset++
+	}
+	if data[0]&0x80 != 0 {
+		dd.TargetAddress = strings.ToUpper(hex.EncodeToString(data[offset : offset+3]))
+		offset = offset + 3
+	}
+	if data[0]&0x40 != 0 {
+		tmp := [6]byte{data[offset], data[offset+1], data[offset+2], data[offset+3], data[offset+4], data[offset+5]}
+		dd.TargetIdentification, _ = modeSIdentification(tmp)
+		offset = offset + 6
+	}
+	if data[0]&0x20 != 0 {
+		dd.MagneticHeading = float64(uint16(data[offset])<<8+uint16(data[offset+1])) * 0.0055
+		_ = offset + 2
+	}
+	if data[0]&0x10 != 0 {
+		var lsb float64
+		if data[offset]&0x80 != 0 {
+			dd.IndicatedAirspeed.IM = "mach"
+			lsb = 0.001
+		} else {
+			dd.IndicatedAirspeed.IM = "ias"
+			lsb = 0.000061035
+		}
+		dd.IndicatedAirspeed.AirSpeed = float64(uint16(data[offset]&0x7f)<<8+uint16(data[offset+1])) * lsb
+		offset = offset + 2
+	}
+	if data[0]&0x08 != 0 {
+		dd.AirSpeed = uint16(data[offset])<<8+uint16(data[offset+1])
+		_ = offset + 2
+	}
+
+	return dd
 }
 
 // calculatedTrackPositionWGS84 returns Latitude and Longitude.

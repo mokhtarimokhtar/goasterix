@@ -57,7 +57,6 @@ func (rec *Record) Decode(data []byte, stdUAP uap.StandardUAP) (unRead int, err 
 			}
 
 		case uap.Extended:
-			//tmp, err = ExtendedDataFieldReader(rb, dataItem.Type.Size)
 			tmp, err = ExtendedDataFieldReader(rb, dataItem.Type.PrimarySize, dataItem.Type.SecondarySize)
 			if err != nil {
 				unRead = rb.Len()

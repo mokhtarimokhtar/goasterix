@@ -8,8 +8,8 @@ var Cat063V16 = StandardUAP{
 	Version:  1.6,
 	Items: []DataField{
 		{
-			FRN:      1,
-			DataItem: "I063/010",
+			FRN:         1,
+			DataItem:    "I063/010",
 			Description: "Data Source Identifier",
 			Type: TypeField{
 				NameType: Fixed,
@@ -17,8 +17,8 @@ var Cat063V16 = StandardUAP{
 			},
 		},
 		{
-			FRN:      2,
-			DataItem: "I063/015",
+			FRN:         2,
+			DataItem:    "I063/015",
 			Description: "Service Identification",
 			Type: TypeField{
 				NameType: Fixed,
@@ -26,8 +26,8 @@ var Cat063V16 = StandardUAP{
 			},
 		},
 		{
-			FRN:      3,
-			DataItem: "I063/030",
+			FRN:         3,
+			DataItem:    "I063/030",
 			Description: "Time of Message",
 			Type: TypeField{
 				NameType: Fixed,
@@ -35,8 +35,8 @@ var Cat063V16 = StandardUAP{
 			},
 		},
 		{
-			FRN:      4,
-			DataItem: "I063/050",
+			FRN:         4,
+			DataItem:    "I063/050",
 			Description: "Sensor Identifier",
 			Type: TypeField{
 				NameType: Fixed,
@@ -44,8 +44,8 @@ var Cat063V16 = StandardUAP{
 			},
 		},
 		{
-			FRN:      5,
-			DataItem: "I063/060",
+			FRN:         5,
+			DataItem:    "I063/060",
 			Description: "Sensor Configuration and Status",
 			Type: TypeField{
 				NameType:      Extended,
@@ -54,8 +54,8 @@ var Cat063V16 = StandardUAP{
 			},
 		},
 		{
-			FRN:      6,
-			DataItem: "I063/070",
+			FRN:         6,
+			DataItem:    "I063/070",
 			Description: "Time Stamping Bias",
 			Type: TypeField{
 				NameType: Fixed,
@@ -63,8 +63,8 @@ var Cat063V16 = StandardUAP{
 			},
 		},
 		{
-			FRN:      7,
-			DataItem: "I063/080",
+			FRN:         7,
+			DataItem:    "I063/080",
 			Description: "SSR/Mode S Range Gain and Bias",
 			Type: TypeField{
 				NameType: Fixed,
@@ -73,8 +73,8 @@ var Cat063V16 = StandardUAP{
 		},
 		//FX : Field Extension Indicator
 		{
-			FRN:      8,
-			DataItem: "I063/081",
+			FRN:         8,
+			DataItem:    "I063/081",
 			Description: "SSR/Mode S Azimuth Bias",
 			Type: TypeField{
 				NameType: Fixed,
@@ -82,8 +82,8 @@ var Cat063V16 = StandardUAP{
 			},
 		},
 		{
-			FRN:      9,
-			DataItem: "I063/090",
+			FRN:         9,
+			DataItem:    "I063/090",
 			Description: "PSR Range Gain and Bias",
 			Type: TypeField{
 				NameType: Fixed,
@@ -91,8 +91,8 @@ var Cat063V16 = StandardUAP{
 			},
 		},
 		{
-			FRN:      10,
-			DataItem: "I063/091",
+			FRN:         10,
+			DataItem:    "I063/091",
 			Description: "PSR Azimuth Bias",
 			Type: TypeField{
 				NameType: Fixed,
@@ -100,8 +100,8 @@ var Cat063V16 = StandardUAP{
 			},
 		},
 		{
-			FRN:      11,
-			DataItem: "I063/092",
+			FRN:         11,
+			DataItem:    "I063/092",
 			Description: "PSR Elevation Bias",
 			Type: TypeField{
 				NameType: Fixed,

@@ -37,7 +37,7 @@ type BarometricAltitude struct {
 }
 
 type IAS struct {
-	IM string `json:"im"`
+	IM       string  `json:"im"`
 	AirSpeed float64 `json:"airSpeed"`
 }
 type DerivedData struct {
@@ -171,7 +171,6 @@ func (data *Cat062Model) write(items []uap.DataField) {
 	}
 }
 
-
 // extractDerivedData returns Data derived directly by the aircraft.
 func extractDerivedData(data []byte) DerivedData {
 	var dd DerivedData
@@ -208,7 +207,7 @@ func extractDerivedData(data []byte) DerivedData {
 		offset = offset + 2
 	}
 	if data[0]&0x08 != 0 {
-		dd.AirSpeed = uint16(data[offset])<<8+uint16(data[offset+1])
+		dd.AirSpeed = uint16(data[offset])<<8 + uint16(data[offset+1])
 		_ = offset + 2
 	}
 

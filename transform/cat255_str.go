@@ -2,7 +2,7 @@ package transform
 
 import (
 	"errors"
-	"github.com/mokhtarimokhtar/goasterix/uap"
+	"github.com/mokhtarimokhtar/goasterix"
 )
 
 var (
@@ -43,52 +43,52 @@ type Cat255STRModel struct {
 	Biais  []BiaisRadar      `json:"biais,omitempty"`
 }
 
-func (data *Cat255STRModel) write(items []uap.DataField) {
-	for _, item := range items {
-		switch item.FRN {
+func (data *Cat255STRModel) write(rec goasterix.Record) {
+	for _, item := range rec.Items {
+		switch item.Meta.FRN {
 		case 1:
 			// decode sac sic
 			var payload [2]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload[:])
 			tmp, _ := sacSic(payload)
 			data.SacSic = &tmp
 		case 2:
 			// HEM : Heure d’émission du message d’alerte
 			var payload [3]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload[:])
 			data.Hem, _ = timeOfDay(payload)
 		case 3:
 			// SPE : Présence STR-STPV
-			tmp := speStpv(item.Payload)
+			tmp := speStpv(*item.Extended)
 			data.Spe = &tmp
 		case 4:
 			// NIVC : Niveaux optionnels assignés à la carte dynamique
 			var payload [4]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload[:])
 			tmp := nivCarte(payload)
 			data.Nivc = &tmp
 		case 5:
 			// TXTC : Texte optionnel de la carte dynamique
-			data.Txtc = string(item.Payload[1:])
+			data.Txtc = string(item.Repetitive.Payload)
 		case 6:
 			// CART : activation de cartes dynamiques
 			var payload [9]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload[:])
 			tmp, _ := carte(payload)
 			data.Cart = &tmp
 		case 7:
 			// BIAIS : Valeurs des biais courants radars
-			data.Biais = biaisExtract(item.Payload)
+			data.Biais = biaisExtract(*item.Repetitive)
 		}
 	}
 }
 
-func speStpv(data []byte) PresenceSTPV {
+func speStpv(item goasterix.Extended) PresenceSTPV {
 	var spe PresenceSTPV
-	spe.Version = data[0] & 0xE0 >> 5
-	spe.Nap = data[0] & 0x18 >> 3
+	spe.Version = item.Primary[0] & 0xE0 >> 5
+	spe.Nap = item.Primary[0] & 0x18 >> 3
 
-	tmpNs := data[0] & 0x06 >> 1
+	tmpNs := item.Primary[0] & 0x06 >> 1
 	switch tmpNs {
 	case 0:
 		spe.NS = "principal"
@@ -97,13 +97,14 @@ func speStpv(data []byte) PresenceSTPV {
 	case 2:
 		spe.NS = "test"
 	}
-	if data[0]&0x01 != 0 {
-		if data[1]&0x80 != 0 {
+
+	if item.Secondary != nil {
+		if item.Secondary[0]&0x80 != 0 {
 			spe.ST = "evaluation"
 		} else {
 			spe.ST = "operational"
 		}
-		if data[1]&0x40 != 0 {
+		if item.Secondary[0]&0x40 != 0 {
 			spe.PS = "stpv_deconnecte_str"
 		} else {
 			spe.PS = "stpv_connecte_str"
@@ -137,18 +138,19 @@ func carte(data [9]byte) (CarteActive, error) {
 	return cart, err
 }
 
-func biaisExtract(data []byte) []BiaisRadar {
+func biaisExtract(item goasterix.Repetitive) []BiaisRadar {
 	var biais []BiaisRadar
-	n := int(data[0])
+	n := int(item.Rep)
+	data := item.Payload
 	for i := 0; i < n; i++ {
 		b := BiaisRadar{}
 		var sacsic [2]byte
-		copy(sacsic[:], data[i+1:i+3])
+		copy(sacsic[:], data[i:i+2])
 		b.SacSic, _ = sacSic(sacsic)
-		b.GainDistance = float64(uint16(data[i+3])<<8+uint16(data[i+4])) / 6384
-		b.BiaisDistance = float64(int16(data[i+5])<<8 + int16(data[i+6]))
-		b.BiaisAzimut = float64(int16(data[i+7])<<8+int16(data[i+8])) * 0.0055
-		b.BiaisDatation = float64(int16(data[i+9])<<8+int16(data[i+10])) / 1024
+		b.GainDistance = float64(uint16(data[i+2])<<8+uint16(data[i+3])) / 6384
+		b.BiaisDistance = float64(int16(data[i+4])<<8 + int16(data[i+5]))
+		b.BiaisAzimut = float64(int16(data[i+6])<<8+int16(data[i+7])) * 0.0055
+		b.BiaisDatation = float64(int16(data[i+8])<<8+int16(data[i+9])) / 1024
 		biais = append(biais, b)
 	}
 	return biais

@@ -40,7 +40,7 @@ func TestCat030STRModel_ToJsonRecord(t *testing.T) {
 		_, err := rec.Decode(data, uap030)
 
 		cat030Model := new(Cat030STRModel)
-		cat030Model.write(rec.Items)
+		cat030Model.write(*rec)
 
 		// Act
 		recJson, _ := json.Marshal(cat030Model)
@@ -201,13 +201,16 @@ func TestCat030STRModel_Pist(t *testing.T) {
 	// setup
 	type dataTest struct {
 		TestCaseName string
-		input        []byte
+		input        goasterix.Extended
 		output       Pist
 	}
 	dataset := []dataTest{
 		{
 			TestCaseName: "testcase 1",
-			input:        []byte{0x01, 0x01, 0x01},
+			input: goasterix.Extended{
+				Primary:   []byte{0x01},
+				Secondary: []byte{0x01, 0x01},
+			},
 			output: Pist{
 				Liv:    "trafic_reel",
 				Cnf:    "piste_confirmee",
@@ -227,7 +230,10 @@ func TestCat030STRModel_Pist(t *testing.T) {
 		},
 		{
 			TestCaseName: "testcase 2",
-			input:        []byte{0xf3, 0xd3, 0x7c},
+			input: goasterix.Extended{
+				Primary:   []byte{0xf3},
+				Secondary: []byte{0xd3, 0x7c},
+			},
 			output: Pist{
 				Liv:    "simule_ou_plot_test",
 				Cnf:    "piste_initialisation",
@@ -366,13 +372,16 @@ func TestCat030STRModel_Spe(t *testing.T) {
 	// setup
 	type dataTest struct {
 		TestCaseName string
-		input        []byte
+		input        goasterix.Extended
 		output       Spe
 	}
 	dataset := []dataTest{
 		{
 			TestCaseName: "testcase 1",
-			input:        []byte{0x00, 0x00, 0x00, 0x00},
+			input: goasterix.Extended{
+				Primary:   []byte{0x00},
+				Secondary: []byte{0x00, 0x00, 0x00},
+			},
 			output: Spe{
 				SY:  0,
 				M:   0,
@@ -402,7 +411,10 @@ func TestCat030STRModel_Spe(t *testing.T) {
 		},
 		{
 			TestCaseName: "testcase 2",
-			input:        []byte{0x7f, 0xff, 0xff, 0xff},
+			input: goasterix.Extended{
+				Primary:   []byte{0x7f},
+				Secondary: []byte{0xff, 0xff, 0xff},
+			},
 			output: Spe{
 				SY:  15,
 				M:   1,

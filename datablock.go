@@ -6,10 +6,9 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"errors"
+	"github.com/mokhtarimokhtar/goasterix/uap"
 	"math"
 	"strings"
-
-	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
 var (
@@ -127,7 +126,7 @@ LoopRecords:
 	return unRead, nil
 }
 
-func (db *DataBlock) String() (records [][]string) {
+/*func (db *DataBlock) String() (records [][]string) {
 	for _, record := range db.Records {
 		records = append(records, record.String())
 	}
@@ -139,7 +138,7 @@ func (db *DataBlock) Payload() (b [][]byte) {
 		b = append(b, record.Payload())
 	}
 	return b
-}
+}*/
 
 // HexStringToByte converts a hexadecimal string format to an array of byte.
 // It is used to facilitate the testing.

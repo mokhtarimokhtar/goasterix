@@ -1,9 +1,9 @@
 package uap
 
-type NameTypeField uint8
+type TypeField uint8
 
 const (
-	Fixed NameTypeField = iota + 1
+	Fixed TypeField = iota + 1
 	Extended
 	Compound
 	Repetitive
@@ -30,13 +30,27 @@ type DataField struct {
 	DataItem    string
 	Description string
 	Type        TypeField
+	Fixed       FixedField
+	Extended    ExtendedField
+	Repetitive  RepetitiveField
+	Compound    []DataField
 	Conditional bool
-	Payload     []byte
+}
+type FixedField struct {
+	Size uint8
+}
+type ExtendedField struct {
+	PrimarySize   uint8
+	SecondarySize uint8
+}
+type RepetitiveField struct {
+	SubItemSize uint8
 }
 
+/*
 type TypeField struct {
-	NameType      NameTypeField
-	Size          uint8
+	NameType TypeField
+	Size     uint8
 	PrimarySize   uint8    // used for extended
 	SecondarySize uint8    // used for extended
 	Primary       *Primary // used for compound
@@ -58,10 +72,11 @@ type MetaField map[Bit]Subfield
 
 // Subfield describes the type of field and the size if necessary
 type Subfield struct {
-	NameType      NameTypeField
+	NameType      TypeField
 	Size          uint8
 	PrimarySize   uint8
 	SecondarySize uint8
 	Item          string
 	Description   string
 }
+*/

@@ -7,64 +7,123 @@ var Cat002V10 = StandardUAP{
 	Version:  1.0,
 	Items: []DataField{
 		{
-			FRN: 1, DataItem: "I002/010", Type: TypeField{NameType: Fixed, Size: 2},
+			FRN:         1,
+			DataItem:    "I002/010",
+			Description: "Data Source Identifier",
+			Type:        Fixed,
+			Fixed: FixedField{
+				Size: 2,
+			},
 		},
 		{
-			FRN: 2, DataItem: "I002/000", Type: TypeField{NameType: Fixed, Size: 1},
+			FRN:         2,
+			DataItem:    "I002/000",
+			Description: "Message Type",
+			Type:        Fixed,
+			Fixed: FixedField{
+				Size: 1,
+			},
 		},
 		{
-			FRN: 3, DataItem: "I002/020", Type: TypeField{NameType: Fixed, Size: 1},
+			FRN:         3,
+			DataItem:    "I002/020",
+			Description: "Sector Number",
+			Type:        Fixed,
+			Fixed: FixedField{
+				Size: 1,
+			},
 		},
 		{
-			FRN: 4, DataItem: "I002/030", Type: TypeField{NameType: Fixed, Size: 3},
+			FRN:         4,
+			DataItem:    "I002/030",
+			Description: "Time of Day",
+			Type:        Fixed,
+			Fixed: FixedField{
+				Size: 3,
+			},
 		},
 		{
-			FRN: 5, DataItem: "I002/041", Type: TypeField{NameType: Fixed, Size: 2},
+			FRN:         5,
+			DataItem:    "I002/041",
+			Description: "Antenna Rotation Period",
+			Type:        Fixed,
+			Fixed: FixedField{
+				Size: 2,
+			},
 		},
 		{
-			FRN:      6,
-			DataItem: "I002/050",
-			Type: TypeField{
-				NameType:      Extended,
+			FRN:         6,
+			DataItem:    "I002/050",
+			Description: "Station Configuration Status",
+			Type:        Extended,
+			Extended: ExtendedField{
 				PrimarySize:   1,
 				SecondarySize: 1,
 			},
 		},
 		{
-			FRN:      7,
-			DataItem: "I002/060",
-			Type: TypeField{
-				NameType:      Extended,
+			FRN:         7,
+			DataItem:    "I002/060",
+			Description: "Station Processing Mode",
+			Type:        Extended,
+			Extended: ExtendedField{
 				PrimarySize:   1,
 				SecondarySize: 1,
 			},
 		},
 		{
-			FRN: 8, DataItem: "I002/070", Type: TypeField{NameType: Repetitive, Size: 2},
+			FRN:         8,
+			DataItem:    "I002/070",
+			Description: "Plot Count Values",
+			Type:        Fixed,
+			Fixed: FixedField{
+				Size: 2,
+			},
 		},
 		{
-			FRN: 9, DataItem: "I002/100", Type: TypeField{NameType: Fixed, Size: 8},
+			FRN:         9,
+			DataItem:    "I002/100",
+			Description: "Dynamic Window - Type 1",
+			Type:        Fixed,
+			Fixed: FixedField{
+				Size: 8,
+			},
 		},
 		{
-			FRN: 10, DataItem: "I002/090", Type: TypeField{NameType: Fixed, Size: 2},
+			FRN:         10,
+			DataItem:    "I002/090",
+			Description: "Collimation Error",
+			Type:        Fixed,
+			Fixed: FixedField{
+				Size: 2,
+			},
 		},
 		{
-			FRN:      11,
-			DataItem: "I002/080",
-			Type: TypeField{
-				NameType:      Extended,
+			FRN:         11,
+			DataItem:    "I002/080",
+			Description: "Warning/Error Conditions",
+			Type:        Extended,
+			Extended: ExtendedField{
 				PrimarySize:   1,
 				SecondarySize: 1,
 			},
 		},
 		{
-			FRN: 12, DataItem: "NA", Type: TypeField{NameType: Spare},
+			FRN:      12,
+			DataItem: "NA",
+			Type:     Spare,
 		},
 		{
-			FRN: 13, DataItem: "SP-Data Item", Type: TypeField{NameType: SP},
+			FRN:         13,
+			DataItem:    "SP-Data Item",
+			Description: "Reserved for SP Indicator",
+			Type:        SP,
 		},
 		{
-			FRN: 14, DataItem: "Random Field Sequencing", Type: TypeField{NameType: RFS},
+			FRN:         14,
+			DataItem:    "Random Field Sequencing",
+			Description: "Reserved for RFS Indicator",
+			Type:        RFS,
 		},
 	},
 }

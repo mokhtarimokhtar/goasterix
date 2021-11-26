@@ -5,10 +5,9 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"errors"
+	"github.com/mokhtarimokhtar/goasterix/uap"
 	"io"
 	"math/bits"
-
-	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
 var (
@@ -17,24 +16,121 @@ var (
 )
 
 type Record struct {
-	Fspec []byte
-	Items []uap.DataField
 	Cat   uint8
+	Fspec []byte
+	Items []Item
 }
 
 func NewRecord() *Record {
-	r := &Record{}
-	return r
+	return &Record{}
+}
+
+type Item struct {
+	Meta       MetaItem
+	Size       uint8
+	Fixed      *Fixed
+	Extended   *Extended
+	Explicit   *Explicit
+	Repetitive *Repetitive
+	Compound   *Compound
+	RFS        *RandomFieldSequencing
+	SP         *SpecialPurpose
+}
+
+func (i *Item) String() string {
+	var str string
+
+	switch i.Meta.Type {
+	case uap.Fixed:
+		str = i.Meta.DataItem + ", " + i.Meta.Description + ": " + i.Fixed.String()
+	case uap.Extended:
+		str = i.Meta.DataItem + ", " + i.Meta.Description + ": " + i.Extended.String()
+	case uap.Explicit:
+		str = i.Meta.DataItem + ", " + i.Meta.Description + ": " + i.Explicit.String()
+	case uap.Repetitive:
+		str = i.Meta.DataItem + ", " + i.Meta.Description + ": " + i.Repetitive.String()
+	}
+	return str
+}
+
+func NewItem(field uap.DataField) *Item {
+	return &Item{
+		Meta: MetaItem{
+			FRN:         field.FRN,
+			DataItem:    field.DataItem,
+			Description: field.Description,
+			Type:        field.Type,
+		},
+	}
+}
+
+type MetaItem struct {
+	FRN         uint8
+	DataItem    string
+	Description string
+	Type        uap.TypeField
+}
+type Fixed struct {
+	Payload []byte
+}
+
+func (f *Fixed) String() string {
+	return hex.EncodeToString(f.Payload)
+}
+
+type Extended struct {
+	Primary   []byte
+	Secondary []byte
+}
+
+func (e *Extended) String() string {
+	return hex.EncodeToString(e.Primary) + hex.EncodeToString(e.Secondary)
+}
+
+type Explicit struct {
+	Len     uint8
+	Payload []byte
+}
+
+func (e *Explicit) String() string {
+	tmp := []byte{e.Len}
+	return hex.EncodeToString(tmp) + hex.EncodeToString(e.Payload)
+}
+
+type Repetitive struct {
+	Rep     uint8
+	Payload []byte
+}
+
+func (r *Repetitive) String() string {
+	tmp := []byte{r.Rep}
+	return hex.EncodeToString(tmp) + hex.EncodeToString(r.Payload)
+}
+
+type Compound struct {
+	Primary   []byte
+	Secondary []Item
+}
+type RandomFieldSequencing struct {
+	N        uint8
+	Sequence []RandomField
+}
+type RandomField struct {
+	FRN   uint8
+	Field Item
+}
+type SpecialPurpose struct {
+	Len     uint8
+	Payload []byte
 }
 
 // Decode extracts a Record of asterix data block (only one record).
 // An asterix data block can contain a or more records.
 // It returns the number of bytes unread and fills the Record Struct(Fspec, Items array) in byte.
 func (rec *Record) Decode(data []byte, stdUAP uap.StandardUAP) (unRead int, err error) {
-	items := stdUAP.Items
 	rec.Cat = stdUAP.Category
-	rb := bytes.NewReader(data)
 
+	rb := bytes.NewReader(data)
 	rec.Fspec, err = FspecReader(rb)
 	unRead = rb.Len()
 	if err != nil {
@@ -43,78 +139,110 @@ func (rec *Record) Decode(data []byte, stdUAP uap.StandardUAP) (unRead int, err 
 
 	frnIndex := FspecIndex(rec.Fspec)
 	offset := uint8(0) // offset shifts the index for a conditional UAP
+
 	for _, frn := range frnIndex {
-		dataItem := items[frn-1-offset] // here the index corresponds to the FRN
+		uapItem := stdUAP.Items[frn-1-offset] // here the index corresponds to the FRN
 
-		var tmp []byte
-
-		switch dataItem.Type.NameType {
+		item := NewItem(uapItem)
+		switch uapItem.Type {
 		case uap.Fixed:
-			tmp, err = FixedDataFieldReader(rb, dataItem.Type.Size)
+			item.Size = uapItem.Fixed.Size
+			tmp, err := FixedDataFieldReader(rb, uapItem.Fixed.Size)
 			if err != nil {
 				unRead = rb.Len()
 				return unRead, err
 			}
+			item.Fixed = &tmp
 
 		case uap.Extended:
-			tmp, err = ExtendedDataFieldReader(rb, dataItem.Type.PrimarySize, dataItem.Type.SecondarySize)
+			extended, err := ExtendedDataFieldReader(rb, uapItem.Extended.PrimarySize, uapItem.Extended.SecondarySize)
 			if err != nil {
 				unRead = rb.Len()
 				return unRead, err
 			}
-
-		case uap.Compound:
-			tmp, err = CompoundDataFieldReader(rb, *dataItem.Type.Primary)
-			if err != nil {
-				unRead = rb.Len()
-				return unRead, err
-			}
-
-		case uap.Repetitive:
-			tmp, err = RepetitiveDataFieldReader(rb, dataItem.Type.Size)
-			if err != nil {
-				unRead = rb.Len()
-				return unRead, err
-			}
+			item.Extended = &extended
 
 		case uap.Explicit:
-			tmp, err = ExplicitDataFieldReader(rb)
+			explicit, err := ExplicitDataFieldReader(rb)
 			if err != nil {
 				unRead = rb.Len()
 				return unRead, err
 			}
+			item.Explicit = &explicit
+
+		case uap.Repetitive:
+			repetitive, err := RepetitiveDataFieldReader(rb, uapItem.Repetitive.SubItemSize)
+			if err != nil {
+				unRead = rb.Len()
+				return unRead, err
+			}
+			item.Repetitive = &repetitive
+
+		case uap.Compound:
+			tmp, err := CompoundDataFieldReader(rb, uapItem.Compound)
+			if err != nil {
+				unRead = rb.Len()
+				return unRead, err
+			}
+			item.Compound = &tmp
 
 		case uap.SP, uap.RE:
-			tmp, err = SPAndREDataFieldReader(rb)
+			tmp, err := SPAndREDataFieldReader(rb)
 			if err != nil {
 				unRead = rb.Len()
 				return unRead, err
 			}
+			item.SP = &tmp
 
 		case uap.RFS:
-			tmp, err = RFSDataFieldReader(rb, items)
+			tmp, err := RFSDataFieldReader(rb, stdUAP.Items)
 			if err != nil {
 				unRead = rb.Len()
 				return unRead, err
 			}
+			item.RFS = &tmp
 
 		default:
 			err = ErrDataFieldUnknown
 			return unRead, err
 		}
-
-		dataItem.Payload = tmp
-		rec.Items = append(rec.Items, dataItem)
 		unRead = rb.Len()
+		rec.Items = append(rec.Items, *item)
 
-		if dataItem.Conditional {
-			items = selectUAPConditional(stdUAP.Category, tmp)
+		if uapItem.Conditional {
+			switch item.Meta.Type {
+			case uap.Fixed:
+				stdUAP.Items = selectUAPConditional(stdUAP.Category, item.Fixed.Payload)
+			case uap.Extended:
+				stdUAP.Items = selectUAPConditional(stdUAP.Category, item.Extended.Primary)
+			}
 			offset = frn
 		}
 	}
-
 	return unRead, nil
 }
+
+// String returns a string(hex) representation of one asterix record (only existing items).
+/*func (rec *Record) String() []string {
+	var items []string
+	tmp := "FSPEC: " + hex.EncodeToString(rec.Fspec)
+	items = append(items, tmp)
+
+	for _, item := range rec.Items {
+		tmp := item.String()
+		items = append(items, tmp)
+	}
+	return items
+}*/
+
+// Payload returns a slice of byte for one asterix record.
+/*func (rec *Record) Payload() (b []byte) {
+	b = append(b, rec.Fspec...)
+	for _, item := range rec.Items {
+		b = append(b, item.Payload...)
+	}
+	return b
+}*/
 
 func selectUAPConditional(category uint8, field []byte) []uap.DataField {
 	var selectedUAP []uap.DataField
@@ -126,30 +254,15 @@ func selectUAPConditional(category uint8, field []byte) []uap.DataField {
 		} else {
 			selectedUAP = uap.Cat001PlotV12
 		}
+	case 26:
+		tmp := field[0] & 0x80 >> 7
+		if tmp == 1 {
+			selectedUAP = uap.Cat4TestTrack
+		} else {
+			selectedUAP = uap.Cat4TestPlot
+		}
 	}
 	return selectedUAP
-}
-
-// Payload returns a slice of byte for one asterix record.
-func (rec *Record) Payload() (b []byte) {
-	b = append(b, rec.Fspec...)
-	for _, item := range rec.Items {
-		b = append(b, item.Payload...)
-	}
-	return b
-}
-
-// String returns a string(hex) representation of one asterix record (only existing items).
-func (rec *Record) String() []string {
-	var items []string
-	tmp := "FSPEC: " + hex.EncodeToString(rec.Fspec)
-	items = append(items, tmp)
-
-	for _, item := range rec.Items {
-		tmp := item.DataItem + ": " + hex.EncodeToString(item.Payload)
-		items = append(items, tmp)
-	}
-	return items
 }
 
 // FspecReader returns a slice of FSPEC data record asterix.
@@ -189,16 +302,16 @@ func FspecIndex(fspec []byte) []uint8 {
 
 // FixedDataFieldReader extracts a number(nb) of bytes(size) and returns a slice of bytes(data of item).
 // Fixed length Data Fields shall comprise a fixed number of octets.
-func FixedDataFieldReader(rb *bytes.Reader, size uint8) ([]byte, error) {
-	var item []byte
+func FixedDataFieldReader(rb *bytes.Reader, size uint8) (Fixed, error) {
 	var err error
+	item := Fixed{}
+
 	tmp := make([]byte, size)
 	err = binary.Read(rb, binary.BigEndian, &tmp)
 	if err != nil {
-		return nil, err
+		return item, err
 	}
-	item = append(item, tmp...)
-
+	item.Payload = tmp
 	return item, err
 }
 
@@ -210,22 +323,25 @@ func FixedDataFieldReader(rb *bytes.Reader, size uint8) ([]byte, error) {
 // The presence of the next following secondary part shall be indicated by the setting to one of the
 // Least Significant Bit (LSB) of the last octet of the preceding part (either the primary part or a secondary part).
 // This bit which is reserved for that purpose is called the Field Extension Indicator (FX).
-func ExtendedDataFieldReader(rb *bytes.Reader, primarySize uint8, secondarySize uint8) (item []byte, err error) {
+func ExtendedDataFieldReader(rb *bytes.Reader, primarySize uint8, secondarySize uint8) (Extended, error) {
+	var err error
+	item := Extended{}
+
 	tmp := make([]byte, primarySize)
 	err = binary.Read(rb, binary.BigEndian, &tmp)
 	if err != nil {
-		return nil, err
+		return item, err
 	}
-	item = append(item, tmp...)
+	item.Primary = tmp
 
 	if tmp[primarySize-1]&0x01 != 0 {
 		for {
 			tmp := make([]byte, secondarySize)
 			err = binary.Read(rb, binary.BigEndian, &tmp)
 			if err != nil {
-				return nil, err
+				return item, err
 			}
-			item = append(item, tmp...)
+			item.Secondary = append(item.Secondary, tmp...)
 			if tmp[secondarySize-1]&0x01 == 0 {
 				break
 			}
@@ -237,21 +353,21 @@ func ExtendedDataFieldReader(rb *bytes.Reader, primarySize uint8, secondarySize 
 // ExplicitDataFieldReader extracts a number of bytes define by the first byte.
 // Explicit length Data Fields shall start with a one-octet length indicator giving
 // the total field length in octets including the length indicator itself.
-func ExplicitDataFieldReader(rb *bytes.Reader) (item []byte, err error) {
-	var l uint8
-	err = binary.Read(rb, binary.BigEndian, &l)
+func ExplicitDataFieldReader(rb *bytes.Reader) (Explicit, error) {
+	var err error
+	item := Explicit{}
+
+	err = binary.Read(rb, binary.BigEndian, &item.Len)
 	if err != nil {
-		return nil, err
+		return item, err
 	}
 
-	tmp := make([]byte, l-1)
+	tmp := make([]byte, item.Len-1)
 	err = binary.Read(rb, binary.BigEndian, &tmp)
 	if err != nil {
-		return nil, err
+		return item, err
 	}
-
-	item = append(item, l)
-	item = append(item, tmp...)
+	item.Payload = tmp
 	return item, err
 }
 
@@ -259,21 +375,21 @@ func ExplicitDataFieldReader(rb *bytes.Reader) (item []byte, err error) {
 // The first byte is REP(factor), nb is the size of bytes to repetition.
 // Repetitive Data Fields, being of a variable length, shall comprise a one-octet Field Repetition Indicator (REP)
 // signalling the presence of N consecutive sub-fields each of the same pre-determined length.
-func RepetitiveDataFieldReader(rb *bytes.Reader, size uint8) (item []byte, err error) {
-	var rep uint8
-	err = binary.Read(rb, binary.BigEndian, &rep)
+func RepetitiveDataFieldReader(rb *bytes.Reader, SubItemSize uint8) (Repetitive, error) {
+	var err error
+	item := Repetitive{}
+
+	err = binary.Read(rb, binary.BigEndian, &item.Rep)
 	if err != nil {
-		return nil, err
+		return item, err
 	}
 
-	tmp := make([]byte, rep*size)
+	tmp := make([]byte, item.Rep*SubItemSize)
 	err = binary.Read(rb, binary.BigEndian, &tmp)
 	if err != nil {
-		return nil, err
+		return item, err
 	}
-	item = append(item, rep)
-	item = append(item, tmp...)
-
+	item.Payload = tmp
 	return item, err
 }
 
@@ -283,105 +399,109 @@ func RepetitiveDataFieldReader(rb *bytes.Reader, size uint8) (item []byte, err e
 // of one octet extendable using the Field Extension (FX) mechanism.
 // The definition, structure and format of the data subfields are part of the description of the relevant Compound Data
 // Item. Data subfields shall be either fixed length, extended length, explicit length or repetitive, but not compound.
-func CompoundDataFieldReader(rb *bytes.Reader, subItem uap.Primary) (item []byte, err error) {
-	var primaries []byte
-	for {
-		var tmp [1]byte
-		err = binary.Read(rb, binary.BigEndian, &tmp)
-		if err != nil {
-			return nil, err
-		}
-		primaries = append(primaries, tmp[0])
-		if tmp[0]&0x01 == 0 {
-			break
+func CompoundDataFieldReader(rb *bytes.Reader, cp []uap.DataField) (Compound, error) {
+	var err error
+	items := Compound{}
+
+	items.Primary, err = FspecReader(rb)
+	if err != nil {
+		return items, err
+	}
+	frnIndex := FspecIndex(items.Primary)
+
+	for _, frn := range frnIndex {
+		uapItem := cp[frn-1]
+		item := NewItem(uapItem)
+		switch uapItem.Type {
+		case uap.Fixed:
+			item.Size = uapItem.Fixed.Size
+			tmp, err := FixedDataFieldReader(rb, uapItem.Fixed.Size)
+			if err != nil {
+				return items, err
+			}
+			item.Fixed = &tmp
+			items.Secondary = append(items.Secondary, *item)
+
+		case uap.Extended:
+			extended, err := ExtendedDataFieldReader(rb, uapItem.Extended.PrimarySize, uapItem.Extended.SecondarySize)
+			if err != nil {
+				return items, err
+			}
+			item.Extended = &extended
+			items.Secondary = append(items.Secondary, *item)
+
+		case uap.Explicit:
+			explicit, err := ExplicitDataFieldReader(rb)
+			if err != nil {
+				return items, err
+			}
+			item.Explicit = &explicit
+			items.Secondary = append(items.Secondary, *item)
+
+		case uap.Repetitive:
+			repetitive, err := RepetitiveDataFieldReader(rb, uapItem.Repetitive.SubItemSize)
+			if err != nil {
+				return items, err
+			}
+			item.Repetitive = &repetitive
+			items.Secondary = append(items.Secondary, *item)
+		case uap.RFS:
+
+		default:
+			err = ErrDataFieldUnknown
+			return items, err
 		}
 	}
-	item = append(item, primaries...)
-
-	for i, primary := range primaries {
-		var tmp []byte
-		if primary&0x80 != 0 {
-			tmp, err = SelectTypeFieldReader(rb, subItem[i][8])
-			if err != nil {
-				return nil, err
-			}
-			item = append(item, tmp...)
-		}
-		if primary&0x40 != 0 {
-			tmp, err = SelectTypeFieldReader(rb, subItem[i][7])
-			if err != nil {
-				return nil, err
-			}
-			item = append(item, tmp...)
-		}
-		if primary&0x20 != 0 {
-			tmp, err = SelectTypeFieldReader(rb, subItem[i][6])
-			if err != nil {
-				return nil, err
-			}
-			item = append(item, tmp...)
-		}
-		if primary&0x10 != 0 {
-			tmp, err = SelectTypeFieldReader(rb, subItem[i][5])
-			if err != nil {
-				return nil, err
-			}
-			item = append(item, tmp...)
-		}
-		if primary&0x08 != 0 {
-			tmp, err = SelectTypeFieldReader(rb, subItem[i][4])
-			if err != nil {
-				return nil, err
-			}
-			item = append(item, tmp...)
-		}
-		if primary&0x04 != 0 {
-			tmp, err = SelectTypeFieldReader(rb, subItem[i][3])
-			if err != nil {
-				return nil, err
-			}
-			item = append(item, tmp...)
-		}
-		if primary&0x02 != 0 {
-			tmp, err = SelectTypeFieldReader(rb, subItem[i][2])
-			if err != nil {
-				return nil, err
-			}
-			item = append(item, tmp...)
-		}
-	}
-
-	return item, err
+	return items, err
 }
 
-func SelectTypeFieldReader(rb *bytes.Reader, sub uap.Subfield) (item []byte, err error) {
-	typeOfField := sub.NameType
-	switch typeOfField {
-	case uap.Fixed:
-		item, err = FixedDataFieldReader(rb, sub.Size)
+// RFSDataFieldReader
+// The RFS organised field is a collection of Data Fields which in
+// contrast to the OFS organisation, can occur in any order.
+// The RFS organised field shall be structured as follows:
+// - the first octet provides the number, N, of Data Fields following;
+// - N fields in any arbitrary order each consisting of a one-octet FRN immediately followed by the contents of the
+// Data Item associated with the preceding FRN.
+func RFSDataFieldReader(rb *bytes.Reader, items []uap.DataField) (RandomFieldSequencing, error) {
+	var err error
+	rfs := RandomFieldSequencing{}
+	// N is the total number of datafields
+	err = binary.Read(rb, binary.BigEndian, &rfs.N)
+	if err != nil {
+		return rfs, err
+	}
+	for i := uint8(0); i < rfs.N; i++ {
+		// retrieve random FRN
+		var frn uint8
+		err := binary.Read(rb, binary.BigEndian, &frn)
 		if err != nil {
-			return nil, err
+			return rfs, err
 		}
-	case uap.Repetitive:
-		item, err = RepetitiveDataFieldReader(rb, sub.Size)
-		if err != nil {
-			return nil, err
+
+		for _, field := range items {
+			if frn == field.FRN {
+				rf := new(RandomField)
+				rf.FRN = frn
+
+				// todo: work just for Fixed datafield use case
+				tmp := make([]byte, field.Fixed.Size)
+
+				err := binary.Read(rb, binary.BigEndian, &tmp)
+				if err != nil {
+					return rfs, err
+				}
+				item := NewItem(field)
+				item.Size = field.Fixed.Size
+				fixed := Fixed{}
+				fixed.Payload = tmp
+				item.Fixed = &fixed
+				rf.Field = *item
+				rfs.Sequence = append(rfs.Sequence, *rf)
+			}
 		}
-	case uap.Extended:
-		item, err = ExtendedDataFieldReader(rb, sub.PrimarySize, sub.SecondarySize)
-		if err != nil {
-			return nil, err
-		}
-	case uap.Explicit:
-		item, err = ExplicitDataFieldReader(rb)
-		if err != nil {
-			return nil, err
-		}
-	default:
-		return nil, ErrDataFieldUnknown
 	}
 
-	return item, err
+	return rfs, err
 }
 
 // SPAndREDataFieldReader extracts returns a slice
@@ -389,58 +509,21 @@ func SelectTypeFieldReader(rb *bytes.Reader, sub uap.Subfield) (item []byte, err
 // 4.3.5 Non-Standard Data Fields:
 // Reserved Expansion Data
 // Field Special Purpose field
-func SPAndREDataFieldReader(rb *bytes.Reader) (item []byte, err error) {
-	l := make([]byte, 1)
-	err = binary.Read(rb, binary.BigEndian, &l)
+func SPAndREDataFieldReader(rb *bytes.Reader) (SpecialPurpose, error) {
+	var err error
+	sp := SpecialPurpose{}
+
+	err = binary.Read(rb, binary.BigEndian, &sp.Len)
 	if err != nil {
-		return nil, err
+		return sp, err
 	}
 
-	tmp := make([]byte, l[0]-1)
+	tmp := make([]byte, sp.Len-1)
 	err = binary.Read(rb, binary.BigEndian, &tmp)
 	if err != nil {
-		return nil, err
+		return sp, err
 	}
+	sp.Payload = tmp
 
-	item = append(item, l[0])
-	item = append(item, tmp...)
-	return item, err
-}
-
-// RFSDataFieldReader extracts Random Field Sequencing part and returns an array of byte(data item).
-func RFSDataFieldReader(rb *bytes.Reader, uap []uap.DataField) (item []byte, err error) {
-	// total is the number of datafields
-	var n uint8
-	err = binary.Read(rb, binary.BigEndian, &n)
-	if err != nil {
-		return nil, err
-	}
-
-	item = append(item, n)
-
-	for i := uint8(0); i < n; i++ {
-		// random FRN
-		var frn uint8
-		err := binary.Read(rb, binary.BigEndian, &frn)
-		if err != nil {
-			return nil, err
-		}
-		item = append(item, frn)
-
-		for _, field := range uap {
-			if frn == field.FRN {
-				// todo: work just for Fixed datafield use case
-				tmp := make([]byte, field.Type.Size)
-
-				err := binary.Read(rb, binary.BigEndian, &tmp)
-				if err != nil {
-					return nil, err
-				}
-
-				item = append(item, tmp...)
-			}
-		}
-	}
-
-	return item, err
+	return sp, err
 }

@@ -2,14 +2,13 @@ package goasterix
 
 import (
 	"bytes"
-	"fmt"
+	"github.com/mokhtarimokhtar/goasterix/uap"
 	"io"
 	"reflect"
 	"testing"
-
-	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
+/*
 func TestRecord_Payload(t *testing.T) {
 	// Arrange
 	data, _ := HexStringToByte("ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020a0")
@@ -46,7 +45,7 @@ func TestRecord_String(t *testing.T) {
 	}
 
 }
-
+*/
 func TestFspecReader_Valid(t *testing.T) {
 	// Arrange
 	input := []byte{0xFF, 0x01, 0xF2, 0xFF}
@@ -130,216 +129,8 @@ func TestFspecIndex(t *testing.T) {
 
 }
 
-// DataFieldExplicit
-func TestDataFieldExplicitReader_Valid(t *testing.T) {
-	// Arrange
-	input, _ := HexStringToByte("03 FF FF")
-	output := []byte{0x03, 0xFF, 0xFF}
-	rb := bytes.NewReader(input)
-
-	// Act
-	sp, err := ExplicitDataFieldReader(rb)
-
-	// Assert
-	if err != nil {
-		t.Errorf("FAIL: error: %s; Expected: %v", err, nil)
-	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
-	}
-
-	if bytes.Equal(sp, output) == false {
-		t.Errorf("FAIL: sp = % X; Expected: % X", sp, output)
-	} else {
-		t.Logf("SUCCESS: sp = % X; Expected: % X", sp, output)
-	}
-}
-
-func TestDataFieldExplicitReader_Invalid(t *testing.T) {
-	// Arrange
-	input, _ := HexStringToByte("03 FF")
-	var output []byte
-	rb := bytes.NewReader(input)
-
-	// Act
-	sp, err := ExplicitDataFieldReader(rb)
-
-	// Assert
-	if err != io.ErrUnexpectedEOF {
-		t.Errorf("FAIL: error: %s; Expected: %v", err, io.ErrUnexpectedEOF)
-	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, io.ErrUnexpectedEOF)
-	}
-
-	if bytes.Equal(sp, output) == false {
-		t.Errorf("FAIL: sp = % X; Expected: % X", sp, output)
-	} else {
-		t.Logf("SUCCESS: sp = % X; Expected: % X", sp, output)
-	}
-}
-
-func TestExplicitDataFieldReader_Empty(t *testing.T) {
-	// Arrange
-	input, _ := HexStringToByte("")
-	var output []byte
-	rb := bytes.NewReader(input)
-
-	// Act
-	sp, err := ExplicitDataFieldReader(rb)
-
-	// Assert
-	if err != io.EOF {
-		t.Errorf("FAIL: error: %s; Expected: %v", err, io.ErrUnexpectedEOF)
-	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, io.ErrUnexpectedEOF)
-	}
-
-	if bytes.Equal(sp, output) == false {
-		t.Errorf("FAIL: sp = % X; Expected: % X", sp, output)
-	} else {
-		t.Logf("SUCCESS: sp = % X; Expected: % X", sp, output)
-	}
-}
-
-// DataFieldSPAndRE
-func TestDataFieldSPAndREReader_Valid(t *testing.T) {
-	// Arrange
-	input, _ := HexStringToByte("03 FF FF")
-	output := []byte{0x03, 0xFF, 0xFF}
-	rb := bytes.NewReader(input)
-
-	// Act
-	sp, err := SPAndREDataFieldReader(rb)
-
-	// Assert
-	if err != nil {
-		t.Errorf("FAIL: error: %s; Expected: %v", err, nil)
-	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
-	}
-
-	if bytes.Equal(sp, output) == false {
-		t.Errorf("FAIL: % X; Expected: % X", sp, output)
-	} else {
-		t.Logf("SUCCESS: % X; Expected: % X", sp, output)
-	}
-}
-
-func TestDataFieldSPAndREReader_Invalid(t *testing.T) {
-	// Arrange
-	input, _ := HexStringToByte("03 FF")
-	var output []byte
-	rb := bytes.NewReader(input)
-
-	// Act
-	sp, err := SPAndREDataFieldReader(rb)
-
-	// Assert
-	if err != io.ErrUnexpectedEOF {
-		t.Errorf("FAIL: error: %s; Expected: %v", err, io.ErrUnexpectedEOF)
-	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, io.ErrUnexpectedEOF)
-	}
-
-	if bytes.Equal(sp, output) == false {
-		t.Errorf("FAIL: % X; Expected: % X", sp, output)
-	} else {
-		t.Logf("SUCCESS: % X; Expected: % X", sp, output)
-	}
-}
-
-func TestDataFieldSPAndREReader_Empty(t *testing.T) {
-	// Arrange
-	input, _ := HexStringToByte("")
-	var output []byte
-	rb := bytes.NewReader(input)
-
-	// Act
-	sp, err := SPAndREDataFieldReader(rb)
-
-	// Assert
-	if err != io.EOF {
-		t.Errorf("FAIL: error: %s; Expected: %v", err, io.EOF)
-	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, io.EOF)
-	}
-
-	if bytes.Equal(sp, output) == false {
-		t.Errorf("FAIL: % X; Expected: % X", sp, output)
-	} else {
-		t.Logf("SUCCESS: % X; Expected: % X", sp, output)
-	}
-}
-
-// DataFieldRepetitive
-func TestDataFieldRepetitiveReader_Valid(t *testing.T) {
-	// Arrange
-	input, _ := HexStringToByte("03 01 02 03 04 05 06 07 08 09")
-	nb := uint8(3)
-	rb := bytes.NewReader(input)
-	output := []byte{0x03, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09}
-
-	// Act
-	item, err := RepetitiveDataFieldReader(rb, nb)
-
-	// Assert
-	if err != nil {
-		t.Errorf("FAIL: error: %v; Expected: %v", err, nil)
-	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
-	}
-	if bytes.Equal(item, output) == false {
-		t.Errorf("FAIL: item = % X; Expected: % X", item, output)
-	} else {
-		t.Logf("SUCCESS: item = % X; Expected: % X", item, output)
-	}
-}
-
-func TestDataFieldRepetitiveReader_Invalid(t *testing.T) {
-	// Arrange
-	input, _ := HexStringToByte("04 01 02 03 04 05 06 07 08 09")
-	nb := uint8(3)
-	rb := bytes.NewReader(input)
-
-	// Act
-	item, err := RepetitiveDataFieldReader(rb, nb)
-
-	// Assert
-	if err != io.ErrUnexpectedEOF {
-		t.Errorf("FAIL: error: %s; Expected: %v", err, io.ErrUnexpectedEOF)
-	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, io.ErrUnexpectedEOF)
-	}
-	if item != nil {
-		t.Errorf("FAIL: item = %v; Expected: %v", item, nil)
-	} else {
-		t.Logf("SUCCESS: item = %v; Expected: %v", item, nil)
-	}
-}
-
-func TestDataFieldRepetitiveReader_Empty(t *testing.T) {
-	// Arrange
-	input, _ := HexStringToByte("")
-	nb := uint8(3)
-	rb := bytes.NewReader(input)
-
-	// Act
-	item, err := RepetitiveDataFieldReader(rb, nb)
-
-	// Assert
-	if err != io.EOF {
-		t.Errorf("FAIL: error: %s; Expected: %v", err, io.ErrUnexpectedEOF)
-	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, io.ErrUnexpectedEOF)
-	}
-	if item != nil {
-		t.Errorf("FAIL: item = %v; Expected: %v", item, nil)
-	} else {
-		t.Logf("SUCCESS: item = %v; Expected: %v", item, nil)
-	}
-}
-
-// DataFieldFixed
-func TestDataFieldFixedReader_Valid(t *testing.T) {
+// FixedDataField
+func TestFixedDataFieldReader_Valid(t *testing.T) {
 	// Arrange
 	input, _ := HexStringToByte("FF FE FD BF 00 01 02 03")
 	nb := uint8(8)
@@ -355,14 +146,14 @@ func TestDataFieldFixedReader_Valid(t *testing.T) {
 	} else {
 		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
 	}
-	if bytes.Equal(item, output) == false {
+	if bytes.Equal(item.Payload, output) == false {
 		t.Errorf("FAIL: sp = % X; Expected: % X", item, output)
 	} else {
 		t.Logf("SUCCESS: sp = % X; Expected: % X", item, output)
 	}
 }
 
-func TestDataFieldFixedReader_Invalid(t *testing.T) {
+func TestFixedDataFieldReader_Invalid(t *testing.T) {
 	// Arrange
 	input, _ := HexStringToByte("FF FE BF 00 01 02")
 	nb := uint8(7)
@@ -377,410 +168,22 @@ func TestDataFieldFixedReader_Invalid(t *testing.T) {
 	} else {
 		t.Logf("SUCCESS: error: %v; Expected: %v", err, io.ErrUnexpectedEOF)
 	}
-	if item != nil {
+	if item.Payload != nil {
 		t.Errorf("FAIL: item = %v; Expected: %v", item, nil)
 	} else {
 		t.Logf("SUCCESS: item = %v; Expected: %v", item, nil)
 	}
 }
 
-// DataFieldCompound
-
-func TestDataFieldCompoundReader(t *testing.T) {
-	// Setup
-	type compoundDataFieldTest struct {
-		Name   string
-		input  string
-		output []byte
-		item   uap.Primary
-		err    error
-	}
-	dataSet := []compoundDataFieldTest{
-		{
-			Name: "Compound type: two primaries subitems and follow valid subitems",
-			input: "FF FE " +
-				"FFFFFF  FFFFFFFFFFFF FFFF FFFF FFFF FFFF FFFF" +
-				"FF " +
-				"02 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF " +
-				"FFFF FFFF FFFFFFFFFFFFFF FFFF FFFF",
-			output: []byte{0xFF, 0xFE,
-				0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-				0xFF, 0x02, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-				0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF},
-			item: uap.Primary{
-				uap.MetaField{
-					8: {NameType: uap.Fixed, Size: 3},
-					7: {NameType: uap.Fixed, Size: 6},
-					6: {NameType: uap.Fixed, Size: 2},
-					5: {NameType: uap.Fixed, Size: 2},
-					4: {NameType: uap.Fixed, Size: 2},
-					3: {NameType: uap.Fixed, Size: 2},
-					2: {NameType: uap.Fixed, Size: 2},
-				},
-				uap.MetaField{
-					8: {NameType: uap.Fixed, Size: 1},
-					7: {NameType: uap.Repetitive, Size: 15},
-					6: {NameType: uap.Fixed, Size: 2},
-					5: {NameType: uap.Fixed, Size: 2},
-					4: {NameType: uap.Fixed, Size: 7},
-					3: {NameType: uap.Fixed, Size: 2},
-					2: {NameType: uap.Fixed, Size: 2},
-				},
-			},
-			err: nil,
-		},
-		{
-			Name: "Compound type: one primary subitem and follow valid subitems",
-			input: "FE " +
-				"FFFFFF  FFFFFFFFFFFF FFFF FFFF FFFF FFFF FFFF",
-			output: []byte{0xFE,
-				0xFF, 0xFF, 0xFF,
-				0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-				0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF},
-			item: uap.Primary{
-				uap.MetaField{
-					8: {NameType: uap.Fixed, Size: 3},
-					7: {NameType: uap.Fixed, Size: 6},
-					6: {NameType: uap.Fixed, Size: 2},
-					5: {NameType: uap.Fixed, Size: 2},
-					4: {NameType: uap.Fixed, Size: 2},
-					3: {NameType: uap.Fixed, Size: 2},
-					2: {NameType: uap.Fixed, Size: 2},
-				},
-			},
-			err: nil,
-		},
-		{
-			Name:   "Compound type: empty",
-			input:  "",
-			output: []byte{},
-			item: uap.Primary{
-				uap.MetaField{
-					8: {NameType: uap.Fixed, Size: 3},
-					7: {NameType: uap.Fixed, Size: 6},
-					6: {NameType: uap.Fixed, Size: 2},
-					5: {NameType: uap.Fixed, Size: 2},
-					4: {NameType: uap.Fixed, Size: 2},
-					3: {NameType: uap.Fixed, Size: 2},
-					2: {NameType: uap.Fixed, Size: 2},
-				},
-			},
-			err: io.EOF,
-		},
-		{
-			Name:   "Compound type: ErrDataFieldUnknown",
-			input:  "40 FF",
-			output: []byte{},
-			item: uap.Primary{
-				uap.MetaField{
-					7: {NameType: uap.Spare, Size: 2},
-				},
-			},
-			err: ErrDataFieldUnknown,
-		},
-		{
-			Name:   "Compound type: error secondary part bit 8",
-			input:  "80 FF",
-			output: []byte{},
-			item: uap.Primary{
-				uap.MetaField{
-					8: {NameType: uap.Fixed, Size: 2},
-				},
-			},
-			err: io.ErrUnexpectedEOF,
-		},
-		{
-			Name:   "Compound type: error secondary part bit 7",
-			input:  "40 FF",
-			output: []byte{},
-			item: uap.Primary{
-				uap.MetaField{
-					7: {NameType: uap.Fixed, Size: 2},
-				},
-			},
-			err: io.ErrUnexpectedEOF,
-		},
-		{
-			Name:   "Compound type: error secondary part bit 6",
-			input:  "20 FF",
-			output: []byte{},
-
-			item: uap.Primary{
-				uap.MetaField{
-					6: {NameType: uap.Fixed, Size: 2},
-				},
-			},
-			err: io.ErrUnexpectedEOF,
-		},
-		{
-			Name:   "Compound type: error secondary part bit 5",
-			input:  "10 FF",
-			output: []byte{},
-
-			item: uap.Primary{
-				uap.MetaField{
-					5: {NameType: uap.Fixed, Size: 2},
-				},
-			},
-			err: io.ErrUnexpectedEOF,
-		},
-		{
-			Name:   "Compound type: error secondary bit 4",
-			input:  "08 FF",
-			output: []byte{},
-
-			item: uap.Primary{
-				uap.MetaField{
-					4: {NameType: uap.Fixed, Size: 2},
-				},
-			},
-			err: io.ErrUnexpectedEOF,
-		},
-		{
-			Name:   "Compound type: error secondary bit 3",
-			input:  "04 FF",
-			output: []byte{},
-			item: uap.Primary{
-				uap.MetaField{
-					3: {NameType: uap.Fixed, Size: 2},
-				},
-			},
-			err: io.ErrUnexpectedEOF,
-		},
-		{
-			Name:   "Compound type: error secondary part bit 2",
-			input:  "02 FF",
-			output: []byte{},
-
-			item: uap.Primary{
-				uap.MetaField{
-					2: {NameType: uap.Fixed, Size: 2},
-				},
-			},
-			err: io.ErrUnexpectedEOF,
-		},
-	}
-
-	for _, row := range dataSet {
-		// Arrange
-		input, _ := HexStringToByte(row.input)
-		rb := bytes.NewReader(input)
-
-		// Act
-		dataItem, err := CompoundDataFieldReader(rb, row.item)
-
-		// Assert
-		if err != row.err {
-			t.Errorf("FAIL: error: %v; Expected: %v", err, row.err)
-		} else {
-			t.Logf("SUCCESS: error: %v; Expected: %v", err, row.err)
-		}
-		if bytes.Equal(dataItem, row.output) == false {
-			t.Errorf("FAIL: Compound = % X; Expected: % X", dataItem, row.output)
-		} else {
-			t.Logf("SUCCESS: Compound = % X; Expected: % X", dataItem, row.output)
-		}
-	}
-}
-
-func TestSelectTypeFieldReader(t *testing.T) {
-	type SelectTypeFieldTest struct {
-		input  string
-		output []byte
-		item   uap.Subfield
-		err    error
-	}
-	// Setup
-	dataSet := []SelectTypeFieldTest{
-		{
-			// Fixed
-			input:  "FF",
-			output: []byte{0xFF},
-			item:   uap.Subfield{NameType: uap.Fixed, Size: 1},
-			err:    nil,
-		},
-		{
-			// Error EOF
-			input:  "",
-			output: []byte{},
-			item:   uap.Subfield{NameType: uap.Fixed, Size: 1},
-			err:    io.EOF,
-		},
-		{
-			// Extended
-			input:  "FF FF FE",
-			output: []byte{0xFF, 0xFF, 0xFE},
-			item:   uap.Subfield{NameType: uap.Extended, PrimarySize: 1, SecondarySize: 1},
-			err:    nil,
-		},
-		{
-			// Error EOF
-			input:  "",
-			output: []byte{},
-			item:   uap.Subfield{NameType: uap.Extended, PrimarySize: 1, SecondarySize: 1},
-			err:    io.EOF,
-		},
-		{
-			// Explicit
-			input:  "03 FF FF",
-			output: []byte{0x03, 0xFF, 0xFF},
-			item:   uap.Subfield{NameType: uap.Explicit},
-			err:    nil,
-		},
-		{
-			// Error EOF
-			input:  "",
-			output: []byte{},
-			item:   uap.Subfield{NameType: uap.Explicit, Size: 1},
-			err:    io.EOF,
-		},
-		{
-			// Repetitive
-			input:  "03 FFFFFF FFFFFF FFFFFF",
-			output: []byte{0x03, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF},
-			item:   uap.Subfield{NameType: uap.Repetitive, Size: 3},
-			err:    nil,
-		},
-		{
-			// Error EOF
-			input:  "",
-			output: []byte{},
-			item:   uap.Subfield{NameType: uap.Repetitive, Size: 1},
-			err:    io.EOF,
-		},
-		{
-			// ErrDataFieldUnknown
-			input:  "FF",
-			output: []byte{},
-			item:   uap.Subfield{NameType: uap.Spare},
-			err:    ErrDataFieldUnknown,
-		},
-	}
-	for _, row := range dataSet {
-		// Arrange
-		input, _ := HexStringToByte(row.input)
-		rb := bytes.NewReader(input)
-
-		// Act
-		dataItem, err := SelectTypeFieldReader(rb, row.item)
-
-		// Assert
-		if err != row.err {
-			t.Errorf("FAIL: error: %v; Expected: %v", err, row.err)
-		} else {
-			t.Logf("SUCCESS: error: %v; Expected: %v", err, row.err)
-		}
-		if bytes.Equal(dataItem, row.output) == false {
-			t.Errorf("FAIL: % X; Expected: % X", dataItem, row.output)
-		} else {
-			t.Logf("SUCCESS: % X; Expected: % X", dataItem, row.output)
-		}
-	}
-}
-
-func TestDataFieldRFSReader_FrnValid(t *testing.T) {
-	// Arrange
-	// N = 2, FRN = 3, FRN = 17
-	input, _ := HexStringToByte("02 03 FFFF 11 FFFFFFFF")
-	uap001 := uap.Cat001TrackV12
-	rb := bytes.NewReader(input)
-	output := []byte{0x02, 0x03, 0xFF, 0xFF, 0x11, 0xFF, 0xFF, 0xFF, 0xFF}
-
-	// Act
-	item, err := RFSDataFieldReader(rb, uap001)
-
-	// Assert
-	if err != nil {
-		t.Errorf("FAIL: error: %v; Expected: %v", err, nil)
-	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
-	}
-	if bytes.Equal(item, output) == false {
-		t.Errorf("FAIL: % X; Expected: % X", item, output)
-	} else {
-		t.Logf("SUCCESS: % X; Expected: % X", item, output)
-	}
-}
-
-func TestDataFieldRFSReader_FrnNotExist(t *testing.T) {
-	// Arrange
-	// N = 2, the following binary not exist
-	input, _ := HexStringToByte("02")
-	uap001 := uap.Cat001TrackV12
-	rb := bytes.NewReader(input)
-	var output []byte
-
-	// Act
-	item, err := RFSDataFieldReader(rb, uap001)
-
-	// Assert
-	if err != io.EOF {
-		t.Errorf("FAIL: error: %v; Expected: %v", err, io.EOF)
-	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, io.EOF)
-	}
-	if bytes.Equal(item, output) == false {
-		t.Errorf("FAIL: % X; Expected: % X", item, output)
-	} else {
-		t.Logf("SUCCESS: % X; Expected: % X", item, output)
-	}
-}
-
-func TestDataFieldRFSReader_FrnInValid(t *testing.T) {
-	// Arrange
-	// N = 2, FRN = 3, FRN = 17
-	input, _ := HexStringToByte("02 03 FFFF 11 FFFFFF")
-	uap001 := uap.Cat001TrackV12
-	rb := bytes.NewReader(input)
-	var output []byte
-
-	// Act
-	item, err := RFSDataFieldReader(rb, uap001)
-
-	// Assert
-	if err != io.ErrUnexpectedEOF {
-		t.Errorf("FAIL: error: %v; Expected: %v", err, io.ErrUnexpectedEOF)
-	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, io.ErrUnexpectedEOF)
-	}
-	if bytes.Equal(item, output) == false {
-		t.Errorf("FAIL: % X; Expected: % X", item, output)
-	} else {
-		t.Logf("SUCCESS: % X; Expected: % X", item, output)
-	}
-}
-
-func TestDataFieldRFSReader_Empty(t *testing.T) {
-	// Arrange
-	input, _ := HexStringToByte("")
-	uap001 := uap.Cat001TrackV12
-	rb := bytes.NewReader(input)
-	var output []byte
-
-	// Act
-	item, err := RFSDataFieldReader(rb, uap001)
-
-	// Assert
-	if err != io.EOF {
-		t.Errorf("FAIL: error: %v; Expected: %v", err, io.EOF)
-	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, io.EOF)
-	}
-	if bytes.Equal(item, output) == false {
-		t.Errorf("FAIL: rfs = % X; Expected: % X", item, output)
-	} else {
-		t.Logf("SUCCESS: rfs = % X; Expected: % X", item, output)
-	}
-}
-
-func TestDataFieldExtendedReader(t *testing.T) {
+// ExtendedDataField
+func TestExtendedDataFieldReader(t *testing.T) {
 	// setup
 	type dataTest struct {
 		TestCaseName  string
 		input         string
 		primarySize   uint8
 		secondarySize uint8
-		output        []byte
+		output        Extended
 		err           error
 	}
 	dataSet := []dataTest{
@@ -789,56 +192,73 @@ func TestDataFieldExtendedReader(t *testing.T) {
 			input:         "01 03 07 09 0B 0D 0F 0E",
 			primarySize:   1,
 			secondarySize: 1,
-			output:        []byte{0x01, 0x03, 0x07, 0x09, 0x0B, 0x0D, 0x0F, 0x0E},
-			err:           nil,
+			output: Extended{
+				Primary:   []byte{0x01},
+				Secondary: []byte{0x03, 0x07, 0x09, 0x0B, 0x0D, 0x0F, 0x0E},
+			},
+			err: nil,
 		},
 		{
 			TestCaseName:  "testcase 2",
 			input:         "FE",
 			primarySize:   1,
 			secondarySize: 1,
-			output:        []byte{0xFE},
-			err:           nil,
+			output: Extended{
+				Primary: []byte{0xFE},
+			},
+			err: nil,
 		},
 		{
 			TestCaseName:  "testcase 3",
 			input:         "",
 			primarySize:   1,
 			secondarySize: 1,
-			output:        []byte{},
-			err:           io.EOF,
+			output: Extended{
+				Primary: nil,
+			},
+			err: io.EOF,
 		},
 		{
 			TestCaseName:  "testcase 4",
 			input:         "FF",
 			primarySize:   1,
 			secondarySize: 1,
-			output:        []byte{},
-			err:           io.EOF,
+			output: Extended{
+				Primary: []byte{0xff},
+			},
+			err: io.EOF,
 		},
 		{
 			TestCaseName:  "testcase 5",
 			input:         "FF",
 			primarySize:   2,
 			secondarySize: 1,
-			output:        []byte{},
-			err:           io.ErrUnexpectedEOF,
+			output: Extended{
+				Primary: nil,
+			},
+			err: io.ErrUnexpectedEOF,
 		},
 		{
 			TestCaseName:  "testcase 6",
 			input:         "0001 000001 FFFFFE",
 			primarySize:   2,
 			secondarySize: 3,
-			output:        []byte{0x00, 0x01, 0x00, 0x00, 0x01, 0xFF, 0xFF, 0xFE},
-			err:           nil,
+			output: Extended{
+				Primary:   []byte{0x00, 0x01},
+				Secondary: []byte{0x00, 0x00, 0x01, 0xFF, 0xFF, 0xFE},
+			},
+			err: nil,
 		},
 		{
 			TestCaseName:  "testcase 7",
 			input:         "0001 000001 FFFF",
 			primarySize:   2,
 			secondarySize: 3,
-			output:        []byte{},
-			err:           io.ErrUnexpectedEOF,
+			output: Extended{
+				Primary:   []byte{0x00, 0x01},
+				Secondary: []byte{0x00, 0x00, 0x01},
+			},
+			err: io.ErrUnexpectedEOF,
 		},
 	}
 	for _, row := range dataSet {
@@ -855,7 +275,7 @@ func TestDataFieldExtendedReader(t *testing.T) {
 		} else {
 			t.Logf("SUCCESS: error: %v; Expected: %v", err, row.err)
 		}
-		if bytes.Equal(item, row.output) == false {
+		if reflect.DeepEqual(item, row.output) == false {
 			t.Errorf("FAIL: %s - item = % X; Expected: % X", row.TestCaseName, item, row.output)
 		} else {
 			t.Logf("SUCCESS: item = % X; Expected: % X", item, row.output)
@@ -863,19 +283,571 @@ func TestDataFieldExtendedReader(t *testing.T) {
 	}
 }
 
-/**
-Testing by record
-*/
+// ExplicitDataField
+func TestExplicitDataFieldReader(t *testing.T) {
+	// setup
+	type dataTest struct {
+		TestCaseName string
+		input        string
+		output       Explicit
+		err          error
+	}
+	dataSet := []dataTest{
+		{
+			TestCaseName: "testcase 1",
+			input:        "03 FF FF",
+			output: Explicit{
+				Len:     0x03,
+				Payload: []byte{0xFF, 0xFF},
+			},
+			err: nil,
+		},
+		{
+			TestCaseName: "testcase 2",
+			input:        "03 FF",
+			output: Explicit{
+				Len:     0x03,
+				Payload: nil,
+			},
+			err: io.ErrUnexpectedEOF,
+		},
+		{
+			TestCaseName: "testcase 3",
+			input:        "",
+			output: Explicit{
+				Len:     0,
+				Payload: nil,
+			},
+			err: io.EOF,
+		},
+	}
+	for _, row := range dataSet {
+		// Arrange
+		input, _ := HexStringToByte(row.input)
+		rb := bytes.NewReader(input)
 
+		// Act
+		item, err := ExplicitDataFieldReader(rb)
+
+		// Assert
+		if err != row.err {
+			t.Errorf("FAIL: %s - error: %v; Expected: %v", row.TestCaseName, err, row.err)
+		} else {
+			t.Logf("SUCCESS: error: %v; Expected: %v", err, row.err)
+		}
+		if reflect.DeepEqual(item, row.output) == false {
+			t.Errorf("FAIL: %s - item = % X; Expected: % X", row.TestCaseName, item, row.output)
+		} else {
+			t.Logf("SUCCESS: item = % X; Expected: % X", item, row.output)
+		}
+	}
+
+}
+
+// RepetitiveDataField
+func TestRepetitiveDataFieldReader(t *testing.T) {
+	// setup
+	type dataTest struct {
+		TestCaseName string
+		input        string
+		SubItemSize  uint8
+		output       Repetitive
+		err          error
+	}
+	dataSet := []dataTest{
+		{
+			TestCaseName: "testcase 1",
+			input:        "03 01 02 03 04 05 06 07 08 09",
+			SubItemSize:  3,
+			output: Repetitive{
+				Rep:     0x03,
+				Payload: []byte{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09},
+			},
+			err: nil,
+		},
+		{
+			TestCaseName: "testcase 2",
+			input:        "04 01 02 03 04 05 06 07 08 09",
+			SubItemSize:  3,
+			output: Repetitive{
+				Rep:     0x04,
+				Payload: nil,
+			},
+			err: io.ErrUnexpectedEOF,
+		},
+		{
+			TestCaseName: "testcase 3",
+			input:        "",
+			SubItemSize:  3,
+			output: Repetitive{
+				Rep:     0,
+				Payload: nil,
+			},
+			err: io.EOF,
+		},
+	}
+	for _, row := range dataSet {
+		// Arrange
+		input, _ := HexStringToByte(row.input)
+		rb := bytes.NewReader(input)
+
+		// Act
+		item, err := RepetitiveDataFieldReader(rb, row.SubItemSize)
+
+		// Assert
+		if err != row.err {
+			t.Errorf("FAIL: %s - error: %v; Expected: %v", row.TestCaseName, err, row.err)
+		} else {
+			t.Logf("SUCCESS: error: %v; Expected: %v", err, row.err)
+		}
+		if reflect.DeepEqual(item, row.output) == false {
+			t.Errorf("FAIL: %s - item = % X; Expected: % X", row.TestCaseName, item, row.output)
+		} else {
+			t.Logf("SUCCESS: item = % X; Expected: % X", item, row.output)
+		}
+	}
+}
+
+// CompoundDataField
+func TestCompoundDataFieldReader(t *testing.T) {
+	// Setup
+	type dataTest struct {
+		TestCaseName string
+		input        string
+		output       Compound
+		item         []uap.DataField
+		err          error
+	}
+	dataSet := []dataTest{
+		{
+			TestCaseName: "Compound type: two primaries subitems and follow valid subitems",
+			input: "FF FE " +
+				"FFFFFF  FFFFFFFFFFFF FFFF FFFF FFFF FFFF FFFF" +
+				"FF " +
+				"02 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF " +
+				"FFFF FFFF FFFFFFFFFFFFFF FFFF FFFF",
+			output: Compound{
+				Primary: []byte{0xFF, 0xFE},
+				Secondary: []Item{
+					{
+						Meta: MetaItem{FRN: 1, Type: uap.Fixed}, Size: 3,
+						Fixed: &Fixed{Payload: []byte{0xFF, 0xFF, 0xFF}},
+					},
+					{
+						Meta: MetaItem{FRN: 2, Type: uap.Fixed}, Size: 6,
+						Fixed: &Fixed{Payload: []byte{0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}},
+					},
+					{
+						Meta: MetaItem{FRN: 3, Type: uap.Fixed}, Size: 2,
+						Fixed: &Fixed{Payload: []byte{0xFF, 0xFF}},
+					},
+					{
+						Meta: MetaItem{FRN: 4, Type: uap.Fixed}, Size: 2,
+						Fixed: &Fixed{Payload: []byte{0xFF, 0xFF}},
+					},
+					{
+						Meta: MetaItem{FRN: 5, Type: uap.Fixed}, Size: 2,
+						Fixed: &Fixed{Payload: []byte{0xFF, 0xFF}},
+					},
+					{
+						Meta: MetaItem{FRN: 6, Type: uap.Fixed}, Size: 2,
+						Fixed: &Fixed{Payload: []byte{0xFF, 0xFF}},
+					},
+					{
+						Meta: MetaItem{FRN: 7, Type: uap.Fixed}, Size: 2,
+						Fixed: &Fixed{Payload: []byte{0xFF, 0xFF}},
+					},
+					{
+						Meta: MetaItem{FRN: 8, Type: uap.Fixed}, Size: 1,
+						Fixed: &Fixed{Payload: []byte{0xFF}},
+					},
+					{
+						Meta: MetaItem{FRN: 9, Type: uap.Repetitive},
+						Repetitive: &Repetitive{
+							Rep:     0x02,
+							Payload: []byte{0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF},
+						},
+					},
+					{
+						Meta: MetaItem{FRN: 10, Type: uap.Fixed}, Size: 2,
+						Fixed: &Fixed{Payload: []byte{0xFF, 0xFF}},
+					},
+					{
+						Meta: MetaItem{FRN: 11, Type: uap.Fixed}, Size: 2,
+						Fixed: &Fixed{Payload: []byte{0xFF, 0xFF}},
+					},
+					{
+						Meta: MetaItem{FRN: 12, Type: uap.Fixed}, Size: 7,
+						Fixed: &Fixed{Payload: []byte{0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}},
+					},
+					{
+						Meta: MetaItem{FRN: 13, Type: uap.Fixed}, Size: 2,
+						Fixed: &Fixed{Payload: []byte{0xFF, 0xFF}},
+					},
+					{
+						Meta: MetaItem{FRN: 14, Type: uap.Fixed}, Size: 2,
+						Fixed: &Fixed{Payload: []byte{0xFF, 0xFF}},
+					},
+				},
+			},
+			item: []uap.DataField{
+				{FRN: 1, Type: uap.Fixed, Fixed: uap.FixedField{Size: 3}},
+				{FRN: 2, Type: uap.Fixed, Fixed: uap.FixedField{Size: 6}},
+				{FRN: 3, Type: uap.Fixed, Fixed: uap.FixedField{Size: 2}},
+				{FRN: 4, Type: uap.Fixed, Fixed: uap.FixedField{Size: 2}},
+				{FRN: 5, Type: uap.Fixed, Fixed: uap.FixedField{Size: 2}},
+				{FRN: 6, Type: uap.Fixed, Fixed: uap.FixedField{Size: 2}},
+				{FRN: 7, Type: uap.Fixed, Fixed: uap.FixedField{Size: 2}},
+
+				{FRN: 8, Type: uap.Fixed, Fixed: uap.FixedField{Size: 1}},
+				{FRN: 9, Type: uap.Repetitive, Repetitive: uap.RepetitiveField{SubItemSize: 15}},
+				{FRN: 10, Type: uap.Fixed, Fixed: uap.FixedField{Size: 2}},
+				{FRN: 11, Type: uap.Fixed, Fixed: uap.FixedField{Size: 2}},
+				{FRN: 12, Type: uap.Fixed, Fixed: uap.FixedField{Size: 7}},
+				{FRN: 13, Type: uap.Fixed, Fixed: uap.FixedField{Size: 2}},
+				{FRN: 14, Type: uap.Fixed, Fixed: uap.FixedField{Size: 2}},
+			},
+			err: nil,
+		},
+		/*
+			{
+				Name: "Compound type: one primary subitem and follow valid subitems",
+				input: "FE " +
+					"FFFFFF  FFFFFFFFFFFF FFFF FFFF FFFF FFFF FFFF",
+				output: []byte{0xFE,
+					0xFF, 0xFF, 0xFF,
+					0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+					0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF},
+				item: uap.Primary{
+					uap.MetaField{
+						8: {NameType: uap.Fixed, Size: 3},
+						7: {NameType: uap.Fixed, Size: 6},
+						6: {NameType: uap.Fixed, Size: 2},
+						5: {NameType: uap.Fixed, Size: 2},
+						4: {NameType: uap.Fixed, Size: 2},
+						3: {NameType: uap.Fixed, Size: 2},
+						2: {NameType: uap.Fixed, Size: 2},
+					},
+				},
+				err: nil,
+			},
+			{
+				Name:   "Compound type: empty",
+				input:  "",
+				output: []byte{},
+				item: uap.Primary{
+					uap.MetaField{
+						8: {NameType: uap.Fixed, Size: 3},
+						7: {NameType: uap.Fixed, Size: 6},
+						6: {NameType: uap.Fixed, Size: 2},
+						5: {NameType: uap.Fixed, Size: 2},
+						4: {NameType: uap.Fixed, Size: 2},
+						3: {NameType: uap.Fixed, Size: 2},
+						2: {NameType: uap.Fixed, Size: 2},
+					},
+				},
+				err: io.EOF,
+			},
+			{
+				Name:   "Compound type: ErrDataFieldUnknown",
+				input:  "40 FF",
+				output: []byte{},
+				item: uap.Primary{
+					uap.MetaField{
+						7: {NameType: uap.Spare, Size: 2},
+					},
+				},
+				err: ErrDataFieldUnknown,
+			},
+			{
+				Name:   "Compound type: error secondary part bit 8",
+				input:  "80 FF",
+				output: []byte{},
+				item: uap.Primary{
+					uap.MetaField{
+						8: {NameType: uap.Fixed, Size: 2},
+					},
+				},
+				err: io.ErrUnexpectedEOF,
+			},
+			{
+				Name:   "Compound type: error secondary part bit 7",
+				input:  "40 FF",
+				output: []byte{},
+				item: uap.Primary{
+					uap.MetaField{
+						7: {NameType: uap.Fixed, Size: 2},
+					},
+				},
+				err: io.ErrUnexpectedEOF,
+			},
+			{
+				Name:   "Compound type: error secondary part bit 6",
+				input:  "20 FF",
+				output: []byte{},
+
+				item: uap.Primary{
+					uap.MetaField{
+						6: {NameType: uap.Fixed, Size: 2},
+					},
+				},
+				err: io.ErrUnexpectedEOF,
+			},
+			{
+				Name:   "Compound type: error secondary part bit 5",
+				input:  "10 FF",
+				output: []byte{},
+
+				item: uap.Primary{
+					uap.MetaField{
+						5: {NameType: uap.Fixed, Size: 2},
+					},
+				},
+				err: io.ErrUnexpectedEOF,
+			},
+			{
+				Name:   "Compound type: error secondary bit 4",
+				input:  "08 FF",
+				output: []byte{},
+
+				item: uap.Primary{
+					uap.MetaField{
+						4: {NameType: uap.Fixed, Size: 2},
+					},
+				},
+				err: io.ErrUnexpectedEOF,
+			},
+			{
+				Name:   "Compound type: error secondary bit 3",
+				input:  "04 FF",
+				output: []byte{},
+				item: uap.Primary{
+					uap.MetaField{
+						3: {NameType: uap.Fixed, Size: 2},
+					},
+				},
+				err: io.ErrUnexpectedEOF,
+			},
+			{
+				Name:   "Compound type: error secondary part bit 2",
+				input:  "02 FF",
+				output: []byte{},
+
+				item: uap.Primary{
+					uap.MetaField{
+						2: {NameType: uap.Fixed, Size: 2},
+					},
+				},
+				err: io.ErrUnexpectedEOF,
+			},
+		*/
+	}
+
+	for _, row := range dataSet {
+		// Arrange
+		input, _ := HexStringToByte(row.input)
+		rb := bytes.NewReader(input)
+
+		// Act
+		cp, err := CompoundDataFieldReader(rb, row.item)
+
+		// Assert
+		if err != row.err {
+			t.Errorf("FAIL: error: %v; Expected: %v", err, row.err)
+		} else {
+			t.Logf("SUCCESS: error: %v; Expected: %v", err, row.err)
+		}
+		if reflect.DeepEqual(cp, row.output) == false {
+			t.Errorf("FAIL: %s - \nCompound = %v;\nExpected: %v", row.TestCaseName, cp, row.output)
+		} else {
+			t.Logf("SUCCESS: Compound = %v; Expected: %v", cp, row.output)
+		}
+	}
+}
+
+// SPAndREDataField
+func TestSPAndREDataFieldReader(t *testing.T) {
+	// Setup
+	type dataTest struct {
+		TestCaseName string
+		input        string
+		output       SpecialPurpose
+		err          error
+	}
+	dataSet := []dataTest{
+		{
+			TestCaseName: "testcase 1",
+			input:        "03 FF FF",
+			output: SpecialPurpose{
+				Len:     0x03,
+				Payload: []byte{0xFF, 0xFF},
+			},
+			err: nil,
+		},
+		{
+			TestCaseName: "testcase 2",
+			input:        "03 FF",
+			output: SpecialPurpose{
+				Len:     0x03,
+				Payload: nil,
+			},
+			err: io.ErrUnexpectedEOF,
+		},
+		{
+			TestCaseName: "testcase 3",
+			input:        "",
+			output: SpecialPurpose{
+				Len:     0x00,
+				Payload: nil,
+			},
+			err: io.EOF,
+		},
+	}
+
+	for _, row := range dataSet {
+		// Arrange
+		input, _ := HexStringToByte(row.input)
+		rb := bytes.NewReader(input)
+
+		// Act
+		cp, err := SPAndREDataFieldReader(rb)
+
+		// Assert
+		if err != row.err {
+			t.Errorf("FAIL: error: %v; Expected: %v", err, row.err)
+		} else {
+			t.Logf("SUCCESS: error: %v; Expected: %v", err, row.err)
+		}
+		if reflect.DeepEqual(cp, row.output) == false {
+			t.Errorf("FAIL: %s - \nCompound = %v;\nExpected: %v", row.TestCaseName, cp, row.output)
+		} else {
+			t.Logf("SUCCESS: Compound = %v; Expected: %v", cp, row.output)
+		}
+	}
+}
+
+// RFSDataField
+func TestRFSDataFieldReader(t *testing.T) {
+	// Setup
+	type dataTest struct {
+		TestCaseName string
+		input        string
+		item         []uap.DataField
+		output       RandomFieldSequencing
+		err          error
+	}
+	dataSet := []dataTest{
+		{
+			TestCaseName: "testcase 1",
+			input:        "02 03 ffffffff 0a ff",
+			item:         uap.Cat001PlotV12,
+			output: RandomFieldSequencing{
+				N: 0x02,
+				Sequence: []RandomField{
+					{
+						FRN: 0x03,
+						Field: Item{
+							Meta: MetaItem{
+								FRN:         3,
+								DataItem:    "I001/040",
+								Description: "Measured Position in Polar Coordinates",
+								Type:        uap.Fixed,
+							},
+							Size:  4,
+							Fixed: &Fixed{Payload: []byte{0xff, 0xff, 0xff, 0xff}},
+						},
+					},
+					{
+						FRN: 0x0a,
+						Field: Item{
+							Meta: MetaItem{
+								FRN:         10,
+								DataItem:    "I001/131",
+								Description: "Received Power",
+								Type:        uap.Fixed,
+							},
+							Size:  1,
+							Fixed: &Fixed{Payload: []byte{0xff}},
+						},
+					},
+				},
+			},
+			err: nil,
+		},
+		{
+			TestCaseName: "testcase 2",
+			input:        "02",
+			item:         uap.Cat001PlotV12,
+			output: RandomFieldSequencing{
+				N: 0x02,
+			},
+			err: io.EOF,
+		},
+		{
+			TestCaseName: "testcase 3",
+			input:        "02 03 ffffffff 0a",
+			item:         uap.Cat001PlotV12,
+			output: RandomFieldSequencing{
+				N: 0x02,
+				Sequence: []RandomField{
+					{
+						FRN: 0x03,
+						Field: Item{
+							Meta: MetaItem{
+								FRN:         3,
+								DataItem:    "I001/040",
+								Description: "Measured Position in Polar Coordinates",
+								Type:        uap.Fixed,
+							},
+							Size:  4,
+							Fixed: &Fixed{Payload: []byte{0xff, 0xff, 0xff, 0xff}},
+						},
+					},
+				},
+			},
+			err: io.EOF,
+		},
+		{
+			TestCaseName: "testcase 4",
+			input:        "",
+			item:         uap.Cat001PlotV12,
+			output:       RandomFieldSequencing{},
+			err:          io.EOF,
+		},
+	}
+
+	for _, row := range dataSet {
+		// Arrange
+		input, _ := HexStringToByte(row.input)
+		rb := bytes.NewReader(input)
+
+		// Act
+		cp, err := RFSDataFieldReader(rb, row.item)
+
+		// Assert
+		if err != row.err {
+			t.Errorf("FAIL: error: %v; Expected: %v", err, row.err)
+		} else {
+			t.Logf("SUCCESS: error: %v; Expected: %v", err, row.err)
+		}
+		if reflect.DeepEqual(cp, row.output) == false {
+			t.Errorf("FAIL: %s - \nCompound = %v;\nExpected: %v", row.TestCaseName, cp, row.output)
+		} else {
+			t.Logf("SUCCESS: Compound = %v; Expected: %v", cp, row.output)
+		}
+	}
+}
+
+//Testing by record
 func TestRecordDecode_NbOfItems(t *testing.T) {
 	// setup
-	type dataRecordTest struct {
+	type dataTest struct {
 		input     string          // data test one record = fspec + items
 		uap       uap.StandardUAP // Items of category corresponding to data test input
 		nbOfItems int
 		err       error // error expected
 	}
-	dataSetRecordTests := []dataRecordTest{
+	dataSet := []dataTest{
 		{
 			input:     "f6083602429b7110940028200094008000",
 			uap:       uap.Cat034V127,
@@ -927,7 +899,7 @@ func TestRecordDecode_NbOfItems(t *testing.T) {
 		},
 	}
 
-	for _, row := range dataSetRecordTests {
+	for _, row := range dataSet {
 		// Arrange
 		data, _ := HexStringToByte(row.input)
 		rec := new(Record)
@@ -957,7 +929,7 @@ func TestRecordDecode_NbOfItems(t *testing.T) {
 func TestRecordDecode_Empty(t *testing.T) {
 	// Arrange
 	input := ""
-	var output []uap.DataField
+	var output []Item
 	uap048 := uap.Cat048V127
 	data, _ := HexStringToByte(input)
 	rec := NewRecord()
@@ -986,19 +958,165 @@ func TestRecordDecode_Empty(t *testing.T) {
 // Decode Cat4Test
 func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 	// Arrange
-	input := "FD80 FFFF FFFE AAFFFFFE 02FFFF FFFF 03FFFF 02FFFFFFFF 04FFFFFF 0101FFFF 04FFFFFF"
-	output := [][]byte{
-		{0xff, 0xff},
-		{0xff, 0xfe},
-		{0xaa, 0xff, 0xff, 0xfe, 0x02, 0xff, 0xff, 0xff, 0xff, 0x03, 0xff, 0xff},
-		{0x02, 0xff, 0xff, 0xff, 0xff},
-		{0x04, 0xff, 0xff, 0xff},
-		{0x01, 0x01, 0xff, 0xff},
-		{0x04, 0xff, 0xff, 0xff},
+	input := "fd 40 ffff fffffe 03ffff 02ffffffff ab80 ff fffe 02ffffffff 04ffffff ffff 0101ffff 03ffff"
+	output := []Item{
+		{
+			Meta: MetaItem{
+				FRN:         1,
+				DataItem:    "I026/001",
+				Description: "Fixed type field for test",
+				Type:        uap.Fixed,
+			},
+			Size:  2,
+			Fixed: &Fixed{Payload: []byte{0xff, 0xff}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         2,
+				DataItem:    "I026/002",
+				Description: "Extended type field for test",
+				Type:        uap.Extended,
+			},
+			Extended: &Extended{
+				Primary:   []byte{0xff},
+				Secondary: []byte{0xff, 0xfe},
+			},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         3,
+				DataItem:    "I026/003",
+				Description: "Explicit type field for test",
+				Type:        uap.Explicit,
+			},
+			Explicit: &Explicit{
+				Len:     0x03,
+				Payload: []byte{0xff, 0xff},
+			},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         4,
+				DataItem:    "I026/004",
+				Description: "Repetitive type field for test",
+				Type:        uap.Repetitive,
+			},
+			Repetitive: &Repetitive{
+				Rep:     0x02,
+				Payload: []byte{0xff, 0xff, 0xff, 0xff},
+			},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         5,
+				DataItem:    "I026/005",
+				Description: "Compound type field for test",
+				Type:        uap.Compound,
+			},
+			Compound: &Compound{
+				Primary: []byte{0xab, 0x80},
+				Secondary: []Item{
+					{
+						Meta: MetaItem{
+							FRN:         1,
+							DataItem:    "Compound/001",
+							Description: "Compound Fixed type field for test",
+							Type:        uap.Fixed,
+						},
+						Size:  1,
+						Fixed: &Fixed{Payload: []byte{0xff}},
+					},
+					{
+						Meta: MetaItem{
+							FRN:         3,
+							DataItem:    "Compound/003",
+							Description: "Compound Extended type field for test",
+							Type:        uap.Extended,
+						},
+						Extended: &Extended{
+							Primary:   []byte{0xff},
+							Secondary: []byte{0xfe},
+						},
+					},
+					{
+						Meta: MetaItem{
+							FRN:         5,
+							DataItem:    "Compound/005",
+							Description: "Compound Repetitive type field for test",
+							Type:        uap.Repetitive,
+						},
+						Repetitive: &Repetitive{
+							Rep:     0x02,
+							Payload: []byte{0xff, 0xff, 0xff, 0xff},
+						},
+					},
+					{
+						Meta: MetaItem{
+							FRN:         7,
+							DataItem:    "Compound/007",
+							Description: "Compound Explicit type field for test",
+							Type:        uap.Explicit,
+						},
+						Explicit: &Explicit{
+							Len:     0x04,
+							Payload: []byte{0xff, 0xff, 0xff},
+						},
+					},
+					{
+						Meta: MetaItem{
+							FRN:         8,
+							DataItem:    "Compound/008",
+							Description: "Compound Fixed type field for test",
+							Type:        uap.Fixed,
+						},
+						Size:  2,
+						Fixed: &Fixed{Payload: []byte{0xff, 0xff}},
+					},
+				},
+			},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         6,
+				DataItem:    "I026/006",
+				Description: "RFS(Random Field Sequencing) type field for test",
+				Type:        uap.RFS,
+			},
+			RFS: &RandomFieldSequencing{
+				N: 0x01,
+				Sequence: []RandomField{
+					{
+						FRN: 1,
+						Field: Item{
+							Meta: MetaItem{
+								FRN:         1,
+								DataItem:    "I026/001",
+								Description: "Fixed type field for test",
+								Type:        uap.Fixed,
+							},
+							Size:  2,
+							Fixed: &Fixed{Payload: []byte{0xff, 0xff}},
+						},
+					},
+				},
+			},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         9,
+				DataItem:    "SP",
+				Description: "SP (Special Purpose field) type field for test",
+				Type:        uap.SP,
+			},
+			SP: &SpecialPurpose{
+				Len:     03,
+				Payload: []byte{0xff, 0xff},
+			},
+		},
 	}
 	uap4Test := uap.Cat4Test
 	data, _ := HexStringToByte(input)
-	rec := NewRecord()
+	rec := new(Record)
 
 	// Act
 	unRead, err := rec.Decode(data, uap4Test)
@@ -1015,31 +1133,33 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
 	}
 	for i, item := range rec.Items {
-		if bytes.Equal(item.Payload, output[i]) == false {
-			t.Errorf("FAIL: %s = % X; Expected: % X", item.DataItem, item.Payload, output[i])
+		if reflect.DeepEqual(item, output[i]) == false {
+			t.Errorf("FAIL: %v; \nExpected: %v", item, output[i])
 		} else {
-			t.Logf("SUCCESS: %s = % X; Expected: % X", item.DataItem, item.Payload, output[i])
+			t.Logf("SUCCESS: %v; Expected: %v", item, output[i])
 		}
 	}
 }
 
 func TestRecordDecode_Cat4TestError(t *testing.T) {
 	// Setup
-	type dataCat4ErrTest struct {
-		input  string
-		output []uap.DataField
-		unRead int
-		err    error
+	type dataTest struct {
+		TestCase string
+		input    string
+		output   []Item
+		unRead   int
+		err      error
 	}
-	dataSetTest := []dataCat4ErrTest{
+	dataSet := []dataTest{
 		{
-			// ErrDataFieldUnknown
-			input:  "02 FFFF",
-			output: nil,
-			unRead: 2,
-			err:    ErrDataFieldUnknown,
+			TestCase: "testcase 1",
+			input:    "02 FFFF",
+			output:   nil,
+			unRead:   2,
+			err:      ErrDataFieldUnknown,
 		},
 		{
+			TestCase: "testcase 2",
 			// Repetitive FRN 4
 			input:  "10 03FFFFFFFF",
 			output: nil,
@@ -1047,13 +1167,15 @@ func TestRecordDecode_Cat4TestError(t *testing.T) {
 			err:    io.ErrUnexpectedEOF,
 		},
 		{
-			// Explicit FRN 5
-			input:  "08 04FFFF",
+			TestCase: "testcase 3",
+			// Explicit FRN 3
+			input:  "20 04FFFF",
 			output: nil,
 			unRead: 0,
 			err:    io.ErrUnexpectedEOF,
 		},
 		{
+			TestCase: "testcase 4",
 			// RFS FRN 6
 			input:  "04 0101",
 			output: nil,
@@ -1061,7 +1183,8 @@ func TestRecordDecode_Cat4TestError(t *testing.T) {
 			err:    io.EOF,
 		},
 		{
-			// SP FRN 8
+			TestCase: "testcase 5",
+			// RE FRN 8
 			input:  "0180 04FFFF",
 			output: nil,
 			unRead: 0,
@@ -1069,7 +1192,7 @@ func TestRecordDecode_Cat4TestError(t *testing.T) {
 		},
 	}
 
-	for _, row := range dataSetTest {
+	for _, row := range dataSet {
 		// Arrange
 		uap4Test := uap.Cat4Test
 		data, _ := HexStringToByte(row.input)
@@ -1080,18 +1203,17 @@ func TestRecordDecode_Cat4TestError(t *testing.T) {
 
 		// Assert
 		if err != row.err {
-			t.Errorf("FAIL: error = %v; Expected: %v", err, row.err)
+			t.Errorf("FAIL: %s - error = %v; Expected: %v", row.TestCase, err, row.err)
 		} else {
 			t.Logf("SUCCESS: error: %v; Expected: %v", err, row.err)
 		}
 		if remaining != row.unRead {
-			t.Errorf("FAIL: unRead = %v; Expected: %v", remaining, row.unRead)
+			t.Errorf("FAIL: %s - unRead = %v; Expected: %v", row.TestCase, remaining, row.unRead)
 		} else {
 			t.Logf("SUCCESS: unRead = %v; Expected: %v", remaining, row.unRead)
 		}
 		if reflect.DeepEqual(rec.Items, row.output) == false {
-			fmt.Println(rec)
-			t.Errorf("FAIL: %v; Expected: %v", rec.Items, row.output)
+			t.Errorf("FAIL: %s - %v; Expected: %v", row.TestCase, rec.Items, row.output)
 		} else {
 			t.Logf("SUCCESS: %v; Expected: %v", rec.Items, row.output)
 		}
@@ -1101,22 +1223,178 @@ func TestRecordDecode_Cat4TestError(t *testing.T) {
 func TestRecordDecode_CAT048(t *testing.T) {
 	// Arrange
 	input := "fff702 0836 429b52 a0 94c70181 0913 02d0 6002b7 490d01 38a178cf4220 02e79a5d27a00c0060a3280030a4000040 063a 0743ce5b 40 20f5"
-	output := [][]byte{
-		{0x08, 0x36},
-		{0x42, 0x9b, 0x52},
-		{0xa0},
-		{0x94, 0xc7, 0x01, 0x81},
-		{0x09, 0x13},
-		{0x02, 0xd0},
-		{0x60, 0x02, 0xb7},
-		{0x49, 0x0d, 0x01},
-		{0x38, 0xa1, 0x78, 0xcf, 0x42, 0x20},
-		{0x02, 0xe7, 0x9a, 0x5d, 0x27, 0xa0, 0x0c, 0x00, 0x60, 0xa3, 0x28, 0x00, 0x30, 0xa4, 0x00, 0x00, 0x40},
-		{0x06, 0x3a},
-		{0x07, 0x43, 0xce, 0x5b},
-		{0x40},
-		{0x20, 0xf5},
+	output := []Item{
+		{
+			Meta: MetaItem{
+				FRN:         1,
+				DataItem:    "I048/010",
+				Description: "Data Source Identifier",
+				Type:        uap.Fixed,
+			},
+			Size:  2,
+			Fixed: &Fixed{Payload: []byte{0x08, 0x36}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         2,
+				DataItem:    "I048/140",
+				Description: "Time-of-Day",
+				Type:        uap.Fixed,
+			},
+			Size:  3,
+			Fixed: &Fixed{Payload: []byte{0x42, 0x9b, 0x52}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         3,
+				DataItem:    "I048/020",
+				Description: "Target Report Descriptor",
+				Type:        uap.Extended,
+			},
+			Extended: &Extended{
+				Primary:   []byte{0xa0},
+				Secondary: nil,
+			},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         4,
+				DataItem:    "I048/040",
+				Description: "Measured Position in Slant Polar Coordinates",
+				Type:        uap.Fixed,
+			},
+			Size:  4,
+			Fixed: &Fixed{Payload: []byte{0x94, 0xc7, 0x01, 0x81}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         5,
+				DataItem:    "I048/070",
+				Description: "Mode-3/A Code in Octal Representation",
+				Type:        uap.Fixed,
+			},
+			Size:  2,
+			Fixed: &Fixed{Payload: []byte{0x09, 0x13}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         6,
+				DataItem:    "I048/090",
+				Description: "Flight Level in Binary Representation",
+				Type:        uap.Fixed,
+			},
+			Size:  2,
+			Fixed: &Fixed{Payload: []byte{0x02, 0xd0}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         7,
+				DataItem:    "I048/130",
+				Description: "Radar Plot Characteristics",
+				Type:        uap.Compound,
+			},
+			Compound: &Compound{
+				Primary: []byte{0x60},
+				Secondary: []Item{
+					{
+						Meta: MetaItem{
+							FRN:         2,
+							DataItem:    "SRR",
+							Description: "Number of received replies",
+							Type:        uap.Fixed,
+						},
+						Size:  1,
+						Fixed: &Fixed{Payload: []byte{0x02}},
+					},
+					{
+						Meta: MetaItem{
+							FRN:         3,
+							DataItem:    "SAM",
+							Description: "Amplitude of received replies for M(SSR)",
+							Type:        uap.Fixed,
+						},
+						Size:  1,
+						Fixed: &Fixed{Payload: []byte{0xb7}},
+					},
+				},
+			},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         8,
+				DataItem:    "I048/220",
+				Description: "Aircraft Address",
+				Type:        uap.Fixed,
+			},
+			Size:  3,
+			Fixed: &Fixed{Payload: []byte{0x49, 0x0d, 0x01}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         9,
+				DataItem:    "I048/240",
+				Description: "Aircraft Identification",
+				Type:        uap.Fixed,
+			},
+			Size:  6,
+			Fixed: &Fixed{Payload: []byte{0x38, 0xa1, 0x78, 0xcf, 0x42, 0x20}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         10,
+				DataItem:    "I048/250",
+				Description: "Mode S MB Data",
+				Type:        uap.Repetitive,
+			},
+			Repetitive: &Repetitive{
+				Rep:     0x02,
+				Payload: []byte{0xe7, 0x9a, 0x5d, 0x27, 0xa0, 0x0c, 0x00, 0x60, 0xa3, 0x28, 0x00, 0x30, 0xa4, 0x00, 0x00, 0x40},
+			},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         11,
+				DataItem:    "I048/161",
+				Description: "Track Number",
+				Type:        uap.Fixed,
+			},
+			Size:  2,
+			Fixed: &Fixed{Payload: []byte{0x06, 0x3a}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         13,
+				DataItem:    "I048/200",
+				Description: "Calculated Track Velocity in Polar Representation",
+				Type:        uap.Fixed,
+			},
+			Size:  4,
+			Fixed: &Fixed{Payload: []byte{0x07, 0x43, 0xce, 0x5b}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         14,
+				DataItem:    "I048/170",
+				Description: "Track Status",
+				Type:        uap.Extended,
+			},
+			Extended: &Extended{
+				Primary:   []byte{0x40},
+				Secondary: nil,
+			},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         21,
+				DataItem:    "I048/230",
+				Description: "Communications / ACAS Capability and Flight Status",
+				Type:        uap.Fixed,
+			},
+			Size:  2,
+			Fixed: &Fixed{Payload: []byte{0x20, 0xf5}},
+		},
 	}
+
 	uap048 := uap.Cat048V127
 	data, _ := HexStringToByte(input)
 	rec := new(Record)
@@ -1136,14 +1414,15 @@ func TestRecordDecode_CAT048(t *testing.T) {
 		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
 	}
 	for i, item := range rec.Items {
-		if bytes.Equal(item.Payload, output[i]) == false {
-			t.Errorf("FAIL: %s = % X; Expected: % X", item.DataItem, item.Payload, output[i])
+		if reflect.DeepEqual(item, output[i]) == false {
+			t.Errorf("FAIL: %v; \nExpected: %v", item, output[i])
 		} else {
-			t.Logf("SUCCESS: %s = % X; Expected: % X", item.DataItem, item.Payload, output[i])
+			t.Logf("SUCCESS: %v; Expected: %v", item, output[i])
 		}
 	}
 }
 
+/*
 func TestRecordDecode_CAT001Track(t *testing.T) {
 	// Arrange
 	input := "f502 0831 98 01bf 0a1ebb43 022538e2 00"
@@ -1527,3 +1806,4 @@ func TestRecordDecode_CAT030ARTAS(t *testing.T) {
 		}
 	}
 }
+*/

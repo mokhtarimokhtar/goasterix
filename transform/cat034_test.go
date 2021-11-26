@@ -41,13 +41,57 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 	// setup
 	type dataTest struct {
 		Name   string
-		input  []byte
+		input  goasterix.Compound
 		output SysConf
 	}
 	dataset := []dataTest{
 		{
-			Name:  "testcase 1: full subfield",
-			input: []byte{0x9c, 0x00, 0x00, 0x00, 0x00, 0x00},
+			Name: "testcase 1: full subfield",
+			input: goasterix.Compound{
+				Primary: []byte{0x9c},
+				Secondary: []goasterix.Item{
+					{
+						Meta: goasterix.MetaItem{
+							FRN:         1,
+							DataItem:    "COM",
+							Description: "Common Part",
+							Type:        uap.Fixed,
+						},
+						Size:  1,
+						Fixed: &goasterix.Fixed{Payload: []byte{0x00}},
+					},
+					{
+						Meta: goasterix.MetaItem{
+							FRN:         4,
+							DataItem:    "PSR",
+							Description: "Specific Status for PSR Sensor",
+							Type:        uap.Fixed,
+						},
+						Size:  1,
+						Fixed: &goasterix.Fixed{Payload: []byte{0x00}},
+					},
+					{
+						Meta: goasterix.MetaItem{
+							FRN:         5,
+							DataItem:    "SSR",
+							Description: "Specific Status for SSR Sensor",
+							Type:        uap.Fixed,
+						},
+						Size:  1,
+						Fixed: &goasterix.Fixed{Payload: []byte{0x00}},
+					},
+					{
+						Meta: goasterix.MetaItem{
+							FRN:         6,
+							DataItem:    "MDS",
+							Description: "Specific Status for Mode S Sensor",
+							Type:        uap.Fixed,
+						},
+						Size:  2,
+						Fixed: &goasterix.Fixed{Payload: []byte{0x00, 0x00}},
+					},
+				},
+			},
 			output: SysConf{
 				Com: &ComSysConf{
 					Nogo:   "system_inhibited",
@@ -83,8 +127,52 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testcase 2: full subfield",
-			input: []byte{0x9c, 0xfe, 0xb8, 0xb8, 0xbf, 0x80},
+			Name: "testcase 2: full subfield",
+			input: goasterix.Compound{
+				Primary: []byte{0x9c},
+				Secondary: []goasterix.Item{
+					{
+						Meta: goasterix.MetaItem{
+							FRN:         1,
+							DataItem:    "COM",
+							Description: "Common Part",
+							Type:        uap.Fixed,
+						},
+						Size:  1,
+						Fixed: &goasterix.Fixed{Payload: []byte{0xfe}},
+					},
+					{
+						Meta: goasterix.MetaItem{
+							FRN:         4,
+							DataItem:    "PSR",
+							Description: "Specific Status for PSR Sensor",
+							Type:        uap.Fixed,
+						},
+						Size:  1,
+						Fixed: &goasterix.Fixed{Payload: []byte{0xb8}},
+					},
+					{
+						Meta: goasterix.MetaItem{
+							FRN:         5,
+							DataItem:    "SSR",
+							Description: "Specific Status for SSR Sensor",
+							Type:        uap.Fixed,
+						},
+						Size:  1,
+						Fixed: &goasterix.Fixed{Payload: []byte{0xb8}},
+					},
+					{
+						Meta: goasterix.MetaItem{
+							FRN:         6,
+							DataItem:    "MDS",
+							Description: "Specific Status for Mode S Sensor",
+							Type:        uap.Fixed,
+						},
+						Size:  2,
+						Fixed: &goasterix.Fixed{Payload: []byte{0xbf, 0x80}},
+					},
+				},
+			},
 			output: SysConf{
 				Com: &ComSysConf{
 					Nogo:   "system_operational",
@@ -120,8 +208,42 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testcase 3: full subfield",
-			input: []byte{0x1c, 0x40, 0x40, 0x40, 0x00},
+			Name: "testcase 3: full subfield",
+			input: goasterix.Compound{
+				Primary: []byte{0x1c},
+				Secondary: []goasterix.Item{
+					{
+						Meta: goasterix.MetaItem{
+							FRN:         4,
+							DataItem:    "PSR",
+							Description: "Specific Status for PSR Sensor",
+							Type:        uap.Fixed,
+						},
+						Size:  1,
+						Fixed: &goasterix.Fixed{Payload: []byte{0x40}},
+					},
+					{
+						Meta: goasterix.MetaItem{
+							FRN:         5,
+							DataItem:    "SSR",
+							Description: "Specific Status for SSR Sensor",
+							Type:        uap.Fixed,
+						},
+						Size:  1,
+						Fixed: &goasterix.Fixed{Payload: []byte{0x40}},
+					},
+					{
+						Meta: goasterix.MetaItem{
+							FRN:         6,
+							DataItem:    "MDS",
+							Description: "Specific Status for Mode S Sensor",
+							Type:        uap.Fixed,
+						},
+						Size:  2,
+						Fixed: &goasterix.Fixed{Payload: []byte{0x40, 0x00}},
+					},
+				},
+			},
 			output: SysConf{
 				Com: nil,
 				Psr: &PsrSsrSysConf{
@@ -149,8 +271,42 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testcase 4: full subfield",
-			input: []byte{0x1c, 0x60, 0x60, 0x60, 0x00},
+			Name: "testcase 4: full subfield",
+			input: goasterix.Compound{
+				Primary: []byte{0x1c},
+				Secondary: []goasterix.Item{
+					{
+						Meta: goasterix.MetaItem{
+							FRN:         4,
+							DataItem:    "PSR",
+							Description: "Specific Status for PSR Sensor",
+							Type:        uap.Fixed,
+						},
+						Size:  1,
+						Fixed: &goasterix.Fixed{Payload: []byte{0x60}},
+					},
+					{
+						Meta: goasterix.MetaItem{
+							FRN:         5,
+							DataItem:    "SSR",
+							Description: "Specific Status for SSR Sensor",
+							Type:        uap.Fixed,
+						},
+						Size:  1,
+						Fixed: &goasterix.Fixed{Payload: []byte{0x60}},
+					},
+					{
+						Meta: goasterix.MetaItem{
+							FRN:         6,
+							DataItem:    "MDS",
+							Description: "Specific Status for Mode S Sensor",
+							Type:        uap.Fixed,
+						},
+						Size:  2,
+						Fixed: &goasterix.Fixed{Payload: []byte{0x60, 0x00}},
+					},
+				},
+			},
 			output: SysConf{
 				Com: nil,
 				Psr: &PsrSsrSysConf{
@@ -195,6 +351,164 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 				t.Logf("SUCCESS: %s - %v; Expected: %v", typeOfS.Field(i).Name, in.Field(i).Interface(), out.Field(i).Interface())
 			}
 		}
+	}
+}
+
+func TestCat034Model_SystemProcessingMode(t *testing.T) {
+	// Arrange
+	type dataTest struct {
+		Name   string
+		input  goasterix.Compound
+		output SysProcess
+	}
+	dataset := []dataTest{
+		{
+			Name: "testcase 1: full subfield",
+			input: goasterix.Compound{
+				Primary: []byte{0x9c},
+				Secondary: []goasterix.Item{
+					{
+						Meta: goasterix.MetaItem{
+							FRN:         1,
+							DataItem:    "COM",
+							Description: "Common Part",
+							Type:        uap.Fixed,
+						},
+						Size:  1,
+						Fixed: &goasterix.Fixed{Payload: []byte{0x00}},
+					},
+					{
+						Meta: goasterix.MetaItem{
+							FRN:         4,
+							DataItem:    "PSR",
+							Description: "Specific Processing Mode information for PSR Sensor",
+							Type:        uap.Fixed,
+						},
+						Size:  1,
+						Fixed: &goasterix.Fixed{Payload: []byte{0x00}},
+					},
+					{
+						Meta: goasterix.MetaItem{
+							FRN:         5,
+							DataItem:    "SSR",
+							Description: "Specific Processing Mode information for SSR Sensor",
+							Type:        uap.Fixed,
+						},
+						Size:  1,
+						Fixed: &goasterix.Fixed{Payload: []byte{0x00}},
+					},
+					{
+						Meta: goasterix.MetaItem{
+							FRN:         6,
+							DataItem:    "MDS",
+							Description: "Specific Processing Mode information for Mode S Sensor",
+							Type:        uap.Fixed,
+						},
+						Size:  2,
+						Fixed: &goasterix.Fixed{Payload: []byte{0x00}},
+					},
+				},
+			},
+			output: SysProcess{
+				ComSysPro: &ComSysPro{
+					Redrdp: "no_reduction_active",
+					Redxmt: "no_reduction_active",
+				},
+				Psr: &PsrSysPro{
+					Pol:    "linear_polarization",
+					Redrad: "no_reduction_active",
+					Stc:    "stcMap_1",
+				},
+				Ssr: &SsrSysPro{Redrad: "no_reduction_active"},
+				Mds: &MdsSysPro{
+					Redrad: "no_reduction_active",
+					Clu:    "autonomous",
+				},
+			},
+		},
+		{
+			Name: "testcase 2: full subfield",
+			input: goasterix.Compound{
+				Primary: []byte{0x9c},
+				Secondary: []goasterix.Item{
+					{
+						Meta: goasterix.MetaItem{
+							FRN:         1,
+							DataItem:    "COM",
+							Description: "Common Part",
+							Type:        uap.Fixed,
+						},
+						Size:  1,
+						Fixed: &goasterix.Fixed{Payload: []byte{0x12}},
+					},
+					{
+						Meta: goasterix.MetaItem{
+							FRN:         4,
+							DataItem:    "PSR",
+							Description: "Specific Processing Mode information for PSR Sensor",
+							Type:        uap.Fixed,
+						},
+						Size:  1,
+						Fixed: &goasterix.Fixed{Payload: []byte{0x94}},
+					},
+					{
+						Meta: goasterix.MetaItem{
+							FRN:         5,
+							DataItem:    "SSR",
+							Description: "Specific Processing Mode information for SSR Sensor",
+							Type:        uap.Fixed,
+						},
+						Size:  1,
+						Fixed: &goasterix.Fixed{Payload: []byte{0x20}},
+					},
+					{
+						Meta: goasterix.MetaItem{
+							FRN:         6,
+							DataItem:    "MDS",
+							Description: "Specific Processing Mode information for Mode S Sensor",
+							Type:        uap.Fixed,
+						},
+						Size:  2,
+						Fixed: &goasterix.Fixed{Payload: []byte{0x30}},
+					},
+				},
+			},
+			output: SysProcess{
+				ComSysPro: &ComSysPro{
+					Redrdp: "reduction_step_1_active",
+					Redxmt: "reduction_step_1_active",
+				},
+				Psr: &PsrSysPro{
+					Pol:    "circular_polarization",
+					Redrad: "reduction_step_1_active",
+					Stc:    "stcMap_2",
+				},
+				Ssr: &SsrSysPro{Redrad: "reduction_step_1_active"},
+				Mds: &MdsSysPro{
+					Redrad: "reduction_step_1_active",
+					Clu:    "no_autonomous",
+				},
+			},
+		},
+	}
+
+	for _, row := range dataset {
+		// Act
+		res := systemProcessingMode(row.input)
+
+		// Assert
+		in := reflect.ValueOf(res)
+		out := reflect.ValueOf(row.output)
+		typeOfS := in.Type()
+
+		for i := 0; i < in.NumField(); i++ {
+			if reflect.DeepEqual(in.Field(i).Interface(), out.Field(i).Interface()) == false {
+				t.Errorf("FAIL: %s: %s - %v; Expected: %v", row.Name, typeOfS.Field(i).Name, in.Field(i).Interface(), out.Field(i).Interface())
+			} else {
+				t.Logf("SUCCESS: %s - %v; Expected: %v", typeOfS.Field(i).Name, in.Field(i).Interface(), out.Field(i).Interface())
+			}
+		}
+
 	}
 }
 
@@ -381,76 +695,6 @@ func TestCat034Model_Position3DofDataSource(t *testing.T) {
 	}
 }
 
-func TestCat034Model_SystemProcessingMode(t *testing.T) {
-	// Arrange
-	type dataTest struct {
-		Name   string
-		input  []byte
-		output SysProcess
-	}
-	dataset := []dataTest{
-		{
-			Name:  "testcase 1: full subfield",
-			input: []byte{0x9c, 0x00, 0x00, 0x00, 0x00},
-			output: SysProcess{
-				ComSysPro: &ComSysPro{
-					Redrdp: "no_reduction_active",
-					Redxmt: "no_reduction_active",
-				},
-				Psr: &PsrSysPro{
-					Pol:    "linear_polarization",
-					Redrad: "no_reduction_active",
-					Stc:    "stcMap_1",
-				},
-				Ssr: &SsrSysPro{Redrad: "no_reduction_active"},
-				Mds: &MdsSysPro{
-					Redrad: "no_reduction_active",
-					Clu:    "autonomous",
-				},
-			},
-		},
-		{
-			Name:  "testcase 2: full subfield",
-			input: []byte{0x9c, 0x12, 0x94, 0x20, 0x30},
-			output: SysProcess{
-				ComSysPro: &ComSysPro{
-					Redrdp: "reduction_step_1_active",
-					Redxmt: "reduction_step_1_active",
-				},
-				Psr: &PsrSysPro{
-					Pol:    "circular_polarization",
-					Redrad: "reduction_step_1_active",
-					Stc:    "stcMap_2",
-				},
-				Ssr: &SsrSysPro{Redrad: "reduction_step_1_active"},
-				Mds: &MdsSysPro{
-					Redrad: "reduction_step_1_active",
-					Clu:    "no_autonomous",
-				},
-			},
-		},
-	}
-
-	for _, row := range dataset {
-		// Act
-		res := systemProcessingMode(row.input)
-
-		// Assert
-		in := reflect.ValueOf(res)
-		out := reflect.ValueOf(row.output)
-		typeOfS := in.Type()
-
-		for i := 0; i < in.NumField(); i++ {
-			if reflect.DeepEqual(in.Field(i).Interface(), out.Field(i).Interface()) == false {
-				t.Errorf("FAIL: %s: %s - %v; Expected: %v", row.Name, typeOfS.Field(i).Name, in.Field(i).Interface(), out.Field(i).Interface())
-			} else {
-				t.Logf("SUCCESS: %s - %v; Expected: %v", typeOfS.Field(i).Name, in.Field(i).Interface(), out.Field(i).Interface())
-			}
-		}
-
-	}
-}
-
 func TestCat034Model_ToJsonRecord(t *testing.T) {
 	// Arrange
 	input := "f6083602429b7110940028200094008000"
@@ -462,7 +706,7 @@ func TestCat034Model_ToJsonRecord(t *testing.T) {
 	_, err := rec.Decode(data, uap034)
 
 	model := new(Cat034Model)
-	model.write(rec.Items)
+	model.write(*rec)
 
 	// Act
 	recJson, _ := json.Marshal(model)

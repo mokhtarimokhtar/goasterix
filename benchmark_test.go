@@ -56,6 +56,12 @@ func BenchmarkRecordDecode_Len55(b *testing.B) {
 		uap.Cat048V127,
 		b)
 }
+func BenchmarkRecordDecode_Len68(b *testing.B) {
+	benchmarkRecordDecode(
+		"fc ffff fffffe 03ffff 02ffffffff ab80 ff fffe 02ffffffff 04ffffff ffff 0101ffff",
+		uap.Cat4Test,
+		b)
+}
 func BenchmarkRecordDecode_Len73(b *testing.B) {
 	benchmarkRecordDecode(
 		"afbbf317f1300883040070a8bcf3ff07070723f0a8800713feb7022b0389038b140704012c080811580000001e7004f04aa004b0012400544e49413531313206c84c45424c48454c58",

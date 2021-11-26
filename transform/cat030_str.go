@@ -2,18 +2,9 @@ package transform
 
 import (
 	"encoding/hex"
-	"errors"
 	"github.com/mokhtarimokhtar/goasterix"
-	"github.com/mokhtarimokhtar/goasterix/uap"
 	"strconv"
 	"strings"
-)
-
-var (
-	ErrPistTypeUnknown   = errors.New("[ASTERIX Error] Piste TYPE Unknown")
-	ErrPistSlrUnknown    = errors.New("[ASTERIX Error] Piste SLR Unknown")
-	ErrPistCorUnknown    = errors.New("[ASTERIX Error] Piste COR Unknown")
-	ErrPistDs1ds2Unknown = errors.New("[ASTERIX Error] Piste Ds1Ds2 Unknown")
 )
 
 type Mov struct {
@@ -125,20 +116,20 @@ type Cat030STRModel struct {
 
 // Write writes a single ASTERIX Record to Cat030STRModel.
 // Items is a slice of Items DataField.
-func (data *Cat030STRModel) write(items []uap.DataField) {
-	for _, item := range items {
-		switch item.FRN {
+func (data *Cat030STRModel) write(rec goasterix.Record) {
+	for _, item := range rec.Items {
+		switch item.Meta.FRN {
 		case 1:
 			// decode sac sic
 			var payload [2]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload)
 			tmp, _ := sacSic(payload)
 			data.SacSic = &tmp
 		// case 2 N∕A
 		case 3:
 			//Numéro de Piste STR
 			var payload [3]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload)
 			tmp := num(payload)
 			data.Num = &tmp
 		case 4:
@@ -148,82 +139,82 @@ func (data *Cat030STRModel) write(items []uap.DataField) {
 			// The time of day value is reset to 0 each day at midnight.
 			// Ref: 7.3.4 HPTU : Heure TU de la piste
 			var payload [3]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload)
 			data.Hptu, _ = timeOfDay(payload)
 		case 5:
 			// Etat piste
-			tmp := pist(item.Payload)
+			tmp := pist(*item.Extended)
 			data.Pist = &tmp
 		case 6:
 			// alis : Mode A lissé piste
 			var payload [2]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload)
 			tmp := alis(payload)
 			data.Alis = &tmp
 		case 7:
 			// Position cartésienne calculée
 			var payload [4]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload)
 			tmp := pos(payload)
 			data.Pos = &tmp
 		case 8:
 			// QUAL returns an integer of track quality range = 0 to 7(best).
 			// Ref: 7.3.8 QUAL : Qualité piste
-			data.Qual = item.Payload[0] & 0xFE >> 1
+			data.Qual = item.Fixed.Payload[0] & 0xFE >> 1
 		case 9:
 			var payload [2]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload[:])
 			tmp := flp(payload)
 			data.Flpc = &tmp
 		case 10:
 			// Niveau de vol mesuré de la piste
 			var payload [2]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload[:])
 			tmp := flp(payload)
 			data.Flpm = &tmp
 		case 11:
 			// VIT : Vitesse calculée dans le plan (coordonnées cartésiennes)
 			var payload [4]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload[:])
 			tmp := vitCal(payload)
 			data.Vit = &tmp
 		case 12:
 			// mov : Mode de vol, tendance verticale
 			var payload [1]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload[:])
 			tmp := mov(payload)
 			data.Mov = &tmp
 		case 13:
 			// Taux returns Rate of ascent / descent in float64 FL/min
 			// TAUX : Taux de montée/descente
-			data.Taux = float64(int16(item.Payload[0])<<8+int16(item.Payload[1])) * 5.859375
+			data.Taux = float64(int16(item.Fixed.Payload[0])<<8+int16(item.Fixed.Payload[1])) * 5.859375
 		case 14:
 			// spe : Marquage spécial (Special purpose)
-			tmp := spe(item.Payload)
+			tmp := spe(*item.Extended)
 			data.Spe = &tmp
 		case 15:
 			// RAD : Numéro de radar
 			var payload [2]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload[:])
 			tmp, _ := sacSic(payload)
 			data.RadSacSic = &tmp
 		case 16:
 			// IVOL : Indicatif de vol complet
-			data.Ivol = string(item.Payload)
+			data.Ivol = string(item.Fixed.Payload)
 		case 17:
 			// PLN : Numéro de plan de vol CAUTRA (number flight plan)
-			data.Pln = uint16(item.Payload[0])<<8 + uint16(item.Payload[1])
+			data.Pln = uint16(item.Fixed.Payload[0])<<8 + uint16(item.Fixed.Payload[1])
 		case 18:
 			// AV : Type d’avion (type aircraft)
-			data.Av = string(item.Payload)
+			data.Av = string(item.Fixed.Payload)
 		case 19:
-			data.Turb = string(item.Payload[:])
+			data.Turb = string(item.Fixed.Payload[:])
 		case 20:
 			// Terd Terrain de départ (departure)
-			data.Terd = string(item.Payload)
+			data.Terd = string(item.Fixed.Payload)
 		case 21:
 			// Tera Terrain d’arrivée (arrival)
-			data.Tera = string(item.Payload)
+			data.Tera = string(item.Fixed.Payload)
 		//case 22:
 		// obsolete for this version
 		// altic : Altitude calculée de la piste
@@ -233,11 +224,11 @@ func (data *Cat030STRModel) write(items []uap.DataField) {
 		//data.Altic = &tmp
 		case 23:
 			// ADRS : Adresse mode S
-			data.Adrs = strings.ToUpper(hex.EncodeToString(item.Payload[:]))
+			data.Adrs = strings.ToUpper(hex.EncodeToString(item.Fixed.Payload[:]))
 		case 24:
 			// IDS : Identification mode S
 			var payload [6]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload[:])
 			data.Ids, _ = modeSIdentification(payload)
 		}
 	}
@@ -325,31 +316,31 @@ func num(data [3]byte) NumPiste {
 
 // pist return a map
 // Etat piste
-func pist(data []byte) Pist {
+func pist(item goasterix.Extended) Pist {
 	var piste Pist
 
-	if data[0]&0x80 != 0 {
+	if item.Primary[0]&0x80 != 0 {
 		piste.Liv = "simule_ou_plot_test"
 	} else {
 		piste.Liv = "trafic_reel"
 	}
-	if data[0]&0x40 != 0 {
+	if item.Primary[0]&0x40 != 0 {
 		piste.Cnf = "piste_initialisation"
 	} else {
 		piste.Cnf = "piste_confirmee"
 	}
-	if data[0]&0x20 != 0 {
+	if item.Primary[0]&0x20 != 0 {
 		piste.Man = "piste_virage"
 	} else {
 		piste.Man = "defaut"
 	}
-	if data[0]&0x10 != 0 {
+	if item.Primary[0]&0x10 != 0 {
 		piste.Tva = "piste_pas_niveau_vol_valide"
 	} else {
 		piste.Tva = "defaut"
 	}
 
-	typePiste := data[0] & 0x0E >> 1
+	typePiste := item.Primary[0] & 0x0E >> 1
 	switch typePiste {
 	case 0:
 		piste.Type = "piste_association_multiple_primaire_secondaire"
@@ -369,19 +360,20 @@ func pist(data []byte) Pist {
 		piste.Type = "piste_en_manque"
 	}
 
-	if data[0]&0x01 != 0 {
-		if data[1]&0x80 != 0 {
+	//if data[0]&0x01 != 0 {
+	if item.Secondary != nil {
+		if item.Secondary[0]&0x80 != 0 {
 			piste.Mort = "mort_de_piste"
 		} else {
 			piste.Mort = "defaut"
 		}
-		if data[1]&0x40 != 0 {
+		if item.Secondary[0]&0x40 != 0 {
 			piste.Cre = "creation_de_piste"
 		} else {
 			piste.Cre = "defaut"
 		}
 
-		slr := data[1] & 0x30 >> 4
+		slr := item.Secondary[0] & 0x30 >> 4
 		switch slr {
 		case 0:
 			piste.Slr = "coordonnees_projetees_niveau_calcule"
@@ -393,7 +385,7 @@ func pist(data []byte) Pist {
 			piste.Slr = "coordonnees_rabattues"
 		}
 
-		cor := data[1] & 0x0E >> 1
+		cor := item.Secondary[0] & 0x0E >> 1
 		switch cor {
 		case 0:
 			piste.Cor = "piste_correlation_plan_vol_confirmee"
@@ -413,8 +405,8 @@ func pist(data []byte) Pist {
 			piste.Cor = "piste_non_correlee_plan_vol"
 		}
 
-		if data[1]&0x01 != 0 {
-			ds1ds2 := data[2] & 0xC0 >> 6
+		if item.Secondary[0]&0x01 != 0 {
+			ds1ds2 := item.Secondary[1] & 0xC0 >> 6
 			switch ds1ds2 {
 			case 0:
 				piste.Ds1ds2 = "defaut"
@@ -426,22 +418,22 @@ func pist(data []byte) Pist {
 				piste.Ds1ds2 = "detresse_code_7700"
 			}
 
-			if data[2]&0x20 != 0 {
+			if item.Secondary[1]&0x20 != 0 {
 				piste.For = "vol_en_formation"
 			} else {
 				piste.For = "defaut"
 			}
-			if data[2]&0x10 != 0 {
+			if item.Secondary[1]&0x10 != 0 {
 				piste.Ama = "piste_non_amalgamee"
 			} else {
 				piste.Ama = "piste_amalgamee"
 			}
-			if data[2]&0x08 != 0 {
+			if item.Secondary[1]&0x08 != 0 {
 				piste.Spi = "special_pulse_ident"
 			} else {
 				piste.Spi = "defaut"
 			}
-			if data[2]&0x04 != 0 {
+			if item.Secondary[1]&0x04 != 0 {
 				piste.Me = "detresse_militaire"
 			} else {
 				piste.Me = "defaut"
@@ -523,38 +515,38 @@ func mov(data [1]byte) Mov {
 }
 
 // spe : Marquage spécial (Special purpose)
-func spe(data []byte) Spe {
+func spe(item goasterix.Extended) Spe {
 	var spe Spe
-	spe.SY = data[0] & 0xF8 >> 3
-	spe.M = data[0] & 0x04 >> 2
-	spe.S = data[0] & 0x02 >> 1
+	spe.SY = item.Primary[0] & 0xF8 >> 3
+	spe.M = item.Primary[0] & 0x04 >> 2
+	spe.S = item.Primary[0] & 0x02 >> 1
 
-	if data[0]&0x01 != 0 {
-		spe.O19 = data[1] & 0x80 >> 7
-		spe.O18 = data[1] & 0x40 >> 6
-		spe.O17 = data[1] & 0x20 >> 5
-		spe.O16 = data[1] & 0x10 >> 4
-		spe.O15 = data[1] & 0x08 >> 3
-		spe.O14 = data[1] & 0x04 >> 2
-		spe.O13 = data[1] & 0x02 >> 1
+	if item.Secondary != nil {
+		spe.O19 = item.Secondary[0] & 0x80 >> 7
+		spe.O18 = item.Secondary[0] & 0x40 >> 6
+		spe.O17 = item.Secondary[0] & 0x20 >> 5
+		spe.O16 = item.Secondary[0] & 0x10 >> 4
+		spe.O15 = item.Secondary[0] & 0x08 >> 3
+		spe.O14 = item.Secondary[0] & 0x04 >> 2
+		spe.O13 = item.Secondary[0] & 0x02 >> 1
 
-		if data[1]&0x01 != 0 {
-			spe.O12 = data[2] & 0x80 >> 7
-			spe.O11 = data[2] & 0x40 >> 6
-			spe.O10 = data[2] & 0x20 >> 5
-			spe.O9 = data[2] & 0x10 >> 4
-			spe.O8 = data[2] & 0x08 >> 3
-			spe.O7 = data[2] & 0x04 >> 2
-			spe.O6 = data[2] & 0x02 >> 1
+		if item.Secondary[0]&0x01 != 0 {
+			spe.O12 = item.Secondary[1] & 0x80 >> 7
+			spe.O11 = item.Secondary[1] & 0x40 >> 6
+			spe.O10 = item.Secondary[1] & 0x20 >> 5
+			spe.O9 = item.Secondary[1] & 0x10 >> 4
+			spe.O8 = item.Secondary[1] & 0x08 >> 3
+			spe.O7 = item.Secondary[1] & 0x04 >> 2
+			spe.O6 = item.Secondary[1] & 0x02 >> 1
 
-			if data[2]&0x01 != 0 {
-				spe.O5 = data[3] & 0x80 >> 7
-				spe.O4 = data[3] & 0x40 >> 6
-				spe.O3 = data[3] & 0x20 >> 5
-				spe.O2 = data[3] & 0x10 >> 4
-				spe.O1 = data[3] & 0x08 >> 3
-				spe.R = data[3] & 0x04 >> 2
-				spe.C = data[3] & 0x02 >> 1
+			if item.Secondary[1]&0x01 != 0 {
+				spe.O5 = item.Secondary[2] & 0x80 >> 7
+				spe.O4 = item.Secondary[2] & 0x40 >> 6
+				spe.O3 = item.Secondary[2] & 0x20 >> 5
+				spe.O2 = item.Secondary[2] & 0x10 >> 4
+				spe.O1 = item.Secondary[2] & 0x08 >> 3
+				spe.R = item.Secondary[2] & 0x04 >> 2
+				spe.C = item.Secondary[2] & 0x02 >> 1
 			}
 		}
 	}

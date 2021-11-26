@@ -1,12 +1,9 @@
 package transform
 
 import (
-	"encoding/hex"
 	"github.com/mokhtarimokhtar/goasterix"
-	"github.com/mokhtarimokhtar/goasterix/uap"
 	"math"
 	"strconv"
-	"strings"
 )
 
 type TrackVelocity struct {
@@ -41,11 +38,12 @@ type IAS struct {
 	AirSpeed float64 `json:"airSpeed"`
 }
 type DerivedData struct {
-	TargetAddress        string  `json:"targetAddress,omitempty"`
-	TargetIdentification string  `json:"targetIdentification,omitempty"`
-	MagneticHeading      float64 `json:"magneticHeading,omitempty"`
-	IndicatedAirspeed    *IAS    `json:"indicatedAirspeed,omitempty"`
-	AirSpeed             uint16  `json:"airSpeed,omitempty"`
+	TargetAddress        string            `json:"targetAddress,omitempty"`
+	TargetIdentification string            `json:"targetIdentification,omitempty"`
+	MagneticHeading      float64           `json:"magneticHeading,omitempty"`
+	IndicatedAirspeed    *IAS              `json:"indicatedAirspeed,omitempty"`
+	AirSpeed             uint16            `json:"airSpeed,omitempty"`
+	SelectedAltitude     *SelectedAltitude `json:"selectedAltitude,omitempty"`
 }
 
 type Cat062Model struct {
@@ -68,69 +66,69 @@ type Cat062Model struct {
 
 // Write writes a single ASTERIX Record to Cat062Model.
 // CompoundItems is a slice of CompoundItems DataField.
-func (data *Cat062Model) write(items []uap.DataField) {
-	for _, item := range items {
-		switch item.FRN {
+func (data *Cat062Model) write(rec goasterix.Record) {
+	for _, item := range rec.Items {
+		switch item.Meta.FRN {
 		case 1:
 			// decode sac sic
 			var payload [2]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload[:])
 			tmp, _ := sacSic(payload)
 			data.SacSic = &tmp
 		// case 2 is spare
 		case 3:
 			// Service Identification
-			data.ServiceIdentification = item.Payload[0]
+			data.ServiceIdentification = item.Fixed.Payload[0]
 		case 4:
 			// Time Of Track Information
 			var payload [3]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload[:])
 			data.TimeOfDay, _ = timeOfDay(payload)
 		case 5:
 			// Calculated Track Position (WGS-84)
 			var payload [8]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload[:])
 			tmp := calculatedTrackPositionWGS84(payload)
 			data.TrackPositionWGS84 = &tmp
 		case 6:
 			// Calculated Track Position. (Cartesian)
 			var payload [6]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload[:])
 			tmp := calculatedTrackPositionCartesian(payload)
 			data.CartesianXY = &tmp
 		case 7:
 			// Calculated Track Velocity (Cartesian)
 			var payload [4]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload[:])
 			tmp := calculatedTrackVelocityCartesian(payload)
 			data.TrackVelocity = &tmp
 		case 8:
 			// Calculated Acceleration (Cartesian)
 			var payload [2]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload[:])
 			tmp := calculatedAccelerationCartesian(payload)
 			data.Acceleration = &tmp
 		case 9:
 			// Track Mode 3/A Code
 			var payload [2]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload[:])
 			tmp := mode3ACode(payload)
 			data.Mode3ACode = &tmp
 		case 10:
 			// Target Identification
 			var payload [7]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload[:])
 			tmp := targetIdentification(payload)
 			data.TargetIdentification = &tmp
 		case 11:
 			// Aircraft Derived Data
-			tmp := extractDerivedData(item.Payload)
-			data.AircraftDerivedData = &tmp
+			//tmp := extractDerivedData(item.Payload)
+			//data.AircraftDerivedData = &tmp
 
 		case 12:
 			// Track Number
 			var payload [2]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload[:])
 			data.TrackNumber = trackNumber(payload)
 		// todo case 13
 		// todo case 14
@@ -139,23 +137,23 @@ func (data *Cat062Model) write(items []uap.DataField) {
 		case 17:
 			// Measured Flight Level
 			var payload [2]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload[:])
 			data.FlightLevel = measuredFlightLevel(payload)
 		case 18:
 			// Calculated Track Geometric Altitude
 			var payload [2]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload[:])
 			data.GeometricAltitude = trackGeometricAltitude(payload)
 		case 19:
 			// Calculated Track Barometric Altitude
 			var payload [2]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload[:])
 			tmp := trackBarometricAltitude(payload)
 			data.BarometricAltitude = &tmp
 		case 20:
 			// Calculated Rate Of Climb/Descent
 			var payload [2]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload[:])
 			data.RateOfClimbDescent = rateOfClimbDescent(payload)
 			// todo case 21
 			// todo case 22
@@ -171,6 +169,7 @@ func (data *Cat062Model) write(items []uap.DataField) {
 	}
 }
 
+/*
 // extractDerivedData returns Data derived directly by the aircraft.
 func extractDerivedData(data []byte) DerivedData {
 	var dd DerivedData
@@ -208,10 +207,36 @@ func extractDerivedData(data []byte) DerivedData {
 	}
 	if data[0]&0x08 != 0 {
 		dd.AirSpeed = uint16(data[offset])<<8 + uint16(data[offset+1])
-		_ = offset + 2
+		offset = offset + 2
+	}
+	if data[0]&0x04 != 0 {
+		if data[offset]&0x80 != 0 {
+			dd.SelectedAltitude.SAS = "source_information_provided"
+		} else {
+			dd.SelectedAltitude.SAS = "no_source_information_provided"
+		}
+		tmp := data[offset] & 0x60 >> 5
+		switch tmp {
+		case 0:
+			dd.SelectedAltitude.Source = "unknown"
+		case 1:
+			dd.SelectedAltitude.Source = "aircraft_altitude"
+		case 2:
+			dd.SelectedAltitude.Source = "fcu_mcp_selected_altitude"
+		case 3:
+			dd.SelectedAltitude.Source = "fms_selected_altitude"
+		}
+		dd.SelectedAltitude.Altitude = float64(uint16(data[offset]&0x1f)<<8+uint16(data[offset+1])) / 25
+
 	}
 
 	return dd
+}
+*/
+type SelectedAltitude struct {
+	SAS      string  `json:"sas"`
+	Source   string  `json:"source"`
+	Altitude float64 `json:"altitude"`
 }
 
 // calculatedTrackPositionWGS84 returns Latitude and Longitude.

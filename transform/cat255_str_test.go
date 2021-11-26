@@ -30,7 +30,7 @@ func TestCat255STRModel_ToJsonRecord(t *testing.T) {
 		_, err := rec.Decode(data, uap255)
 
 		cat255Model := new(Cat255STRModel)
-		cat255Model.write(rec.Items)
+		cat255Model.write(*rec)
 
 		// Act
 		recJson, _ := json.Marshal(cat255Model)
@@ -54,13 +54,16 @@ func TestCat255STRModel_SpeStpv(t *testing.T) {
 	// setup
 	type dataTest struct {
 		TestCaseName string
-		input        []byte
+		input        goasterix.Extended
 		output       PresenceSTPV
 	}
 	dataSet := []dataTest{
 		{
 			TestCaseName: "testcase 1",
-			input:        []byte{0x29, 0x00},
+			input: goasterix.Extended{
+				Primary:   []byte{0x29},
+				Secondary: []byte{0x00},
+			},
 			output: PresenceSTPV{
 				Version: 1,
 				Nap:     1,
@@ -71,7 +74,10 @@ func TestCat255STRModel_SpeStpv(t *testing.T) {
 		},
 		{
 			TestCaseName: "testcase 2",
-			input:        []byte{0x2b, 0xc0},
+			input: goasterix.Extended{
+				Primary:   []byte{0x2b},
+				Secondary: []byte{0xc0},
+			},
 			output: PresenceSTPV{
 				Version: 1,
 				Nap:     1,
@@ -82,7 +88,10 @@ func TestCat255STRModel_SpeStpv(t *testing.T) {
 		},
 		{
 			TestCaseName: "testcase 3",
-			input:        []byte{0x2d, 0xc0},
+			input: goasterix.Extended{
+				Primary:   []byte{0x2d},
+				Secondary: []byte{0xc0},
+			},
 			output: PresenceSTPV{
 				Version: 1,
 				Nap:     1,
@@ -198,18 +207,20 @@ func TestCat255STRModel_BiaisExtract(t *testing.T) {
 	// setup
 	type dataTest struct {
 		TestCaseName string
-		input        []byte
+		input        goasterix.Repetitive
 		output       []BiaisRadar
 	}
 	dataSet := []dataTest{
 		{
 			TestCaseName: "testcase 1",
-			input: []byte{0x01,
-				0x08, 0x81,
-				0x18, 0xf0,
-				0x00, 0xff,
-				0x03, 0xe8,
-				0x04, 0x00},
+			input: goasterix.Repetitive{
+				Rep: 0x01,
+				Payload: []byte{0x08, 0x81,
+					0x18, 0xf0,
+					0x00, 0xff,
+					0x03, 0xe8,
+					0x04, 0x00},
+			},
 			output: []BiaisRadar{
 				{
 					SacSic: SourceIdentifier{

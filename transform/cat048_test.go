@@ -20,7 +20,7 @@ func TestCat048Model_ToJsonRecord(t *testing.T) {
 	_, err := rec.Decode(data, uap048)
 
 	cat048Model := new(Cat048Model)
-	cat048Model.write(rec.Items)
+	cat048Model.write(*rec)
 
 	// Act
 	recJson, _ := json.Marshal(cat048Model)
@@ -194,13 +194,16 @@ func TestCat048Model_TrackStatus(t *testing.T) {
 	// setup
 	type dataTest struct {
 		TestCaseName string
-		input        []byte
+		input        goasterix.Extended
 		output       Status
 	}
 	dataset := []dataTest{
 		{
 			TestCaseName: "testcase 1",
-			input:        []byte{0x41, 0x00},
+			input: goasterix.Extended{
+				Primary:   []byte{0x41},
+				Secondary: []byte{0x00},
+			},
 			output: Status{
 				CNF: "confirmed_track",
 				RAD: "ssr_modes_track",
@@ -215,7 +218,10 @@ func TestCat048Model_TrackStatus(t *testing.T) {
 		},
 		{
 			TestCaseName: "testcase 2",
-			input:        []byte{0x9b, 0xF0},
+			input: goasterix.Extended{
+				Primary:   []byte{0x9b},
+				Secondary: []byte{0xF0},
+			},
 			output: Status{
 				CNF: "tentative_track",
 				RAD: "combined_track",
@@ -230,7 +236,10 @@ func TestCat048Model_TrackStatus(t *testing.T) {
 		},
 		{
 			TestCaseName: "testcase 3",
-			input:        []byte{0x24}, // 0010-0100
+			input: goasterix.Extended{
+				Primary:   []byte{0x24},
+				Secondary: nil,
+			},
 			output: Status{
 				CNF: "confirmed_track",
 				RAD: "psr_track",
@@ -241,7 +250,10 @@ func TestCat048Model_TrackStatus(t *testing.T) {
 		},
 		{
 			TestCaseName: "testcase 4",
-			input:        []byte{0x66}, // 0110-0110
+			input: goasterix.Extended{
+				Primary:   []byte{0x66},
+				Secondary: nil,
+			},
 			output: Status{
 				CNF: "confirmed_track",
 				RAD: "invalid",
@@ -269,13 +281,88 @@ func TestCat048Model_RadarPlotCharacteristics(t *testing.T) {
 	// setup
 	type dataTest struct {
 		TestCaseName string
-		input        []byte
+		input        goasterix.Compound
 		output       PlotCharacteristics
 	}
 	dataset := []dataTest{
 		{
 			TestCaseName: "full subfield",
-			input:        []byte{0xFE, 0x64, 0x64, 0x64, 0x64, 0x64, 0x7F, 0x64},
+			//input:        []byte{0xFE, 0x64, 0x64, 0x64, 0x64, 0x64, 0x7F, 0x64},
+			input: goasterix.Compound{
+				Primary: []byte{0xFE},
+				Secondary: []goasterix.Item{
+					{
+						Meta: goasterix.MetaItem{
+							FRN:         1,
+							DataItem:    "SRL",
+							Description: "SSR plot runlength",
+							Type:        uap.Fixed,
+						},
+						Size:  1,
+						Fixed: &goasterix.Fixed{Payload: []byte{0x64}},
+					},
+					{
+						Meta: goasterix.MetaItem{
+							FRN:         2,
+							DataItem:    "SRR",
+							Description: "Number of received replies",
+							Type:        uap.Fixed,
+						},
+						Size:  1,
+						Fixed: &goasterix.Fixed{Payload: []byte{0x64}},
+					},
+					{
+						Meta: goasterix.MetaItem{
+							FRN:         3,
+							DataItem:    "SAM",
+							Description: "Amplitude of received replies for M(SSR)",
+							Type:        uap.Fixed,
+						},
+						Size:  1,
+						Fixed: &goasterix.Fixed{Payload: []byte{0x64}},
+					},
+					{
+						Meta: goasterix.MetaItem{
+							FRN:         4,
+							DataItem:    "PRL",
+							Description: "PSR plot runlength",
+							Type:        uap.Fixed,
+						},
+						Size:  1,
+						Fixed: &goasterix.Fixed{Payload: []byte{0x64}},
+					},
+					{
+						Meta: goasterix.MetaItem{
+							FRN:         5,
+							DataItem:    "PAM",
+							Description: "PSR amplitude",
+							Type:        uap.Fixed,
+						},
+						Size:  1,
+						Fixed: &goasterix.Fixed{Payload: []byte{0x64}},
+					},
+					{
+						Meta: goasterix.MetaItem{
+							FRN:         6,
+							DataItem:    "RPD",
+							Description: "Difference in Range between PSR and SSR plot",
+							Type:        uap.Fixed,
+						},
+						Size:  1,
+						Fixed: &goasterix.Fixed{Payload: []byte{0x7f}},
+					},
+					{
+						Meta: goasterix.MetaItem{
+							FRN:         7,
+							DataItem:    "APD",
+							Description: "Difference in Azimuth between PSR and SSR plot",
+							Type:        uap.Fixed,
+						},
+						Size:  1,
+						Fixed: &goasterix.Fixed{Payload: []byte{0x64}},
+					},
+				},
+			},
 			output: PlotCharacteristics{
 				SRL: 4.3999999999999995,
 				SRR: 100,

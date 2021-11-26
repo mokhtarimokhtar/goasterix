@@ -3,8 +3,8 @@ package transform
 import (
 	"encoding/hex"
 	"errors"
+	"github.com/mokhtarimokhtar/goasterix"
 	"github.com/mokhtarimokhtar/goasterix/commbds"
-	"github.com/mokhtarimokhtar/goasterix/uap"
 	"strconv"
 	"strings"
 )
@@ -90,75 +90,75 @@ type Cat048Model struct {
 
 // Write writes a single ASTERIX Record to Cat048Model.
 // Items is a slice of Items DataField.
-func (data *Cat048Model) write(items []uap.DataField) {
-	for _, item := range items {
-		switch item.FRN {
+func (data *Cat048Model) write(rec goasterix.Record) {
+	for _, item := range rec.Items {
+		switch item.Meta.FRN {
 		case 1:
 			// decode sac sic
 			var payload [2]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload)
 			tmp, _ := sacSic(payload)
 			data.SacSic = &tmp
 		case 2:
 			// decode timeOfDay
 			var payload [3]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload)
 			data.TimeOfDay, _ = timeOfDay(payload)
 		// todo: case 3
 		case 4:
 			// decode PolarPosition
 			var payload [4]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload)
 			tmp := rhoTheta(payload)
 			data.RhoTheta = &tmp
 		case 5:
 			// decode Mode3aVGL
 			var payload [2]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload)
 			tmp := mode3ACodeVGL(payload)
 			data.Mode3ACode = &tmp
 		case 6:
 			// decode Flight Level
 			var payload [2]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload)
 			tmp := flightLevel(payload)
 			data.FlightLevel = &tmp
 		case 7:
 			// decode Radar Plot Characteristics
-			tmp := radarPlotCharacteristics(item.Payload)
+			tmp := radarPlotCharacteristics(*item.Compound)
 			data.RadarPlotCharacteristics = &tmp
 		case 8:
 			// decode AircraftAddress
 			// AircraftAddress returns the hexadecimal code in string format.
 			// Aircraft address (24-bits Mode S address) assigned uniquely to each aircraft.
-			data.AircraftAddress = strings.ToUpper(hex.EncodeToString(item.Payload[:]))
+			data.AircraftAddress = strings.ToUpper(hex.EncodeToString(item.Fixed.Payload))
 		case 9:
 			// decode Aircraft Identification
 			var payload [6]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload)
 			data.AircraftIdentification, _ = modeSIdentification(payload)
 		case 10:
-			data.BDSRegisterData, _ = modeSMBData(item.Payload)
+			data.BDSRegisterData, _ = modeSMBData(*item.Repetitive)
 		case 11:
 			// decode trackNumber
 			var payload [2]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload)
 			data.TrackNumber = trackNumber(payload)
 		case 12:
 			// decode Cartesian Coordinates
 			var payload [4]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload)
 			tmp, _ := cartesianXY(payload)
 			data.CartesianXY = &tmp
 		case 13:
 			// decode trackVelocity
 			var payload [4]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload)
 			tmp, _ := trackVelocity(payload)
 			data.TrackVelocity = &tmp
 		case 14:
 			// decode Track Status
-			tmp := trackStatus(item.Payload[:])
+			tmp := trackStatus(*item.Extended)
 			data.TrackStatus = &tmp
 		// todo: case 15
 		// todo: case 16
@@ -169,7 +169,7 @@ func (data *Cat048Model) write(items []uap.DataField) {
 		case 21:
 			// decode Communications/ACAS Capability and Flight Status
 			var payload [2]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload)
 			tmp := comACASCapabilityFlightStatus(payload)
 			data.ComACASCapabilityFlightStatus = &tmp
 		}
@@ -254,36 +254,26 @@ func flightLevel(data [2]byte) FL {
 // APD: Difference in Azimuth between PSR and SSR plot, two's complement form.
 // Additional information on the quality of the target report.
 // 5.2.16 Records Item I048/130, Radar Plot Characteristics
-func radarPlotCharacteristics(data []byte) PlotCharacteristics {
+func radarPlotCharacteristics(cp goasterix.Compound) PlotCharacteristics {
 	var rpc PlotCharacteristics
-	offset := 1
 
-	if data[0]&0x80 != 0 {
-		rpc.SRL = float64(data[offset]) * 0.044
-		offset++
-	}
-	if data[0]&0x40 != 0 {
-		rpc.SRR = data[offset]
-		offset++
-	}
-	if data[0]&0x20 != 0 {
-		rpc.SAM = int8(data[offset])
-		offset++
-	}
-	if data[0]&0x10 != 0 {
-		rpc.PRL = float64(data[offset]) * 0.044
-		offset++
-	}
-	if data[0]&0x08 != 0 {
-		rpc.PAM = int8(data[offset])
-		offset++
-	}
-	if data[0]&0x04 != 0 {
-		rpc.RPD = float64(int8(data[offset])) / 256
-		offset++
-	}
-	if data[0]&0x02 != 0 {
-		rpc.APD = float64(int8(data[offset])) * 0.021972656
+	for _, item := range cp.Secondary {
+		switch item.Meta.FRN {
+		case 1:
+			rpc.SRL = float64(item.Fixed.Payload[0]) * 0.044
+		case 2:
+			rpc.SRR = item.Fixed.Payload[0]
+		case 3:
+			rpc.SAM = int8(item.Fixed.Payload[0])
+		case 4:
+			rpc.PRL = float64(item.Fixed.Payload[0]) * 0.044
+		case 5:
+			rpc.PAM = int8(item.Fixed.Payload[0])
+		case 6:
+			rpc.RPD = float64(int8(item.Fixed.Payload[0])) / 256
+		case 7:
+			rpc.APD = float64(int8(item.Fixed.Payload[0])) * 0.021972656
+		}
 	}
 
 	return rpc
@@ -295,11 +285,11 @@ type ModeSMB struct {
 }
 
 func (mb *ModeSMB) Decode(data []byte) (err error) {
-	rep := data[0]
-	mb.Rep = rep
+	//rep := data[0]
+	//mb.Rep = rep
 
-	for i := 0; i < int(rep*8); i = i + 8 {
-		mbData := data[i+1 : i+9]
+	for i := 0; i < int(mb.Rep*8); i = i + 8 {
+		mbData := data[i : i+8]
 		var data [8]byte
 		copy(data[:], mbData) // convert slice to array of 8 bytes
 		bds := new(commbds.Bds)
@@ -312,9 +302,10 @@ func (mb *ModeSMB) Decode(data []byte) (err error) {
 
 // modeSMBData returns an array of map.
 // Mode S Comm B data as extracted from the aircraft transponder.
-func modeSMBData(data []byte) (msb []*commbds.Bds, err error) {
+func modeSMBData(item goasterix.Repetitive) (msb []*commbds.Bds, err error) {
 	modeSMBData := new(ModeSMB)
-	err = modeSMBData.Decode(data)
+	modeSMBData.Rep = item.Rep
+	err = modeSMBData.Decode(item.Payload)
 	msb = modeSMBData.BDSs
 	return msb, err
 }
@@ -346,16 +337,16 @@ func trackVelocity(data [4]byte) (v Velocity, err error) {
 
 // trackStatus returns a map of uint8, CNF, RAD, DOU, MAH, CDM id exist: TRE, GHO, SUP, TCC.
 // Status of monoradar track (PSR and/or SSR updated).
-func trackStatus(data []byte) Status {
+func trackStatus(item goasterix.Extended) Status {
 	var ts Status
 
-	if data[0]&0x80 != 0 {
+	if item.Primary[0]&0x80 != 0 {
 		ts.CNF = "tentative_track"
 	} else {
 		ts.CNF = "confirmed_track"
 	}
 
-	tmp := data[0] & 0x60 >> 5
+	tmp := item.Primary[0] & 0x60 >> 5
 	switch tmp {
 	case 0:
 		ts.RAD = "combined_track"
@@ -367,19 +358,19 @@ func trackStatus(data []byte) Status {
 		ts.RAD = "invalid"
 	}
 
-	if data[0]&0x10 != 0 {
+	if item.Primary[0]&0x10 != 0 {
 		ts.DOU = "low_confidence"
 	} else {
 		ts.DOU = "normal_confidence"
 	}
 
-	if data[0]&0x08 != 0 {
+	if item.Primary[0]&0x08 != 0 {
 		ts.MAH = "horizontal_man_sensed"
 	} else {
 		ts.MAH = "no_horizontal_man_sensed"
 	}
 
-	tmp = data[0] & 0x06 >> 1
+	tmp = item.Primary[0] & 0x06 >> 1
 	switch tmp {
 	case 0:
 		ts.CDM = "maintaining"
@@ -390,32 +381,30 @@ func trackStatus(data []byte) Status {
 	case 3:
 		ts.CDM = "unknown"
 	}
-
-	if data[0]&0x01 != 0 {
-		if data[1]&0x80 != 0 {
+	if item.Secondary != nil {
+		if item.Secondary[0]&0x80 != 0 {
 			ts.TRE = "end_of_track_lifetime"
 		} else {
 			ts.TRE = "track_still_alive"
 		}
 
-		if data[1]&0x40 != 0 {
+		if item.Secondary[0]&0x40 != 0 {
 			ts.GHO = "ghost_target_track"
 		} else {
 			ts.GHO = "true_target_track"
 		}
 
-		if data[1]&0x20 != 0 {
+		if item.Secondary[0]&0x20 != 0 {
 			ts.SUP = "yes"
 		} else {
 			ts.SUP = "no"
 		}
-		if data[1]&0x10 != 0 {
+		if item.Secondary[0]&0x10 != 0 {
 			ts.TCC = "slant_range_correction_used"
 		} else {
 			ts.TCC = "radar_plane"
 		}
 	}
-
 	return ts
 }
 

@@ -6,184 +6,362 @@ var Cat001V12 = StandardUAP{
 	Version:  1.2,
 	Items: []DataField{
 		{
-			FRN:      1,
-			DataItem: "I001/010",
-			Type: TypeField{
-				NameType: Fixed,
-				Size:     2,
+			FRN:         1,
+			DataItem:    "I001/010",
+			Description: "Data Source Identifier",
+			Type:        Fixed,
+			Fixed: FixedField{
+				Size: 2,
 			},
 		},
 		{
 			FRN:         2,
 			DataItem:    "I001/020",
+			Description: "Target Report Descriptor",
 			Conditional: true,
-			Type: TypeField{
-				NameType:      Extended,
+			Type:        Extended,
+			Extended: ExtendedField{
 				PrimarySize:   1,
 				SecondarySize: 1,
 			},
 		},
 	},
 }
-
-var Cat001TrackV12 = []DataField{
+var Cat001PlotV12 = []DataField{
 	{
-		FRN: 3, DataItem: "I001/161", Type: TypeField{NameType: Fixed, Size: 2},
+		FRN:         3,
+		DataItem:    "I001/040",
+		Description: "Measured Position in Polar Coordinates",
+		Type:        Fixed,
+		Fixed: FixedField{
+			Size: 4,
+		},
 	},
 	{
-		FRN: 4, DataItem: "I001/040", Type: TypeField{NameType: Fixed, Size: 4},
+		FRN:         4,
+		DataItem:    "I001/070",
+		Description: "Mode-3/A Code in Octal Representation",
+		Type:        Fixed,
+		Fixed: FixedField{
+			Size: 2,
+		},
 	},
 	{
-		FRN: 5, DataItem: "I001/042", Type: TypeField{NameType: Fixed, Size: 4},
+		FRN:         5,
+		DataItem:    "I001/090",
+		Description: "Mode-C Code in Binary Representation",
+		Type:        Fixed,
+		Fixed: FixedField{
+			Size: 2,
+		},
 	},
 	{
-		FRN: 6, DataItem: "I001/200", Type: TypeField{NameType: Fixed, Size: 4},
-	},
-	{
-		FRN: 7, DataItem: "I001/070", Type: TypeField{NameType: Fixed, Size: 2},
-	},
-	{
-		FRN: 8, DataItem: "I001/090", Type: TypeField{NameType: Fixed, Size: 2},
-	},
-	{
-		FRN: 9, DataItem: "I001/141", Type: TypeField{NameType: Fixed, Size: 2},
-	},
-	{
-		FRN:      10,
-		DataItem: "I001/130",
-		Type: TypeField{
-			NameType:      Extended,
+		FRN:         6,
+		DataItem:    "I001/130",
+		Description: "Radar Plot Characteristics",
+		Type:        Extended,
+		Extended: ExtendedField{
 			PrimarySize:   1,
 			SecondarySize: 1,
 		},
 	},
 	{
-		FRN: 11, DataItem: "I001/131", Type: TypeField{NameType: Fixed, Size: 1},
+		FRN:         7,
+		DataItem:    "I001/141",
+		Description: "Truncated Time of Day",
+		Type:        Fixed,
+		Fixed: FixedField{
+			Size: 2,
+		},
 	},
 	{
-		FRN: 12, DataItem: "I001/120", Type: TypeField{NameType: Fixed, Size: 1},
+		FRN:         8,
+		DataItem:    "I001/050",
+		Description: "Mode-2 Code in Octal Representation",
+		Type:        Fixed,
+		Fixed: FixedField{
+			Size: 2,
+		},
 	},
 	{
-		FRN:      13,
-		DataItem: "I001/170",
-		Type: TypeField{
-			NameType:      Extended,
+		FRN:         9,
+		DataItem:    "I001/120",
+		Description: "Measured Radial Doppler Speed",
+		Type:        Fixed,
+		Fixed: FixedField{
+			Size: 1,
+		},
+	},
+	{
+		FRN:         10,
+		DataItem:    "I001/131",
+		Description: "Received Power",
+		Type:        Fixed,
+		Fixed: FixedField{
+			Size: 1,
+		},
+	},
+	{
+		FRN:         11,
+		DataItem:    "I001/080",
+		Description: "Mode-3/A Code Confidence Indicator",
+		Type:        Fixed,
+		Fixed: FixedField{
+			Size: 2,
+		},
+	},
+	{
+		FRN:         12,
+		DataItem:    "I001/100",
+		Description: "Mode-C Code and Code Confidence Indicator",
+		Type:        Fixed,
+		Fixed: FixedField{
+			Size: 4,
+		},
+	},
+	{
+		FRN:         13,
+		DataItem:    "I001/060",
+		Description: "Mode-2 Code Confidence Indicator",
+		Type:        Fixed,
+		Fixed: FixedField{
+			Size: 2,
+		},
+	},
+	{
+		FRN:         14,
+		DataItem:    "I001/030",
+		Description: "Warning/Error Conditions",
+		Type:        Extended,
+		Extended: ExtendedField{
 			PrimarySize:   1,
 			SecondarySize: 1,
 		},
 	},
 	{
-		FRN:      14,
-		DataItem: "I001/210",
-		Type: TypeField{
-			NameType:      Extended,
-			PrimarySize:   1,
-			SecondarySize: 1,
+		FRN:         15,
+		DataItem:    "I001/150",
+		Description: "Presence of X-Pulse",
+		Type:        Fixed,
+		Fixed: FixedField{
+			Size: 1,
 		},
 	},
 	{
-		FRN: 15, DataItem: "I001/050", Type: TypeField{NameType: Fixed, Size: 2},
+		FRN:      16,
+		DataItem: "NA",
+		Type:     Spare,
 	},
 	{
-		FRN: 16, DataItem: "I001/080", Type: TypeField{NameType: Fixed, Size: 2},
+		FRN:      16,
+		DataItem: "NA",
+		Type:     Spare,
 	},
 	{
-		FRN: 17, DataItem: "I001/100", Type: TypeField{NameType: Fixed, Size: 4},
+		FRN:      17,
+		DataItem: "NA",
+		Type:     Spare,
 	},
 	{
-		FRN: 18, DataItem: "I001/060", Type: TypeField{NameType: Fixed, Size: 2},
+		FRN:      18,
+		DataItem: "NA",
+		Type:     Spare,
 	},
 	{
 		FRN:      19,
-		DataItem: "I001/030",
-		Type: TypeField{
-			NameType:      Extended,
-			PrimarySize:   1,
-			SecondarySize: 1,
-		},
+		DataItem: "NA",
+		Type:     Spare,
 	},
 	{
-		FRN: 20, DataItem: "SP-Data Item", Type: TypeField{NameType: SP},
+		FRN:         20,
+		DataItem:    "SP-Data Item",
+		Description: "",
+		Type:        SP,
 	},
 	{
-		FRN: 21, DataItem: "Random Field Sequencing", Type: TypeField{NameType: RFS},
-	},
-	{
-		FRN: 22, DataItem: "I001/150", Type: TypeField{NameType: Fixed, Size: 1},
+		FRN:         21,
+		DataItem:    "Random Field Sequencing",
+		Description: "",
+		Type:        RFS,
 	},
 }
 
-var Cat001PlotV12 = []DataField{
+var Cat001TrackV12 = []DataField{
 	{
-		FRN: 3, DataItem: "I001/040", Type: TypeField{NameType: Fixed, Size: 4},
+		FRN:         3,
+		DataItem:    "I001/161",
+		Description: "Track/Plot Number",
+		Type:        Fixed,
+		Fixed: FixedField{
+			Size: 2,
+		},
 	},
 	{
-		FRN: 4, DataItem: "I001/070", Type: TypeField{NameType: Fixed, Size: 2},
+		FRN:         4,
+		DataItem:    "I001/040",
+		Description: "Measured Position in Polar Coordinates",
+		Type:        Fixed,
+		Fixed: FixedField{
+			Size: 4,
+		},
 	},
 	{
-		FRN: 5, DataItem: "I001/090", Type: TypeField{NameType: Fixed, Size: 2},
+		FRN:         5,
+		DataItem:    "I001/042",
+		Description: "Calculated Position in Cartesian Coordinates",
+		Type:        Fixed,
+		Fixed: FixedField{
+			Size: 4,
+		},
 	},
 	{
-		FRN:      6,
-		DataItem: "I001/130",
-		Type: TypeField{
-			NameType:      Extended,
+		FRN:         6,
+		DataItem:    "I001/200",
+		Description: "Calculated Track Velocity in polar Coordinates",
+		Type:        Fixed,
+		Fixed: FixedField{
+			Size: 4,
+		},
+	},
+	{
+		FRN:         7,
+		DataItem:    "I001/070",
+		Description: "Mode-3/A Code in Octal Representation",
+		Type:        Fixed,
+		Fixed: FixedField{
+			Size: 2,
+		},
+	},
+	{
+		FRN:         8,
+		DataItem:    "I001/090",
+		Description: "Mode-C Code in Binary Representation",
+		Type:        Fixed,
+		Fixed: FixedField{
+			Size: 2,
+		},
+	},
+	{
+		FRN:         9,
+		DataItem:    "I001/141",
+		Description: "Truncated Time of Day",
+		Type:        Fixed,
+		Fixed: FixedField{
+			Size: 2,
+		},
+	},
+	{
+		FRN:         10,
+		DataItem:    "I001/130",
+		Description: "Radar Plot Characteristics",
+		Extended: ExtendedField{
 			PrimarySize:   1,
 			SecondarySize: 1,
 		},
 	},
 	{
-		FRN: 7, DataItem: "I001/141", Type: TypeField{NameType: Fixed, Size: 2},
+		FRN:         11,
+		DataItem:    "I001/131",
+		Description: "Received Power",
+		Type:        Fixed,
+		Fixed: FixedField{
+			Size: 1,
+		},
 	},
 	{
-		FRN: 8, DataItem: "I001/050", Type: TypeField{NameType: Fixed, Size: 2},
+		FRN:         12,
+		DataItem:    "I001/120",
+		Description: "Measured Radial Doppler Speed",
+		Type:        Fixed,
+		Fixed: FixedField{
+			Size: 1,
+		},
 	},
 	{
-		FRN: 9, DataItem: "I001/120", Type: TypeField{NameType: Fixed, Size: 1},
-	},
-	{
-		FRN: 10, DataItem: "I001/131", Type: TypeField{NameType: Fixed, Size: 1},
-	},
-	{
-		FRN: 11, DataItem: "I001/080", Type: TypeField{NameType: Fixed, Size: 2},
-	},
-	{
-		FRN: 12, DataItem: "I001/100", Type: TypeField{NameType: Fixed, Size: 4},
-	},
-	{
-		FRN: 13, DataItem: "I001/060", Type: TypeField{NameType: Fixed, Size: 2},
-	},
-	{
-		FRN:      14,
-		DataItem: "I001/030",
-		Type: TypeField{
-			NameType:      Extended,
+		FRN:         13,
+		DataItem:    "I001/170",
+		Description: "Track Status",
+		Type:        Extended,
+		Extended: ExtendedField{
 			PrimarySize:   1,
 			SecondarySize: 1,
 		},
 	},
 	{
-		FRN: 15, DataItem: "I001/150", Type: TypeField{NameType: Fixed, Size: 1},
+		FRN:         14,
+		DataItem:    "I001/210",
+		Description: "Track Quality",
+		Type:        Extended,
+		Extended: ExtendedField{
+			PrimarySize:   1,
+			SecondarySize: 1,
+		},
 	},
 	{
-		FRN: 16, DataItem: "NA", Type: TypeField{NameType: Spare},
+		FRN:         15,
+		DataItem:    "I001/050",
+		Description: "Mode-2 Code in Octal Representation",
+		Type:        Fixed,
+		Fixed: FixedField{
+			Size: 2,
+		},
 	},
 	{
-		FRN: 16, DataItem: "NA", Type: TypeField{NameType: Spare},
+		FRN:         16,
+		DataItem:    "I001/080",
+		Description: "Mode-3/A Code Confidence Indicator",
+		Type:        Fixed,
+		Fixed: FixedField{
+			Size: 2,
+		},
 	},
 	{
-		FRN: 17, DataItem: "NA", Type: TypeField{NameType: Spare},
+		FRN:         17,
+		DataItem:    "I001/100",
+		Description: "Mode-C Code and Code Confidence Indicator",
+		Type:        Fixed,
+		Fixed: FixedField{
+			Size: 4,
+		},
 	},
 	{
-		FRN: 18, DataItem: "NA", Type: TypeField{NameType: Spare},
+		FRN:         18,
+		DataItem:    "I001/060",
+		Description: "Mode-2 Code Confidence Indicator",
+		Type:        Fixed,
+		Fixed: FixedField{
+			Size: 2,
+		},
 	},
 	{
-		FRN: 19, DataItem: "NA", Type: TypeField{NameType: Spare},
+		FRN:         19,
+		DataItem:    "I001/030",
+		Description: "Warning/Error Conditions",
+		Type:        Extended,
+		Extended: ExtendedField{
+			PrimarySize:   1,
+			SecondarySize: 1,
+		},
 	},
 	{
-		FRN: 20, DataItem: "SP-Data Item", Type: TypeField{NameType: SP},
+		FRN:         20,
+		DataItem:    "SP-Data Item",
+		Description: "Reserved for Special Purpose Indicator",
+		Type:        SP,
 	},
 	{
-		FRN: 21, DataItem: "Random Field Sequencing", Type: TypeField{NameType: RFS},
+		FRN:         21,
+		DataItem:    "Random Field Sequencing",
+		Description: "Reserved for RFS Indicator",
+		Type:        RFS,
+	},
+	{
+		FRN:         22,
+		DataItem:    "I001/150",
+		Description: "Presence of X-Pulse",
+		Type:        Fixed,
+		Fixed: FixedField{
+			Size: 1,
+		},
 	},
 }

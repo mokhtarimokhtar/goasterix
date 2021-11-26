@@ -4,7 +4,6 @@ import (
 	"encoding/hex"
 	"errors"
 	"github.com/mokhtarimokhtar/goasterix"
-	"github.com/mokhtarimokhtar/goasterix/uap"
 	"strconv"
 )
 
@@ -100,58 +99,58 @@ type Cat034Model struct {
 	SPDataItem             string              `json:"spDataItem,omitempty"`
 }
 
-func (data *Cat034Model) write(items []uap.DataField) {
-	for _, item := range items {
-		switch item.FRN {
+func (data *Cat034Model) write(rec goasterix.Record) {
+	for _, item := range rec.Items {
+		switch item.Meta.FRN {
 		case 1:
 			// decode sac sic
 			var payload [2]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload[:])
 			tmp, _ := sacSic(payload)
 			data.SacSic = &tmp
 		case 2:
 			//decode messageType
 			var payload [1]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload[:])
 			data.MessageType = messageType(payload)
 		case 3:
 			// decode timeOfDay
 			var payload [3]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload[:])
 			data.TimeOfDay, _ = timeOfDay(payload)
 		case 4:
 			// decode sector number
 			// SectorNumber returns a float.
 			// Ref: 5.2.3 Records Item I034/020.
 			// Eight most significant bits of the antenna azimuth defining a particular azimuth sector.
-			data.SectorNumber = float64(item.Payload[0]) * 1.40625
+			data.SectorNumber = float64(item.Fixed.Payload[0]) * 1.40625
 		case 5:
 			// AntennaRotationSpeed returns a float in second.
 			// Antenna rotation period as measured between two consecutive
 			// North crossings or as averaged during a period of time.
 			// Ref: 5.2.3 Records Item I034/041.
-			data.AntennaRotationSpeed = float64(uint16(item.Payload[0])<<8+uint16(item.Payload[1])) / 128
+			data.AntennaRotationSpeed = float64(uint16(item.Fixed.Payload[0])<<8+uint16(item.Fixed.Payload[1])) / 128
 		case 6:
-			tmp := systemConfiguration(item.Payload)
+			tmp := systemConfiguration(*item.Compound)
 			data.SystemConfiguration = &tmp
 		case 7:
-			tmp := systemProcessingMode(item.Payload)
+			tmp := systemProcessingMode(*item.Compound)
 			data.SystemProcessingMode = &tmp
 		case 8:
-			tmp, _ := messageCountValues(item.Payload)
+			tmp, _ := messageCountValues(item.Fixed.Payload)
 			data.MessageCountValues = tmp
 		case 9:
 			var payload [8]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload[:])
 			tmp := genericPolarWindow(payload)
 			data.GenericPolarWindow = &tmp
 		case 10:
 			var payload [1]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload[:])
 			data.DataFilter, _ = dataFilter(payload)
 		case 11:
 			var payload [8]byte
-			copy(payload[:], item.Payload[:])
+			copy(payload[:], item.Fixed.Payload[:])
 			tmp := position3DofDataSource(payload)
 			data.Position3DofDataSource = &tmp
 		case 12:
@@ -159,13 +158,13 @@ func (data *Cat034Model) write(items []uap.DataField) {
 			// RANGE ERROR and AZIMUTH ERROR
 			// Ref: 5.2.9 Records Item I034/090.
 			tmp := new(collimationError)
-			tmp.RangeError = float64(int8(item.Payload[0])) / 128
-			tmp.AzimuthError = float64(int8(item.Payload[1])) * 0.021972656
+			tmp.RangeError = float64(int8(item.Fixed.Payload[0])) / 128
+			tmp.AzimuthError = float64(int8(item.Fixed.Payload[1])) * 0.021972656
 			data.CollimationError = tmp
 		case 13:
-			data.REDataItem = hex.EncodeToString(item.Payload)
+			data.REDataItem = hex.EncodeToString(item.Fixed.Payload)
 		case 14:
-			data.SPDataItem = hex.EncodeToString(item.Payload)
+			data.SPDataItem = hex.EncodeToString(item.Fixed.Payload)
 		}
 	}
 }
@@ -200,175 +199,165 @@ func messageType(data [1]byte) string {
 
 // systemConfiguration returns map of map string.
 // Ref: 5.2.6 Data Item I034/050, System Configuration and Status
-func systemConfiguration(data []byte) SysConf {
+func systemConfiguration(cp goasterix.Compound) SysConf {
 	var sysConf SysConf
-	primary := data[0]
 
-	// secondary
-	offset := 0
+	for _, item := range cp.Secondary {
+		switch item.Meta.FRN {
+		case 1:
+			com := new(ComSysConf)
+			tmp := item.Fixed.Payload[0]
+			if tmp&0x80 == 0 {
+				com.Nogo = sysIn
+			} else {
+				com.Nogo = sysOp
+			}
+			if tmp&0x40 == 0 {
+				com.Rdpc = "radar_data_processor_chain1"
+			} else {
+				com.Rdpc = "radar_data_processor_chain2"
+			}
+			if tmp&0x20 == 0 {
+				com.Rdpr = "default_situation"
+			} else {
+				com.Rdpr = "reset_of_rdpc"
+			}
+			if tmp&0x10 == 0 {
+				com.Ovlrdp = noOverload
+			} else {
+				com.Ovlrdp = overload
+			}
+			if tmp&0x08 == 0 {
+				com.Ovlxmt = noOverload
+			} else {
+				com.Ovlxmt = overload
+			}
+			if tmp&0x04 == 0 {
+				com.Msc = mscC
+			} else {
+				com.Msc = mscD
+			}
+			if tmp&0x02 == 0 {
+				com.Tsv = "time_source_valid"
+			} else {
+				com.Tsv = "time_source_invalid"
+			}
+			sysConf.Com = com
+		case 4:
+			psr := new(PsrSsrSysConf)
+			tmp := item.Fixed.Payload[0]
+			if tmp&0x80 == 0 {
+				psr.Ant = antenna1
+			} else {
+				psr.Ant = antenna2
+			}
 
-	if primary&0x80 != 0 {
-		com := new(ComSysConf)
-		offset += 1
-		if data[offset]&0x80 == 0 {
-			com.Nogo = sysIn
-		} else {
-			com.Nogo = sysOp
-		}
-		if data[offset]&0x40 == 0 {
-			com.Rdpc = "radar_data_processor_chain1"
-		} else {
-			com.Rdpc = "radar_data_processor_chain2"
-		}
-		if data[offset]&0x20 == 0 {
-			com.Rdpr = "default_situation"
-		} else {
-			com.Rdpr = "reset_of_rdpc"
-		}
-		if data[offset]&0x10 == 0 {
-			com.Ovlrdp = noOverload
-		} else {
-			com.Ovlrdp = overload
-		}
-		if data[offset]&0x08 == 0 {
-			com.Ovlxmt = noOverload
-		} else {
-			com.Ovlxmt = overload
-		}
-		if data[offset]&0x04 == 0 {
-			com.Msc = mscC
-		} else {
-			com.Msc = mscD
-		}
-		if data[offset]&0x02 == 0 {
-			com.Tsv = "time_source_valid"
-		} else {
-			com.Tsv = "time_source_invalid"
-		}
+			tmpChAB := tmp & 0x60 >> 5
+			if tmpChAB == 0 {
+				psr.ChAB = noChanSelected
+			} else if tmpChAB == 1 {
+				psr.ChAB = chanASelected
+			} else if tmpChAB == 2 {
+				psr.ChAB = chanBSelected
+			} else if tmpChAB == 3 {
+				psr.ChAB = chanABSelected
+			}
+			if tmp&0x10 == 0 {
+				psr.Ovl = noOverload
+			} else {
+				psr.Ovl = overload
+			}
+			if tmp&0x08 == 0 {
+				psr.Msc = mscC
+			} else {
+				psr.Msc = mscD
+			}
+			sysConf.Psr = psr
+		case 5:
+			ssr := new(PsrSsrSysConf)
+			tmp := item.Fixed.Payload[0]
 
-		sysConf.Com = com
+			if tmp&0x80 == 0 {
+				ssr.Ant = antenna1
+			} else {
+				ssr.Ant = antenna2
+			}
+
+			tmpChAB := tmp & 0x60 >> 5
+			if tmpChAB == 0 {
+				ssr.ChAB = noChanSelected
+			} else if tmpChAB == 1 {
+				ssr.ChAB = chanASelected
+			} else if tmpChAB == 2 {
+				ssr.ChAB = chanBSelected
+			} else if tmpChAB == 3 {
+				ssr.ChAB = chanABSelected
+			}
+			if tmp&0x10 == 0 {
+				ssr.Ovl = noOverload
+			} else {
+				ssr.Ovl = overload
+			}
+			if tmp&0x08 == 0 {
+				ssr.Msc = mscC
+			} else {
+				ssr.Msc = mscD
+			}
+			sysConf.Ssr = ssr
+		case 6:
+			mds := new(MdsSysConf)
+			tmp := item.Fixed.Payload[0]
+
+			if tmp&0x80 == 0 {
+				mds.Ant = antenna1
+			} else {
+				mds.Ant = antenna2
+			}
+
+			tmpChAB := tmp & 0x60 >> 5
+			if tmpChAB == 0 {
+				mds.ChAB = noChanSelected
+			} else if tmpChAB == 1 {
+				mds.ChAB = chanASelected
+			} else if tmpChAB == 2 {
+				mds.ChAB = chanBSelected
+			} else if tmpChAB == 3 {
+				mds.ChAB = chanIllCombi
+			}
+
+			if tmp&0x10 == 0 {
+				mds.Ovlsur = noOverload
+			} else {
+				mds.Ovlsur = overload
+			}
+			if tmp&0x08 == 0 {
+				mds.Msc = mscC
+			} else {
+				mds.Msc = mscD
+			}
+			if tmp&0x04 == 0 {
+				mds.Scf = chanAuse
+			} else {
+				mds.Scf = chanBuse
+			}
+			if tmp&0x02 == 0 {
+				mds.Dlf = chanAuse
+			} else {
+				mds.Dlf = chanBuse
+			}
+			if tmp&0x01 == 0 {
+				mds.Ovlscf = noOverload
+			} else {
+				mds.Ovlscf = overload
+			}
+			if item.Fixed.Payload[1]&0x80 == 0 {
+				mds.Ovldlf = noOverload
+			} else {
+				mds.Ovldlf = overload
+			}
+			sysConf.Mds = mds
+		}
 	}
-
-	if primary&0x10 != 0 {
-		psr := new(PsrSsrSysConf)
-		offset += 1
-
-		if data[offset]&0x80 == 0 {
-			psr.Ant = antenna1
-		} else {
-			psr.Ant = antenna2
-		}
-
-		tmpChAB := data[offset] & 0x60 >> 5
-		if tmpChAB == 0 {
-			psr.ChAB = noChanSelected
-		} else if tmpChAB == 1 {
-			psr.ChAB = chanASelected
-		} else if tmpChAB == 2 {
-			psr.ChAB = chanBSelected
-		} else if tmpChAB == 3 {
-			psr.ChAB = chanABSelected
-		}
-		if data[offset]&0x10 == 0 {
-			psr.Ovl = noOverload
-		} else {
-			psr.Ovl = overload
-		}
-		if data[offset]&0x08 == 0 {
-			psr.Msc = mscC
-		} else {
-			psr.Msc = mscD
-		}
-		sysConf.Psr = psr
-	}
-
-	if primary&0x08 != 0 {
-		ssr := new(PsrSsrSysConf)
-		offset += 1
-
-		if data[offset]&0x80 == 0 {
-			ssr.Ant = antenna1
-		} else {
-			ssr.Ant = antenna2
-		}
-
-		tmpChAB := data[offset] & 0x60 >> 5
-		if tmpChAB == 0 {
-			ssr.ChAB = noChanSelected
-		} else if tmpChAB == 1 {
-			ssr.ChAB = chanASelected
-		} else if tmpChAB == 2 {
-			ssr.ChAB = chanBSelected
-		} else if tmpChAB == 3 {
-			ssr.ChAB = chanABSelected
-		}
-		if data[offset]&0x10 == 0 {
-			ssr.Ovl = noOverload
-		} else {
-			ssr.Ovl = overload
-		}
-		if data[offset]&0x08 == 0 {
-			ssr.Msc = mscC
-		} else {
-			ssr.Msc = mscD
-		}
-		sysConf.Ssr = ssr
-	}
-
-	if primary&0x04 != 0 {
-		mds := new(MdsSysConf)
-		offset += 2
-
-		if data[offset-1]&0x80 == 0 {
-			mds.Ant = antenna1
-		} else {
-			mds.Ant = antenna2
-		}
-
-		tmpChAB := data[offset-1] & 0x60 >> 5
-		if tmpChAB == 0 {
-			mds.ChAB = noChanSelected
-		} else if tmpChAB == 1 {
-			mds.ChAB = chanASelected
-		} else if tmpChAB == 2 {
-			mds.ChAB = chanBSelected
-		} else if tmpChAB == 3 {
-			mds.ChAB = chanIllCombi
-		}
-
-		if data[offset-1]&0x10 == 0 {
-			mds.Ovlsur = noOverload
-		} else {
-			mds.Ovlsur = overload
-		}
-		if data[offset-1]&0x08 == 0 {
-			mds.Msc = mscC
-		} else {
-			mds.Msc = mscD
-		}
-		if data[offset-1]&0x04 == 0 {
-			mds.Scf = chanAuse
-		} else {
-			mds.Scf = chanBuse
-		}
-		if data[offset-1]&0x02 == 0 {
-			mds.Dlf = chanAuse
-		} else {
-			mds.Dlf = chanBuse
-		}
-		if data[offset-1]&0x01 == 0 {
-			mds.Ovlscf = noOverload
-		} else {
-			mds.Ovlscf = overload
-		}
-		if data[offset]&0x80 == 0 {
-			mds.Ovldlf = noOverload
-		} else {
-			mds.Ovldlf = overload
-		}
-		sysConf.Mds = mds
-	}
-
 	return sysConf
 }
 
@@ -397,89 +386,72 @@ type SysProcess struct {
 
 // systemProcessingMode returns map of map string.
 // Ref: Data Item I034/060, System Processing Mode
-func systemProcessingMode(data []byte) SysProcess {
+func systemProcessingMode(cp goasterix.Compound) SysProcess {
 	var sysProc SysProcess
-	primary := data[0]
+	for _, item := range cp.Secondary {
+		switch item.Meta.FRN {
+		case 1:
+			tmp := new(ComSysPro)
 
-	// secondary
-	offset := 0
-	if primary&0x80 != 0 {
-		tmp := new(ComSysPro)
-		offset += 1
+			tmpRedrdp := item.Fixed.Payload[0] & 0x70 >> 4
+			if tmpRedrdp == 0 {
+				tmp.Redrdp = "no_reduction_active"
+			} else {
+				tmp.Redrdp = "reduction_step_" + strconv.Itoa(int(tmpRedrdp)) + "_active"
+			}
 
-		tmpRedrdp := data[offset] & 0x70 >> 4
-		if tmpRedrdp == 0 {
-			tmp.Redrdp = "no_reduction_active"
-		} else {
-			tmp.Redrdp = "reduction_step_" + strconv.Itoa(int(tmpRedrdp)) + "_active"
+			tmpRedxmt := item.Fixed.Payload[0] & 0x0E >> 1
+			if tmpRedxmt == 0 {
+				tmp.Redxmt = "no_reduction_active"
+			} else {
+				tmp.Redxmt = "reduction_step_" + strconv.Itoa(int(tmpRedxmt)) + "_active"
+			}
+			sysProc.ComSysPro = tmp
+		case 4:
+			tmp := new(PsrSysPro)
+			if item.Fixed.Payload[0]&0x80 == 0 {
+				tmp.Pol = "linear_polarization"
+			} else {
+				tmp.Pol = "circular_polarization"
+			}
+
+			tmpRedrdp := item.Fixed.Payload[0] & 0x70 >> 4
+			if tmpRedrdp == 0 {
+				tmp.Redrad = "no_reduction_active"
+			} else {
+				tmp.Redrad = "reduction_step_" + strconv.Itoa(int(tmpRedrdp)) + "_active"
+			}
+
+			tmpStc := item.Fixed.Payload[0] & 0x0C >> 2
+			tmp.Stc = "stcMap_" + strconv.Itoa(int(tmpStc)+1)
+			sysProc.Psr = tmp
+		case 5:
+			tmp := new(SsrSysPro)
+			tmpRedrad := item.Fixed.Payload[0] & 0xE0 >> 5
+			if tmpRedrad == 0 {
+				tmp.Redrad = "no_reduction_active"
+			} else {
+				tmp.Redrad = "reduction_step_" + strconv.Itoa(int(tmpRedrad)) + "_active"
+			}
+			sysProc.Ssr = tmp
+		case 6:
+			tmp := new(MdsSysPro)
+
+			tmpRedrad := item.Fixed.Payload[0] & 0xE0 >> 5
+			if tmpRedrad == 0 {
+				tmp.Redrad = "no_reduction_active"
+			} else {
+				tmp.Redrad = "reduction_step_" + strconv.Itoa(int(tmpRedrad)) + "_active"
+			}
+
+			if item.Fixed.Payload[0]&0x10 == 0 {
+				tmp.Clu = "autonomous"
+			} else {
+				tmp.Clu = "no_autonomous"
+			}
+			sysProc.Mds = tmp
 		}
-
-		tmpRedxmt := data[offset] & 0x0E >> 1
-		if tmpRedxmt == 0 {
-			tmp.Redxmt = "no_reduction_active"
-		} else {
-			tmp.Redxmt = "reduction_step_" + strconv.Itoa(int(tmpRedxmt)) + "_active"
-		}
-
-		sysProc.ComSysPro = tmp
 	}
-
-	if primary&0x10 != 0 {
-		tmp := new(PsrSysPro)
-		offset += 1
-
-		if data[offset]&0x80 == 0 {
-			tmp.Pol = "linear_polarization"
-		} else {
-			tmp.Pol = "circular_polarization"
-		}
-
-		tmpRedrdp := data[offset] & 0x70 >> 4
-		if tmpRedrdp == 0 {
-			tmp.Redrad = "no_reduction_active"
-		} else {
-			tmp.Redrad = "reduction_step_" + strconv.Itoa(int(tmpRedrdp)) + "_active"
-		}
-
-		tmpStc := data[offset] & 0x0C >> 2
-		tmp.Stc = "stcMap_" + strconv.Itoa(int(tmpStc)+1)
-
-		sysProc.Psr = tmp
-	}
-
-	if primary&0x08 != 0 {
-		tmp := new(SsrSysPro)
-		offset += 1
-
-		tmpRedrad := data[offset] & 0xE0 >> 5
-		if tmpRedrad == 0 {
-			tmp.Redrad = "no_reduction_active"
-		} else {
-			tmp.Redrad = "reduction_step_" + strconv.Itoa(int(tmpRedrad)) + "_active"
-		}
-
-		sysProc.Ssr = tmp
-	}
-
-	if primary&0x04 != 0 {
-		tmp := new(MdsSysPro)
-		offset += 1
-
-		tmpRedrad := data[offset] & 0xE0 >> 5
-		if tmpRedrad == 0 {
-			tmp.Redrad = "no_reduction_active"
-		} else {
-			tmp.Redrad = "reduction_step_" + strconv.Itoa(int(tmpRedrad)) + "_active"
-		}
-
-		if data[offset]&0x10 == 0 {
-			tmp.Clu = "autonomous"
-		} else {
-			tmp.Clu = "no_autonomous"
-		}
-		sysProc.Mds = tmp
-	}
-
 	return sysProc
 }
 

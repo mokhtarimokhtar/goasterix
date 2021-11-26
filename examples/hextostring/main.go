@@ -30,13 +30,13 @@ func main() {
 		for _, dataBlock := range w.DataBlocks {
 			// dataBlock contains one datablock = CAT + LEN + RECORD(S)
 			fmt.Printf("\nCategory: %v, Len: %v\n", dataBlock.Category, dataBlock.Len)
-			for i, records := range dataBlock.String() {
+			/*for i, records := range dataBlock.String() {
 				// records contains one or more records = N * items
 				fmt.Println("Record: ", i+1)
 				for _, record := range records {
 					fmt.Println(record) // it displays its items in Hexadecimal
 				}
-			}
+			}*/
 		}
 	}
 }

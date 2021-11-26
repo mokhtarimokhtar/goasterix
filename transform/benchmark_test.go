@@ -8,7 +8,8 @@ import (
 
 func benchmarkWriteModel(input string, items uap.StandardUAP, b *testing.B) {
 	data, _ := goasterix.HexStringToByte(input)
-	rec := goasterix.NewRecord()
+	//rec := goasterix.NewRecord()
+	rec := new(goasterix.Record)
 	unRead, err := rec.Decode(data, items)
 	if err != nil {
 		b.Errorf("FAIL: error = %v; Expected: %v", err, nil)
@@ -19,7 +20,7 @@ func benchmarkWriteModel(input string, items uap.StandardUAP, b *testing.B) {
 
 	for n := 0; n < b.N; n++ {
 		cat048Model := new(Cat048Model)
-		WriteModel(cat048Model, rec.Items)
+		WriteModel(cat048Model, *rec)
 	}
 }
 

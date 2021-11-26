@@ -3,10 +3,9 @@ package goasterix
 import (
 	"bytes"
 	"encoding/hex"
+	"github.com/mokhtarimokhtar/goasterix/uap"
 	"io"
 	"testing"
-
-	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
 /**
@@ -82,11 +81,9 @@ func TestWrapperDataBlockDecode(t *testing.T) {
 	}
 }
 
-/**
-DataBlock Testing
-a DataBlock correspond to one (only) category and contains one or more Records.
-DataBlock = CAT + LEN + [FSPEC + items...] + [...] + ...
-*/
+// DataBlock Testing
+// a DataBlock correspond to one (only) category and contains one or more Records.
+// DataBlock = CAT + LEN + [FSPEC + items...] + [...] + ...
 type DataBlockTest struct {
 	TestCaseName string
 	input        string // data block test input
@@ -178,7 +175,8 @@ func TestDataBlockDecode(t *testing.T) {
 		{
 			TestCaseName: "Cat4Test full record",
 			//
-			input:       "1a 0026 FD80 FFFF FFFE AAFFFFFE 02FFFF FFFF 03FFFF 02FFFFFFFF 04FFFFFF 0101FFFF 04FFFFFF",
+			//input:       "1a 0026 FD80 FFFF FFFE AAFFFFFE 02FFFF FFFF 03FFFF 02FFFFFFFF 04FFFFFF 0101FFFF 04FFFFFF",
+			input:       "1a 0029 fd 40 ffff fffffe 03ffff 02ffffffff ab80 ff fffe 02ffffffff 04ffffff ffff 0101ffff 03ffff",
 			err:         nil,
 			nbOfRecords: 1,
 			unRead:      0,
@@ -226,6 +224,7 @@ func TestDataBlockDecode(t *testing.T) {
 	}
 }
 
+/*
 func TestDataBlockPayload(t *testing.T) {
 	// Arrange
 	data, _ := HexStringToByte("300118fff7020836429b52a094c70181091302d06002b7490d0138a178cf422002e79a5d27a00c0060a3280030a4000040063a0743ce5b4020f5fff7020836429b54e000bc020901a2005c7802e800263946e50464b1cb6ca0029ea9491062a4546093880032d4000040059602f639590220f5fff7020836429b58a0909703ff026405a26002bb4066740815f6e795e002e56a0530ffdff860b0d80032fc00004003cf0810c9ef4020fdfff7020836429b56a0775d03700ec205786002be4060910815f9c363a002a49a0f30bfffff60c4600030a4000040057207674a004020fdfff7020836429b55a0468c029804b105786002c57101124d6070d3282002adfa3333a0140060c4600030a4000040026e07d75fc04020f5")
@@ -261,6 +260,7 @@ func TestDataBlockString(t *testing.T) {
 		t.Logf("SUCCESS: len(items) = %v; Expected: %v", len(records), nbOfRecords)
 	}
 }
+*/
 
 func TestDataBlockDecode_ARTAS(t *testing.T) {
 	// setup

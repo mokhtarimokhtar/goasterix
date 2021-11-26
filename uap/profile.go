@@ -2,9 +2,9 @@ package uap
 
 // DefaultProfiles contains the defaults User Application Profiles version.
 var DefaultProfiles = map[uint8]StandardUAP{
-	1:   Cat001V12,
-	2:   Cat002V10,
-	21:  Cat021v10,
+	1: Cat001V12,
+	2: Cat002V10,
+	//21:  Cat021v10,
 	30:  Cat030StrV51,
 	32:  Cat032StrV70,
 	34:  Cat034V127,

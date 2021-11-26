@@ -8,113 +8,176 @@ var Cat4Test = StandardUAP{
 	Version:  0.1,
 	Items: []DataField{
 		{
-			FRN:      1,
-			DataItem: "I026/001",
-			Type: TypeField{
-				NameType: Fixed,
-				Size:     2,
+			FRN:         1,
+			DataItem:    "I026/001",
+			Description: "Fixed type field for test",
+			Type:        Fixed,
+			Fixed: FixedField{
+				Size: 2,
 			},
 		},
 		{
-			FRN:      2,
-			DataItem: "I026/002",
-			Type: TypeField{
-				NameType:      Extended,
+			FRN:         2,
+			DataItem:    "I026/002",
+			Description: "Extended type field for test",
+			Type:        Extended,
+			Extended: ExtendedField{
 				PrimarySize:   1,
-				SecondarySize: 1,
+				SecondarySize: 2,
 			},
 		},
 		{
-			FRN:      3,
-			DataItem: "I026/003",
-			Type: TypeField{
-				NameType: Compound,
-				Primary: &Primary{
-					MetaField{
-						8: {NameType: Fixed, Size: 1},
-						7: {NameType: Spare},
-						6: {NameType: Extended, PrimarySize: 1, SecondarySize: 1},
-						5: {NameType: Spare},
-						4: {NameType: Repetitive, Size: 2},
-						3: {NameType: Spare},
-						2: {NameType: Explicit},
+			FRN:         3,
+			DataItem:    "I026/003",
+			Description: "Explicit type field for test",
+			Type:        Explicit,
+		},
+		{
+			FRN:         4,
+			DataItem:    "I026/004",
+			Description: "Repetitive type field for test",
+			Type:        Repetitive,
+			Repetitive: RepetitiveField{
+				SubItemSize: 2,
+			},
+		},
+		{
+			FRN:         5,
+			DataItem:    "I026/005",
+			Description: "Compound type field for test",
+			Type:        Compound,
+			Compound: []DataField{
+				{
+					FRN:         1,
+					DataItem:    "Compound/001",
+					Description: "Compound Fixed type field for test",
+					Type:        Fixed,
+					Fixed: FixedField{
+						Size: 1,
+					},
+				},
+				{
+					FRN:  2,
+					Type: Spare,
+				},
+				{
+					FRN:         3,
+					DataItem:    "Compound/003",
+					Description: "Compound Extended type field for test",
+					Type:        Extended,
+					Extended: ExtendedField{
+						PrimarySize:   1,
+						SecondarySize: 1,
+					},
+				},
+				{
+					FRN:  4,
+					Type: Spare,
+				},
+				{
+					FRN:         5,
+					DataItem:    "Compound/005",
+					Description: "Compound Repetitive type field for test",
+					Type:        Repetitive,
+					Repetitive: RepetitiveField{
+						SubItemSize: 2,
+					},
+				},
+				{
+					FRN:  6,
+					Type: Spare,
+				},
+				{
+					FRN:         7,
+					DataItem:    "Compound/007",
+					Description: "Compound Explicit type field for test",
+					Type:        Explicit,
+				},
+				{
+					FRN:         8,
+					DataItem:    "Compound/008",
+					Description: "Compound Fixed type field for test",
+					Type:        Fixed,
+					Fixed: FixedField{
+						Size: 2,
 					},
 				},
 			},
 		},
 		{
-			FRN:      4,
-			DataItem: "I026/004",
-			Type: TypeField{
-				NameType: Repetitive,
-				Size:     2,
-			},
+			FRN:         6,
+			DataItem:    "I026/006",
+			Description: "RFS(Random Field Sequencing) type field for test",
+			Type:        RFS,
 		},
 		{
-			FRN:      5,
-			DataItem: "I026/005",
-			Type: TypeField{
-				NameType: Explicit,
-			},
+			FRN:      7,
+			DataItem: "NA",
+			Type:     Spare,
 		},
 		{
-			FRN:      6,
-			DataItem: "I026/006",
-			Type: TypeField{
-				NameType: RFS,
-			},
+			FRN:         8,
+			DataItem:    "RE",
+			Description: "RE (Reserved Expansion Field) type field for test",
+			Type:        RE,
 		},
 		{
-			FRN: 7, DataItem: "NA", Type: TypeField{NameType: Spare},
+			FRN:         9,
+			DataItem:    "SP",
+			Description: "SP (Special Purpose field) type field for test",
+			Type:        SP,
 		},
 		{
-			FRN: 8, DataItem: "SP-Data Item", Type: TypeField{NameType: SP},
-		},
-		/*
-			{
-				FRN:      9,
-				DataItem: "I026/008",
-				Type:     TypeField{NameType: Compound2},
-				CompoundItems: &[]DataField{
-					{
-						FRN:         1,
-						DataItem:    "Compound001",
-						Description: "",
-						Type:        TypeField{NameType: Fixed, Size: 1},
-					},
-					{
-						FRN:  2,
-						Type: TypeField{NameType: Spare},
-					},
-					{
-						FRN:         3,
-						DataItem:    "Compound003",
-						Description: "",
-						Type:        TypeField{NameType: Extended, PrimarySize: 1, SecondarySize: 1},
-					},
-					{
-						FRN:  4,
-						Type: TypeField{NameType: Spare},
-					},
-					{
-						FRN:         5,
-						DataItem:    "Compound005",
-						Description: "",
-						Type:        TypeField{NameType: Repetitive, Size: 2},
-					},
-					{
-						FRN:  6,
-						Type: TypeField{NameType: Spare},
-					},
-					{
-						FRN:         7,
-						DataItem:    "Compound005",
-						Description: "",
-						Type:        TypeField{NameType: Explicit, Size: 2},
-					},
-				},
+			FRN:         10,
+			DataItem:    "I026/010",
+			Description: "Fixed type field for test",
+			Conditional: true,
+			Type:        Fixed,
+			Fixed: FixedField{
+				Size: 1,
 			},
+		},
+	},
+}
 
-		*/
+var Cat4TestTrack = []DataField{
+	{
+		FRN:         11,
+		DataItem:    "I026/011",
+		Description: "Fixed type field for test",
+		Type:        Fixed,
+		Fixed: FixedField{
+			Size: 1,
+		},
+	},
+	{
+		FRN:         12,
+		DataItem:    "I026/012",
+		Description: "Fixed type field for test",
+		Type:        Fixed,
+		Fixed: FixedField{
+			Size: 2,
+		},
+	},
+}
+
+var Cat4TestPlot = []DataField{
+	{
+		FRN:         11,
+		DataItem:    "I026/011",
+		Description: "Fixed type field for test",
+		Type:        Fixed,
+		Fixed: FixedField{
+			Size: 3,
+		},
+	},
+	{
+		FRN:         12,
+		DataItem:    "I026/012",
+		Description: "Fixed type field for test",
+		Type:        Fixed,
+		Fixed: FixedField{
+			Size: 1,
+		},
 	},
 }

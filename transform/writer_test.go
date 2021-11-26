@@ -70,7 +70,7 @@ func TestWriteModel(t *testing.T) {
 	cat048Model := new(Cat048Model)
 
 	// Act
-	WriteModel(cat048Model, rec.Items)
+	WriteModel(cat048Model, *rec)
 
 	// Assert
 	if err != nil {
@@ -103,7 +103,7 @@ func TestWriteModelJSON(t *testing.T) {
 	cat048Model := new(Cat048Model)
 
 	// Act
-	recJson, err := WriteModelJSON(cat048Model, rec.Items)
+	recJson, err := WriteModelJSON(cat048Model, *rec)
 
 	// Assert
 	if err != nil {
@@ -131,7 +131,7 @@ func TestWriteModelXML(t *testing.T) {
 	cat048Model := new(Cat048Model)
 
 	// Act
-	recJson, err := WriteModelXML(cat048Model, rec.Items)
+	recJson, err := WriteModelXML(cat048Model, *rec)
 
 	// Assert
 	if err != nil {

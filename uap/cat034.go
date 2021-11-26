@@ -7,74 +7,216 @@ var Cat034V127 = StandardUAP{
 	Version:  1.27,
 	Items: []DataField{
 		{
-			FRN: 1, DataItem: "I034/010", Type: TypeField{NameType: Fixed, Size: 2},
+			FRN:         1,
+			DataItem:    "I034/010",
+			Description: "Data Source Identifier",
+			Type:        Fixed,
+			Fixed: FixedField{
+				Size: 2,
+			},
 		},
 		{
-			FRN: 2, DataItem: "I034/000", Type: TypeField{NameType: Fixed, Size: 1},
+			FRN:         2,
+			DataItem:    "I034/000",
+			Description: "Message Type",
+			Type:        Fixed,
+			Fixed: FixedField{
+				Size: 1,
+			},
 		},
 		{
-			FRN: 3, DataItem: "I034/030", Type: TypeField{NameType: Fixed, Size: 3},
+			FRN:         3,
+			DataItem:    "I034/030",
+			Description: "Time-of-Day",
+			Type:        Fixed,
+			Fixed: FixedField{
+				Size: 3,
+			},
 		},
 		{
-			FRN: 4, DataItem: "I034/020", Type: TypeField{NameType: Fixed, Size: 1},
+			FRN:         4,
+			DataItem:    "I034/020",
+			Description: "Sector Number",
+			Type:        Fixed,
+			Fixed: FixedField{
+				Size: 1,
+			},
 		},
 		{
-			FRN: 5, DataItem: "I034/041", Type: TypeField{NameType: Fixed, Size: 2},
+			FRN:         5,
+			DataItem:    "I034/041",
+			Description: "Antenna Rotation Period",
+			Type:        Fixed,
+			Fixed: FixedField{
+				Size: 2,
+			},
 		},
 		{
 			FRN: 6, DataItem: "I034/050",
-			Type: TypeField{
-				NameType: Compound,
-				Primary: &Primary{
-					MetaField{
-						8: {NameType: Fixed, Size: 1},
-						7: {NameType: Spare},
-						6: {NameType: Spare},
-						5: {NameType: Fixed, Size: 1},
-						4: {NameType: Fixed, Size: 1},
-						3: {NameType: Fixed, Size: 2},
-						2: {NameType: Spare},
+			Description: "System Configuration and Status",
+			Type:        Compound,
+			Compound: []DataField{
+				{
+					FRN:         1,
+					DataItem:    "COM",
+					Description: "Common Part",
+					Type:        Fixed,
+					Fixed: FixedField{
+						Size: 1,
 					},
+				},
+				{
+					FRN:  2,
+					Type: Spare,
+				},
+				{
+					FRN:  3,
+					Type: Spare,
+				},
+				{
+					FRN:         4,
+					DataItem:    "PSR",
+					Description: "Specific Status for PSR Sensor",
+					Type:        Fixed,
+					Fixed: FixedField{
+						Size: 1,
+					},
+				},
+				{
+					FRN:         5,
+					DataItem:    "SSR",
+					Description: "Specific Status for SSR Sensor",
+					Type:        Fixed,
+					Fixed: FixedField{
+						Size: 1,
+					},
+				},
+				{
+					FRN:         6,
+					DataItem:    "MDS",
+					Description: "Specific Status for Mode S Sensor",
+					Type:        Fixed,
+					Fixed: FixedField{
+						Size: 2,
+					},
+				},
+				{
+					FRN:  7,
+					Type: Spare,
 				},
 			},
 		},
 		{
 			FRN: 7, DataItem: "I034/060",
-			Type: TypeField{
-				NameType: Compound,
-				Primary: &Primary{
-					MetaField{
-						8: {NameType: Fixed, Size: 1},
-						7: {NameType: Spare},
-						6: {NameType: Spare},
-						5: {NameType: Fixed, Size: 1},
-						4: {NameType: Fixed, Size: 1},
-						3: {NameType: Fixed, Size: 1},
-						2: {NameType: Spare},
+			Description: "System Processing Mode",
+			Type:        Compound,
+			Compound: []DataField{
+				{
+					FRN:         1,
+					DataItem:    "COM",
+					Description: "Common Part",
+					Type:        Fixed,
+					Fixed: FixedField{
+						Size: 1,
 					},
+				},
+				{
+					FRN:  2,
+					Type: Spare,
+				},
+				{
+					FRN:  3,
+					Type: Spare,
+				},
+				{
+					FRN:         4,
+					DataItem:    "PSR",
+					Description: "Specific Processing Mode information for PSR Sensor",
+					Type:        Fixed,
+					Fixed: FixedField{
+						Size: 1,
+					},
+				},
+				{
+					FRN:         5,
+					DataItem:    "SSR",
+					Description: "Specific Processing Mode information for SSR Sensor",
+					Type:        Fixed,
+					Fixed: FixedField{
+						Size: 1,
+					},
+				},
+				{
+					FRN:         6,
+					DataItem:    "MDS",
+					Description: "Specific Processing Mode information for Mode S Sensor",
+					Type:        Fixed,
+					Fixed: FixedField{
+						Size: 1,
+					},
+				},
+				{
+					FRN:  7,
+					Type: Spare,
 				},
 			},
 		},
 		{
-			FRN: 8, DataItem: "I034/070", Type: TypeField{NameType: Repetitive, Size: 2},
+			FRN:         8,
+			DataItem:    "I034/070",
+			Description: "Message Count Values",
+			Type:        Fixed,
+			Fixed: FixedField{
+				Size: 2,
+			},
 		},
 		{
-			FRN: 9, DataItem: "I034/100", Type: TypeField{NameType: Fixed, Size: 8},
+			FRN:         9,
+			DataItem:    "I034/100",
+			Description: "Generic Polar Window",
+			Type:        Fixed,
+			Fixed: FixedField{
+				Size: 8,
+			},
 		},
 		{
-			FRN: 10, DataItem: "I034/110", Type: TypeField{NameType: Fixed, Size: 1},
+			FRN:         10,
+			DataItem:    "I034/110",
+			Description: "Data Filter",
+			Type:        Fixed,
+			Fixed: FixedField{
+				Size: 1,
+			},
 		},
 		{
-			FRN: 11, DataItem: "I034/120", Type: TypeField{NameType: Fixed, Size: 8},
+			FRN:         11,
+			DataItem:    "I034/120",
+			Description: "3D-Position of Data Source",
+			Type:        Fixed,
+			Fixed: FixedField{
+				Size: 8,
+			},
 		},
 		{
-			FRN: 12, DataItem: "I034/090", Type: TypeField{NameType: Fixed, Size: 2},
+			FRN:         12,
+			DataItem:    "I034/090",
+			Description: "Collimation Error",
+			Type:        Fixed,
+			Fixed: FixedField{
+				Size: 2,
+			},
 		},
 		{
-			FRN: 13, DataItem: "RE-Data Item", Type: TypeField{NameType: RE},
+			FRN:         13,
+			DataItem:    "RE-Data Item",
+			Description: "Reserved Expansion Field",
+			Type:        RE,
 		},
 		{
-			FRN: 14, DataItem: "SP-Data Item", Type: TypeField{NameType: SP},
+			FRN:         14,
+			DataItem:    "SP-Data Item",
+			Description: "Special Purpose Field",
+			Type:        SP,
 		},
 	},
 }

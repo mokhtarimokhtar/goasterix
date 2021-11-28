@@ -55,28 +55,28 @@ func (rec *Record) Decode(data []byte, stdUAP uap.StandardUAP) (unRead int, err 
 			item.Fixed = &tmp
 
 		case uap.Extended:
-			extended, err := ExtendedDataFieldReader(rb, uapItem.Extended.PrimarySize, uapItem.Extended.SecondarySize)
+			tmp, err := ExtendedDataFieldReader(rb, uapItem.Extended.PrimarySize, uapItem.Extended.SecondarySize)
 			if err != nil {
 				unRead = rb.Len()
 				return unRead, err
 			}
-			item.Extended = &extended
+			item.Extended = &tmp
 
 		case uap.Explicit:
-			explicit, err := ExplicitDataFieldReader(rb)
+			tmp, err := ExplicitDataFieldReader(rb)
 			if err != nil {
 				unRead = rb.Len()
 				return unRead, err
 			}
-			item.Explicit = &explicit
+			item.Explicit = &tmp
 
 		case uap.Repetitive:
-			repetitive, err := RepetitiveDataFieldReader(rb, uapItem.Repetitive.SubItemSize)
+			tmp, err := RepetitiveDataFieldReader(rb, uapItem.Repetitive.SubItemSize)
 			if err != nil {
 				unRead = rb.Len()
 				return unRead, err
 			}
-			item.Repetitive = &repetitive
+			item.Repetitive = &tmp
 
 		case uap.Compound:
 			tmp, err := CompoundDataFieldReader(rb, uapItem.Compound)
@@ -322,27 +322,27 @@ func CompoundDataFieldReader(rb *bytes.Reader, cp []uap.DataField) (Compound, er
 			items.Secondary = append(items.Secondary, *item)
 
 		case uap.Extended:
-			extended, err := ExtendedDataFieldReader(rb, uapItem.Extended.PrimarySize, uapItem.Extended.SecondarySize)
+			tmp, err := ExtendedDataFieldReader(rb, uapItem.Extended.PrimarySize, uapItem.Extended.SecondarySize)
 			if err != nil {
 				return items, err
 			}
-			item.Extended = &extended
+			item.Extended = &tmp
 			items.Secondary = append(items.Secondary, *item)
 
 		case uap.Explicit:
-			explicit, err := ExplicitDataFieldReader(rb)
+			tmp, err := ExplicitDataFieldReader(rb)
 			if err != nil {
 				return items, err
 			}
-			item.Explicit = &explicit
+			item.Explicit = &tmp
 			items.Secondary = append(items.Secondary, *item)
 
 		case uap.Repetitive:
-			repetitive, err := RepetitiveDataFieldReader(rb, uapItem.Repetitive.SubItemSize)
+			tmp, err := RepetitiveDataFieldReader(rb, uapItem.Repetitive.SubItemSize)
 			if err != nil {
 				return items, err
 			}
-			item.Repetitive = &repetitive
+			item.Repetitive = &tmp
 			items.Secondary = append(items.Secondary, *item)
 
 		default:

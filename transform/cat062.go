@@ -85,6 +85,7 @@ type Cat062Model struct {
 // CompoundItems is a slice of CompoundItems DataField.
 func (data *Cat062Model) write(rec goasterix.Record) {
 	for _, item := range rec.Items {
+
 		switch item.Meta.FRN {
 		case 1:
 			// decode sac sic

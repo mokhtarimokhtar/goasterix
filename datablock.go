@@ -133,9 +133,9 @@ LoopRecords:
 	return records
 }
 
-func (db *DataBlock) Payload() (b [][]byte) {
+func (db *DataBlock) Data() (b [][]byte) {
 	for _, record := range db.Records {
-		b = append(b, record.Payload())
+		b = append(b, record.Data())
 	}
 	return b
 }*/

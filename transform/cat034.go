@@ -105,31 +105,31 @@ func (data *Cat034Model) write(rec goasterix.Record) {
 		case 1:
 			// decode sac sic
 			var payload [2]byte
-			copy(payload[:], item.Fixed.Payload[:])
+			copy(payload[:], item.Fixed.Data[:])
 			tmp, _ := sacSic(payload)
 			data.SacSic = &tmp
 		case 2:
 			//decode messageType
 			var payload [1]byte
-			copy(payload[:], item.Fixed.Payload[:])
+			copy(payload[:], item.Fixed.Data[:])
 			data.MessageType = messageType(payload)
 		case 3:
 			// decode timeOfDay
 			var payload [3]byte
-			copy(payload[:], item.Fixed.Payload[:])
+			copy(payload[:], item.Fixed.Data[:])
 			data.TimeOfDay, _ = timeOfDay(payload)
 		case 4:
 			// decode sector number
 			// SectorNumber returns a float.
 			// Ref: 5.2.3 Records Item I034/020.
 			// Eight most significant bits of the antenna azimuth defining a particular azimuth sector.
-			data.SectorNumber = float64(item.Fixed.Payload[0]) * 1.40625
+			data.SectorNumber = float64(item.Fixed.Data[0]) * 1.40625
 		case 5:
 			// AntennaRotationSpeed returns a float in second.
 			// Antenna rotation period as measured between two consecutive
 			// North crossings or as averaged during a period of time.
 			// Ref: 5.2.3 Records Item I034/041.
-			data.AntennaRotationSpeed = float64(uint16(item.Fixed.Payload[0])<<8+uint16(item.Fixed.Payload[1])) / 128
+			data.AntennaRotationSpeed = float64(uint16(item.Fixed.Data[0])<<8+uint16(item.Fixed.Data[1])) / 128
 		case 6:
 			tmp := systemConfiguration(*item.Compound)
 			data.SystemConfiguration = &tmp
@@ -137,20 +137,20 @@ func (data *Cat034Model) write(rec goasterix.Record) {
 			tmp := systemProcessingMode(*item.Compound)
 			data.SystemProcessingMode = &tmp
 		case 8:
-			tmp, _ := messageCountValues(item.Fixed.Payload)
+			tmp, _ := messageCountValues(item.Fixed.Data)
 			data.MessageCountValues = tmp
 		case 9:
 			var payload [8]byte
-			copy(payload[:], item.Fixed.Payload[:])
+			copy(payload[:], item.Fixed.Data[:])
 			tmp := genericPolarWindow(payload)
 			data.GenericPolarWindow = &tmp
 		case 10:
 			var payload [1]byte
-			copy(payload[:], item.Fixed.Payload[:])
+			copy(payload[:], item.Fixed.Data[:])
 			data.DataFilter, _ = dataFilter(payload)
 		case 11:
 			var payload [8]byte
-			copy(payload[:], item.Fixed.Payload[:])
+			copy(payload[:], item.Fixed.Data[:])
 			tmp := position3DofDataSource(payload)
 			data.Position3DofDataSource = &tmp
 		case 12:
@@ -158,13 +158,13 @@ func (data *Cat034Model) write(rec goasterix.Record) {
 			// RANGE ERROR and AZIMUTH ERROR
 			// Ref: 5.2.9 Records Item I034/090.
 			tmp := new(collimationError)
-			tmp.RangeError = float64(int8(item.Fixed.Payload[0])) / 128
-			tmp.AzimuthError = float64(int8(item.Fixed.Payload[1])) * 0.021972656
+			tmp.RangeError = float64(int8(item.Fixed.Data[0])) / 128
+			tmp.AzimuthError = float64(int8(item.Fixed.Data[1])) * 0.021972656
 			data.CollimationError = tmp
 		case 13:
-			data.REDataItem = hex.EncodeToString(item.Fixed.Payload)
+			data.REDataItem = hex.EncodeToString(item.Fixed.Data)
 		case 14:
-			data.SPDataItem = hex.EncodeToString(item.Fixed.Payload)
+			data.SPDataItem = hex.EncodeToString(item.Fixed.Data)
 		}
 	}
 }
@@ -206,7 +206,7 @@ func systemConfiguration(cp goasterix.Compound) SysConf {
 		switch item.Meta.FRN {
 		case 1:
 			com := new(ComSysConf)
-			tmp := item.Fixed.Payload[0]
+			tmp := item.Fixed.Data[0]
 			if tmp&0x80 == 0 {
 				com.Nogo = sysIn
 			} else {
@@ -245,7 +245,7 @@ func systemConfiguration(cp goasterix.Compound) SysConf {
 			sysConf.Com = com
 		case 4:
 			psr := new(PsrSsrSysConf)
-			tmp := item.Fixed.Payload[0]
+			tmp := item.Fixed.Data[0]
 			if tmp&0x80 == 0 {
 				psr.Ant = antenna1
 			} else {
@@ -275,7 +275,7 @@ func systemConfiguration(cp goasterix.Compound) SysConf {
 			sysConf.Psr = psr
 		case 5:
 			ssr := new(PsrSsrSysConf)
-			tmp := item.Fixed.Payload[0]
+			tmp := item.Fixed.Data[0]
 
 			if tmp&0x80 == 0 {
 				ssr.Ant = antenna1
@@ -306,7 +306,7 @@ func systemConfiguration(cp goasterix.Compound) SysConf {
 			sysConf.Ssr = ssr
 		case 6:
 			mds := new(MdsSysConf)
-			tmp := item.Fixed.Payload[0]
+			tmp := item.Fixed.Data[0]
 
 			if tmp&0x80 == 0 {
 				mds.Ant = antenna1
@@ -350,7 +350,7 @@ func systemConfiguration(cp goasterix.Compound) SysConf {
 			} else {
 				mds.Ovlscf = overload
 			}
-			if item.Fixed.Payload[1]&0x80 == 0 {
+			if item.Fixed.Data[1]&0x80 == 0 {
 				mds.Ovldlf = noOverload
 			} else {
 				mds.Ovldlf = overload
@@ -393,14 +393,14 @@ func systemProcessingMode(cp goasterix.Compound) SysProcess {
 		case 1:
 			tmp := new(ComSysPro)
 
-			tmpRedrdp := item.Fixed.Payload[0] & 0x70 >> 4
+			tmpRedrdp := item.Fixed.Data[0] & 0x70 >> 4
 			if tmpRedrdp == 0 {
 				tmp.Redrdp = "no_reduction_active"
 			} else {
 				tmp.Redrdp = "reduction_step_" + strconv.Itoa(int(tmpRedrdp)) + "_active"
 			}
 
-			tmpRedxmt := item.Fixed.Payload[0] & 0x0E >> 1
+			tmpRedxmt := item.Fixed.Data[0] & 0x0E >> 1
 			if tmpRedxmt == 0 {
 				tmp.Redxmt = "no_reduction_active"
 			} else {
@@ -409,25 +409,25 @@ func systemProcessingMode(cp goasterix.Compound) SysProcess {
 			sysProc.ComSysPro = tmp
 		case 4:
 			tmp := new(PsrSysPro)
-			if item.Fixed.Payload[0]&0x80 == 0 {
+			if item.Fixed.Data[0]&0x80 == 0 {
 				tmp.Pol = "linear_polarization"
 			} else {
 				tmp.Pol = "circular_polarization"
 			}
 
-			tmpRedrdp := item.Fixed.Payload[0] & 0x70 >> 4
+			tmpRedrdp := item.Fixed.Data[0] & 0x70 >> 4
 			if tmpRedrdp == 0 {
 				tmp.Redrad = "no_reduction_active"
 			} else {
 				tmp.Redrad = "reduction_step_" + strconv.Itoa(int(tmpRedrdp)) + "_active"
 			}
 
-			tmpStc := item.Fixed.Payload[0] & 0x0C >> 2
+			tmpStc := item.Fixed.Data[0] & 0x0C >> 2
 			tmp.Stc = "stcMap_" + strconv.Itoa(int(tmpStc)+1)
 			sysProc.Psr = tmp
 		case 5:
 			tmp := new(SsrSysPro)
-			tmpRedrad := item.Fixed.Payload[0] & 0xE0 >> 5
+			tmpRedrad := item.Fixed.Data[0] & 0xE0 >> 5
 			if tmpRedrad == 0 {
 				tmp.Redrad = "no_reduction_active"
 			} else {
@@ -437,14 +437,14 @@ func systemProcessingMode(cp goasterix.Compound) SysProcess {
 		case 6:
 			tmp := new(MdsSysPro)
 
-			tmpRedrad := item.Fixed.Payload[0] & 0xE0 >> 5
+			tmpRedrad := item.Fixed.Data[0] & 0xE0 >> 5
 			if tmpRedrad == 0 {
 				tmp.Redrad = "no_reduction_active"
 			} else {
 				tmp.Redrad = "reduction_step_" + strconv.Itoa(int(tmpRedrad)) + "_active"
 			}
 
-			if item.Fixed.Payload[0]&0x10 == 0 {
+			if item.Fixed.Data[0]&0x10 == 0 {
 				tmp.Clu = "autonomous"
 			} else {
 				tmp.Clu = "no_autonomous"

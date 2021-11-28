@@ -2,7 +2,7 @@ package uap
 
 // Cat021v10 User Application Profile
 // version 2.5
-/*
+/* todo
 var Cat021v10 = StandardUAP{
 	Name:     "cat021_2.5",
 	Category: 21,

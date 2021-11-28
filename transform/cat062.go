@@ -1,9 +1,11 @@
 package transform
 
 import (
+	"encoding/hex"
 	"github.com/mokhtarimokhtar/goasterix"
 	"math"
 	"strconv"
+	"strings"
 )
 
 type TrackVelocity struct {
@@ -37,13 +39,28 @@ type IAS struct {
 	IM       string  `json:"im"`
 	AirSpeed float64 `json:"airSpeed"`
 }
+
+type SelectedAltitude struct {
+	SAS      string  `json:"sas"`
+	Source   string  `json:"source"`
+	Altitude float64 `json:"altitude"`
+}
+
+type StateSelectedAltitude struct {
+	MV       string  `json:"mv"`
+	AH       string  `json:"ah"`
+	AM       string  `json:"am"`
+	Altitude float64 `json:"altitude"`
+}
+
 type DerivedData struct {
-	TargetAddress        string            `json:"targetAddress,omitempty"`
-	TargetIdentification string            `json:"targetIdentification,omitempty"`
-	MagneticHeading      float64           `json:"magneticHeading,omitempty"`
-	IndicatedAirspeed    *IAS              `json:"indicatedAirspeed,omitempty"`
-	AirSpeed             uint16            `json:"airSpeed,omitempty"`
-	SelectedAltitude     *SelectedAltitude `json:"selectedAltitude,omitempty"`
+	TargetAddress         string                 `json:"targetAddress,omitempty"`
+	TargetIdentification  string                 `json:"targetIdentification,omitempty"`
+	MagneticHeading       float64                `json:"magneticHeading,omitempty"`
+	IndicatedAirspeed     *IAS                   `json:"indicatedAirspeed,omitempty"`
+	AirSpeed              uint16                 `json:"airSpeed,omitempty"`
+	SelectedAltitude      *SelectedAltitude      `json:"selectedAltitude,omitempty"`
+	StateSelectedAltitude *StateSelectedAltitude `json:"stateSelectedAltitude,omitempty"`
 }
 
 type Cat062Model struct {
@@ -72,63 +89,63 @@ func (data *Cat062Model) write(rec goasterix.Record) {
 		case 1:
 			// decode sac sic
 			var payload [2]byte
-			copy(payload[:], item.Fixed.Payload[:])
+			copy(payload[:], item.Fixed.Data[:])
 			tmp, _ := sacSic(payload)
 			data.SacSic = &tmp
 		// case 2 is spare
 		case 3:
 			// Service Identification
-			data.ServiceIdentification = item.Fixed.Payload[0]
+			data.ServiceIdentification = item.Fixed.Data[0]
 		case 4:
 			// Time Of Track Information
 			var payload [3]byte
-			copy(payload[:], item.Fixed.Payload[:])
+			copy(payload[:], item.Fixed.Data[:])
 			data.TimeOfDay, _ = timeOfDay(payload)
 		case 5:
 			// Calculated Track Position (WGS-84)
 			var payload [8]byte
-			copy(payload[:], item.Fixed.Payload[:])
+			copy(payload[:], item.Fixed.Data[:])
 			tmp := calculatedTrackPositionWGS84(payload)
 			data.TrackPositionWGS84 = &tmp
 		case 6:
 			// Calculated Track Position. (Cartesian)
 			var payload [6]byte
-			copy(payload[:], item.Fixed.Payload[:])
+			copy(payload[:], item.Fixed.Data[:])
 			tmp := calculatedTrackPositionCartesian(payload)
 			data.CartesianXY = &tmp
 		case 7:
 			// Calculated Track Velocity (Cartesian)
 			var payload [4]byte
-			copy(payload[:], item.Fixed.Payload[:])
+			copy(payload[:], item.Fixed.Data[:])
 			tmp := calculatedTrackVelocityCartesian(payload)
 			data.TrackVelocity = &tmp
 		case 8:
 			// Calculated Acceleration (Cartesian)
 			var payload [2]byte
-			copy(payload[:], item.Fixed.Payload[:])
+			copy(payload[:], item.Fixed.Data[:])
 			tmp := calculatedAccelerationCartesian(payload)
 			data.Acceleration = &tmp
 		case 9:
 			// Track Mode 3/A Code
 			var payload [2]byte
-			copy(payload[:], item.Fixed.Payload[:])
+			copy(payload[:], item.Fixed.Data[:])
 			tmp := mode3ACode(payload)
 			data.Mode3ACode = &tmp
 		case 10:
 			// Target Identification
 			var payload [7]byte
-			copy(payload[:], item.Fixed.Payload[:])
+			copy(payload[:], item.Fixed.Data[:])
 			tmp := targetIdentification(payload)
 			data.TargetIdentification = &tmp
 		case 11:
 			// Aircraft Derived Data
-			//tmp := extractDerivedData(item.Payload)
-			//data.AircraftDerivedData = &tmp
+			tmp := extractDerivedData(*item.Compound)
+			data.AircraftDerivedData = &tmp
 
 		case 12:
 			// Track Number
 			var payload [2]byte
-			copy(payload[:], item.Fixed.Payload[:])
+			copy(payload[:], item.Fixed.Data[:])
 			data.TrackNumber = trackNumber(payload)
 		// todo case 13
 		// todo case 14
@@ -137,23 +154,23 @@ func (data *Cat062Model) write(rec goasterix.Record) {
 		case 17:
 			// Measured Flight Level
 			var payload [2]byte
-			copy(payload[:], item.Fixed.Payload[:])
+			copy(payload[:], item.Fixed.Data[:])
 			data.FlightLevel = measuredFlightLevel(payload)
 		case 18:
 			// Calculated Track Geometric Altitude
 			var payload [2]byte
-			copy(payload[:], item.Fixed.Payload[:])
+			copy(payload[:], item.Fixed.Data[:])
 			data.GeometricAltitude = trackGeometricAltitude(payload)
 		case 19:
 			// Calculated Track Barometric Altitude
 			var payload [2]byte
-			copy(payload[:], item.Fixed.Payload[:])
+			copy(payload[:], item.Fixed.Data[:])
 			tmp := trackBarometricAltitude(payload)
 			data.BarometricAltitude = &tmp
 		case 20:
 			// Calculated Rate Of Climb/Descent
 			var payload [2]byte
-			copy(payload[:], item.Fixed.Payload[:])
+			copy(payload[:], item.Fixed.Data[:])
 			data.RateOfClimbDescent = rateOfClimbDescent(payload)
 			// todo case 21
 			// todo case 22
@@ -169,74 +186,80 @@ func (data *Cat062Model) write(rec goasterix.Record) {
 	}
 }
 
-/*
 // extractDerivedData returns Data derived directly by the aircraft.
-func extractDerivedData(data []byte) DerivedData {
+func extractDerivedData(cp goasterix.Compound) DerivedData {
 	var dd DerivedData
-	offset := uint8(1)
-	for {
-		if data[offset-1]&0x01 == 0 {
-			break
-		}
-		offset++
-	}
-	if data[0]&0x80 != 0 {
-		dd.TargetAddress = strings.ToUpper(hex.EncodeToString(data[offset : offset+3]))
-		offset = offset + 3
-	}
-	if data[0]&0x40 != 0 {
-		tmp := [6]byte{data[offset], data[offset+1], data[offset+2], data[offset+3], data[offset+4], data[offset+5]}
-		dd.TargetIdentification, _ = modeSIdentification(tmp)
-		offset = offset + 6
-	}
-	if data[0]&0x20 != 0 {
-		dd.MagneticHeading = float64(uint16(data[offset])<<8+uint16(data[offset+1])) * 0.0055
-		_ = offset + 2
-	}
-	if data[0]&0x10 != 0 {
-		var lsb float64
-		if data[offset]&0x80 != 0 {
-			dd.IndicatedAirspeed.IM = "mach"
-			lsb = 0.001
-		} else {
-			dd.IndicatedAirspeed.IM = "ias"
-			lsb = 0.000061035
-		}
-		dd.IndicatedAirspeed.AirSpeed = float64(uint16(data[offset]&0x7f)<<8+uint16(data[offset+1])) * lsb
-		offset = offset + 2
-	}
-	if data[0]&0x08 != 0 {
-		dd.AirSpeed = uint16(data[offset])<<8 + uint16(data[offset+1])
-		offset = offset + 2
-	}
-	if data[0]&0x04 != 0 {
-		if data[offset]&0x80 != 0 {
-			dd.SelectedAltitude.SAS = "source_information_provided"
-		} else {
-			dd.SelectedAltitude.SAS = "no_source_information_provided"
-		}
-		tmp := data[offset] & 0x60 >> 5
-		switch tmp {
-		case 0:
-			dd.SelectedAltitude.Source = "unknown"
+	for _, item := range cp.Secondary {
+		switch item.Meta.FRN {
 		case 1:
-			dd.SelectedAltitude.Source = "aircraft_altitude"
+			dd.TargetAddress = strings.ToUpper(hex.EncodeToString(item.Fixed.Data))
 		case 2:
-			dd.SelectedAltitude.Source = "fcu_mcp_selected_altitude"
+			var payload [6]byte
+			copy(payload[:], item.Fixed.Data[:])
+			dd.TargetIdentification, _ = modeSIdentification(payload)
 		case 3:
-			dd.SelectedAltitude.Source = "fms_selected_altitude"
+			dd.MagneticHeading = float64(uint16(item.Fixed.Data[0])<<8+uint16(item.Fixed.Data[1])) * 0.0055
+		case 4:
+			tmp := new(IAS)
+			var lsb float64
+			if item.Fixed.Data[0]&0x80 != 0 {
+				tmp.IM = "mach"
+				lsb = 0.001
+			} else {
+				tmp.IM = "ias"
+				lsb = 0.000061035
+			}
+			tmp.AirSpeed = float64(uint16(item.Fixed.Data[0]&0x7f)<<8+uint16(item.Fixed.Data[1])) * lsb
+			dd.IndicatedAirspeed = tmp
+		case 5:
+			dd.AirSpeed = uint16(item.Fixed.Data[0])<<8 + uint16(item.Fixed.Data[1])
+		case 6:
+			tmp := new(SelectedAltitude)
+			if item.Fixed.Data[0]&0x80 != 0 {
+				tmp.SAS = "source_information_provided"
+			} else {
+				tmp.SAS = "no_source_information_provided"
+			}
+			source := item.Fixed.Data[0] & 0x60 >> 5
+			switch source {
+			case 0:
+				tmp.Source = "unknown"
+			case 1:
+				tmp.Source = "aircraft_altitude"
+			case 2:
+				tmp.Source = "fcu_mcp_selected_altitude"
+			case 3:
+				tmp.Source = "fms_selected_altitude"
+			}
+			data := uint16(item.Fixed.Data[0]&0x1f)<<8 + uint16(item.Fixed.Data[1])
+			altitude := goasterix.TwoComplement16(13, data)
+			tmp.Altitude = float64(altitude) * 25
+			dd.SelectedAltitude = tmp
+		case 7:
+			tmp := new(StateSelectedAltitude)
+			if item.Fixed.Data[0]&0x80 != 0 {
+				tmp.MV = "manage_vertical_mode_active"
+			} else {
+				tmp.MV = "manage_vertical_mode_not_active"
+			}
+			if item.Fixed.Data[0]&0x40 != 0 {
+				tmp.AH = "altitude_hold_active"
+			} else {
+				tmp.AH = "altitude_hold_not_active"
+			}
+			if item.Fixed.Data[0]&0x20 != 0 {
+				tmp.AM = "approach_mode_active"
+			} else {
+				tmp.AM = "approach_mode_not_active"
+			}
+
+			data := uint16(item.Fixed.Data[0]&0x1f)<<8 + uint16(item.Fixed.Data[1])
+			altitude := goasterix.TwoComplement16(13, data)
+			tmp.Altitude = float64(altitude) * 25
+			dd.StateSelectedAltitude = tmp
 		}
-		dd.SelectedAltitude.Altitude = float64(uint16(data[offset]&0x1f)<<8+uint16(data[offset+1])) / 25
-
 	}
-
 	return dd
-}
-*/
-type SelectedAltitude struct {
-	SAS      string  `json:"sas"`
-	Source   string  `json:"source"`
-	Altitude float64 `json:"altitude"`
 }
 
 // calculatedTrackPositionWGS84 returns Latitude and Longitude.

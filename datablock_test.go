@@ -233,7 +233,7 @@ func TestDataBlockPayload(t *testing.T) {
 	_, _ = dataB.Decode(data)
 
 	// Act
-	records := dataB.Payload()
+	records := dataB.Data()
 
 	// Assert
 	if len(records) != nbOfRecords {

@@ -57,8 +57,7 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 							Description: "Common Part",
 							Type:        uap.Fixed,
 						},
-						Size:  1,
-						Fixed: &goasterix.Fixed{Payload: []byte{0x00}},
+						Fixed: &goasterix.Fixed{Data: []byte{0x00}},
 					},
 					{
 						Meta: goasterix.MetaItem{
@@ -67,8 +66,7 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 							Description: "Specific Status for PSR Sensor",
 							Type:        uap.Fixed,
 						},
-						Size:  1,
-						Fixed: &goasterix.Fixed{Payload: []byte{0x00}},
+						Fixed: &goasterix.Fixed{Data: []byte{0x00}},
 					},
 					{
 						Meta: goasterix.MetaItem{
@@ -77,8 +75,7 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 							Description: "Specific Status for SSR Sensor",
 							Type:        uap.Fixed,
 						},
-						Size:  1,
-						Fixed: &goasterix.Fixed{Payload: []byte{0x00}},
+						Fixed: &goasterix.Fixed{Data: []byte{0x00}},
 					},
 					{
 						Meta: goasterix.MetaItem{
@@ -87,8 +84,7 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 							Description: "Specific Status for Mode S Sensor",
 							Type:        uap.Fixed,
 						},
-						Size:  2,
-						Fixed: &goasterix.Fixed{Payload: []byte{0x00, 0x00}},
+						Fixed: &goasterix.Fixed{Data: []byte{0x00, 0x00}},
 					},
 				},
 			},
@@ -138,8 +134,7 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 							Description: "Common Part",
 							Type:        uap.Fixed,
 						},
-						Size:  1,
-						Fixed: &goasterix.Fixed{Payload: []byte{0xfe}},
+						Fixed: &goasterix.Fixed{Data: []byte{0xfe}},
 					},
 					{
 						Meta: goasterix.MetaItem{
@@ -148,8 +143,7 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 							Description: "Specific Status for PSR Sensor",
 							Type:        uap.Fixed,
 						},
-						Size:  1,
-						Fixed: &goasterix.Fixed{Payload: []byte{0xb8}},
+						Fixed: &goasterix.Fixed{Data: []byte{0xb8}},
 					},
 					{
 						Meta: goasterix.MetaItem{
@@ -158,8 +152,7 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 							Description: "Specific Status for SSR Sensor",
 							Type:        uap.Fixed,
 						},
-						Size:  1,
-						Fixed: &goasterix.Fixed{Payload: []byte{0xb8}},
+						Fixed: &goasterix.Fixed{Data: []byte{0xb8}},
 					},
 					{
 						Meta: goasterix.MetaItem{
@@ -168,8 +161,7 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 							Description: "Specific Status for Mode S Sensor",
 							Type:        uap.Fixed,
 						},
-						Size:  2,
-						Fixed: &goasterix.Fixed{Payload: []byte{0xbf, 0x80}},
+						Fixed: &goasterix.Fixed{Data: []byte{0xbf, 0x80}},
 					},
 				},
 			},
@@ -219,8 +211,7 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 							Description: "Specific Status for PSR Sensor",
 							Type:        uap.Fixed,
 						},
-						Size:  1,
-						Fixed: &goasterix.Fixed{Payload: []byte{0x40}},
+						Fixed: &goasterix.Fixed{Data: []byte{0x40}},
 					},
 					{
 						Meta: goasterix.MetaItem{
@@ -229,8 +220,7 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 							Description: "Specific Status for SSR Sensor",
 							Type:        uap.Fixed,
 						},
-						Size:  1,
-						Fixed: &goasterix.Fixed{Payload: []byte{0x40}},
+						Fixed: &goasterix.Fixed{Data: []byte{0x40}},
 					},
 					{
 						Meta: goasterix.MetaItem{
@@ -239,8 +229,7 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 							Description: "Specific Status for Mode S Sensor",
 							Type:        uap.Fixed,
 						},
-						Size:  2,
-						Fixed: &goasterix.Fixed{Payload: []byte{0x40, 0x00}},
+						Fixed: &goasterix.Fixed{Data: []byte{0x40, 0x00}},
 					},
 				},
 			},
@@ -282,8 +271,7 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 							Description: "Specific Status for PSR Sensor",
 							Type:        uap.Fixed,
 						},
-						Size:  1,
-						Fixed: &goasterix.Fixed{Payload: []byte{0x60}},
+						Fixed: &goasterix.Fixed{Data: []byte{0x60}},
 					},
 					{
 						Meta: goasterix.MetaItem{
@@ -292,8 +280,7 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 							Description: "Specific Status for SSR Sensor",
 							Type:        uap.Fixed,
 						},
-						Size:  1,
-						Fixed: &goasterix.Fixed{Payload: []byte{0x60}},
+						Fixed: &goasterix.Fixed{Data: []byte{0x60}},
 					},
 					{
 						Meta: goasterix.MetaItem{
@@ -302,8 +289,7 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 							Description: "Specific Status for Mode S Sensor",
 							Type:        uap.Fixed,
 						},
-						Size:  2,
-						Fixed: &goasterix.Fixed{Payload: []byte{0x60, 0x00}},
+						Fixed: &goasterix.Fixed{Data: []byte{0x60, 0x00}},
 					},
 				},
 			},
@@ -374,8 +360,7 @@ func TestCat034Model_SystemProcessingMode(t *testing.T) {
 							Description: "Common Part",
 							Type:        uap.Fixed,
 						},
-						Size:  1,
-						Fixed: &goasterix.Fixed{Payload: []byte{0x00}},
+						Fixed: &goasterix.Fixed{Data: []byte{0x00}},
 					},
 					{
 						Meta: goasterix.MetaItem{
@@ -384,8 +369,7 @@ func TestCat034Model_SystemProcessingMode(t *testing.T) {
 							Description: "Specific Processing Mode information for PSR Sensor",
 							Type:        uap.Fixed,
 						},
-						Size:  1,
-						Fixed: &goasterix.Fixed{Payload: []byte{0x00}},
+						Fixed: &goasterix.Fixed{Data: []byte{0x00}},
 					},
 					{
 						Meta: goasterix.MetaItem{
@@ -394,8 +378,7 @@ func TestCat034Model_SystemProcessingMode(t *testing.T) {
 							Description: "Specific Processing Mode information for SSR Sensor",
 							Type:        uap.Fixed,
 						},
-						Size:  1,
-						Fixed: &goasterix.Fixed{Payload: []byte{0x00}},
+						Fixed: &goasterix.Fixed{Data: []byte{0x00}},
 					},
 					{
 						Meta: goasterix.MetaItem{
@@ -404,8 +387,7 @@ func TestCat034Model_SystemProcessingMode(t *testing.T) {
 							Description: "Specific Processing Mode information for Mode S Sensor",
 							Type:        uap.Fixed,
 						},
-						Size:  2,
-						Fixed: &goasterix.Fixed{Payload: []byte{0x00}},
+						Fixed: &goasterix.Fixed{Data: []byte{0x00}},
 					},
 				},
 			},
@@ -438,8 +420,7 @@ func TestCat034Model_SystemProcessingMode(t *testing.T) {
 							Description: "Common Part",
 							Type:        uap.Fixed,
 						},
-						Size:  1,
-						Fixed: &goasterix.Fixed{Payload: []byte{0x12}},
+						Fixed: &goasterix.Fixed{Data: []byte{0x12}},
 					},
 					{
 						Meta: goasterix.MetaItem{
@@ -448,8 +429,7 @@ func TestCat034Model_SystemProcessingMode(t *testing.T) {
 							Description: "Specific Processing Mode information for PSR Sensor",
 							Type:        uap.Fixed,
 						},
-						Size:  1,
-						Fixed: &goasterix.Fixed{Payload: []byte{0x94}},
+						Fixed: &goasterix.Fixed{Data: []byte{0x94}},
 					},
 					{
 						Meta: goasterix.MetaItem{
@@ -458,8 +438,7 @@ func TestCat034Model_SystemProcessingMode(t *testing.T) {
 							Description: "Specific Processing Mode information for SSR Sensor",
 							Type:        uap.Fixed,
 						},
-						Size:  1,
-						Fixed: &goasterix.Fixed{Payload: []byte{0x20}},
+						Fixed: &goasterix.Fixed{Data: []byte{0x20}},
 					},
 					{
 						Meta: goasterix.MetaItem{
@@ -468,8 +447,7 @@ func TestCat034Model_SystemProcessingMode(t *testing.T) {
 							Description: "Specific Processing Mode information for Mode S Sensor",
 							Type:        uap.Fixed,
 						},
-						Size:  2,
-						Fixed: &goasterix.Fixed{Payload: []byte{0x30}},
+						Fixed: &goasterix.Fixed{Data: []byte{0x30}},
 					},
 				},
 			},

@@ -25,105 +25,6 @@ func NewRecord() *Record {
 	return &Record{}
 }
 
-type Item struct {
-	Meta       MetaItem
-	Size       uint8
-	Fixed      *Fixed
-	Extended   *Extended
-	Explicit   *Explicit
-	Repetitive *Repetitive
-	Compound   *Compound
-	RFS        *RandomFieldSequencing
-	SP         *SpecialPurpose
-}
-
-func (i *Item) String() string {
-	var str string
-
-	switch i.Meta.Type {
-	case uap.Fixed:
-		str = i.Meta.DataItem + ", " + i.Meta.Description + ": " + i.Fixed.String()
-	case uap.Extended:
-		str = i.Meta.DataItem + ", " + i.Meta.Description + ": " + i.Extended.String()
-	case uap.Explicit:
-		str = i.Meta.DataItem + ", " + i.Meta.Description + ": " + i.Explicit.String()
-	case uap.Repetitive:
-		str = i.Meta.DataItem + ", " + i.Meta.Description + ": " + i.Repetitive.String()
-	}
-	return str
-}
-
-func NewItem(field uap.DataField) *Item {
-	return &Item{
-		Meta: MetaItem{
-			FRN:         field.FRN,
-			DataItem:    field.DataItem,
-			Description: field.Description,
-			Type:        field.Type,
-		},
-	}
-}
-
-type MetaItem struct {
-	FRN         uint8
-	DataItem    string
-	Description string
-	Type        uap.TypeField
-}
-type Fixed struct {
-	Payload []byte
-}
-
-func (f *Fixed) String() string {
-	return hex.EncodeToString(f.Payload)
-}
-
-type Extended struct {
-	Primary   []byte
-	Secondary []byte
-}
-
-func (e *Extended) String() string {
-	return hex.EncodeToString(e.Primary) + hex.EncodeToString(e.Secondary)
-}
-
-type Explicit struct {
-	Len     uint8
-	Payload []byte
-}
-
-func (e *Explicit) String() string {
-	tmp := []byte{e.Len}
-	return hex.EncodeToString(tmp) + hex.EncodeToString(e.Payload)
-}
-
-type Repetitive struct {
-	Rep     uint8
-	Payload []byte
-}
-
-func (r *Repetitive) String() string {
-	tmp := []byte{r.Rep}
-	return hex.EncodeToString(tmp) + hex.EncodeToString(r.Payload)
-}
-
-type Compound struct {
-	Primary   []byte
-	Secondary []Item
-}
-type RandomFieldSequencing struct {
-	N        uint8
-	Sequence []RandomField
-}
-type RandomField struct {
-	FRN   uint8
-	Field Item
-}
-type SpecialPurpose struct {
-	Len     uint8
-	Payload []byte
-}
-
 // Decode extracts a Record of asterix data block (only one record).
 // An asterix data block can contain a or more records.
 // It returns the number of bytes unread and fills the Record Struct(Fspec, Items array) in byte.
@@ -146,7 +47,6 @@ func (rec *Record) Decode(data []byte, stdUAP uap.StandardUAP) (unRead int, err 
 		item := NewItem(uapItem)
 		switch uapItem.Type {
 		case uap.Fixed:
-			item.Size = uapItem.Fixed.Size
 			tmp, err := FixedDataFieldReader(rb, uapItem.Fixed.Size)
 			if err != nil {
 				unRead = rb.Len()
@@ -212,7 +112,7 @@ func (rec *Record) Decode(data []byte, stdUAP uap.StandardUAP) (unRead int, err 
 		if uapItem.Conditional {
 			switch item.Meta.Type {
 			case uap.Fixed:
-				stdUAP.Items = selectUAPConditional(stdUAP.Category, item.Fixed.Payload)
+				stdUAP.Items = selectUAPConditional(stdUAP.Category, item.Fixed.Data)
 			case uap.Extended:
 				stdUAP.Items = selectUAPConditional(stdUAP.Category, item.Extended.Primary)
 			}
@@ -223,7 +123,7 @@ func (rec *Record) Decode(data []byte, stdUAP uap.StandardUAP) (unRead int, err 
 }
 
 // String returns a string(hex) representation of one asterix record (only existing items).
-/*func (rec *Record) String() []string {
+func (rec *Record) String() []string {
 	var items []string
 	tmp := "FSPEC: " + hex.EncodeToString(rec.Fspec)
 	items = append(items, tmp)
@@ -233,16 +133,16 @@ func (rec *Record) Decode(data []byte, stdUAP uap.StandardUAP) (unRead int, err 
 		items = append(items, tmp)
 	}
 	return items
-}*/
+}
 
 // Payload returns a slice of byte for one asterix record.
-/*func (rec *Record) Payload() (b []byte) {
+func (rec *Record) Payload() (b []byte) {
 	b = append(b, rec.Fspec...)
 	for _, item := range rec.Items {
-		b = append(b, item.Payload...)
+		b = append(b, item.Payload()...)
 	}
 	return b
-}*/
+}
 
 func selectUAPConditional(category uint8, field []byte) []uap.DataField {
 	var selectedUAP []uap.DataField
@@ -311,7 +211,7 @@ func FixedDataFieldReader(rb *bytes.Reader, size uint8) (Fixed, error) {
 	if err != nil {
 		return item, err
 	}
-	item.Payload = tmp
+	item.Data = tmp
 	return item, err
 }
 
@@ -367,7 +267,7 @@ func ExplicitDataFieldReader(rb *bytes.Reader) (Explicit, error) {
 	if err != nil {
 		return item, err
 	}
-	item.Payload = tmp
+	item.Data = tmp
 	return item, err
 }
 
@@ -389,7 +289,7 @@ func RepetitiveDataFieldReader(rb *bytes.Reader, SubItemSize uint8) (Repetitive,
 	if err != nil {
 		return item, err
 	}
-	item.Payload = tmp
+	item.Data = tmp
 	return item, err
 }
 
@@ -414,7 +314,6 @@ func CompoundDataFieldReader(rb *bytes.Reader, cp []uap.DataField) (Compound, er
 		item := NewItem(uapItem)
 		switch uapItem.Type {
 		case uap.Fixed:
-			item.Size = uapItem.Fixed.Size
 			tmp, err := FixedDataFieldReader(rb, uapItem.Fixed.Size)
 			if err != nil {
 				return items, err
@@ -445,7 +344,6 @@ func CompoundDataFieldReader(rb *bytes.Reader, cp []uap.DataField) (Compound, er
 			}
 			item.Repetitive = &repetitive
 			items.Secondary = append(items.Secondary, *item)
-		case uap.RFS:
 
 		default:
 			err = ErrDataFieldUnknown
@@ -491,9 +389,8 @@ func RFSDataFieldReader(rb *bytes.Reader, items []uap.DataField) (RandomFieldSeq
 					return rfs, err
 				}
 				item := NewItem(field)
-				item.Size = field.Fixed.Size
 				fixed := Fixed{}
-				fixed.Payload = tmp
+				fixed.Data = tmp
 				item.Fixed = &fixed
 				rf.Field = *item
 				rfs.Sequence = append(rfs.Sequence, *rf)
@@ -523,7 +420,7 @@ func SPAndREDataFieldReader(rb *bytes.Reader) (SpecialPurpose, error) {
 	if err != nil {
 		return sp, err
 	}
-	sp.Payload = tmp
+	sp.Data = tmp
 
 	return sp, err
 }

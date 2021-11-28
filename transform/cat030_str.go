@@ -122,14 +122,14 @@ func (data *Cat030STRModel) write(rec goasterix.Record) {
 		case 1:
 			// decode sac sic
 			var payload [2]byte
-			copy(payload[:], item.Fixed.Payload)
+			copy(payload[:], item.Fixed.Data)
 			tmp, _ := sacSic(payload)
 			data.SacSic = &tmp
 		// case 2 N∕A
 		case 3:
 			//Numéro de Piste STR
 			var payload [3]byte
-			copy(payload[:], item.Fixed.Payload)
+			copy(payload[:], item.Fixed.Data)
 			tmp := num(payload)
 			data.Num = &tmp
 		case 4:
@@ -139,7 +139,7 @@ func (data *Cat030STRModel) write(rec goasterix.Record) {
 			// The time of day value is reset to 0 each day at midnight.
 			// Ref: 7.3.4 HPTU : Heure TU de la piste
 			var payload [3]byte
-			copy(payload[:], item.Fixed.Payload)
+			copy(payload[:], item.Fixed.Data)
 			data.Hptu, _ = timeOfDay(payload)
 		case 5:
 			// Etat piste
@@ -148,46 +148,46 @@ func (data *Cat030STRModel) write(rec goasterix.Record) {
 		case 6:
 			// alis : Mode A lissé piste
 			var payload [2]byte
-			copy(payload[:], item.Fixed.Payload)
+			copy(payload[:], item.Fixed.Data)
 			tmp := alis(payload)
 			data.Alis = &tmp
 		case 7:
 			// Position cartésienne calculée
 			var payload [4]byte
-			copy(payload[:], item.Fixed.Payload)
+			copy(payload[:], item.Fixed.Data)
 			tmp := pos(payload)
 			data.Pos = &tmp
 		case 8:
 			// QUAL returns an integer of track quality range = 0 to 7(best).
 			// Ref: 7.3.8 QUAL : Qualité piste
-			data.Qual = item.Fixed.Payload[0] & 0xFE >> 1
+			data.Qual = item.Fixed.Data[0] & 0xFE >> 1
 		case 9:
 			var payload [2]byte
-			copy(payload[:], item.Fixed.Payload[:])
+			copy(payload[:], item.Fixed.Data[:])
 			tmp := flp(payload)
 			data.Flpc = &tmp
 		case 10:
 			// Niveau de vol mesuré de la piste
 			var payload [2]byte
-			copy(payload[:], item.Fixed.Payload[:])
+			copy(payload[:], item.Fixed.Data[:])
 			tmp := flp(payload)
 			data.Flpm = &tmp
 		case 11:
 			// VIT : Vitesse calculée dans le plan (coordonnées cartésiennes)
 			var payload [4]byte
-			copy(payload[:], item.Fixed.Payload[:])
+			copy(payload[:], item.Fixed.Data[:])
 			tmp := vitCal(payload)
 			data.Vit = &tmp
 		case 12:
 			// mov : Mode de vol, tendance verticale
 			var payload [1]byte
-			copy(payload[:], item.Fixed.Payload[:])
+			copy(payload[:], item.Fixed.Data[:])
 			tmp := mov(payload)
 			data.Mov = &tmp
 		case 13:
 			// Taux returns Rate of ascent / descent in float64 FL/min
 			// TAUX : Taux de montée/descente
-			data.Taux = float64(int16(item.Fixed.Payload[0])<<8+int16(item.Fixed.Payload[1])) * 5.859375
+			data.Taux = float64(int16(item.Fixed.Data[0])<<8+int16(item.Fixed.Data[1])) * 5.859375
 		case 14:
 			// spe : Marquage spécial (Special purpose)
 			tmp := spe(*item.Extended)
@@ -195,40 +195,40 @@ func (data *Cat030STRModel) write(rec goasterix.Record) {
 		case 15:
 			// RAD : Numéro de radar
 			var payload [2]byte
-			copy(payload[:], item.Fixed.Payload[:])
+			copy(payload[:], item.Fixed.Data[:])
 			tmp, _ := sacSic(payload)
 			data.RadSacSic = &tmp
 		case 16:
 			// IVOL : Indicatif de vol complet
-			data.Ivol = string(item.Fixed.Payload)
+			data.Ivol = string(item.Fixed.Data)
 		case 17:
 			// PLN : Numéro de plan de vol CAUTRA (number flight plan)
-			data.Pln = uint16(item.Fixed.Payload[0])<<8 + uint16(item.Fixed.Payload[1])
+			data.Pln = uint16(item.Fixed.Data[0])<<8 + uint16(item.Fixed.Data[1])
 		case 18:
 			// AV : Type d’avion (type aircraft)
-			data.Av = string(item.Fixed.Payload)
+			data.Av = string(item.Fixed.Data)
 		case 19:
-			data.Turb = string(item.Fixed.Payload[:])
+			data.Turb = string(item.Fixed.Data[:])
 		case 20:
 			// Terd Terrain de départ (departure)
-			data.Terd = string(item.Fixed.Payload)
+			data.Terd = string(item.Fixed.Data)
 		case 21:
 			// Tera Terrain d’arrivée (arrival)
-			data.Tera = string(item.Fixed.Payload)
+			data.Tera = string(item.Fixed.Data)
 		//case 22:
 		// obsolete for this version
 		// altic : Altitude calculée de la piste
 		//var payload [2]byte
-		//copy(payload[:], item.Payload[:])
+		//copy(payload[:], item.Data[:])
 		//tmp := altic(payload)
 		//data.Altic = &tmp
 		case 23:
 			// ADRS : Adresse mode S
-			data.Adrs = strings.ToUpper(hex.EncodeToString(item.Fixed.Payload[:]))
+			data.Adrs = strings.ToUpper(hex.EncodeToString(item.Fixed.Data[:]))
 		case 24:
 			// IDS : Identification mode S
 			var payload [6]byte
-			copy(payload[:], item.Fixed.Payload[:])
+			copy(payload[:], item.Fixed.Data[:])
 			data.Ids, _ = modeSIdentification(payload)
 		}
 	}

@@ -49,13 +49,13 @@ func (data *Cat255STRModel) write(rec goasterix.Record) {
 		case 1:
 			// decode sac sic
 			var payload [2]byte
-			copy(payload[:], item.Fixed.Payload[:])
+			copy(payload[:], item.Fixed.Data[:])
 			tmp, _ := sacSic(payload)
 			data.SacSic = &tmp
 		case 2:
 			// HEM : Heure d’émission du message d’alerte
 			var payload [3]byte
-			copy(payload[:], item.Fixed.Payload[:])
+			copy(payload[:], item.Fixed.Data[:])
 			data.Hem, _ = timeOfDay(payload)
 		case 3:
 			// SPE : Présence STR-STPV
@@ -64,16 +64,16 @@ func (data *Cat255STRModel) write(rec goasterix.Record) {
 		case 4:
 			// NIVC : Niveaux optionnels assignés à la carte dynamique
 			var payload [4]byte
-			copy(payload[:], item.Fixed.Payload[:])
+			copy(payload[:], item.Fixed.Data[:])
 			tmp := nivCarte(payload)
 			data.Nivc = &tmp
 		case 5:
 			// TXTC : Texte optionnel de la carte dynamique
-			data.Txtc = string(item.Repetitive.Payload)
+			data.Txtc = string(item.Repetitive.Data)
 		case 6:
 			// CART : activation de cartes dynamiques
 			var payload [9]byte
-			copy(payload[:], item.Fixed.Payload[:])
+			copy(payload[:], item.Fixed.Data[:])
 			tmp, _ := carte(payload)
 			data.Cart = &tmp
 		case 7:
@@ -141,7 +141,7 @@ func carte(data [9]byte) (CarteActive, error) {
 func biaisExtract(item goasterix.Repetitive) []BiaisRadar {
 	var biais []BiaisRadar
 	n := int(item.Rep)
-	data := item.Payload
+	data := item.Data
 	for i := 0; i < n; i++ {
 		b := BiaisRadar{}
 		var sacsic [2]byte

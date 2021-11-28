@@ -96,31 +96,31 @@ func (data *Cat048Model) write(rec goasterix.Record) {
 		case 1:
 			// decode sac sic
 			var payload [2]byte
-			copy(payload[:], item.Fixed.Payload)
+			copy(payload[:], item.Fixed.Data)
 			tmp, _ := sacSic(payload)
 			data.SacSic = &tmp
 		case 2:
 			// decode timeOfDay
 			var payload [3]byte
-			copy(payload[:], item.Fixed.Payload)
+			copy(payload[:], item.Fixed.Data)
 			data.TimeOfDay, _ = timeOfDay(payload)
 		// todo: case 3
 		case 4:
 			// decode PolarPosition
 			var payload [4]byte
-			copy(payload[:], item.Fixed.Payload)
+			copy(payload[:], item.Fixed.Data)
 			tmp := rhoTheta(payload)
 			data.RhoTheta = &tmp
 		case 5:
 			// decode Mode3aVGL
 			var payload [2]byte
-			copy(payload[:], item.Fixed.Payload)
+			copy(payload[:], item.Fixed.Data)
 			tmp := mode3ACodeVGL(payload)
 			data.Mode3ACode = &tmp
 		case 6:
 			// decode Flight Level
 			var payload [2]byte
-			copy(payload[:], item.Fixed.Payload)
+			copy(payload[:], item.Fixed.Data)
 			tmp := flightLevel(payload)
 			data.FlightLevel = &tmp
 		case 7:
@@ -131,29 +131,29 @@ func (data *Cat048Model) write(rec goasterix.Record) {
 			// decode AircraftAddress
 			// AircraftAddress returns the hexadecimal code in string format.
 			// Aircraft address (24-bits Mode S address) assigned uniquely to each aircraft.
-			data.AircraftAddress = strings.ToUpper(hex.EncodeToString(item.Fixed.Payload))
+			data.AircraftAddress = strings.ToUpper(hex.EncodeToString(item.Fixed.Data))
 		case 9:
 			// decode Aircraft Identification
 			var payload [6]byte
-			copy(payload[:], item.Fixed.Payload)
+			copy(payload[:], item.Fixed.Data)
 			data.AircraftIdentification, _ = modeSIdentification(payload)
 		case 10:
 			data.BDSRegisterData, _ = modeSMBData(*item.Repetitive)
 		case 11:
 			// decode trackNumber
 			var payload [2]byte
-			copy(payload[:], item.Fixed.Payload)
+			copy(payload[:], item.Fixed.Data)
 			data.TrackNumber = trackNumber(payload)
 		case 12:
 			// decode Cartesian Coordinates
 			var payload [4]byte
-			copy(payload[:], item.Fixed.Payload)
+			copy(payload[:], item.Fixed.Data)
 			tmp, _ := cartesianXY(payload)
 			data.CartesianXY = &tmp
 		case 13:
 			// decode trackVelocity
 			var payload [4]byte
-			copy(payload[:], item.Fixed.Payload)
+			copy(payload[:], item.Fixed.Data)
 			tmp, _ := trackVelocity(payload)
 			data.TrackVelocity = &tmp
 		case 14:
@@ -169,7 +169,7 @@ func (data *Cat048Model) write(rec goasterix.Record) {
 		case 21:
 			// decode Communications/ACAS Capability and Flight Status
 			var payload [2]byte
-			copy(payload[:], item.Fixed.Payload)
+			copy(payload[:], item.Fixed.Data)
 			tmp := comACASCapabilityFlightStatus(payload)
 			data.ComACASCapabilityFlightStatus = &tmp
 		}
@@ -260,19 +260,19 @@ func radarPlotCharacteristics(cp goasterix.Compound) PlotCharacteristics {
 	for _, item := range cp.Secondary {
 		switch item.Meta.FRN {
 		case 1:
-			rpc.SRL = float64(item.Fixed.Payload[0]) * 0.044
+			rpc.SRL = float64(item.Fixed.Data[0]) * 0.044
 		case 2:
-			rpc.SRR = item.Fixed.Payload[0]
+			rpc.SRR = item.Fixed.Data[0]
 		case 3:
-			rpc.SAM = int8(item.Fixed.Payload[0])
+			rpc.SAM = int8(item.Fixed.Data[0])
 		case 4:
-			rpc.PRL = float64(item.Fixed.Payload[0]) * 0.044
+			rpc.PRL = float64(item.Fixed.Data[0]) * 0.044
 		case 5:
-			rpc.PAM = int8(item.Fixed.Payload[0])
+			rpc.PAM = int8(item.Fixed.Data[0])
 		case 6:
-			rpc.RPD = float64(int8(item.Fixed.Payload[0])) / 256
+			rpc.RPD = float64(int8(item.Fixed.Data[0])) / 256
 		case 7:
-			rpc.APD = float64(int8(item.Fixed.Payload[0])) * 0.021972656
+			rpc.APD = float64(int8(item.Fixed.Data[0])) * 0.021972656
 		}
 	}
 
@@ -305,7 +305,7 @@ func (mb *ModeSMB) Decode(data []byte) (err error) {
 func modeSMBData(item goasterix.Repetitive) (msb []*commbds.Bds, err error) {
 	modeSMBData := new(ModeSMB)
 	modeSMBData.Rep = item.Rep
-	err = modeSMBData.Decode(item.Payload)
+	err = modeSMBData.Decode(item.Data)
 	msb = modeSMBData.BDSs
 	return msb, err
 }

@@ -298,8 +298,7 @@ func TestCat048Model_RadarPlotCharacteristics(t *testing.T) {
 							Description: "SSR plot runlength",
 							Type:        uap.Fixed,
 						},
-						Size:  1,
-						Fixed: &goasterix.Fixed{Payload: []byte{0x64}},
+						Fixed: &goasterix.Fixed{Data: []byte{0x64}},
 					},
 					{
 						Meta: goasterix.MetaItem{
@@ -308,8 +307,7 @@ func TestCat048Model_RadarPlotCharacteristics(t *testing.T) {
 							Description: "Number of received replies",
 							Type:        uap.Fixed,
 						},
-						Size:  1,
-						Fixed: &goasterix.Fixed{Payload: []byte{0x64}},
+						Fixed: &goasterix.Fixed{Data: []byte{0x64}},
 					},
 					{
 						Meta: goasterix.MetaItem{
@@ -318,8 +316,7 @@ func TestCat048Model_RadarPlotCharacteristics(t *testing.T) {
 							Description: "Amplitude of received replies for M(SSR)",
 							Type:        uap.Fixed,
 						},
-						Size:  1,
-						Fixed: &goasterix.Fixed{Payload: []byte{0x64}},
+						Fixed: &goasterix.Fixed{Data: []byte{0x64}},
 					},
 					{
 						Meta: goasterix.MetaItem{
@@ -328,8 +325,7 @@ func TestCat048Model_RadarPlotCharacteristics(t *testing.T) {
 							Description: "PSR plot runlength",
 							Type:        uap.Fixed,
 						},
-						Size:  1,
-						Fixed: &goasterix.Fixed{Payload: []byte{0x64}},
+						Fixed: &goasterix.Fixed{Data: []byte{0x64}},
 					},
 					{
 						Meta: goasterix.MetaItem{
@@ -338,8 +334,7 @@ func TestCat048Model_RadarPlotCharacteristics(t *testing.T) {
 							Description: "PSR amplitude",
 							Type:        uap.Fixed,
 						},
-						Size:  1,
-						Fixed: &goasterix.Fixed{Payload: []byte{0x64}},
+						Fixed: &goasterix.Fixed{Data: []byte{0x64}},
 					},
 					{
 						Meta: goasterix.MetaItem{
@@ -348,8 +343,7 @@ func TestCat048Model_RadarPlotCharacteristics(t *testing.T) {
 							Description: "Difference in Range between PSR and SSR plot",
 							Type:        uap.Fixed,
 						},
-						Size:  1,
-						Fixed: &goasterix.Fixed{Payload: []byte{0x7f}},
+						Fixed: &goasterix.Fixed{Data: []byte{0x7f}},
 					},
 					{
 						Meta: goasterix.MetaItem{
@@ -358,8 +352,7 @@ func TestCat048Model_RadarPlotCharacteristics(t *testing.T) {
 							Description: "Difference in Azimuth between PSR and SSR plot",
 							Type:        uap.Fixed,
 						},
-						Size:  1,
-						Fixed: &goasterix.Fixed{Payload: []byte{0x64}},
+						Fixed: &goasterix.Fixed{Data: []byte{0x64}},
 					},
 				},
 			},

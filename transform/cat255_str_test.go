@@ -215,7 +215,7 @@ func TestCat255STRModel_BiaisExtract(t *testing.T) {
 			TestCaseName: "testcase 1",
 			input: goasterix.Repetitive{
 				Rep: 0x01,
-				Payload: []byte{0x08, 0x81,
+				Data: []byte{0x08, 0x81,
 					0x18, 0xf0,
 					0x00, 0xff,
 					0x03, 0xe8,

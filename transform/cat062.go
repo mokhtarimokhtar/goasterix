@@ -57,10 +57,12 @@ type DerivedData struct {
 	TargetAddress         string                 `json:"targetAddress,omitempty"`
 	TargetIdentification  string                 `json:"targetIdentification,omitempty"`
 	MagneticHeading       float64                `json:"magneticHeading,omitempty"`
-	IndicatedAirspeed     *IAS                   `json:"indicatedAirspeed,omitempty"`
+	IndicatedAirspeedOld  *IAS                   `json:"indicatedAirspeedOld,omitempty"`
 	AirSpeed              uint16                 `json:"airSpeed,omitempty"`
 	SelectedAltitude      *SelectedAltitude      `json:"selectedAltitude,omitempty"`
 	StateSelectedAltitude *StateSelectedAltitude `json:"stateSelectedAltitude,omitempty"`
+	MachNumber            float64                `json:"machNumber,omitempty"`
+	IndicatedAirSpeed     float64                `json:"indicatedAirSpeed,omitempty"`
 }
 
 type Cat062Model struct {
@@ -211,7 +213,7 @@ func extractDerivedData(cp goasterix.Compound) DerivedData {
 				lsb = 0.000061035
 			}
 			tmp.AirSpeed = float64(uint16(item.Fixed.Data[0]&0x7f)<<8+uint16(item.Fixed.Data[1])) * lsb
-			dd.IndicatedAirspeed = tmp
+			dd.IndicatedAirspeedOld = tmp
 		case 5:
 			dd.AirSpeed = uint16(item.Fixed.Data[0])<<8 + uint16(item.Fixed.Data[1])
 		case 6:
@@ -258,6 +260,10 @@ func extractDerivedData(cp goasterix.Compound) DerivedData {
 			altitude := goasterix.TwoComplement16(13, data)
 			tmp.Altitude = float64(altitude) * 25
 			dd.StateSelectedAltitude = tmp
+		case 26:
+			dd.IndicatedAirSpeed = float64(uint16(item.Fixed.Data[0])<<8 + uint16(item.Fixed.Data[1]))
+		case 27:
+			dd.MachNumber = float64(uint16(item.Fixed.Data[0])<<8+uint16(item.Fixed.Data[1])) * 0.008
 		}
 	}
 	return dd

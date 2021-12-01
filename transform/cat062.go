@@ -194,11 +194,18 @@ func (data *Cat062Model) write(rec goasterix.Record) {
 }
 
 type TrackStatus struct {
-	MON string
-	SPI string
-	MRH string
-	SRC string
-	CNF string
+	MON string `json:"mon"`
+	SPI string `json:"spi"`
+	MRH string `json:"mrh"`
+	SRC string `json:"src"`
+	CNF string `json:"cnf"`
+	TrackStatusFirstExtent
+	TrackStatusSecondExtent
+	TrackStatusThirdExtent
+	TrackStatusFourthExtent
+	TrackStatusFifthExtent
+}
+type TrackStatusFirstExtent struct {
 	SIM string `json:"sim,omitempty"`
 	TSE string `json:"tse,omitempty"`
 	TSB string `json:"tsb,omitempty"`
@@ -207,19 +214,50 @@ type TrackStatus struct {
 	STP string `json:"stp,omitempty"`
 	KOS string `json:"kos,omitempty"`
 }
+type TrackStatusSecondExtent struct {
+	AMA string `json:"ama,omitempty"`
+	MD4 string `json:"md4,omitempty"`
+	ME  string `json:"me,omitempty"`
+	MI  string `json:"mi,omitempty"`
+	MD5 string `json:"md5,omitempty"`
+}
+type TrackStatusThirdExtent struct {
+	CST string `json:"cst,omitempty"`
+	PSR string `json:"psr,omitempty"`
+	SSR  string `json:"ssr,omitempty"`
+	MDS  string `json:"mds,omitempty"`
+	ADS string `json:"ads,omitempty"`
+	SUC string `json:"suc,omitempty"`
+	AAC string `json:"aac,omitempty"`
+}
+type TrackStatusFourthExtent struct {
+	SDS  string `json:"sds,omitempty"`
+	EMS  string `json:"ems,omitempty"`
+	PFT  string `json:"pft,omitempty"`
+	FPLT string `json:"fplt,omitempty"`
+}
+type TrackStatusFifthExtent struct {
+	DUPT string `json:"dupt,omitempty"`
+	DUPF string `json:"dupf,omitempty"`
+	DUPM string `json:"dupm,omitempty"`
+	SFC  string `json:"sfc,omitempty"`
+	IDD  string `json:"idd,omitempty"`
+	IEC  string `json:"iec,omitempty"`
+}
 
 // extractTrackStatus returns Status of a track.
 func extractTrackStatus(item goasterix.Extended) TrackStatus {
 	var ts TrackStatus
+
 	if item.Primary[0]&0x80 != 0 {
-		ts.MON = "monosensor_track"
+		ts.MON = "multisensor"
 	} else {
-		ts.MON = "multisensor_track"
+		ts.MON = "monosensor"
 	}
 	if item.Primary[0]&0x40 != 0 {
-		ts.MON = "last_report_received"
+		ts.SPI = "last_report_received"
 	} else {
-		ts.MON = "default_value"
+		ts.SPI = "default_value"
 	}
 	if item.Primary[0]&0x20 != 0 {
 		ts.MRH = "geometric_altitude_reliable"
@@ -244,6 +282,206 @@ func extractTrackStatus(item goasterix.Extended) TrackStatus {
 		ts.SRC = "default_height"
 	case 7:
 		ts.SRC = "multilateration"
+	}
+
+	if item.Primary[0]&0x02 != 0 {
+		ts.CNF = "tentative_track"
+	} else {
+		ts.CNF = "confirmed_track"
+	}
+
+	if item.Secondary != nil {
+		if item.Secondary[0]&0x80 != 0 {
+			ts.SIM = "simulated_track"
+		} else {
+			ts.SIM = "actual_track"
+		}
+		if item.Secondary[0]&0x40 != 0 {
+			ts.TSE = "last_message_transmitted"
+		} else {
+			ts.TSE = "default_value"
+		}
+		if item.Secondary[0]&0x20 != 0 {
+			ts.TSB = "first_message_transmitted"
+		} else {
+			ts.TSB = "default_value"
+		}
+		if item.Secondary[0]&0x10 != 0 {
+			ts.FPC = "flight_plan_correlated"
+		} else {
+			ts.FPC = "not_flight_plan_correlated"
+		}
+		if item.Secondary[0]&0x08 != 0 {
+			ts.AFF = "ads_b_data_inconsistent"
+		} else {
+			ts.AFF = "default_value"
+		}
+		if item.Secondary[0]&0x04 != 0 {
+			ts.STP = "slave_track_promotion"
+		} else {
+			ts.STP = "default_value"
+		}
+		if item.Secondary[0]&0x02 != 0 {
+			ts.KOS = "background_service_used"
+		} else {
+			ts.KOS = "complementary_service_used"
+		}
+
+		if item.Secondary[0]&0x01 != 0 {
+			if item.Secondary[1]&0x80 != 0 {
+				ts.AMA = "track_resulting_amalgamation_process"
+			} else {
+				ts.AMA = "track_not_resulting_amalgamation_process"
+			}
+			tmp := item.Secondary[1] & 0x60 >> 5
+			switch tmp {
+			case 0:
+				ts.MD4 = "no_mode_4_interrogation"
+			case 1:
+				ts.MD4 = "friendly_target"
+			case 2:
+				ts.MD4 = "unknown_target"
+			case 3:
+				ts.MD4 = "no_reply"
+			}
+			if item.Secondary[1]&0x10 != 0 {
+				ts.ME = "military_emergency_last_report_received"
+			} else {
+				ts.ME = "default_value"
+			}
+			if item.Secondary[1]&0x08 != 0 {
+				ts.MI = "military_identification_last_report_received"
+			} else {
+				ts.MI = "default_value"
+			}
+			tmp = item.Secondary[1] & 0x06 >> 1
+			switch tmp {
+			case 0:
+				ts.MD5 = "no_mode_5_interrogation"
+			case 1:
+				ts.MD5 = "friendly_target"
+			case 2:
+				ts.MD5 = "unknown_target"
+			case 3:
+				ts.MD5 = "no_reply"
+			}
+
+			if item.Secondary[1]&0x01 != 0 {
+				if item.Secondary[2]&0x80 != 0 {
+					ts.CST = "age_last_track_higher_than_system_dependent_threshold"
+				} else {
+					ts.CST = "default_value"
+				}
+				if item.Secondary[2]&0x40 != 0 {
+					ts.PSR = "age_last_psr_track_higher_than_system_dependent_threshold"
+				} else {
+					ts.PSR = "default_value"
+				}
+				if item.Secondary[2]&0x20 != 0 {
+					ts.SSR = "age_last_ssr_track_higher_than_system_dependent_threshold"
+				} else {
+					ts.SSR = "default_value"
+				}
+				if item.Secondary[2]&0x10 != 0 {
+					ts.MDS = "age_last_mode_s_track_higher_than_system_dependent_threshold"
+				} else {
+					ts.MDS = "default_value"
+				}
+				if item.Secondary[2]&0x08 != 0 {
+					ts.ADS = "age_last_ads_b_track_higher_than_system_dependent_threshold"
+				} else {
+					ts.ADS = "default_value"
+				}
+				if item.Secondary[2]&0x04 != 0 {
+					ts.SUC = "special_used_code"
+				} else {
+					ts.SUC = "default_value"
+				}
+				if item.Secondary[2]&0x02 != 0 {
+					ts.AAC = "assigned_mode_a_code_conflict"
+				} else {
+					ts.AAC = "default_value"
+				}
+
+				if item.Secondary[2]&0x01 != 0 {
+					tmp := item.Secondary[3] & 0xc0 >> 6
+					switch tmp {
+					case 0:
+						ts.SDS = "combined"
+					case 1:
+						ts.SDS = "cooperative_only"
+					case 2:
+						ts.SDS = "non_cooperative_only"
+					case 3:
+						ts.SDS = "not_defined"
+					}
+
+					tmp = item.Secondary[3] & 0x38 >> 3
+					switch tmp {
+					case 0:
+						ts.EMS = "no_emergency"
+					case 1:
+						ts.EMS = "general_emergency"
+					case 2:
+						ts.EMS = "lifeguard_medical"
+					case 3:
+						ts.EMS = "minimum_fuel"
+					case 4:
+						ts.EMS = "no_communications"
+					case 5:
+						ts.EMS = "unlawful_interference"
+					case 6:
+						ts.EMS = "downed_aircraft"
+					case 7:
+						ts.EMS = "undefined"
+					}
+
+					if item.Secondary[3]&0x04 != 0 {
+						ts.PFT = "potential_false_track_indication"
+					} else {
+						ts.PFT = "no_indication"
+					}
+					if item.Secondary[3]&0x02 != 0 {
+						ts.FPLT = "track_created_updated_fpl_data"
+					} else {
+						ts.FPLT = "default_value"
+					}
+
+					if item.Secondary[3]&0x01 != 0 {
+						if item.Secondary[4]&0x80 != 0 {
+							ts.DUPT = "duplicate_mode_3a_code"
+						} else {
+							ts.DUPT = "default_value"
+						}
+						if item.Secondary[4]&0x40 != 0 {
+							ts.DUPF = "duplicate_flight_plan"
+						} else {
+							ts.DUPF = "default_value"
+						}
+						if item.Secondary[4]&0x20 != 0 {
+							ts.DUPM = "duplicate_flight_plan_manual_correlation"
+						} else {
+							ts.DUPM = "default_value"
+						}
+						if item.Secondary[4]&0x10 != 0 {
+							ts.SFC = "surface_target"
+						} else {
+							ts.SFC = "default_value"
+						}
+						if item.Secondary[4]&0x08 != 0 {
+							ts.IDD = "duplicate_flight_id"
+						} else {
+							ts.IDD = "no_indication"
+						}
+						if item.Secondary[4]&0x04 != 0 {
+							ts.IEC = "inconsistent_emergency_code"
+						} else {
+							ts.IEC = "default_value"
+						}
+					}
+				}
+			}
+		}
 	}
 
 	return ts

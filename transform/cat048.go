@@ -399,6 +399,7 @@ func trackStatus(item goasterix.Extended) Status {
 		} else {
 			ts.SUP = "no"
 		}
+
 		if item.Secondary[0]&0x10 != 0 {
 			ts.TCC = "slant_range_correction_used"
 		} else {

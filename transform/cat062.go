@@ -65,6 +65,13 @@ type DerivedData struct {
 	IndicatedAirSpeed     float64                `json:"indicatedAirSpeed,omitempty"`
 }
 
+type ModeMov struct {
+	TRANS string `json:"trans"`
+	LONG  string `json:"long"`
+	VERT  string `json:"vert"`
+	ADF   string `json:"adf"`
+}
+
 type Cat062Model struct {
 	SacSic                *SourceIdentifier    `json:"sourceIdentifier,omitempty"`
 	ServiceIdentification uint8                `json:"serviceIdentification,omitempty"`
@@ -78,6 +85,7 @@ type Cat062Model struct {
 	AircraftDerivedData   *DerivedData         `json:"aircraftDerivedData,omitempty"`
 	TrackNumber           uint16               `json:"trackNumber,omitempty"`
 	TrackStatus           *TrackStatus         `json:"trackStatus,omitempty"`
+	ModeOfMovement        *ModeMov             `json:"modeOfmovement,omitempty"`
 	FlightLevel           float32              `json:"flightLevel,omitempty"`
 	GeometricAltitude     float32              `json:"geometricAltitude,omitempty"`
 	BarometricAltitude    *BarometricAltitude  `json:"barometricAltitude,omitempty"`
@@ -156,7 +164,12 @@ func (data *Cat062Model) write(rec goasterix.Record) {
 			tmp := extractTrackStatus(*item.Extended)
 			data.TrackStatus = &tmp
 		// todo case 14
-		// todo case 15
+		case 15:
+			// Mode of Movement
+			var payload [1]byte
+			copy(payload[:], item.Fixed.Data[:])
+			tmp := extractModeOfMovement(payload)
+			data.ModeOfMovement = &tmp
 		// todo case 16
 		case 17:
 			// Measured Flight Level
@@ -193,6 +206,54 @@ func (data *Cat062Model) write(rec goasterix.Record) {
 	}
 }
 
+// extractModeOfMovement returns Calculated Mode of Movement of a target
+func extractModeOfMovement(data [1]byte) ModeMov {
+	var mov ModeMov
+	tmp := data[0] & 0xc0 >> 6
+	switch tmp {
+	case 0:
+		mov.TRANS = "constant_course"
+	case 1:
+		mov.TRANS = "right_turn"
+	case 2:
+		mov.TRANS = "left_turn"
+	case 3:
+		mov.TRANS = "undetermined"
+	}
+
+	tmp = data[0] & 0x30 >> 4
+	switch tmp {
+	case 0:
+		mov.LONG = "constant_groundspeed"
+	case 1:
+		mov.LONG = "increasing_groundspeed"
+	case 2:
+		mov.LONG = "decreasing_groundspeed"
+	case 3:
+		mov.LONG = "undetermined"
+	}
+
+	tmp = data[0] & 0x0c >> 2
+	switch tmp {
+	case 0:
+		mov.VERT = "level"
+	case 1:
+		mov.VERT = "climb"
+	case 2:
+		mov.VERT = "descent"
+	case 3:
+		mov.VERT = "undetermined"
+	}
+
+	if data[0]&0x02 != 0 {
+		mov.ADF = "altitude_discrepancy"
+	} else {
+		mov.ADF = "no_altitude_discrepancy"
+	}
+
+	return mov
+}
+
 type TrackStatus struct {
 	MON string `json:"mon"`
 	SPI string `json:"spi"`
@@ -224,8 +285,8 @@ type TrackStatusSecondExtent struct {
 type TrackStatusThirdExtent struct {
 	CST string `json:"cst,omitempty"`
 	PSR string `json:"psr,omitempty"`
-	SSR  string `json:"ssr,omitempty"`
-	MDS  string `json:"mds,omitempty"`
+	SSR string `json:"ssr,omitempty"`
+	MDS string `json:"mds,omitempty"`
 	ADS string `json:"ads,omitempty"`
 	SUC string `json:"suc,omitempty"`
 	AAC string `json:"aac,omitempty"`

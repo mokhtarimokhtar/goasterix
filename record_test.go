@@ -2,10 +2,11 @@ package goasterix
 
 import (
 	"bytes"
-	"github.com/mokhtarimokhtar/goasterix/uap"
 	"io"
 	"reflect"
 	"testing"
+
+	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
 func TestRecord_Payload(t *testing.T) {
@@ -1419,6 +1420,132 @@ func TestRecordDecode_CAT048(t *testing.T) {
 
 	// Act
 	unRead, err := rec.Decode(data, uap048)
+
+	// Assert
+	if err != nil {
+		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+	} else {
+		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+	}
+	if unRead != 0 {
+		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
+	} else {
+		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
+	}
+	for i, item := range rec.Items {
+		if reflect.DeepEqual(item, output[i]) == false {
+			t.Errorf("FAIL: %v; \nExpected: %v", item, output[i])
+		} else {
+			t.Logf("SUCCESS: %v; Expected: %v", item, output[i])
+		}
+	}
+}
+
+func TestRecordDecode_CAT063(t *testing.T) {
+	// Arrange
+	input := "bff0090c7cd2cc08294000000000000000000000000000000000"
+	output := []Item{
+		{
+			Meta: MetaItem{
+				FRN:         1,
+				DataItem:    "I063/010",
+				Description: "Data Source Identifier",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x09, 0x0c}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         3,
+				DataItem:    "I063/030",
+				Description: "Time of Message",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x7c, 0xd2, 0xcc}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         4,
+				DataItem:    "I063/050",
+				Description: "Sensor Identifier",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x08, 0x29}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         5,
+				DataItem:    "I063/060",
+				Description: "Sensor Configuration and Status",
+				Type:        uap.Extended,
+			},
+			Extended: &Extended{
+				Primary:   []byte{0x40},
+				Secondary: nil,
+			},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         6,
+				DataItem:    "I063/070",
+				Description: "Time Stamping Bias",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x00, 0x00}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         7,
+				DataItem:    "I063/080",
+				Description: "SSR/Mode S Range Gain and Bias",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x00, 0x00, 0x00, 0x00}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         8,
+				DataItem:    "I063/081",
+				Description: "SSR/Mode S Azimuth Bias",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x00, 0x00}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         9,
+				DataItem:    "I063/090",
+				Description: "PSR Range Gain and Bias",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x00, 0x00, 0x00, 0x00}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         10,
+				DataItem:    "I063/091",
+				Description: "PSR Azimuth Bias",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x00, 0x00}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         11,
+				DataItem:    "I063/092",
+				Description: "PSR Elevation Bias",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x00, 0x00}},
+		},
+	}
+
+	uap063 := uap.Cat063V16
+	data, _ := HexStringToByte(input)
+	rec := new(Record)
+
+	// Act
+	unRead, err := rec.Decode(data, uap063)
 
 	// Assert
 	if err != nil {

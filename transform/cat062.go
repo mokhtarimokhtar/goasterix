@@ -77,6 +77,7 @@ type Cat062Model struct {
 	TargetIdentification  *TargetIdent         `json:"targetIdentification,omitempty"`
 	AircraftDerivedData   *DerivedData         `json:"aircraftDerivedData,omitempty"`
 	TrackNumber           uint16               `json:"trackNumber,omitempty"`
+	TrackStatus           *TrackStatus         `json:"trackStatus,omitempty"`
 	FlightLevel           float32              `json:"flightLevel,omitempty"`
 	GeometricAltitude     float32              `json:"geometricAltitude,omitempty"`
 	BarometricAltitude    *BarometricAltitude  `json:"barometricAltitude,omitempty"`
@@ -150,7 +151,10 @@ func (data *Cat062Model) write(rec goasterix.Record) {
 			var payload [2]byte
 			copy(payload[:], item.Fixed.Data[:])
 			data.TrackNumber = trackNumber(payload)
-		// todo case 13
+		case 13:
+			// Track Status
+			tmp := extractTrackStatus(*item.Extended)
+			data.TrackStatus = &tmp
 		// todo case 14
 		// todo case 15
 		// todo case 16
@@ -187,6 +191,62 @@ func (data *Cat062Model) write(rec goasterix.Record) {
 			// todo case 35
 		}
 	}
+}
+
+type TrackStatus struct {
+	MON string
+	SPI string
+	MRH string
+	SRC string
+	CNF string
+	SIM string `json:"sim,omitempty"`
+	TSE string `json:"tse,omitempty"`
+	TSB string `json:"tsb,omitempty"`
+	FPC string `json:"fpc,omitempty"`
+	AFF string `json:"aff,omitempty"`
+	STP string `json:"stp,omitempty"`
+	KOS string `json:"kos,omitempty"`
+}
+
+// extractTrackStatus returns Status of a track.
+func extractTrackStatus(item goasterix.Extended) TrackStatus {
+	var ts TrackStatus
+	if item.Primary[0]&0x80 != 0 {
+		ts.MON = "monosensor_track"
+	} else {
+		ts.MON = "multisensor_track"
+	}
+	if item.Primary[0]&0x40 != 0 {
+		ts.MON = "last_report_received"
+	} else {
+		ts.MON = "default_value"
+	}
+	if item.Primary[0]&0x20 != 0 {
+		ts.MRH = "geometric_altitude_reliable"
+	} else {
+		ts.MRH = "barometric_altitude_reliable"
+	}
+	tmp := item.Primary[0] & 0x1c >> 2
+	switch tmp {
+	case 0:
+		ts.SRC = "no_source"
+	case 1:
+		ts.SRC = "gnss"
+	case 2:
+		ts.SRC = "3d_radar"
+	case 3:
+		ts.SRC = "triangulation"
+	case 4:
+		ts.SRC = "height_coverage"
+	case 5:
+		ts.SRC = "speed_look_up_table"
+	case 6:
+		ts.SRC = "default_height"
+	case 7:
+		ts.SRC = "multilateration"
+	}
+
+	return ts
 }
 
 // extractDerivedData returns Data derived directly by the aircraft.

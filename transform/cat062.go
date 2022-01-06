@@ -2,10 +2,11 @@ package transform
 
 import (
 	"encoding/hex"
-	"github.com/mokhtarimokhtar/goasterix"
 	"math"
 	"strconv"
 	"strings"
+
+	"github.com/mokhtarimokhtar/goasterix"
 )
 
 type TrackVelocity struct {
@@ -17,8 +18,8 @@ type Acceleration struct {
 	Ay float32 `json:"ay,omitempty"`
 }
 type PositionWGS84 struct {
-	Latitude  float64 `json:"latitude,omitempty"`
-	Longitude float64 `json:"longitude,omitempty"`
+	Latitude  float64 `json:"latitude"`
+	Longitude float64 `json:"longitude"`
 }
 type TrackMode3A struct {
 	V      string `json:"v"`
@@ -633,8 +634,8 @@ func extractDerivedData(cp goasterix.Compound) DerivedData {
 func calculatedTrackPositionWGS84(data [8]byte) PositionWGS84 {
 	var pos PositionWGS84
 	lsb := 180 / math.Pow(2, 25)
-	pos.Latitude = float64(int64(data[0])<<24+int64(data[1])<<16+int64(data[2])<<8+int64(data[3])) * lsb
-	pos.Longitude = float64(int64(data[4])<<24+int64(data[5])<<16+int64(data[6])<<8+int64(data[7])) * lsb
+	pos.Latitude = float64(int32(data[0])<<24+int32(data[1])<<16+int32(data[2])<<8+int32(data[3])) * lsb
+	pos.Longitude = float64(int32(data[4])<<24+int32(data[5])<<16+int32(data[6])<<8+int32(data[7])) * lsb
 	return pos
 }
 

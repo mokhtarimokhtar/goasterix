@@ -2,10 +2,11 @@ package transform
 
 import (
 	"encoding/json"
-	"github.com/mokhtarimokhtar/goasterix"
-	"github.com/mokhtarimokhtar/goasterix/uap"
 	"reflect"
 	"testing"
+
+	"github.com/mokhtarimokhtar/goasterix"
+	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
 func TestCat062Model_ToJsonRecord(t *testing.T) {
@@ -195,4 +196,32 @@ func TestCat062Model_Mode3ACode(t *testing.T) {
 			t.Logf("SUCCESS: s = %v; Expected: %v", res, row.output)
 		}
 	}
+}
+
+func TestCat062Model_CalculatedTrackPositionWGS84(t *testing.T) {
+	// setup
+	type dataTest struct {
+		TestCaseName string
+		input        [8]byte
+		output       PositionWGS84
+	}
+	dataset := []dataTest{
+		{
+			TestCaseName: "testcase1",
+			input:        [8]byte{0x00, 0x88, 0x62, 0x20, 0xff, 0xf8, 0x72, 0x50},
+			output:       PositionWGS84{Latitude: 47.9472541809082, Longitude: -2.655515670776367},
+		},
+	}
+	for _, row := range dataset {
+		// Arrange
+		res := calculatedTrackPositionWGS84(row.input)
+
+		// Assert
+		if res != row.output {
+			t.Errorf("FAIL: %s - res = %v; Expected: %v", row.TestCaseName, res, row.output)
+		} else {
+			t.Logf("SUCCESS: s = %v; Expected: %v", res, row.output)
+		}
+	}
+
 }

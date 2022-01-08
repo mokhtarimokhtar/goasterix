@@ -6,9 +6,10 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"errors"
-	"github.com/mokhtarimokhtar/goasterix/uap"
 	"math"
 	"strings"
+
+	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
 var (
@@ -178,7 +179,7 @@ func TwoComplement32(sizeBits uint8, data uint32) (v int32) {
 	v = tmp1 + tmp2
 
 	// checking example
-	// mask := uint32(0x007FFFFF)
+	// mask := uint32(0x007F)
 	/*signed := data[2] & 0x80 >> 7
 	if signed == 1 {
 		complement := ^tmpLatitude 	// one complement

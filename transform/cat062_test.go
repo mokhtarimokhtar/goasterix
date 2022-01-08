@@ -211,6 +211,20 @@ func TestCat062Model_CalculatedTrackPositionWGS84(t *testing.T) {
 			input:        [8]byte{0x00, 0x88, 0x62, 0x20, 0xff, 0xf8, 0x72, 0x50},
 			output:       PositionWGS84{Latitude: 47.9472541809082, Longitude: -2.655515670776367},
 		},
+		{
+			TestCaseName: "testcase2",
+			input:        [8]byte{0xff, 0xb7, 0x09, 0x44, 0xff, 0xf8, 0x72, 0x50},
+			output:       PositionWGS84{Latitude: -25.65133810043335, Longitude: -2.655515670776367},
+		},
+		{
+			TestCaseName: "testcase3",
+			input:        [8]byte{0xff, 0xb7, 0x09, 0x44, 0x00, 0x88, 0x62, 0x20},
+			output:       PositionWGS84{Latitude: -25.65133810043335, Longitude: 47.9472541809082},
+		}, {
+			TestCaseName: "testcase4",
+			input:        [8]byte{0x00, 0x88, 0x62, 0x20, 0x00, 0x88, 0x62, 0x20},
+			output:       PositionWGS84{Latitude: 47.9472541809082, Longitude: 47.9472541809082},
+		},
 	}
 	for _, row := range dataset {
 		// Arrange
@@ -221,6 +235,7 @@ func TestCat062Model_CalculatedTrackPositionWGS84(t *testing.T) {
 			t.Errorf("FAIL: %s - res = %v; Expected: %v", row.TestCaseName, res, row.output)
 		} else {
 			t.Logf("SUCCESS: s = %v; Expected: %v", res, row.output)
+
 		}
 	}
 

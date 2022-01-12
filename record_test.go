@@ -1566,6 +1566,82 @@ func TestRecordDecode_CAT063(t *testing.T) {
 		}
 	}
 }
+func TestRecordDecode_CAT065(t *testing.T) {
+	// Arrange
+	input := "f8090c0203424cf30a"
+	output := []Item{
+		{
+			Meta: MetaItem{
+				FRN:         1,
+				DataItem:    "I065/010",
+				Description: "Data Source Identifier",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x09, 0x0c}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         2,
+				DataItem:    "I065/000",
+				Description: "Message Type",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x02}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         3,
+				DataItem:    "I065/015",
+				Description: "Service Identification",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x03}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         4,
+				DataItem:    "I065/030",
+				Description: "Time Of Message",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x42, 0x4c, 0xf3}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         5,
+				DataItem:    "I065/020",
+				Description: "Batch Number",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x0a}},
+		},
+	}
+	uap065 := uap.Cat065V15
+	data, _ := HexStringToByte(input)
+	rec := new(Record)
+
+	// Act
+	unRead, err := rec.Decode(data, uap065)
+
+	// Assert
+	if err != nil {
+		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+	} else {
+		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+	}
+	if unRead != 0 {
+		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
+	} else {
+		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
+	}
+	for i, item := range rec.Items {
+		if reflect.DeepEqual(item, output[i]) == false {
+			t.Errorf("FAIL: %v; \nExpected: %v", item, output[i])
+		} else {
+			t.Logf("SUCCESS: %v; Expected: %v", item, output[i])
+		}
+	}
+}
 
 /*
 todo

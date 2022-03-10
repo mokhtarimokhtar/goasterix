@@ -9,11 +9,10 @@ import (
 	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
-
 func TestCat063Model_ToJsonRecord(t *testing.T) {
 	// Arrange
-	input := "a0 0836 429b71" //FSPEC : 10100000 => A0 f6 0836 429b71 10940028200094008000
-	output := []byte(`{"dataSourceIdentifier":{"sac":8,"sic":54},"timeOfMessage":34102.8828125}`)
+	input := "b0 0836 429b71 0801" //FSPEC : 10110000 => B0 f6 0836 429b71 0801 10940028200094008000
+	output := []byte(`{"dataSourceIdentifier":{"sac":8,"sic":54},"timeOfMessage":34102.8828125,"sensorIdentifier":{"sac":8,"sic":1}}`)
 
 	uap063 := uap.Cat063V16
 	data, _ := goasterix.HexStringToByte(input)

@@ -108,7 +108,7 @@ func TestCat048Model_FlightLevel(t *testing.T) {
 	}
 	dataset := []dataTest{
 		{
-			TestCaseName: "validated",
+			TestCaseName: "testcase 1",
 			input:        [2]byte{0x00, 0xFF},
 			output: FL{
 				V:     "code_validated",
@@ -117,12 +117,30 @@ func TestCat048Model_FlightLevel(t *testing.T) {
 			},
 		},
 		{
-			TestCaseName: "not validated",
+			TestCaseName: "testcase 2",
 			input:        [2]byte{0xC0, 0xFF}, // 1100-1111 1111-1111
 			output: FL{
 				V:     "code_not_validated",
 				G:     "garbled_code",
 				Level: float64(uint16(0x00FF)) / 4,
+			},
+		},
+		{
+			TestCaseName: "testcase 3",
+			input:        [2]byte{0x00, 0x00}, // 1100-1111 1111-1111
+			output: FL{
+				V:     "code_validated",
+				G:     "default",
+				Level: float64(uint16(0x0000)) / 4,
+			},
+		},
+		{
+			TestCaseName: "testcase 4",
+			input:        [2]byte{0x3f, 0xff}, // 1100-1111 1111-1111
+			output: FL{
+				V:     "code_validated",
+				G:     "default",
+				Level: 4095.75,
 			},
 		},
 	}

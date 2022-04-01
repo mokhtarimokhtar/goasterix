@@ -112,6 +112,7 @@ func TestFspecIndex(t *testing.T) {
 		{input: []byte{0xaa}, output: []uint8{1, 3, 5, 7}},
 		{input: []byte{0x55}, output: []uint8{2, 4, 6}},
 		{input: []byte{}, output: []uint8{}},
+		{input: []byte{0xef, 0x98}, output: []uint8{1, 2, 3, 5, 6, 7, 8, 11, 12}},
 	}
 
 	for _, row := range dataSet {
@@ -1441,6 +1442,157 @@ func TestRecordDecode_CAT048(t *testing.T) {
 	}
 }
 
+func TestRecordDecode_CAT034(t *testing.T) {
+	// Arrange
+	input := "f6 0836 02 429b61 08 9400282000 94008000"
+	output := []Item{
+		{
+			Meta: MetaItem{
+				FRN:         1,
+				DataItem:    "I034/010",
+				Description: "Data Source Identifier",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x08, 0x36}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         2,
+				DataItem:    "I034/000",
+				Description: "Message Type",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x02}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         3,
+				DataItem:    "I034/030",
+				Description: "Time-of-Day",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x42, 0x9b, 0x61}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         4,
+				DataItem:    "I034/020",
+				Description: "Sector Number",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x08}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         6,
+				DataItem:    "I034/050",
+				Description: "System Configuration and Status",
+				Type:        uap.Compound,
+			},
+			Compound: &Compound{
+				Primary: []byte{0x94},
+				Secondary: []Item{
+					{
+						Meta: MetaItem{
+							FRN:         1,
+							DataItem:    "COM",
+							Description: "Common Part",
+							Type:        uap.Fixed,
+						},
+						Fixed: &Fixed{Data: []byte{0x00}},
+					},
+					{
+						Meta: MetaItem{
+							FRN:         4,
+							DataItem:    "PSR",
+							Description: "Specific Status for PSR Sensor",
+							Type:        uap.Fixed,
+						},
+						Fixed: &Fixed{Data: []byte{0x28}},
+					},
+					{
+						Meta: MetaItem{
+							FRN:         6,
+							DataItem:    "MDS",
+							Description: "Specific Status for Mode S Sensor",
+							Type:        uap.Fixed,
+						},
+						Fixed: &Fixed{Data: []byte{0x20, 0x00}},
+					},
+				},
+			},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         7,
+				DataItem:    "I034/060",
+				Description: "System Processing Mode",
+				Type:        uap.Compound,
+			},
+			Compound: &Compound{
+				Primary: []byte{0x94}, //1001-0100 94 00 80 00
+				Secondary: []Item{
+					{
+						Meta: MetaItem{
+							FRN:         1,
+							DataItem:    "COM",
+							Description: "Common Part",
+							Type:        uap.Fixed,
+						},
+						Fixed: &Fixed{Data: []byte{0x00}},
+					},
+					{
+						Meta: MetaItem{
+							FRN:         4,
+							DataItem:    "PSR",
+							Description: "Specific Processing Mode information for PSR Sensor",
+							Type:        uap.Fixed,
+						},
+						Fixed: &Fixed{Data: []byte{0x80}},
+					},
+					{
+						Meta: MetaItem{
+							FRN:         6,
+							DataItem:    "MDS",
+							Description: "Specific Processing Mode information for Mode S Sensor",
+							Type:        uap.Fixed,
+						},
+						Fixed: &Fixed{Data: []byte{0x00}},
+					},
+				},
+			},
+		},
+	}
+
+
+
+	uap034 := uap.Cat034V127
+	data, _ := HexStringToByte(input)
+	rec := new(Record)
+
+	// Act
+	unRead, err := rec.Decode(data, uap034)
+
+	// Assert
+	if err != nil {
+		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+	} else {
+		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+	}
+	if unRead != 0 {
+		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
+	} else {
+		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
+	}
+	for i, item := range rec.Items {
+		if reflect.DeepEqual(item, output[i]) == false {
+			t.Errorf("FAIL: %v; \nExpected: %v", item, output[i])
+		} else {
+			t.Logf("SUCCESS: %v; Expected: %v", item, output[i])
+		}
+	}
+}
+
 func TestRecordDecode_CAT063(t *testing.T) {
 	// Arrange
 	input := "bff0090c7cd2cc08294000000000000000000000000000000000"
@@ -1566,6 +1718,7 @@ func TestRecordDecode_CAT063(t *testing.T) {
 		}
 	}
 }
+
 func TestRecordDecode_CAT065(t *testing.T) {
 	// Arrange
 	input := "f8090c0203424cf30a"
@@ -1642,6 +1795,7 @@ func TestRecordDecode_CAT065(t *testing.T) {
 		}
 	}
 }
+
 
 /*
 todo
@@ -1844,43 +1998,7 @@ func TestRecordDecode_CAT032STR(t *testing.T) {
 	}
 }
 
-func TestRecordDecode_CAT034(t *testing.T) {
-	// Arrange
-	input := "f6 0836 02 429b61 08 9400282000 94008000"
-	output := [][]byte{
-		{0x08, 0x36},
-		{0x02},
-		{0x42, 0x9b, 0x61},
-		{0x08},
-		{0x94, 0x00, 0x28, 0x20, 0x00},
-		{0x94, 0x00, 0x80, 0x00},
-	}
-	uap048 := uap.Cat034V127
-	data, _ := HexStringToByte(input)
-	rec := new(Record)
 
-	// Act
-	unRead, err := rec.Decode(data, uap048)
-
-	// Assert
-	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
-	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
-	}
-	if unRead != 0 {
-		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
-	} else {
-		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
-	}
-	for i, item := range rec.Items {
-		if bytes.Equal(item.Data, output[i]) == false {
-			t.Errorf("FAIL: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
-		} else {
-			t.Logf("SUCCESS: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
-		}
-	}
-}
 
 func TestRecordDecode_CAT062(t *testing.T) {
 	// Arrange

@@ -1564,8 +1564,6 @@ func TestRecordDecode_CAT034(t *testing.T) {
 		},
 	}
 
-
-
 	uap034 := uap.Cat034V127
 	data, _ := HexStringToByte(input)
 	rec := new(Record)
@@ -1796,6 +1794,203 @@ func TestRecordDecode_CAT065(t *testing.T) {
 	}
 }
 
+func TestRecordDecode_CAT004(t *testing.T) {
+	// Arrange
+	// 04 003d fdcb8008a2080108826ae1800000080001d1c041504d3030303100010bc51ef7a55900f5050370c30c4000003039ff50ffd8a880404cb3820820
+	input := "fdcb80 08a2 08 010882 6ae180 0000 08 0001 d1c0 41504d30303031 0001 0bc51ef7a55900f5 050370c30c40 00003039 ff50 ffd8a8 80 404cb3820820"
+	output := []Item{
+		{
+			Meta: MetaItem{
+				FRN:         1,
+				DataItem:    "I004/010",
+				Description: "Data Source Identifier",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x08, 0xa2}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         2,
+				DataItem:    "I004/000",
+				Description: "Message Type",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x08}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         3,
+				DataItem:    "I004/015",
+				Description: "SDPS Identifier",
+				Type:        uap.Repetitive,
+			},
+			Repetitive: &Repetitive{
+				Rep:  0x01,
+				Data: []byte{0x08, 0x82},
+			},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         4,
+				DataItem:    "I004/020",
+				Description: "Time Of Message",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x6a, 0xe1, 0x80}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         5,
+				DataItem:    "I004/040",
+				Description: "Alert Identifier",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x00, 0x00}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         6,
+				DataItem:    "I004/045",
+				Description: "Alert Status",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x08}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         8,
+				DataItem:    "I004/030",
+				Description: "Track Number 1",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x00, 0x01}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         9,
+				DataItem:    "I004/170",
+				Description: "Aircraft Identification & Characteristics 1",
+				Type:        uap.Compound,
+			},
+			Compound: &Compound{
+				Primary: []byte{0xd1, 0xc0}, //1101-0001 1100-0000
+				Secondary: []Item{
+					{
+						Meta: MetaItem{
+							FRN:         1,
+							DataItem:    "AI1",
+							Description: "Aircraft Identifier 1",
+							Type:        uap.Fixed,
+						},
+						Fixed: &Fixed{Data: []byte{0x41, 0x50, 0x4d, 0x30, 0x30, 0x30, 0x31}},
+					},
+					{
+						Meta: MetaItem{
+							FRN:         2,
+							DataItem:    "M31",
+							Description: "Mode 3/A Code Aircraft 1",
+							Type:        uap.Fixed,
+						},
+						Fixed: &Fixed{Data: []byte{0x00, 0x01}},
+					},
+					{
+						Meta: MetaItem{
+							FRN:         4,
+							DataItem:    "CPC",
+							Description: "Predicted Conflict Position 1 (Cartesian Coordinates)",
+							Type:        uap.Fixed,
+						},
+						Fixed: &Fixed{Data: []byte{0x0b, 0xc5, 0x1e, 0xf7, 0xa5, 0x59, 0x00, 0xf5}},
+					},
+					{
+						Meta: MetaItem{
+							FRN:         8,
+							DataItem:    "MS1",
+							Description: "Mode S Identifier Aircraft 1",
+							Type:        uap.Fixed,
+						},
+						Fixed: &Fixed{Data: []byte{0x05, 0x03, 0x70, 0xc3, 0x0c, 0x40}},
+					},
+					{
+						Meta: MetaItem{
+							FRN:         9,
+							DataItem:    "FP1",
+							Description: "Flight Plan Number Aircraft 1",
+							Type:        uap.Fixed,
+						},
+						Fixed: &Fixed{Data: []byte{0x00, 0x00, 0x30, 0x39}},
+					},
+				},
+			},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         12,
+				DataItem:    "I004/076",
+				Description: "Vertical Deviation",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0xff, 0x50}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         14,
+				DataItem:    "I004/075",
+				Description: "Transversal Distance Deviation",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0xff, 0xd8, 0xa8}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         15,
+				DataItem:    "I004/100",
+				Description: "Area Definitions",
+				Type:        uap.Compound,
+			},
+			Compound: &Compound{
+				Primary: []byte{0x80},
+				Secondary: []Item{
+					{
+						Meta: MetaItem{
+							FRN:         1,
+							DataItem:    "AN",
+							Description: "Area Name",
+							Type:        uap.Fixed,
+						},
+						Fixed: &Fixed{Data: []byte{0x40, 0x4c, 0xb3, 0x82, 0x08, 0x20}},
+					},
+				},
+			},
+		},
+	}
+
+	uap004 := uap.Cat004V112
+	data, _ := HexStringToByte(input)
+	rec := new(Record)
+
+	// Act
+	unRead, err := rec.Decode(data, uap004)
+
+	// Assert
+	if err != nil {
+		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+	} else {
+		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+	}
+	if unRead != 0 {
+		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
+	} else {
+		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
+	}
+	for i, item := range rec.Items {
+		if reflect.DeepEqual(item, output[i]) == false {
+			t.Errorf("FAIL: %v; \nExpected: %v", item, output[i])
+		} else {
+			t.Logf("SUCCESS: %v; Expected: %v", item, output[i])
+		}
+	}
+}
 
 /*
 todo

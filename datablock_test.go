@@ -160,6 +160,13 @@ func TestDataBlockDecode(t *testing.T) {
 			unRead:       0,
 		},
 		{
+			TestCaseName: "CAT034 second bad record",
+			input:        "220025ef982821013aadd90281840020008400000300091010286006c521038a0456770000",
+			err:          ErrDataFieldUnknown,
+			nbOfRecords:  2,
+			unRead:       3,
+		},
+		{
 			TestCaseName: "CAT034",
 			input:        "22",
 			err:          io.EOF,
@@ -172,6 +179,13 @@ func TestDataBlockDecode(t *testing.T) {
 			err:          ErrUndersized,
 			nbOfRecords:  0,
 			unRead:       16,
+		},
+		{
+			TestCaseName: "CAT004",
+			input:        "04 003d fdcb8008a2080108826ae1800000080001d1c041504d3030303100010bc51ef7a55900f5050370c30c4000003039ff50ffd8a880404cb3820820",
+			err:          nil,
+			nbOfRecords:  1,
+			unRead:       0,
 		},
 		{
 			TestCaseName: "CAT030 STR",

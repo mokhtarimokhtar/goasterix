@@ -124,7 +124,7 @@ func (rec *Record) Decode(data []byte, stdUAP uap.StandardUAP) (unRead int, err 
 }
 
 // String returns a string(hex) representation of one asterix record (only existing items).
-func (rec *Record) String() []string {
+func (rec Record) String() []string {
 	var items []string
 	tmp := "FSPEC: " + hex.EncodeToString(rec.Fspec)
 	items = append(items, tmp)
@@ -137,12 +137,13 @@ func (rec *Record) String() []string {
 }
 
 // Payload returns a slice of byte for one asterix record.
-func (rec *Record) Payload() (b []byte) {
-	b = append(b, rec.Fspec...)
+func (rec Record) Payload() []byte {
+	var pd []byte
+	pd = append(pd, rec.Fspec...)
 	for _, item := range rec.Items {
-		b = append(b, item.Payload()...)
+		pd = append(pd, item.Payload()...)
 	}
-	return b
+	return pd
 }
 
 func selectUAPConditional(category uint8, field []byte) []uap.DataField {

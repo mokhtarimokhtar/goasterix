@@ -127,19 +127,31 @@ LoopRecords:
 	return unRead, nil
 }
 
-/*func (db *DataBlock) String() (records [][]string) {
+func (db DataBlock) String() [][]string {
+	var records [][]string
 	for _, record := range db.Records {
 		records = append(records, record.String())
 	}
 	return records
 }
 
-func (db *DataBlock) Data() (b [][]byte) {
+func (db DataBlock) Payload() [][]byte {
+	var pd [][]byte
+	var catPd []byte
+	var lenPd []byte
+
+	catPd = append(catPd, db.Category)
+	pd = append(pd, catPd)
+
+	var h, l = byte(db.Len >> 8), byte(db.Len & 0xff)
+	lenPd = append(lenPd, h, l)
+	pd = append(pd, lenPd)
+
 	for _, record := range db.Records {
-		b = append(b, record.Data())
+		pd = append(pd, record.Payload())
 	}
-	return b
-}*/
+	return pd
+}
 
 // HexStringToByte converts a hexadecimal string format to an array of byte.
 // It is used to facilitate the testing.
@@ -153,7 +165,7 @@ func HexStringToByte(s string) ([]byte, error) {
 }
 
 // TwoComplement16 returns an int16 (signed).
-// sizebits is the number of bit complement.
+// sizeBits is the number of bit complement.
 func TwoComplement16(sizeBits uint8, data uint16) (v int16) {
 	n := float64(sizeBits - 1)
 	p := math.Pow(2, n) // 2^(N-1)
@@ -167,7 +179,7 @@ func TwoComplement16(sizeBits uint8, data uint16) (v int16) {
 }
 
 // TwoComplement32 returns an int32 (signed).
-// sizebits is the number of bit complement.
+// sizeBits is the number of bit complement.
 func TwoComplement32(sizeBits uint8, data uint32) (v int32) {
 	n := float64(sizeBits - 1)
 	p := math.Pow(2, n) // 2^(N-1)

@@ -301,6 +301,7 @@ func TestItem_String(t *testing.T) {
 		output       string
 		len          int
 	}
+	// Arrange
 	dataSet := []dataTest{
 		{
 			TestCaseName: "testcase 1",
@@ -411,7 +412,6 @@ func TestItem_String(t *testing.T) {
 		},
 	}
 	for _, row := range dataSet {
-		// Arrange
 		// Act
 		s := row.input.String()
 

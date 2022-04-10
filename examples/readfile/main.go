@@ -22,12 +22,12 @@ func main() {
 	for _, dataB := range w.DataBlocks {
 		// dataBlock contains one datablock = CAT + LEN + RECORD(S)
 		fmt.Printf("Category: %v, Len: %v\n", dataB.Category, dataB.Len)
-		/*for i, records := range dataB.String() {
+		for i, records := range dataB.String() {
 			// records contains one or more records = N * items
 			fmt.Printf("+ Record n°%v\n", i+1)
 			for _, record := range records {
 				fmt.Println("-", record) // it displays its items in Hexadecimal
 			}
-		}*/
+		}
 	}
 }

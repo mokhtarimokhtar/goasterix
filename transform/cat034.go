@@ -137,8 +137,8 @@ func (data *Cat034Model) write(rec goasterix.Record) {
 			tmp := systemProcessingMode(*item.Compound)
 			data.SystemProcessingMode = &tmp
 		case 8:
-			// todo fix
-			tmp, _ := messageCountValues(item.Fixed.Data)
+			//tmp, _ := messageCountValues(item.Fixed.Data)
+			tmp, _ := messageCountValues(*item.Repetitive)
 			data.MessageCountValues = tmp
 		case 9:
 			var payload [8]byte
@@ -460,16 +460,17 @@ func systemProcessingMode(cp goasterix.Compound) SysProcess {
 // Message Count values, according the various types of messages, for the last completed antenna revolution,
 // counted between two North crossings.
 // Ref. 5.2.8 Data Item I034/070, Message Count Values
-func messageCountValues(data []byte) ([]MessageCounter, error) {
+//func messageCountValues(data []byte) ([]MessageCounter, error) {
+func messageCountValues(item goasterix.Repetitive) ([]MessageCounter, error) {
 	var mcv []MessageCounter
 	var err error
-	rep := data[0]
+	data := item.Data
 
-	for i := 0; i < int(rep*2); i = i + 2 {
+	for i := 0; i < int(item.Rep*2); i = i + 2 {
 		m := MessageCounter{}
-		m.Counter = uint16(data[i+1]&0x07)<<8 + uint16(data[i+2])
+		m.Counter = uint16(data[i]&0x07)<<8 + uint16(data[i+1])
 
-		typeMCtmp := uint16(data[i+1] & 0xF8 >> 3)
+		typeMCtmp := uint16(data[i] & 0xF8 >> 3)
 		switch typeMCtmp {
 		case 0:
 			m.Type = "no_detection"

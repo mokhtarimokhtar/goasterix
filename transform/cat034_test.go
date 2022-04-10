@@ -494,14 +494,17 @@ func TestCat034Model_MessageCountValues(t *testing.T) {
 	// Arrange
 	type dataTest struct {
 		Name   string
-		input  []byte
+		input  goasterix.Repetitive
 		output []MessageCounter
 		err    error
 	}
 	dataset := []dataTest{
 		{
-			Name:  "testcase: rep 1, no_detection",
-			input: []byte{0x01, 0x00, 0x0F},
+			Name: "testcase: rep 1, no_detection",
+			input: goasterix.Repetitive{
+				Rep:  0x01,
+				Data: []byte{0x00, 0x0f},
+			},
 			output: []MessageCounter{
 				{
 					Type:    "no_detection",
@@ -512,29 +515,32 @@ func TestCat034Model_MessageCountValues(t *testing.T) {
 		},
 		{
 			Name: "testcase: rep 21, all type",
-			input: []byte{0x15,
-				0x00, 0x0F,
-				0x08, 0x0F, // 00001 000
-				0x10, 0x0F, // 00010 000
-				0x18, 0x0F, // 00011 000
-				0x20, 0x0F, // 00100 000
-				0x28, 0x0F, // 00101 000
-				0x30, 0x0F, // 00110 000
-				0x38, 0x0F, // 00111 000
-				0x40, 0x0F, // 01000 000
-				0x48, 0x0F, // 01001 000
-				0x50, 0x0F, // 01010 000
-				0x58, 0x0F, // 01011 000
-				0x60, 0x0F, // 01100 000
-				0x68, 0x0F, // 01101 000
-				0x70, 0x0F, // 01110 000
-				0x78, 0x0F, // 01111 000
-				0x80, 0x0F, // 10000 000
-				0x88, 0x0F, // 10001 000
-				0x90, 0x0F, // 10010 000
-				0x98, 0x0F, // 10011 000
-				0xa0, 0x0F, // 10100 000
-				0xa8, 0x0F, // 10101 000
+			input: goasterix.Repetitive{
+				Rep: 0x15,
+				Data: []byte{
+					0x00, 0x0F,
+					0x08, 0x0F, // 00001 000
+					0x10, 0x0F, // 00010 000
+					0x18, 0x0F, // 00011 000
+					0x20, 0x0F, // 00100 000
+					0x28, 0x0F, // 00101 000
+					0x30, 0x0F, // 00110 000
+					0x38, 0x0F, // 00111 000
+					0x40, 0x0F, // 01000 000
+					0x48, 0x0F, // 01001 000
+					0x50, 0x0F, // 01010 000
+					0x58, 0x0F, // 01011 000
+					0x60, 0x0F, // 01100 000
+					0x68, 0x0F, // 01101 000
+					0x70, 0x0F, // 01110 000
+					0x78, 0x0F, // 01111 000
+					0x80, 0x0F, // 10000 000
+					0x88, 0x0F, // 10001 000
+					0x90, 0x0F, // 10010 000
+					0x98, 0x0F, // 10011 000
+					0xa0, 0x0F, // 10100 000
+					0xa8, 0x0F, // 10101 000
+				},
 			},
 			output: []MessageCounter{
 				{Type: "no_detection", Counter: 15},
@@ -562,8 +568,11 @@ func TestCat034Model_MessageCountValues(t *testing.T) {
 			err: nil,
 		},
 		{
-			Name:  "testcase: rep 1, error unknown",
-			input: []byte{0x01, 0xb8, 0x0d},
+			Name: "testcase: rep 1, error unknown",
+			input: goasterix.Repetitive{
+				Rep:  0x01,
+				Data: []byte{0xb8, 0x0d},
+			},
 			output: []MessageCounter{
 				{
 					Type:    "unknown",

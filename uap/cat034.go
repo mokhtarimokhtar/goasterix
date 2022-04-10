@@ -162,13 +162,12 @@ var Cat034V127 = StandardUAP{
 			},
 		},
 		{
-			// todo fix
 			FRN:         8,
 			DataItem:    "I034/070",
 			Description: "Message Count Values",
-			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Type:        Repetitive,
+			Repetitive: RepetitiveField{
+				SubItemSize: 2,
 			},
 		},
 		{

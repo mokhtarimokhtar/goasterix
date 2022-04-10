@@ -160,13 +160,6 @@ func TestDataBlockDecode(t *testing.T) {
 			unRead:       0,
 		},
 		{
-			TestCaseName: "CAT034 second bad record",
-			input:        "220025ef982821013aadd90281840020008400000300091010286006c521038a0456770000",
-			err:          ErrDataFieldUnknown,
-			nbOfRecords:  2,
-			unRead:       3,
-		},
-		{
 			TestCaseName: "CAT034",
 			input:        "22",
 			err:          io.EOF,

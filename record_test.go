@@ -873,7 +873,7 @@ func TestRecordDecode_Empty(t *testing.T) {
 	}
 }
 
-// Decode Cat4Test
+// Testing : Decode Cat4Test
 func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 	// Arrange
 	input := "fd 40 ffff fffffe 03ffff 02ffffffff ab80 ff fffe 02ffffffff 04ffffff ffff 0101ffff 03ffff"
@@ -1252,6 +1252,7 @@ func TestRecordDecode_Cat4TestError(t *testing.T) {
 	}
 }
 
+// Testing : Decode by category
 func TestRecordDecode_CAT048(t *testing.T) {
 	// Arrange
 	input := "fff702 0836 429b52 a0 94c70181 0913 02d0 6002b7 490d01 38a178cf4220 02e79a5d27a00c0060a3280030a4000040 063a 0743ce5b 40 20f5"

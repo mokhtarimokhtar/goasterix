@@ -120,6 +120,8 @@ LoopRecords:
 		if err != nil {
 			return unRead, err
 		}
+		// offset == lenData is for the case payload is oversize of LEN field asterix
+		// if unRead == 0 || offset == lenData {
 		if unRead == 0 {
 			break LoopRecords
 		}

@@ -224,6 +224,13 @@ func TestDataBlockDecode(t *testing.T) {
 			nbOfRecords:  47,
 			unRead:       0,
 		},
+		{
+			TestCaseName: "CAT034: over sized data block",
+			input:        "220014f6081002412998d89400002000940000811a",
+			err:          nil,
+			nbOfRecords:  1,
+			unRead:       1,
+		},
 	}
 
 	for _, row := range dataSet {

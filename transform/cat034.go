@@ -109,10 +109,10 @@ func (data *Cat034Model) write(rec goasterix.Record) {
 			tmp, _ := sacSic(payload)
 			data.SacSic = &tmp
 		case 2:
-			//decode messageType
+			//decode messageTypeCat034
 			var payload [1]byte
 			copy(payload[:], item.Fixed.Data[:])
-			data.MessageType = messageType(payload)
+			data.MessageType = messageTypeCat034(payload)
 		case 3:
 			// decode timeOfDay
 			var payload [3]byte
@@ -137,6 +137,7 @@ func (data *Cat034Model) write(rec goasterix.Record) {
 			tmp := systemProcessingMode(*item.Compound)
 			data.SystemProcessingMode = &tmp
 		case 8:
+			// todo fix
 			tmp, _ := messageCountValues(item.Fixed.Data)
 			data.MessageCountValues = tmp
 		case 9:
@@ -171,7 +172,7 @@ func (data *Cat034Model) write(rec goasterix.Record) {
 
 // MessageType returns a string of message type.
 // Ref. 5.2.1 Data Item I034/000, Message Type
-func messageType(data [1]byte) string {
+func messageTypeCat034(data [1]byte) string {
 	var msg string
 	msgType := data[0]
 

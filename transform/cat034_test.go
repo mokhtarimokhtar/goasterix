@@ -26,7 +26,7 @@ func TestCat034Model_MessageType(t *testing.T) {
 	}
 	for _, row := range dataset {
 		// Act
-		res := messageType(row.input)
+		res := messageTypeCat034(row.input)
 
 		// Assert
 		if res != row.output {

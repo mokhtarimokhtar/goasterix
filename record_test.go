@@ -2,6 +2,7 @@ package goasterix
 
 import (
 	"bytes"
+	"github.com/mokhtarimokhtar/goasterix/util"
 	"io"
 	"reflect"
 	"testing"
@@ -11,7 +12,7 @@ import (
 
 func TestRecord_Payload(t *testing.T) {
 	// Arrange
-	data, _ := HexStringToByte("ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020a0")
+	data, _ := util.HexStringToByte("ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020a0")
 	nbOfBytes := 42
 	rec := NewRecord()
 	_, _ = rec.Decode(data, uap.Cat048V127)
@@ -29,7 +30,7 @@ func TestRecord_Payload(t *testing.T) {
 
 func TestRecord_String(t *testing.T) {
 	// Arrange
-	data, _ := HexStringToByte("ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020a0")
+	data, _ := util.HexStringToByte("ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020a0")
 	nbOfItems := 15
 	rec := NewRecord()
 	_, _ = rec.Decode(data, uap.Cat048V127)
@@ -132,7 +133,7 @@ func TestFspecIndex(t *testing.T) {
 // FixedDataField
 func TestFixedDataFieldReader_Valid(t *testing.T) {
 	// Arrange
-	input, _ := HexStringToByte("FF FE FD BF 00 01 02 03")
+	input, _ := util.HexStringToByte("FF FE FD BF 00 01 02 03")
 	nb := uint8(8)
 	rb := bytes.NewReader(input)
 	output := []byte{0xFF, 0xFE, 0xFD, 0xBF, 0x00, 0x01, 0x02, 0x03}
@@ -155,7 +156,7 @@ func TestFixedDataFieldReader_Valid(t *testing.T) {
 
 func TestFixedDataFieldReader_Invalid(t *testing.T) {
 	// Arrange
-	input, _ := HexStringToByte("FF FE BF 00 01 02")
+	input, _ := util.HexStringToByte("FF FE BF 00 01 02")
 	nb := uint8(7)
 	rb := bytes.NewReader(input)
 
@@ -264,7 +265,7 @@ func TestExtendedDataFieldReader(t *testing.T) {
 
 	for _, row := range dataSet {
 		// Arrange
-		input, _ := HexStringToByte(row.input)
+		input, _ := util.HexStringToByte(row.input)
 		rb := bytes.NewReader(input)
 
 		// Act
@@ -324,7 +325,7 @@ func TestExplicitDataFieldReader(t *testing.T) {
 	}
 	for _, row := range dataSet {
 		// Arrange
-		input, _ := HexStringToByte(row.input)
+		input, _ := util.HexStringToByte(row.input)
 		rb := bytes.NewReader(input)
 
 		// Act
@@ -389,7 +390,7 @@ func TestRepetitiveDataFieldReader(t *testing.T) {
 	}
 	for _, row := range dataSet {
 		// Arrange
-		input, _ := HexStringToByte(row.input)
+		input, _ := util.HexStringToByte(row.input)
 		rb := bytes.NewReader(input)
 
 		// Act
@@ -566,7 +567,7 @@ func TestCompoundDataFieldReader(t *testing.T) {
 
 	for _, row := range dataSet {
 		// Arrange
-		input, _ := HexStringToByte(row.input)
+		input, _ := util.HexStringToByte(row.input)
 		rb := bytes.NewReader(input)
 
 		// Act
@@ -627,7 +628,7 @@ func TestSPAndREDataFieldReader(t *testing.T) {
 
 	for _, row := range dataSet {
 		// Arrange
-		input, _ := HexStringToByte(row.input)
+		input, _ := util.HexStringToByte(row.input)
 		rb := bytes.NewReader(input)
 
 		// Act
@@ -736,7 +737,7 @@ func TestRFSDataFieldReader(t *testing.T) {
 
 	for _, row := range dataSet {
 		// Arrange
-		input, _ := HexStringToByte(row.input)
+		input, _ := util.HexStringToByte(row.input)
 		rb := bytes.NewReader(input)
 
 		// Act
@@ -819,7 +820,7 @@ func TestRecordDecode_NbOfItems(t *testing.T) {
 
 	for _, row := range dataSet {
 		// Arrange
-		data, _ := HexStringToByte(row.input)
+		data, _ := util.HexStringToByte(row.input)
 		rec := new(Record)
 
 		// Act
@@ -849,7 +850,7 @@ func TestRecordDecode_Empty(t *testing.T) {
 	input := ""
 	var output []Item
 	uap048 := uap.Cat048V127
-	data, _ := HexStringToByte(input)
+	data, _ := util.HexStringToByte(input)
 	rec := NewRecord()
 
 	// Act
@@ -1029,7 +1030,7 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 		},
 	}
 	uap4Test := uap.Cat4Test
-	data, _ := HexStringToByte(input)
+	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
 	// Act
@@ -1088,7 +1089,7 @@ func TestRecordDecode_Cat4TestTrackFullRecord(t *testing.T) {
 		},
 	}
 	uap4Test := uap.Cat4Test
-	data, _ := HexStringToByte(input)
+	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
 	// Act
@@ -1147,7 +1148,7 @@ func TestRecordDecode_Cat4TestPlotFullRecord(t *testing.T) {
 		},
 	}
 	uap4Test := uap.Cat4Test
-	data, _ := HexStringToByte(input)
+	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
 	// Act
@@ -1227,7 +1228,7 @@ func TestRecordDecode_Cat4TestError(t *testing.T) {
 	for _, row := range dataSet {
 		// Arrange
 		uap4Test := uap.Cat4Test
-		data, _ := HexStringToByte(row.input)
+		data, _ := util.HexStringToByte(row.input)
 		rec := NewRecord()
 
 		// Act
@@ -1417,7 +1418,7 @@ func TestRecordDecode_CAT048(t *testing.T) {
 	}
 
 	uap048 := uap.Cat048V127
-	data, _ := HexStringToByte(input)
+	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
 	// Act
@@ -1566,7 +1567,7 @@ func TestRecordDecode_CAT034(t *testing.T) {
 	}
 
 	uap034 := uap.Cat034V127
-	data, _ := HexStringToByte(input)
+	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
 	// Act
@@ -1692,7 +1693,7 @@ func TestRecordDecode_CAT063(t *testing.T) {
 	}
 
 	uap063 := uap.Cat063V16
-	data, _ := HexStringToByte(input)
+	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
 	// Act
@@ -1769,7 +1770,7 @@ func TestRecordDecode_CAT065(t *testing.T) {
 		},
 	}
 	uap065 := uap.Cat065V15
-	data, _ := HexStringToByte(input)
+	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
 	// Act
@@ -1966,7 +1967,7 @@ func TestRecordDecode_CAT004(t *testing.T) {
 	}
 
 	uap004 := uap.Cat004V112
-	data, _ := HexStringToByte(input)
+	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
 	// Act
@@ -2007,7 +2008,7 @@ func TestRecordDecode_CAT001Track(t *testing.T) {
 	}
 
 	uap001 := uap.Cat001V12
-	data, _ := HexStringToByte(input)
+	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
 	// Act
@@ -2045,7 +2046,7 @@ func TestRecordDecode_CAT001Plot(t *testing.T) {
 	}
 
 	uap001 := uap.Cat001V12
-	data, _ := HexStringToByte(input)
+	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
 	// Act
@@ -2083,7 +2084,7 @@ func TestRecordDecode_CAT002(t *testing.T) {
 	}
 
 	uap002 := uap.Cat002V10
-	data, _ := HexStringToByte(input)
+	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
 	// Act
@@ -2131,7 +2132,7 @@ func TestRecordDecode_CAT030STR(t *testing.T) {
 		{0x2c, 0xc3, 0x71, 0xcf, 0x1d, 0xe0},
 	}
 	uap030 := uap.Cat030StrV51
-	data, _ := HexStringToByte(input)
+	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
 	// Act
@@ -2167,7 +2168,7 @@ func TestRecordDecode_CAT032STR(t *testing.T) {
 	}
 
 	uap030 := uap.Cat032StrV70
-	data, _ := HexStringToByte(input)
+	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
 	// Act
@@ -2221,7 +2222,7 @@ func TestRecordDecode_CAT062(t *testing.T) {
 	}
 
 	uap062 := uap.Cat062V119
-	data, _ := HexStringToByte(input)
+	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
 	// Act
@@ -2257,7 +2258,7 @@ func TestRecordDecode_CAT255STR(t *testing.T) {
 	}
 
 	uap255 := uap.Cat255StrV51
-	data, _ := HexStringToByte(input)
+	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
 	// Act
@@ -2316,7 +2317,7 @@ func TestRecordDecode_CAT030ARTAS(t *testing.T) {
 	}
 
 	uap030 := uap.Cat030ArtasV62
-	data, _ := HexStringToByte(input)
+	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
 	// Act

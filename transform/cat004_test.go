@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/mokhtarimokhtar/goasterix"
 	"github.com/mokhtarimokhtar/goasterix/uap"
+	"github.com/mokhtarimokhtar/goasterix/util"
 	"reflect"
 	"testing"
 )
@@ -93,10 +94,10 @@ func TestCat004Model_ToJsonRecord(t *testing.T) {
 			"transversalDeviation":-5036
 			}
 			`
-	output := []byte(goasterix.CleanStringMultiline(strOutput))
+	output := []byte(util.CleanStringMultiline(strOutput))
 
 	uap004 := uap.Cat004V112
-	data, _ := goasterix.HexStringToByte(input)
+	data, _ := util.HexStringToByte(input)
 	rec := goasterix.NewRecord()
 	_, err := rec.Decode(data, uap004)
 

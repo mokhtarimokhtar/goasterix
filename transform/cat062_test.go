@@ -2,6 +2,7 @@ package transform
 
 import (
 	"encoding/json"
+	"github.com/mokhtarimokhtar/goasterix/util"
 	"reflect"
 	"testing"
 
@@ -15,7 +16,7 @@ func TestCat062Model_ToJsonRecord(t *testing.T) {
 	output := []byte(`{"sourceIdentifier":{"sac":9,"sic":0},"serviceIdentification":1,"timeOfDay":42562,"trackPositionWGS84":{"latitude":50.07464289665222,"longitude":8.372386693954468},"cartesianXY":{"x":599032.5,"y":374851},"trackVelocity":{"vx":-75.25,"vy":102.5},"mode3ACode":{"v":"code_validated","g":"default","ch":"no_change","squawk":"7710"},"aircraftDerivedData":{"targetAddress":"87304A","targetIdentification":"ANA204  ","magneticHeading":319.616,"stateSelectedAltitude":{"mv":"manage_vertical_mode_active","ah":"altitude_hold_not_active","am":"approach_mode_not_active","altitude":13000},"machNumber":0.392,"indicatedAirSpeed":235},"trackNumber":1202,"trackStatus":{"mon":"monosensor","spi":"default_value","mrh":"barometric_altitude_reliable","src":"default_height","cnf":"confirmed_track","sim":"actual_track","tse":"default_value","tsb":"default_value","fpc":"not_flight_plan_correlated","aff":"default_value","stp":"default_value","kos":"background_service_used","ama":"track_not_resulting_amalgamation_process","md4":"no_mode_4_interrogation","me":"default_value","mi":"default_value","md5":"no_mode_5_interrogation","cst":"default_value","psr":"age_last_psr_track_higher_than_system_dependent_threshold","ssr":"default_value","mds":"default_value","ads":"age_last_ads_b_track_higher_than_system_dependent_threshold","suc":"default_value","aac":"default_value"},"modeOfmovement":{"trans":"constant_course","long":"constant_groundspeed","vert":"climb","adf":"no_altitude_discrepancy"},"flightLevel":56,"geometricAltitude":6968.75,"barometricAltitude":{"qnh":"no_qnh_correction_applied","altitude":56},"rateOfClimbDescent":2412.5}`)
 
 	uap062 := uap.Cat062V119
-	data, _ := goasterix.HexStringToByte(input)
+	data, _ := util.HexStringToByte(input)
 	rec := new(goasterix.Record)
 	_, err := rec.Decode(data, uap062)
 

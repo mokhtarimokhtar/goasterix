@@ -2,11 +2,12 @@ package goasterix
 
 import (
 	"github.com/mokhtarimokhtar/goasterix/uap"
+	"github.com/mokhtarimokhtar/goasterix/util"
 	"testing"
 )
 
 func benchmarkRecordDecode(input string, items uap.StandardUAP, b *testing.B) {
-	data, _ := HexStringToByte(input)
+	data, _ := util.HexStringToByte(input)
 	for n := 0; n < b.N; n++ {
 		rec := new(Record)
 		unRead, err := rec.Decode(data, items)
@@ -70,7 +71,7 @@ func BenchmarkRecordDecode_Len73(b *testing.B) {
 }
 
 func benchmarkDataBlockDecode(input string, b *testing.B) {
-	data, _ := HexStringToByte(input)
+	data, _ := util.HexStringToByte(input)
 	for n := 0; n < b.N; n++ {
 		dataB := NewDataBlock()
 		unRead, err := dataB.Decode(data)
@@ -92,7 +93,7 @@ func BenchmarkDataBlock_Len280(b *testing.B) {
 }
 
 func benchmarkWrapperDataBlockDecode(input string, b *testing.B) {
-	data, _ := HexStringToByte(input)
+	data, _ := util.HexStringToByte(input)
 	for n := 0; n < b.N; n++ {
 		dataB, _ := NewWrapperDataBlock()
 		unRead, err := dataB.Decode(data)

@@ -1,8 +1,7 @@
 package goasterix
 
 import (
-	"bytes"
-	"encoding/hex"
+	"github.com/mokhtarimokhtar/goasterix/util"
 	"io"
 	"testing"
 
@@ -64,7 +63,7 @@ func TestWrapperDataBlockDecode(t *testing.T) {
 
 	for _, row := range dataSet {
 		// Arrange
-		data, _ := HexStringToByte(row.input)
+		data, _ := util.HexStringToByte(row.input)
 		w, _ := NewWrapperDataBlock()
 
 		// Act
@@ -235,7 +234,7 @@ func TestDataBlockDecode(t *testing.T) {
 
 	for _, row := range dataSet {
 		// Arrange
-		data, _ := HexStringToByte(row.input)
+		data, _ := util.HexStringToByte(row.input)
 		dataB := NewDataBlock()
 
 		// Act
@@ -262,7 +261,7 @@ func TestDataBlockDecode(t *testing.T) {
 
 func TestDataBlockPayload(t *testing.T) {
 	// Arrange
-	data, _ := HexStringToByte("30 0118 fff7020836429b52a094c70181091302d06002b7490d0138a178cf422002e79a5d27a00c0060a3280030a4000040063a0743ce5b4020f5fff7020836429b54e000bc020901a2005c7802e800263946e50464b1cb6ca0029ea9491062a4546093880032d4000040059602f639590220f5fff7020836429b58a0909703ff026405a26002bb4066740815f6e795e002e56a0530ffdff860b0d80032fc00004003cf0810c9ef4020fdfff7020836429b56a0775d03700ec205786002be4060910815f9c363a002a49a0f30bfffff60c4600030a4000040057207674a004020fdfff7020836429b55a0468c029804b105786002c57101124d6070d3282002adfa3333a0140060c4600030a4000040026e07d75fc04020f5")
+	data, _ := util.HexStringToByte("30 0118 fff7020836429b52a094c70181091302d06002b7490d0138a178cf422002e79a5d27a00c0060a3280030a4000040063a0743ce5b4020f5fff7020836429b54e000bc020901a2005c7802e800263946e50464b1cb6ca0029ea9491062a4546093880032d4000040059602f639590220f5fff7020836429b58a0909703ff026405a26002bb4066740815f6e795e002e56a0530ffdff860b0d80032fc00004003cf0810c9ef4020fdfff7020836429b56a0775d03700ec205786002be4060910815f9c363a002a49a0f30bfffff60c4600030a4000040057207674a004020fdfff7020836429b55a0468c029804b105786002c57101124d6070d3282002adfa3333a0140060c4600030a4000040026e07d75fc04020f5")
 	nbOfRecords := 7 // cat + len + 5 records
 	dataB := new(DataBlock)
 	_, _ = dataB.Decode(data)
@@ -280,7 +279,7 @@ func TestDataBlockPayload(t *testing.T) {
 
 func TestDataBlock_String(t *testing.T) {
 	// Arrange
-	data, _ := HexStringToByte("300118fff7020836429b52a094c70181091302d06002b7490d0138a178cf422002e79a5d27a00c0060a3280030a4000040063a0743ce5b4020f5fff7020836429b54e000bc020901a2005c7802e800263946e50464b1cb6ca0029ea9491062a4546093880032d4000040059602f639590220f5fff7020836429b58a0909703ff026405a26002bb4066740815f6e795e002e56a0530ffdff860b0d80032fc00004003cf0810c9ef4020fdfff7020836429b56a0775d03700ec205786002be4060910815f9c363a002a49a0f30bfffff60c4600030a4000040057207674a004020fdfff7020836429b55a0468c029804b105786002c57101124d6070d3282002adfa3333a0140060c4600030a4000040026e07d75fc04020f5")
+	data, _ := util.HexStringToByte("300118fff7020836429b52a094c70181091302d06002b7490d0138a178cf422002e79a5d27a00c0060a3280030a4000040063a0743ce5b4020f5fff7020836429b54e000bc020901a2005c7802e800263946e50464b1cb6ca0029ea9491062a4546093880032d4000040059602f639590220f5fff7020836429b58a0909703ff026405a26002bb4066740815f6e795e002e56a0530ffdff860b0d80032fc00004003cf0810c9ef4020fdfff7020836429b56a0775d03700ec205786002be4060910815f9c363a002a49a0f30bfffff60c4600030a4000040057207674a004020fdfff7020836429b55a0468c029804b105786002c57101124d6070d3282002adfa3333a0140060c4600030a4000040026e07d75fc04020f5")
 	nbOfRecords := 5
 	dataB := new(DataBlock)
 	_, _ = dataB.Decode(data)
@@ -311,7 +310,7 @@ func TestDataBlockDecode_ARTAS(t *testing.T) {
 
 	for _, row := range dataSet {
 		// Arrange
-		data, _ := HexStringToByte(row.input)
+		data, _ := util.HexStringToByte(row.input)
 		dataB := NewDataBlock()
 
 		// Act
@@ -404,61 +403,5 @@ func TestTwoComplement32_NegativeNumber(t *testing.T) {
 	}
 }
 
-func TestHexStringToByte_Valid(t *testing.T) {
-	// Arrange
-	input := "01 0203 04"
-	output := []byte{0x01, 0x02, 0x03, 0x04}
 
-	// Act
-	data, _ := HexStringToByte(input)
-
-	// Assert
-	if bytes.Equal(data, output) == false {
-		t.Errorf("FAIL: data = % X; Expected: % X", data, output)
-	} else {
-		t.Logf("SUCCESS: data = % X; Expected: % X", data, output)
-	}
-}
-
-func TestHexStringToByte_Empty(t *testing.T) {
-	// Arrange
-	input := ""
-	var output []byte
-
-	// Act
-	data, err := HexStringToByte(input)
-
-	// Assert
-	if err != nil {
-		t.Errorf("FAIL: error: %s; Expected: %v", err, nil)
-	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
-	}
-	if bytes.Equal(data, output) == false {
-		t.Errorf("FAIL: data = % X; Expected: % X", data, output)
-	} else {
-		t.Logf("SUCCESS: data = % X; Expected: % X", data, output)
-	}
-}
-
-func TestHexStringToByte_Error(t *testing.T) {
-	// Arrange
-	input := "01 0203 0"
-	var output []byte
-
-	// Act
-	data, err := HexStringToByte(input)
-
-	// Assert
-	if err != hex.ErrLength {
-		t.Errorf("FAIL: error: %s; Expected: %v", err, hex.ErrLength)
-	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, hex.ErrLength)
-	}
-	if bytes.Equal(data, output) == false {
-		t.Errorf("FAIL: % X; Expected: % X", data, output)
-	} else {
-		t.Logf("SUCCESS: % X; Expected: % X", data, output)
-	}
-}
 

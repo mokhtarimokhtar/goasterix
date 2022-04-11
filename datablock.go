@@ -4,11 +4,9 @@ package goasterix
 import (
 	"bytes"
 	"encoding/binary"
-	"encoding/hex"
 	"errors"
 	"github.com/mokhtarimokhtar/goasterix/uap"
 	"math"
-	"strings"
 )
 
 var (
@@ -195,22 +193,3 @@ func TwoComplement32(sizeBits uint8, data uint32) (v int32) {
 	return v
 }
 
-// HexStringToByte converts a hexadecimal string format to an array of byte.
-// It is used to facilitate the testing.
-func HexStringToByte(s string) ([]byte, error) {
-	s = strings.ReplaceAll(s, " ", "")
-	data, err := hex.DecodeString(s)
-	if err != nil {
-		return nil, err
-	}
-	return data, nil
-}
-
-// CleanStringMultiline cleans the escapes characters.
-// It is used to facilitate the testing.
-func CleanStringMultiline(s string) string {
-	s = strings.ReplaceAll(s, "\t", "")
-	s = strings.ReplaceAll(s, "\n", "")
-	s = strings.ReplaceAll(s, " ", "")
-	return s
-}

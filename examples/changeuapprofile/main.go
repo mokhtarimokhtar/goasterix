@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/mokhtarimokhtar/goasterix"
 	"github.com/mokhtarimokhtar/goasterix/uap"
+	"github.com/mokhtarimokhtar/goasterix/util"
 )
 
 func main() {
@@ -25,7 +26,7 @@ func main() {
 
 	for _, data := range dataSet {
 		w, _ := goasterix.NewWrapperDataBlock()
-		tmp, _ := goasterix.HexStringToByte(data)
+		tmp, _ := util.HexStringToByte(data)
 		_, err := w.Decode(tmp) // data contains a set of DataBlocks
 		if err != nil {
 			fmt.Println("ERROR Wrapper: ", err)

@@ -2,6 +2,7 @@ package transform
 
 import (
 	"encoding/json"
+	"github.com/mokhtarimokhtar/goasterix/util"
 	"reflect"
 	"testing"
 
@@ -19,7 +20,7 @@ func TestCat063Model_ToJsonRecord(t *testing.T) {
 	output := []byte(`{"dataSourceIdentifier":{"sac":9,"sic":12},"timeOfMessage":62064.8984375,"sensorIdentifier":{"sac":8,"sic":41},"sensorConfigStatus":{"con":"operational","psr":"psr_go","ssr":"ssr_go","mds":"mode_s_go","ads":"ads_go","mlt":"mlt_go"},"timeStampingBias":0,"modeSRangeGainAndBias":{"srg":0.00018,"srb":0},"psrRangeGainAndBias":{"prg":0,"prb":0}}`)
 
 	uap063 := uap.Cat063V16
-	data, _ := goasterix.HexStringToByte(input)
+	data, _ := util.HexStringToByte(input)
 	rec := goasterix.NewRecord()
 	_, err := rec.Decode(data, uap063)
 

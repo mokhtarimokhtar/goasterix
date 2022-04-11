@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/mokhtarimokhtar/goasterix"
 	"github.com/mokhtarimokhtar/goasterix/uap"
+	"github.com/mokhtarimokhtar/goasterix/util"
 	"reflect"
 	"testing"
 )
@@ -25,7 +26,7 @@ func TestCat255STRModel_ToJsonRecord(t *testing.T) {
 	for _, row := range dataSet {
 		// Arrange
 		uap255 := uap.Cat255StrV51
-		data, _ := goasterix.HexStringToByte(row.input)
+		data, _ := util.HexStringToByte(row.input)
 		rec := new(goasterix.Record)
 		_, err := rec.Decode(data, uap255)
 

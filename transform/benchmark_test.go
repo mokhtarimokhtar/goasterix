@@ -3,11 +3,12 @@ package transform
 import (
 	"github.com/mokhtarimokhtar/goasterix"
 	"github.com/mokhtarimokhtar/goasterix/uap"
+	"github.com/mokhtarimokhtar/goasterix/util"
 	"testing"
 )
 
 func benchmarkWriteModel(input string, items uap.StandardUAP, b *testing.B) {
-	data, _ := goasterix.HexStringToByte(input)
+	data, _ := util.HexStringToByte(input)
 	//rec := goasterix.NewRecord()
 	rec := new(goasterix.Record)
 	unRead, err := rec.Decode(data, items)

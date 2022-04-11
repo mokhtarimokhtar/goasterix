@@ -59,12 +59,28 @@ type MsgType struct {
 }
 
 type Cat004Model struct {
-	SacSic         *SourceIdentifier  `json:"sourceIdentifier,omitempty"`
-	MessageType    MsgType            `json:"messageType,omitempty"`
-	SDPSIdentifier []SourceIdentifier `json:"sdpsIdentifier,omitempty"`
-	TimeOfMessage  float64            `json:"timeOfDay,omitempty"`
+	SacSic               *SourceIdentifier  `json:"sourceIdentifier,omitempty"`
+	MessageType          MsgType            `json:"messageType,omitempty"`
+	SDPSIdentifier       []SourceIdentifier `json:"sdpsIdentifier,omitempty"`
+	TimeOfMessage        float64            `json:"timeOfDay,omitempty"`
+	AlertIdentifier      uint16             `json:"alertIdentifier"`
+	AlertStatus          uint8              `json:"alertStatus"`
+	TrackNumber1         uint16             `json:"trackNumber1"`
+	VerticalDeviation    int16              `json:"verticalDeviation,omitempty"`
+	TransversalDeviation float32            `json:"transversalDeviation,omitempty"`
 }
 
+// todo case 7
+// todo case 9
+// todo case 10
+// todo case 11
+// todo case 13
+// todo case 15
+// todo case 16
+// todo case 17
+// todo case 18
+// todo case 20
+// todo case 21
 func (data *Cat004Model) write(rec goasterix.Record) {
 	for _, item := range rec.Items {
 		switch item.Meta.FRN {
@@ -83,10 +99,26 @@ func (data *Cat004Model) write(rec goasterix.Record) {
 			// Data Item I004/015 SDPS Identifier
 			data.SDPSIdentifier = getSDPSIdentifier(*item.Repetitive)
 		case 4:
-			// decode timeOfDay
+			// decode timeOfMessage
 			var payload [3]byte
 			copy(payload[:], item.Fixed.Data[:])
 			data.TimeOfMessage, _ = timeOfDay(payload)
+		case 5:
+			// I004/040 Alert Identifier
+			data.AlertIdentifier = uint16(item.Fixed.Data[0])<<8 + uint16(item.Fixed.Data[1])
+		case 6:
+			// I004/045 Alert Status
+			data.AlertStatus = item.Fixed.Data[0] & 0x0E >> 1
+		case 8:
+			// I004/030 Track Number 1
+			data.TrackNumber1 = uint16(item.Fixed.Data[0])<<8 + uint16(item.Fixed.Data[1])
+		case 12:
+			// I004/076, Vertical Deviation in ft, LSB = 25ft
+			data.VerticalDeviation = (int16(item.Fixed.Data[0])<<8 + int16(item.Fixed.Data[1])) * 25
+		case 14:
+			// I004/075, Transversal Distance Deviation
+			tmp := uint32(item.Fixed.Data[0])<<16 + uint32(item.Fixed.Data[1])<<8 + uint32(item.Fixed.Data[2])
+			data.TransversalDeviation = float32(goasterix.TwoComplement32(24, tmp)) * 0.5
 		}
 	}
 }

@@ -6,10 +6,9 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"errors"
+	"github.com/mokhtarimokhtar/goasterix/uap"
 	"math"
 	"strings"
-
-	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
 var (
@@ -155,17 +154,6 @@ func (db DataBlock) Payload() [][]byte {
 	return pd
 }
 
-// HexStringToByte converts a hexadecimal string format to an array of byte.
-// It is used to facilitate the testing.
-func HexStringToByte(s string) ([]byte, error) {
-	s = strings.ReplaceAll(s, " ", "")
-	data, err := hex.DecodeString(s)
-	if err != nil {
-		return nil, err
-	}
-	return data, nil
-}
-
 // TwoComplement16 returns an int16 (signed).
 // sizeBits is the number of bit complement.
 func TwoComplement16(sizeBits uint8, data uint16) (v int16) {
@@ -205,4 +193,24 @@ func TwoComplement32(sizeBits uint8, data uint32) (v int32) {
 	}*/
 
 	return v
+}
+
+// HexStringToByte converts a hexadecimal string format to an array of byte.
+// It is used to facilitate the testing.
+func HexStringToByte(s string) ([]byte, error) {
+	s = strings.ReplaceAll(s, " ", "")
+	data, err := hex.DecodeString(s)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
+// CleanStringMultiline cleans the escapes characters.
+// It is used to facilitate the testing.
+func CleanStringMultiline(s string) string {
+	s = strings.ReplaceAll(s, "\t", "")
+	s = strings.ReplaceAll(s, "\n", "")
+	s = strings.ReplaceAll(s, " ", "")
+	return s
 }

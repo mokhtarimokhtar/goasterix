@@ -89,9 +89,16 @@ func TestCat004Model_ToJsonRecord(t *testing.T) {
 			"timeOfDay":54723,
 			"alertIdentifier":0,
 			"alertStatus":4,
-			"trackNumber1":1,
+			"trackNumberOne":1,
 			"verticalDeviation":-4400,
-			"transversalDeviation":-5036
+			"transversalDeviation":-5036,
+			"aircraftOne":{
+				"aircraftIdentifier":"APM0001",
+				"mode3ACodeAircraft":"1",
+				"predictedConflictPositionCartesian":{"x":385679,"y":-273747.5,"z":6125},
+				"modeSIdentifier":"APM0001",
+				"flightPlanNumber":12345
+				}
 			}
 			`
 	output := []byte(util.CleanStringMultiline(strOutput))

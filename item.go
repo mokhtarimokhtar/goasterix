@@ -148,6 +148,7 @@ func (c *Compound) Payload() []byte {
 	return p
 }
 
+// todo make string by items
 func (c *Compound) String() string {
 	return hex.EncodeToString(c.Payload())
 }

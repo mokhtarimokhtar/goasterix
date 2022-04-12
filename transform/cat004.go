@@ -1,6 +1,10 @@
 package transform
 
-import "github.com/mokhtarimokhtar/goasterix"
+import (
+	"github.com/mokhtarimokhtar/goasterix"
+	"math"
+	"strconv"
+)
 
 const (
 	msgTypeCode000, msgTypeDesc000 string = "UNDEFINED", "undefined_message_type"
@@ -59,15 +63,16 @@ type MsgType struct {
 }
 
 type Cat004Model struct {
-	SacSic               *SourceIdentifier  `json:"sourceIdentifier,omitempty"`
-	MessageType          MsgType            `json:"messageType,omitempty"`
-	SDPSIdentifier       []SourceIdentifier `json:"sdpsIdentifier,omitempty"`
-	TimeOfMessage        float64            `json:"timeOfDay,omitempty"`
-	AlertIdentifier      uint16             `json:"alertIdentifier"`
-	AlertStatus          uint8              `json:"alertStatus"`
-	TrackNumber1         uint16             `json:"trackNumber1"`
-	VerticalDeviation    int16              `json:"verticalDeviation,omitempty"`
-	TransversalDeviation float32            `json:"transversalDeviation,omitempty"`
+	SacSic               *SourceIdentifier       `json:"sourceIdentifier,omitempty"`
+	MessageType          MsgType                 `json:"messageType,omitempty"`
+	SDPSIdentifier       []SourceIdentifier      `json:"sdpsIdentifier,omitempty"`
+	TimeOfMessage        float64                 `json:"timeOfDay,omitempty"`
+	AlertIdentifier      uint16                  `json:"alertIdentifier"`
+	AlertStatus          uint8                   `json:"alertStatus"`
+	TrackNumberOne       uint16                  `json:"trackNumberOne"`
+	VerticalDeviation    int16                   `json:"verticalDeviation,omitempty"`
+	TransversalDeviation float32                 `json:"transversalDeviation,omitempty"`
+	AircraftOne          *AircraftIdentification `json:"aircraftOne,omitempty"`
 }
 
 // todo case 7
@@ -111,7 +116,12 @@ func (data *Cat004Model) write(rec goasterix.Record) {
 			data.AlertStatus = item.Fixed.Data[0] & 0x0E >> 1
 		case 8:
 			// I004/030 Track Number 1
-			data.TrackNumber1 = uint16(item.Fixed.Data[0])<<8 + uint16(item.Fixed.Data[1])
+			data.TrackNumberOne = uint16(item.Fixed.Data[0])<<8 + uint16(item.Fixed.Data[1])
+		case 9:
+			// Aircraft Derived Data
+			tmp := getAircraft(*item.Compound)
+			data.AircraftOne = &tmp
+
 		case 12:
 			// I004/076, Vertical Deviation in ft, LSB = 25ft
 			data.VerticalDeviation = (int16(item.Fixed.Data[0])<<8 + int16(item.Fixed.Data[1])) * 25
@@ -289,4 +299,159 @@ func getSDPSIdentifier(item goasterix.Repetitive) []SourceIdentifier {
 		sdps = append(sdps, tmp)
 	}
 	return sdps
+}
+
+// AircraftIdentification
+// Identification & Characteristics of Aircraft 1 Involved in the Conflict.
+type AircraftIdentification struct {
+	AircraftIdentifier                 string                     `json:"aircraftIdentifier,omitempty"`
+	Mode3ACodeAircraft                 string                     `json:"mode3ACodeAircraft,omitempty"`
+	PredictedConflictPositionWGS84     *ConflictPositionWGS84     `json:"predictedConflictPosition,omitempty"`
+	PredictedConflictPositionCartesian *ConflictPositionCartesian `json:"predictedConflictPositionCartesian,omitempty"`
+	TimeToThreshold                    float64                    `json:"timeToThreshold,omitempty"`
+	DistanceToThreshold                float64                    `json:"DistanceToThreshold,omitempty"`
+	ModeSIdentifier                    string                     `json:"modeSIdentifier,omitempty"`
+	FlightPlanNumber                   uint32                     `json:"flightPlanNumber,omitempty"`
+	ClearedFlightLevel                 float64                    `json:"clearedFlightLevel,omitempty"`
+	AircraftCharacteristics            *Characteristics           `json:"aircraftCharacteristics,omitempty"`
+}
+type ConflictPositionWGS84 struct {
+	Latitude  float64 `json:"latitude"`
+	Longitude float64 `json:"longitude"`
+	Altitude  int32   `json:"altitude"`
+}
+
+type ConflictPositionCartesian struct {
+	X float64 `json:"x"`
+	Y float64 `json:"y"`
+	Z int32   `json:"z"`
+}
+
+type Characteristics struct {
+	AT   string `json:"at"`
+	FR   string `json:"fr"`
+	RVSM string `json:"rvsm"`
+	HPR  string `json:"hpr"`
+	CDM  string `json:"cdm,omitempty"`
+	PRI  string `json:"pri,omitempty"`
+	GV   string `json:"gv,omitempty"`
+}
+
+func getCharacteristics(item goasterix.Extended) *Characteristics {
+	var cha = new(Characteristics)
+	tmp := item.Primary[0] & 0xc0 >> 6
+	switch tmp {
+	case 0:
+		cha.AT = "unknown"
+	case 1:
+		cha.AT = "general_air_traffic"
+	case 2:
+		cha.AT = "operational_air_traffic"
+	case 3:
+		cha.AT = "not_applicable"
+	}
+
+	tmp = item.Primary[0] & 0x30 >> 4
+	switch tmp {
+	case 0:
+		cha.FR = "instrument_flight_rules"
+	case 1:
+		cha.FR = "visual_flight_rules"
+	case 2:
+		cha.FR = "not_applicable"
+	case 3:
+		cha.FR = "controlled_visual_flight_rules"
+	}
+
+	tmp = item.Primary[0] & 0x0c >> 2
+	switch tmp {
+	case 0:
+		cha.RVSM = "unknown"
+	case 1:
+		cha.RVSM = "approved"
+	case 2:
+		cha.RVSM = "exempt"
+	case 3:
+		cha.RVSM = "not_approved"
+	}
+
+	if item.Primary[0]&0x02 != 0 {
+		cha.HPR = "high_priority_flight"
+	} else {
+		cha.HPR = "normal_priority_flight"
+	}
+	if item.Secondary != nil {
+		tmp = item.Secondary[0] & 0xc0 >> 6
+		switch tmp {
+		case 0:
+			cha.CDM = "maintaining"
+		case 1:
+			cha.CDM = "climbing"
+		case 2:
+			cha.CDM = "descending"
+		case 3:
+			cha.CDM = "invalid"
+		}
+		if item.Secondary[0]&0x20 != 0 {
+			cha.PRI = "primary_target"
+		} else {
+			cha.PRI = "non_primary_target"
+		}
+		if item.Secondary[0]&0x10 != 0 {
+			cha.GV = "ground_vehicle"
+		} else {
+			cha.GV = "default"
+		}
+
+	}
+	return cha
+}
+
+// Data Item I004/170, Aircraft Identification & Characteristics 1
+func getAircraft(items goasterix.Compound) AircraftIdentification {
+	var ai AircraftIdentification
+	for _, item := range items.Secondary {
+		switch item.Meta.FRN {
+		case 1:
+			ai.AircraftIdentifier = string(item.Fixed.Data)
+		case 2:
+			tmp := uint16(item.Fixed.Data[0])&0x000F<<8 + uint16(item.Fixed.Data[1])&0x00FF
+			ai.Mode3ACodeAircraft = strconv.FormatUint(uint64(tmp), 8)
+		case 3:
+			var pos = new(ConflictPositionWGS84)
+			lsb := 180 / math.Pow(2, 25)
+
+			pos.Latitude = float64(int32(item.Fixed.Data[0])<<24+int32(item.Fixed.Data[1])<<16+int32(item.Fixed.Data[2])<<8+int32(item.Fixed.Data[3])) * lsb
+			pos.Longitude = float64(int32(item.Fixed.Data[4])<<24+int32(item.Fixed.Data[5])<<16+int32(item.Fixed.Data[6])<<8+int32(item.Fixed.Data[7])) * lsb
+			pos.Altitude = int32(int16(item.Fixed.Data[8])<<8+int16(item.Fixed.Data[9])) * 25
+
+			ai.PredictedConflictPositionWGS84 = pos
+		case 4:
+			var pos = new(ConflictPositionCartesian)
+			tmpX := uint32(item.Fixed.Data[0])<<16 + uint32(item.Fixed.Data[1])<<8 + uint32(item.Fixed.Data[2])
+			pos.X = float64(goasterix.TwoComplement32(24, tmpX)) * 0.5
+
+			tmpY := uint32(item.Fixed.Data[3])<<16 + uint32(item.Fixed.Data[4])<<8 + uint32(item.Fixed.Data[5])
+			pos.Y = float64(goasterix.TwoComplement32(24, tmpY)) * 0.5
+
+			pos.Z = int32(int16(item.Fixed.Data[6])<<8+int16(item.Fixed.Data[7])) * 25
+			ai.PredictedConflictPositionCartesian = pos
+		case 5:
+			tmp := uint32(item.Fixed.Data[0])<<16 + uint32(item.Fixed.Data[1])<<8 + uint32(item.Fixed.Data[2])
+			ai.TimeToThreshold = float64(goasterix.TwoComplement32(24, tmp)) / 128
+		case 6:
+			ai.DistanceToThreshold = float64(uint16(item.Fixed.Data[0])<<8+uint16(item.Fixed.Data[1])) * 0.5
+		case 7:
+			ai.AircraftCharacteristics = getCharacteristics(*item.Extended)
+		case 8:
+			var payload [6]byte
+			copy(payload[:], item.Fixed.Data[:])
+			ai.ModeSIdentifier, _ = modeSIdentification(payload)
+		case 9:
+			ai.FlightPlanNumber = uint32(item.Fixed.Data[0])<<24 + uint32(item.Fixed.Data[1])<<16 + uint32(item.Fixed.Data[2])<<8 + uint32(item.Fixed.Data[3])
+		case 10:
+			ai.ClearedFlightLevel = float64(int16(item.Fixed.Data[0])<<8+int16(item.Fixed.Data[1])) * 0.25
+		}
+	}
+	return ai
 }

@@ -14,47 +14,47 @@ const (
 	msgTypeCode004, msgTypeDesc004 string = "MSAW", "minimum_safe_altitude_warning"
 	msgTypeCode005, msgTypeDesc005 string = "APW", "area_proximity_warning"
 	msgTypeCode006, msgTypeDesc006 string = "CLAM", "clearance_level_adherence_monitor"
-	msgTypeCode007, msgTypeDesc007 string = "STCA", "Short Term Conflict Alert ()"
+	msgTypeCode007, msgTypeDesc007 string = "STCA", "short_term_conflict_alert"
 	msgTypeCode008, msgTypeDesc008 string = "APM", "approach_path_monitor"
-	msgTypeCode009, msgTypeDesc009 string = "ALM", "RIMCAS Arrival / Landing Monitor ()"
-	msgTypeCode010, msgTypeDesc010 string = "WRA", "RIMCAS Arrival / Departure Wrong Runway Alert ()"
-	msgTypeCode011, msgTypeDesc011 string = "OTA", "RIMCAS Arrival / Departure Opposite Traffic Alert ()"
-	msgTypeCode012, msgTypeDesc012 string = "RDM", "RIMCAS Departure Monitor ()"
-	msgTypeCode013, msgTypeDesc013 string = "RCM", "RIMCAS Runway / Taxiway Crossing Monitor ()"
-	msgTypeCode014, msgTypeDesc014 string = "TSM", "RIMCAS Taxiway Separation Monitor ()"
-	msgTypeCode015, msgTypeDesc015 string = "UTMM", "RIMCAS Unauthorized Taxiway Movement Monitor()"
-	msgTypeCode016, msgTypeDesc016 string = "SBOA", "RIMCAS Stop Bar Overrun Alert ()"
-	msgTypeCode017, msgTypeDesc017 string = "EOC", "End Of Conflict ()"
-	msgTypeCode018, msgTypeDesc018 string = "ACASRA", "ACAS Resolution Advisory ()"
-	msgTypeCode019, msgTypeDesc019 string = "NTCA", "Near Term Conflict Alert ()"
-	msgTypeCode020, msgTypeDesc020 string = "DBPSM", "Downlinked Barometric Pressure Setting Monitor ()"
-	msgTypeCode021, msgTypeDesc021 string = "SAM", "Speed Adherence Monitor ()"
-	msgTypeCode022, msgTypeDesc022 string = "OCAT", "Outside Controlled Airspace Tool ()"
-	msgTypeCode023, msgTypeDesc023 string = "VCD", "Vertical Conflict Detection ()"
-	msgTypeCode024, msgTypeDesc024 string = "VRAM", "Vertical Rate Adherence Monitor ()"
-	msgTypeCode025, msgTypeDesc025 string = "CHAM", "Cleared Heading Adherence Monitor ()"
-	msgTypeCode026, msgTypeDesc026 string = "DSAM", "Downlinked Selected Altitude Monitor ()"
-	msgTypeCode027, msgTypeDesc027 string = "HAM", "Holding Adherence Monitor ()"
-	msgTypeCode028, msgTypeDesc028 string = "VPM", "Vertical Path Monitor ()"
-	msgTypeCode029, msgTypeDesc029 string = "TTA", "RIMCAS Taxiway Traffic Alert ()"
-	msgTypeCode030, msgTypeDesc030 string = "CRA", "RIMCAS Arrival/Departure Close Runway Alert ()"
-	msgTypeCode031, msgTypeDesc031 string = "ASM", "RIMCAS Arrival/Departure Aircraft Separation Monitor()"
-	msgTypeCode032, msgTypeDesc032 string = "IAVM", "RIMCAS ILS Area Violation Monitor ()"
-	msgTypeCode033, msgTypeDesc033 string = "FTD", "Final Target Distance Indicator ()"
-	msgTypeCode034, msgTypeDesc034 string = "ITD", "Initial Target Distance Indicator ()"
-	msgTypeCode035, msgTypeDesc035 string = "IIA", "Wake Vortex Indicator Infringement Alert ()"
-	msgTypeCode036, msgTypeDesc036 string = "SQW", "Sequence Warning ()"
-	msgTypeCode037, msgTypeDesc037 string = "CUW", "Catch Up Warning ()"
-	msgTypeCode038, msgTypeDesc038 string = "CATC", "Conflicting ATC Clearances ()"
-	msgTypeCode039, msgTypeDesc039 string = "NOCLR", "No ATC Clearance ()"
-	msgTypeCode040, msgTypeDesc040 string = "NOMOV", "Aircraft Not Moving despite ATC Clearance ()"
-	msgTypeCode041, msgTypeDesc041 string = "NOH", "Aircraft leaving/entering the aerodrome area without proper handover ()"
-	msgTypeCode042, msgTypeDesc042 string = "WRTY", "Wrong Runway or Taxiway Type ()"
-	msgTypeCode043, msgTypeDesc043 string = "STOCC", "Stand Occupied ()"
-	msgTypeCode044, msgTypeDesc044 string = "ONGOING", "Ongoing Alert ()"
-	msgTypeCode097, msgTypeDesc097 string = "LTW", "Lost Track Warning ()"
-	msgTypeCode098, msgTypeDesc098 string = "HVI", "Holding Volume Infringement ()"
-	msgTypeCode099, msgTypeDesc099 string = "AIW", "Airspace Infringement Warning ()"
+	msgTypeCode009, msgTypeDesc009 string = "ALM", "rimcas_arrival__Landing_monitor"
+	msgTypeCode010, msgTypeDesc010 string = "WRA", "rimcas_arrival__departure_wrong_runway_alert"
+	msgTypeCode011, msgTypeDesc011 string = "OTA", "rimcas_arrival__departure_opposite_traffic_alert"
+	msgTypeCode012, msgTypeDesc012 string = "RDM", "rimcas_departure_monitor"
+	msgTypeCode013, msgTypeDesc013 string = "RCM", "rimcas_runway__taxiway_crossing_monitor"
+	msgTypeCode014, msgTypeDesc014 string = "TSM", "rimcas_taxiway_separation_monitor"
+	msgTypeCode015, msgTypeDesc015 string = "UTMM", "rimcas_unauthorized_taxiway_movement_monitor"
+	msgTypeCode016, msgTypeDesc016 string = "SBOA", "rimcas_stop_bar_overrun_alert"
+	msgTypeCode017, msgTypeDesc017 string = "EOC", "end_of_conflict"
+	msgTypeCode018, msgTypeDesc018 string = "ACASRA", "acas_resolution_advisory"
+	msgTypeCode019, msgTypeDesc019 string = "NTCA", "near_term_conflict_alert"
+	msgTypeCode020, msgTypeDesc020 string = "DBPSM", "downlinked_barometric_pressure_setting_monitor"
+	msgTypeCode021, msgTypeDesc021 string = "SAM", "speed_adherence_monitor"
+	msgTypeCode022, msgTypeDesc022 string = "OCAT", "outside_controlled_airspace_tool"
+	msgTypeCode023, msgTypeDesc023 string = "VCD", "vertical_conflict_detection"
+	msgTypeCode024, msgTypeDesc024 string = "VRAM", "vertical_rate_adherence_monitor"
+	msgTypeCode025, msgTypeDesc025 string = "CHAM", "cleared_heading_adherence_monitor"
+	msgTypeCode026, msgTypeDesc026 string = "DSAM", "downlinked_selected_altitude_monitor"
+	msgTypeCode027, msgTypeDesc027 string = "HAM", "holding_adherence_monitor"
+	msgTypeCode028, msgTypeDesc028 string = "VPM", "vertical_path_monitor"
+	msgTypeCode029, msgTypeDesc029 string = "TTA", "rimcas_taxiway_traffic_alert"
+	msgTypeCode030, msgTypeDesc030 string = "CRA", "rimcas_arrival__departure_close_runway_alert"
+	msgTypeCode031, msgTypeDesc031 string = "ASM", "rimcas_arrival__departure_aircraft_separation_monitor"
+	msgTypeCode032, msgTypeDesc032 string = "IAVM", "rimcas_ils_area_violation_monitor"
+	msgTypeCode033, msgTypeDesc033 string = "FTD", "final_target_distance_indicator"
+	msgTypeCode034, msgTypeDesc034 string = "ITD", "initial_target_distance_indicator"
+	msgTypeCode035, msgTypeDesc035 string = "IIA", "wake_vortex_indicator_infringement_alert"
+	msgTypeCode036, msgTypeDesc036 string = "SQW", "sequence_warning"
+	msgTypeCode037, msgTypeDesc037 string = "CUW", "catch_up_warning"
+	msgTypeCode038, msgTypeDesc038 string = "CATC", "conflicting_atc_clearances"
+	msgTypeCode039, msgTypeDesc039 string = "NOCLR", "no_atc_clearance"
+	msgTypeCode040, msgTypeDesc040 string = "NOMOV", "aircraft_not_moving_despite_atc_clearance"
+	msgTypeCode041, msgTypeDesc041 string = "NOH", "aircraft_leaving__entering_the_aerodrome_area_without_proper_handover"
+	msgTypeCode042, msgTypeDesc042 string = "WRTY", "wrong_runway_or_taxiway_type"
+	msgTypeCode043, msgTypeDesc043 string = "STOCC", "stand_occupied"
+	msgTypeCode044, msgTypeDesc044 string = "ONGOING", "ongoing_alert"
+	msgTypeCode097, msgTypeDesc097 string = "LTW", "lost_track_warning"
+	msgTypeCode098, msgTypeDesc098 string = "HVI", "holding_volume_infringement"
+	msgTypeCode099, msgTypeDesc099 string = "AIW", "airspace_infringement_warning"
 )
 
 type MsgType struct {
@@ -64,15 +64,17 @@ type MsgType struct {
 
 type Cat004Model struct {
 	SacSic               *SourceIdentifier       `json:"sourceIdentifier,omitempty"`
-	MessageType          MsgType                 `json:"messageType,omitempty"`
+	MessageType          *MsgType                `json:"messageType,omitempty"`
 	SDPSIdentifier       []SourceIdentifier      `json:"sdpsIdentifier,omitempty"`
-	TimeOfMessage        float64                 `json:"timeOfDay,omitempty"`
+	TimeOfMessage        float64                 `json:"timeOfMessage,omitempty"`
 	AlertIdentifier      uint16                  `json:"alertIdentifier"`
 	AlertStatus          uint8                   `json:"alertStatus"`
-	TrackNumberOne       uint16                  `json:"trackNumberOne"`
+	TrackNumberOne       uint16                  `json:"trackNumberOne,omitempty"`
 	VerticalDeviation    int16                   `json:"verticalDeviation,omitempty"`
 	TransversalDeviation float32                 `json:"transversalDeviation,omitempty"`
 	AircraftOne          *AircraftIdentification `json:"aircraftOne,omitempty"`
+	AircraftTwo          *AircraftIdentification `json:"aircraftTwo,omitempty"`
+	TrackNumberTwo       uint16                  `json:"trackNumberTwo,omitempty"`
 }
 
 // todo case 7
@@ -80,8 +82,6 @@ type Cat004Model struct {
 // todo case 11
 // todo case 13
 // todo case 15
-// todo case 16
-// todo case 17
 // todo case 18
 // todo case 20
 // todo case 21
@@ -117,7 +117,7 @@ func (data *Cat004Model) write(rec goasterix.Record) {
 			// I004/030 Track Number 1
 			data.TrackNumberOne = uint16(item.Fixed.Data[0])<<8 + uint16(item.Fixed.Data[1])
 		case 9:
-			// Aircraft Derived Data
+			// I004/170, Aircraft Identification & Characteristics 1
 			tmp := getAircraft(*item.Compound)
 			data.AircraftOne = &tmp
 
@@ -128,13 +128,22 @@ func (data *Cat004Model) write(rec goasterix.Record) {
 			// I004/075, Transversal Distance Deviation
 			tmp := uint32(item.Fixed.Data[0])<<16 + uint32(item.Fixed.Data[1])<<8 + uint32(item.Fixed.Data[2])
 			data.TransversalDeviation = float32(goasterix.TwoComplement32(24, tmp)) * 0.5
+		//case 15:
+		// Data Item I004/100, Area Definition
+		case 16:
+			// I004/035 Track Number 2
+			data.TrackNumberTwo = uint16(item.Fixed.Data[0])<<8 + uint16(item.Fixed.Data[1])
+		case 17:
+			// I004/171, Aircraft Identification & Characteristics 2
+			tmp := getAircraft(*item.Compound)
+			data.AircraftTwo = &tmp
 		}
 	}
 }
 
 // MessageType returns a struct of strings of message type.
 // Ref. 6.2.1 Data Item I004/000, Message Type
-func messageTypeCat004(data [1]byte) MsgType {
+func messageTypeCat004(data [1]byte) *MsgType {
 	var msg MsgType
 	msgType := data[0]
 	switch msgType {
@@ -285,7 +294,7 @@ func messageTypeCat004(data [1]byte) MsgType {
 		msg.Desc = msgTypeDesc000
 	}
 
-	return msg
+	return &msg
 }
 
 func getSDPSIdentifier(item goasterix.Repetitive) []SourceIdentifier {

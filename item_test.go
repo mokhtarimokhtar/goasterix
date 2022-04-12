@@ -293,18 +293,18 @@ func TestItem_Payload(t *testing.T) {
 
 }
 
+// Test all item string
 func TestItem_String(t *testing.T) {
 	// setup
-	type dataTest struct {
-		TestCaseName string
-		input        Item
-		output       string
-		len          int
+	type testCase struct {
+		Name   string
+		input  Item
+		output string
 	}
 	// Arrange
-	dataSet := []dataTest{
+	dataSet := []testCase{
 		{
-			TestCaseName: "testcase 1",
+			Name: "testcase 1",
 			input: Item{
 				Meta: MetaItem{
 					FRN:         1,
@@ -317,14 +317,13 @@ func TestItem_String(t *testing.T) {
 				},
 			},
 			output: "ffff",
-			len:    10 + 4,
 		},
 		{
-			TestCaseName: "testcase 2",
+			Name: "testcase 2",
 			input: Item{
 				Meta: MetaItem{
 					FRN:         1,
-					DataItem:    "I000/010",
+					DataItem:    "I000/020",
 					Description: "Test item",
 					Type:        uap.Extended,
 				},
@@ -334,14 +333,13 @@ func TestItem_String(t *testing.T) {
 				},
 			},
 			output: "fffffe",
-			len:    10 + 6,
 		},
 		{
-			TestCaseName: "testcase 3",
+			Name: "testcase 3",
 			input: Item{
 				Meta: MetaItem{
 					FRN:         1,
-					DataItem:    "I000/010",
+					DataItem:    "I000/030",
 					Description: "Test item",
 					Type:        uap.Explicit,
 				},
@@ -351,14 +349,13 @@ func TestItem_String(t *testing.T) {
 				},
 			},
 			output: "04ffffff",
-			len:    10 + 8,
 		},
 		{
-			TestCaseName: "testcase 4",
+			Name: "testcase 4",
 			input: Item{
 				Meta: MetaItem{
 					FRN:         1,
-					DataItem:    "I000/010",
+					DataItem:    "I000/040",
 					Description: "Test item",
 					Type:        uap.Repetitive,
 				},
@@ -368,14 +365,13 @@ func TestItem_String(t *testing.T) {
 				},
 			},
 			output: "02ffff",
-			len:    10 + 6,
 		},
 		{
-			TestCaseName: "testcase 5",
+			Name: "testcase 5",
 			input: Item{
 				Meta: MetaItem{
 					FRN:         1,
-					DataItem:    "I000/010",
+					DataItem:    "I000/050",
 					Description: "Test item",
 					Type:        uap.Compound,
 				},
@@ -386,7 +382,7 @@ func TestItem_String(t *testing.T) {
 							Meta: MetaItem{
 								FRN:         1,
 								DataItem:    "I000/010",
-								Description: "Test item",
+								Description: "Test item 010",
 								Type:        uap.Fixed,
 							},
 							Fixed: &Fixed{
@@ -396,8 +392,8 @@ func TestItem_String(t *testing.T) {
 						{
 							Meta: MetaItem{
 								FRN:         1,
-								DataItem:    "I000/010",
-								Description: "Test item",
+								DataItem:    "I000/020",
+								Description: "Test item 020",
 								Type:        uap.Fixed,
 							},
 							Fixed: &Fixed{
@@ -407,8 +403,7 @@ func TestItem_String(t *testing.T) {
 					},
 				},
 			},
-			output: "c0ffffffff",
-			len:    10 + 10,
+			output: "[primary: c0][I000/010: ffff][I000/020: ffff]",
 		},
 	}
 	for _, row := range dataSet {
@@ -416,16 +411,10 @@ func TestItem_String(t *testing.T) {
 		s := row.input.String()
 
 		// Assert
-		if len(s) != row.len {
-			t.Errorf("FAIL: len(items) = %v; Expected: %v", len(s), row.len)
-		} else {
-			t.Logf("SUCCESS: len(items) = %v; Expected: %v", len(s), row.len)
-		}
 		if s == row.output {
-			t.Errorf("FAIL: item = %s; Expected: %s", s, row.output)
+			t.Errorf("FAIL: %s - item = %s; Expected: %s", row.Name, s, row.output)
 		} else {
-			t.Logf("SUCCESS: item = %s; Expected: %s", s, row.output)
+			t.Logf("SUCCESS: %s - item = %s; Expected: %s", row.Name, s, row.output)
 		}
 	}
-
 }

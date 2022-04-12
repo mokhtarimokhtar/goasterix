@@ -76,7 +76,6 @@ type Cat004Model struct {
 }
 
 // todo case 7
-// todo case 9
 // todo case 10
 // todo case 11
 // todo case 13
@@ -315,6 +314,7 @@ type AircraftIdentification struct {
 	ClearedFlightLevel                 float64                    `json:"clearedFlightLevel,omitempty"`
 	AircraftCharacteristics            *Characteristics           `json:"aircraftCharacteristics,omitempty"`
 }
+
 type ConflictPositionWGS84 struct {
 	Latitude  float64 `json:"latitude"`
 	Longitude float64 `json:"longitude"`
@@ -325,6 +325,55 @@ type ConflictPositionCartesian struct {
 	X float64 `json:"x"`
 	Y float64 `json:"y"`
 	Z int32   `json:"z"`
+}
+
+// Data Item I004/170, Aircraft Identification & Characteristics 1
+func getAircraft(items goasterix.Compound) AircraftIdentification {
+	var ai AircraftIdentification
+	for _, item := range items.Secondary {
+		switch item.Meta.FRN {
+		case 1:
+			ai.AircraftIdentifier = string(item.Fixed.Data)
+		case 2:
+			tmp := uint16(item.Fixed.Data[0])&0x000F<<8 + uint16(item.Fixed.Data[1])&0x00FF
+			ai.Mode3ACodeAircraft = strconv.FormatUint(uint64(tmp), 8)
+		case 3:
+			var pos = new(ConflictPositionWGS84)
+			lsb := 180 / math.Pow(2, 25)
+
+			pos.Latitude = float64(int32(item.Fixed.Data[0])<<24+int32(item.Fixed.Data[1])<<16+int32(item.Fixed.Data[2])<<8+int32(item.Fixed.Data[3])) * lsb
+			pos.Longitude = float64(int32(item.Fixed.Data[4])<<24+int32(item.Fixed.Data[5])<<16+int32(item.Fixed.Data[6])<<8+int32(item.Fixed.Data[7])) * lsb
+			pos.Altitude = int32(int16(item.Fixed.Data[8])<<8+int16(item.Fixed.Data[9])) * 25
+
+			ai.PredictedConflictPositionWGS84 = pos
+		case 4:
+			var pos = new(ConflictPositionCartesian)
+			tmpX := uint32(item.Fixed.Data[0])<<16 + uint32(item.Fixed.Data[1])<<8 + uint32(item.Fixed.Data[2])
+			pos.X = float64(goasterix.TwoComplement32(24, tmpX)) * 0.5
+
+			tmpY := uint32(item.Fixed.Data[3])<<16 + uint32(item.Fixed.Data[4])<<8 + uint32(item.Fixed.Data[5])
+			pos.Y = float64(goasterix.TwoComplement32(24, tmpY)) * 0.5
+
+			pos.Z = int32(int16(item.Fixed.Data[6])<<8+int16(item.Fixed.Data[7])) * 25
+			ai.PredictedConflictPositionCartesian = pos
+		case 5:
+			tmp := uint32(item.Fixed.Data[0])<<16 + uint32(item.Fixed.Data[1])<<8 + uint32(item.Fixed.Data[2])
+			ai.TimeToThreshold = float64(goasterix.TwoComplement32(24, tmp)) / 128
+		case 6:
+			ai.DistanceToThreshold = float64(uint16(item.Fixed.Data[0])<<8+uint16(item.Fixed.Data[1])) * 0.5
+		case 7:
+			ai.AircraftCharacteristics = getCharacteristics(*item.Extended)
+		case 8:
+			var payload [6]byte
+			copy(payload[:], item.Fixed.Data[:])
+			ai.ModeSIdentifier, _ = modeSIdentification(payload)
+		case 9:
+			ai.FlightPlanNumber = uint32(item.Fixed.Data[0])<<24 + uint32(item.Fixed.Data[1])<<16 + uint32(item.Fixed.Data[2])<<8 + uint32(item.Fixed.Data[3])
+		case 10:
+			ai.ClearedFlightLevel = float64(int16(item.Fixed.Data[0])<<8+int16(item.Fixed.Data[1])) * 0.25
+		}
+	}
+	return ai
 }
 
 type Characteristics struct {
@@ -405,53 +454,4 @@ func getCharacteristics(item goasterix.Extended) *Characteristics {
 
 	}
 	return cha
-}
-
-// Data Item I004/170, Aircraft Identification & Characteristics 1
-func getAircraft(items goasterix.Compound) AircraftIdentification {
-	var ai AircraftIdentification
-	for _, item := range items.Secondary {
-		switch item.Meta.FRN {
-		case 1:
-			ai.AircraftIdentifier = string(item.Fixed.Data)
-		case 2:
-			tmp := uint16(item.Fixed.Data[0])&0x000F<<8 + uint16(item.Fixed.Data[1])&0x00FF
-			ai.Mode3ACodeAircraft = strconv.FormatUint(uint64(tmp), 8)
-		case 3:
-			var pos = new(ConflictPositionWGS84)
-			lsb := 180 / math.Pow(2, 25)
-
-			pos.Latitude = float64(int32(item.Fixed.Data[0])<<24+int32(item.Fixed.Data[1])<<16+int32(item.Fixed.Data[2])<<8+int32(item.Fixed.Data[3])) * lsb
-			pos.Longitude = float64(int32(item.Fixed.Data[4])<<24+int32(item.Fixed.Data[5])<<16+int32(item.Fixed.Data[6])<<8+int32(item.Fixed.Data[7])) * lsb
-			pos.Altitude = int32(int16(item.Fixed.Data[8])<<8+int16(item.Fixed.Data[9])) * 25
-
-			ai.PredictedConflictPositionWGS84 = pos
-		case 4:
-			var pos = new(ConflictPositionCartesian)
-			tmpX := uint32(item.Fixed.Data[0])<<16 + uint32(item.Fixed.Data[1])<<8 + uint32(item.Fixed.Data[2])
-			pos.X = float64(goasterix.TwoComplement32(24, tmpX)) * 0.5
-
-			tmpY := uint32(item.Fixed.Data[3])<<16 + uint32(item.Fixed.Data[4])<<8 + uint32(item.Fixed.Data[5])
-			pos.Y = float64(goasterix.TwoComplement32(24, tmpY)) * 0.5
-
-			pos.Z = int32(int16(item.Fixed.Data[6])<<8+int16(item.Fixed.Data[7])) * 25
-			ai.PredictedConflictPositionCartesian = pos
-		case 5:
-			tmp := uint32(item.Fixed.Data[0])<<16 + uint32(item.Fixed.Data[1])<<8 + uint32(item.Fixed.Data[2])
-			ai.TimeToThreshold = float64(goasterix.TwoComplement32(24, tmp)) / 128
-		case 6:
-			ai.DistanceToThreshold = float64(uint16(item.Fixed.Data[0])<<8+uint16(item.Fixed.Data[1])) * 0.5
-		case 7:
-			ai.AircraftCharacteristics = getCharacteristics(*item.Extended)
-		case 8:
-			var payload [6]byte
-			copy(payload[:], item.Fixed.Data[:])
-			ai.ModeSIdentifier, _ = modeSIdentification(payload)
-		case 9:
-			ai.FlightPlanNumber = uint32(item.Fixed.Data[0])<<24 + uint32(item.Fixed.Data[1])<<16 + uint32(item.Fixed.Data[2])<<8 + uint32(item.Fixed.Data[3])
-		case 10:
-			ai.ClearedFlightLevel = float64(int16(item.Fixed.Data[0])<<8+int16(item.Fixed.Data[1])) * 0.25
-		}
-	}
-	return ai
 }

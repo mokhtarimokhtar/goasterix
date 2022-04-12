@@ -148,9 +148,13 @@ func (c *Compound) Payload() []byte {
 	return p
 }
 
-// todo make string by items
-func (c *Compound) String() string {
-	return hex.EncodeToString(c.Payload())
+func (c Compound) String() string {
+	var str string
+	str = "[primary: " + hex.EncodeToString(c.Primary) + "]"
+	for _, item := range c.Secondary {
+		str = str + "[" + item.String() + "]"
+	}
+	return str
 }
 
 type RandomFieldSequencing struct {

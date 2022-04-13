@@ -71,6 +71,7 @@ type Cat004Model struct {
 	AlertStatus          uint8                   `json:"alertStatus"`
 	TrackNumberOne       uint16                  `json:"trackNumberOne,omitempty"`
 	VerticalDeviation    int16                   `json:"verticalDeviation,omitempty"`
+	AreaDefinition       *AreaDefinition         `json:"areaDefinition,omitempty"`
 	TransversalDeviation float32                 `json:"transversalDeviation,omitempty"`
 	AircraftOne          *AircraftIdentification `json:"aircraftOne,omitempty"`
 	AircraftTwo          *AircraftIdentification `json:"aircraftTwo,omitempty"`
@@ -128,8 +129,10 @@ func (data *Cat004Model) write(rec goasterix.Record) {
 			// I004/075, Transversal Distance Deviation
 			tmp := uint32(item.Fixed.Data[0])<<16 + uint32(item.Fixed.Data[1])<<8 + uint32(item.Fixed.Data[2])
 			data.TransversalDeviation = float32(goasterix.TwoComplement32(24, tmp)) * 0.5
-		//case 15:
-		// Data Item I004/100, Area Definition
+		case 15:
+			// Data Item I004/100, Area Definition
+			tmp := getAreaDefinition(*item.Compound)
+			data.AreaDefinition = &tmp
 		case 16:
 			// I004/035 Track Number 2
 			data.TrackNumberTwo = uint16(item.Fixed.Data[0])<<8 + uint16(item.Fixed.Data[1])
@@ -139,6 +142,38 @@ func (data *Cat004Model) write(rec goasterix.Record) {
 			data.AircraftTwo = &tmp
 		}
 	}
+}
+
+type AreaDefinition struct {
+	AreaName            string `json:"areaName,omitempty"`
+	CrossingAreaName    string `json:"crossingAreaName,omitempty"`
+	RunwayDesignatorOne string `json:"runwayDesignatorOne,omitempty"`
+	RunwayDesignatorTwo string `json:"runwayDesignatorTwo,omitempty"`
+	StopBarDesignator   string `json:"stopBarDesignator,omitempty"`
+	GateDesignator      string `json:"gateDesignator,omitempty"`
+}
+
+func getAreaDefinition(items goasterix.Compound) AreaDefinition {
+	var ad AreaDefinition
+	for _, item := range items.Secondary {
+		switch item.Meta.FRN {
+		case 1:
+			var payload [6]byte
+			copy(payload[:], item.Fixed.Data[:])
+			ad.AreaName, _ = modeSIdentification(payload)
+		case 2:
+			ad.CrossingAreaName = string(item.Fixed.Data)
+		case 3:
+			ad.RunwayDesignatorOne = string(item.Fixed.Data)
+		case 4:
+			ad.RunwayDesignatorTwo = string(item.Fixed.Data)
+		case 5:
+			ad.StopBarDesignator = string(item.Fixed.Data)
+		case 6:
+			ad.GateDesignator = string(item.Fixed.Data)
+		}
+	}
+	return ad
 }
 
 // MessageType returns a struct of strings of message type.

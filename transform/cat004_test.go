@@ -98,6 +98,7 @@ func TestCat004Model_write(t *testing.T) {
 				AlertIdentifier:      0,
 				AlertStatus:          4,
 				TrackNumberOne:       1,
+				AreaDefinition: &AreaDefinition{AreaName: "PD23    "},
 				VerticalDeviation:    -4400,
 				TransversalDeviation: -5036,
 				AircraftOne: &AircraftIdentification{
@@ -169,6 +170,7 @@ func TestCat004Model_write(t *testing.T) {
 					ModeSIdentifier:    "APW0021",
 					FlightPlanNumber:   12345,
 				},
+				AreaDefinition: &AreaDefinition{AreaName: "APW TMA "},
 			},
 		},
 	}
@@ -210,9 +212,9 @@ func TestCat004Model_ToJsonRecord(t *testing.T) {
 		output string
 	}
 	dataSet := []testCase{
-		{
+		{ // 404cb3820820
 			Name:  "testcase 1",
-			input: "fdcb80 08a2 08 010882 6ae180 0000 08 0001 d1c0 41504d30303031 0001 0bc51ef7a55900f5 050370c30c40 00003039 ff50 ffd8a8 80 404cb3820820",
+			input: "fdcb80 08a2 08 010882 6ae180 0000 08 0001 d1c0 41504d30303031 0001 0bc51ef7a55900f5 050370c30c40 00003039 ff50 ffd8a8 80 404cb3404cb3",
 			output: `{
 			"sourceIdentifier":{"sac":8,"sic":162},
 			"messageType":{"code":"APM","desc":"approach_path_monitor"},
@@ -222,6 +224,7 @@ func TestCat004Model_ToJsonRecord(t *testing.T) {
 			"alertStatus":4,
 			"trackNumberOne":1,
 			"verticalDeviation":-4400,
+			"areaDefinition":{"areaName":"PD23PD23"},
 			"transversalDeviation":-5036,
 			"aircraftOne":{
 				"aircraftIdentifier":"APM0001",
@@ -245,6 +248,7 @@ func TestCat004Model_ToJsonRecord(t *testing.T) {
 
 		model := new(Cat004Model)
 		model.write(*rec)
+		t.Log(rec.String())
 
 		// Act
 		recJson, _ := json.Marshal(model)

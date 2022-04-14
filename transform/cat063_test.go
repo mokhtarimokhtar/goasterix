@@ -43,3 +43,97 @@ func TestCat063Model_ToJsonRecord(t *testing.T) {
 		t.Logf("SUCCESS: %s; Expected: %s", recJson, output)
 	}
 }
+
+func TestExtractSensorStatus(t *testing.T) {
+	// Arrange
+	type testCase struct {
+		Name   string
+		input  goasterix.Extended
+		output SensorStatus
+	}
+
+	dataset := []testCase{
+		{
+			Name: "testcase 1",
+			input: goasterix.Extended{
+				Primary:   []byte{0x01},
+				Secondary: []byte{0x00},
+			},
+			output: SensorStatus{
+				CON: "operational",
+				PSR: "psr_go",
+				SSR: "ssr_go",
+				MDS: "mode_s_go",
+				ADS: "ads_go",
+				MLT: "mlt_go",
+				OPS: "system_released_for_operationnal_use",
+				ODP: "default_no_overload",
+				OXT: "default_no_overload",
+				MSC: "monitoring_system_connected",
+				TSV: "valid",
+				NPW: "default",
+			},
+		},
+		{
+			Name: "testcase 2",
+			input: goasterix.Extended{
+				Primary:   []byte{0x7f},
+				Secondary: []byte{0xfe},
+			},
+			output: SensorStatus{
+				CON: "degraded",
+				PSR: "psr_nogo",
+				SSR: "ssr_nogo",
+				MDS: "mode_s_nogo",
+				ADS: "ads_nogo",
+				MLT: "mlt_nogo",
+				OPS: "operationnal_use_of_system_inhibited",
+				ODP: "overload_in_dp",
+				OXT: "overload_in_transmission_subsystem",
+				MSC: "monitoring_system_disconnected",
+				TSV: "invalid",
+				NPW: "no_plot_being_received",
+			},
+		},
+		{
+			Name: "testcase 3",
+			input: goasterix.Extended{
+				Primary: []byte{0x80},
+			},
+			output: SensorStatus{
+				CON: "initialization",
+				PSR: "psr_go",
+				SSR: "ssr_go",
+				MDS: "mode_s_go",
+				ADS: "ads_go",
+				MLT: "mlt_go",
+			},
+		},
+		{
+			Name: "testcase 4",
+			input: goasterix.Extended{
+				Primary: []byte{0xc0},
+			},
+			output: SensorStatus{
+				CON: "not_currently_connected",
+				PSR: "psr_go",
+				SSR: "ssr_go",
+				MDS: "mode_s_go",
+				ADS: "ads_go",
+				MLT: "mlt_go",
+			},
+		},
+	}
+
+	for _, row := range dataset {
+		// Act
+		res := extractSensorStatus(row.input)
+
+		// Assert
+		if reflect.DeepEqual(res, row.output) == false {
+			t.Errorf(util.FAIL, row.Name, res, row.output)
+		} else {
+			t.Logf(util.SUCCESS, row.Name, res, row.output)
+		}
+	}
+}

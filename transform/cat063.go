@@ -119,7 +119,7 @@ func extractSensorStatus(item goasterix.Extended) SensorStatus {
 	} else {
 		sr.PSR = "psr_go"
 	}
-	if item.Primary[0]&0x40 != 0 {
+	if item.Primary[0]&0x10 != 0 {
 		sr.SSR = "ssr_nogo"
 	} else {
 		sr.SSR = "ssr_go"

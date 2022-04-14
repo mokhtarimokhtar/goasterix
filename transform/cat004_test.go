@@ -11,11 +11,11 @@ import (
 
 func TestCat004Model_MessageTypeCat004(t *testing.T) {
 	// Arrange
-	type dataTest struct {
+	type testCase struct {
 		input  [1]byte
 		output *MsgType
 	}
-	dataset := []dataTest{
+	dataset := []testCase{
 		{[1]byte{0x00}, &MsgType{Code: msgTypeCode000, Desc: msgTypeDesc000}},
 		{[1]byte{0x01}, &MsgType{Code: msgTypeCode001, Desc: msgTypeDesc001}},
 		{[1]byte{0x02}, &MsgType{Code: msgTypeCode002, Desc: msgTypeDesc002}},

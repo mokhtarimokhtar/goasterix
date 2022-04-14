@@ -9,6 +9,11 @@ import (
  Package util arrange implements some functions to manipulate strings for the testing.
 */
 
+const (
+	FAIL    = "FAIL: %s - %v - Expected: %v"
+	SUCCESS = "SUCCESS: %s - %v - Expected: %v"
+)
+
 // HexStringToByte converts a hexadecimal string format to an array of byte.
 // It is used to facilitate the testing.
 func HexStringToByte(s string) ([]byte, error) {

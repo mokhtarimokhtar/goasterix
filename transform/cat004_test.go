@@ -88,7 +88,7 @@ func TestCat004Model_write(t *testing.T) {
 	}
 	dataSet := []testCase{
 		{
-			Name:  "testcase 1",
+			Name:  "testcase 1: I004/170",
 			input: "fdcb80 08a2 08 010882 6ae180 0000 08 0001 d1c0 41504d30303031 0001 0bc51ef7a55900f5 050370c30c40 00003039 ff50 ffd8a8 80 404cb3820820",
 			output: &Cat004Model{
 				SacSic:               &SourceIdentifier{Sac: 8, Sic: 162},
@@ -98,7 +98,7 @@ func TestCat004Model_write(t *testing.T) {
 				AlertIdentifier:      0,
 				AlertStatus:          4,
 				TrackNumberOne:       1,
-				AreaDefinition: &AreaDefinition{AreaName: "PD23    "},
+				AreaDefinition:       &AreaDefinition{AreaName: "PD23    "},
 				VerticalDeviation:    -4400,
 				TransversalDeviation: -5036,
 				AircraftOne: &AircraftIdentification{
@@ -115,16 +115,21 @@ func TestCat004Model_write(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testcase 2",
+			Name:  "testcase 2: I004/171",
 			input: "fdf16008a2070108826b2100000608001fc1c05354434130333100194d40c1c33c6000002bd700bc000000001a491a4900000000001ec1c05354434130333000184d40c1c33c2000003039",
 			output: &Cat004Model{
-				SacSic:          &SourceIdentifier{Sac: 8, Sic: 162},
-				MessageType:     &MsgType{Code: "STCA", Desc: "short_term_conflict_alert"},
-				SDPSIdentifier:  []SourceIdentifier{{Sac: 8, Sic: 130}},
-				TimeOfMessage:   54850,
-				AlertIdentifier: 6,
-				AlertStatus:     4,
-				TrackNumberOne:  31,
+				SacSic:                  &SourceIdentifier{Sac: 8, Sic: 162},
+				MessageType:             &MsgType{Code: "STCA", Desc: "short_term_conflict_alert"},
+				SDPSIdentifier:          []SourceIdentifier{{Sac: 8, Sic: 130}},
+				TimeOfMessage:           54850,
+				AlertIdentifier:         6,
+				AlertStatus:             4,
+				TrackNumberOne:          31,
+				ConflictCharacteristics: &ConflictCharacteristics{},
+				ConflictTimingSeparation: &ConflictTimingSeparation{
+					CurrentHorizontalSeparation: 3364.5,
+					MinimumHorizontalSeparation: 3364.5,
+				},
 				AircraftOne: &AircraftIdentification{
 					AircraftIdentifier: "STCA031",
 					Mode3ACodeAircraft: "31",
@@ -140,21 +145,8 @@ func TestCat004Model_write(t *testing.T) {
 				TrackNumberTwo: 30,
 			},
 		},
-		// "04 0036 fdf18008a2050108826b2a000005080015c1c04150573030323100110505f0c32c4000003039400080000000800505e050d060"
-		// [[FSPEC: fdf180
-		//I004/010: 08a2
-		//I004/000: 05
-		//I004/015: 010882
-		//I004/020: 6b2a00
-		//I004/040: 0005
-		//I004/045: 08
-		//I004/030: 0015
-		//I004/170: c1c04150573030323100110505f0c32c4000003039
-		//I004/120: 4000
-		//I004/070: 80000000
-		// I004/100: 800505e050d060]]
 		{
-			Name:  "testcase 3",
+			Name:  "testcase 3: I004/100",
 			input: "fdf18008a2050108826b2a000005080015c1c04150573030323100110505f0c32c4000003039400080000000800505e050d060",
 			output: &Cat004Model{
 				SacSic:          &SourceIdentifier{Sac: 8, Sic: 162},
@@ -164,6 +156,14 @@ func TestCat004Model_write(t *testing.T) {
 				AlertIdentifier: 5,
 				AlertStatus:     4,
 				TrackNumberOne:  21,
+				ConflictCharacteristics: &ConflictCharacteristics{
+					ConflictClassification: &ConflictClassification{
+						TableId:            0,
+						ConflictProperties: 0,
+						CS:                 "low",
+					},
+				},
+				ConflictTimingSeparation: &ConflictTimingSeparation{},
 				AircraftOne: &AircraftIdentification{
 					AircraftIdentifier: "APW0021",
 					Mode3ACodeAircraft: "21",
@@ -171,6 +171,34 @@ func TestCat004Model_write(t *testing.T) {
 					FlightPlanNumber:   12345,
 				},
 				AreaDefinition: &AreaDefinition{AreaName: "APW TMA "},
+			},
+		},
+		{
+			Name:  "testcase 4: I004/070",
+			input: "fdf18008a2050108826b29000005080015c1c04150573030323100110505f0c32c4000003039400080000000800505e050d060",
+			output: &Cat004Model{
+				SacSic:          &SourceIdentifier{Sac: 8, Sic: 162},
+				MessageType:     &MsgType{Code: "APW", Desc: "area_proximity_warning"},
+				SDPSIdentifier:  []SourceIdentifier{{Sac: 8, Sic: 130}},
+				TimeOfMessage:   54866,
+				AlertIdentifier: 5,
+				AlertStatus:     4,
+				TrackNumberOne:  21,
+				AreaDefinition:  &AreaDefinition{AreaName: "APW TMA "},
+				ConflictCharacteristics: &ConflictCharacteristics{
+					ConflictClassification: &ConflictClassification{
+						TableId:            0,
+						ConflictProperties: 0,
+						CS:                 "low",
+					},
+				},
+				ConflictTimingSeparation: &ConflictTimingSeparation{},
+				AircraftOne: &AircraftIdentification{
+					AircraftIdentifier: "APW0021",
+					Mode3ACodeAircraft: "21",
+					ModeSIdentifier:    "APW0021",
+					FlightPlanNumber:   12345,
+				},
 			},
 		},
 	}
@@ -186,14 +214,15 @@ func TestCat004Model_write(t *testing.T) {
 		// Act
 		model.write(*rec)
 
-		recJson, _ := json.Marshal(model)
-		t.Log(string(recJson))
+		//recJson, _ := json.Marshal(model)
+		//t.Log(string(recJson))
+		//t.Log(rec.String())
 
 		// Assert
 		if err != nil {
-			t.Errorf("FAIL: error = %v - Expected: %v", err, nil)
+			t.Errorf("FAIL: %s - error: %v - Expected: %v", row.Name, err, nil)
 		} else {
-			t.Logf("SUCCESS: error: %v - Expected: %v", err, nil)
+			t.Logf("SUCCESS: %s - error: %v - Expected: %v", row.Name, err, nil)
 		}
 
 		if reflect.DeepEqual(model, row.output) == false {

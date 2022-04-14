@@ -63,26 +63,26 @@ type MsgType struct {
 }
 
 type Cat004Model struct {
-	SacSic               *SourceIdentifier       `json:"sourceIdentifier,omitempty"`
-	MessageType          *MsgType                `json:"messageType,omitempty"`
-	SDPSIdentifier       []SourceIdentifier      `json:"sdpsIdentifier,omitempty"`
-	TimeOfMessage        float64                 `json:"timeOfMessage,omitempty"`
-	AlertIdentifier      uint16                  `json:"alertIdentifier"`
-	AlertStatus          uint8                   `json:"alertStatus"`
-	TrackNumberOne       uint16                  `json:"trackNumberOne,omitempty"`
-	VerticalDeviation    int16                   `json:"verticalDeviation,omitempty"`
-	AreaDefinition       *AreaDefinition         `json:"areaDefinition,omitempty"`
-	TransversalDeviation float32                 `json:"transversalDeviation,omitempty"`
-	AircraftOne          *AircraftIdentification `json:"aircraftOne,omitempty"`
-	AircraftTwo          *AircraftIdentification `json:"aircraftTwo,omitempty"`
-	TrackNumberTwo       uint16                  `json:"trackNumberTwo,omitempty"`
+	SacSic                   *SourceIdentifier         `json:"sourceIdentifier,omitempty"`
+	MessageType              *MsgType                  `json:"messageType,omitempty"`
+	SDPSIdentifier           []SourceIdentifier        `json:"sdpsIdentifier,omitempty"`
+	TimeOfMessage            float64                   `json:"timeOfMessage,omitempty"`
+	AlertIdentifier          uint16                    `json:"alertIdentifier"`
+	AlertStatus              uint8                     `json:"alertStatus"`
+	TrackNumberOne           uint16                    `json:"trackNumberOne,omitempty"`
+	VerticalDeviation        int16                     `json:"verticalDeviation,omitempty"`
+	AreaDefinition           *AreaDefinition           `json:"areaDefinition,omitempty"`
+	TransversalDeviation     float32                   `json:"transversalDeviation,omitempty"`
+	ConflictCharacteristics  *ConflictCharacteristics  `json:"conflictCharacteristics,omitempty"`
+	ConflictTimingSeparation *ConflictTimingSeparation `json:"ConflictTimingSeparation,omitempty"`
+	AircraftOne              *AircraftIdentification   `json:"aircraftOne,omitempty"`
+	AircraftTwo              *AircraftIdentification   `json:"aircraftTwo,omitempty"`
+	TrackNumberTwo           uint16                    `json:"trackNumberTwo,omitempty"`
 }
 
+
 // todo case 7
-// todo case 10
-// todo case 11
 // todo case 13
-// todo case 15
 // todo case 18
 // todo case 20
 // todo case 21
@@ -121,7 +121,12 @@ func (data *Cat004Model) write(rec goasterix.Record) {
 			// I004/170, Aircraft Identification & Characteristics 1
 			tmp := getAircraft(*item.Compound)
 			data.AircraftOne = &tmp
-
+		case 10:
+			// I004/120, Conflict Characteristics
+			data.ConflictCharacteristics = getConflictCharacteristics(*item.Compound)
+		case 11:
+			// I004/070, Conflict Timing and Separation
+			data.ConflictTimingSeparation = getConflictTimingSeparation(*item.Compound)
 		case 12:
 			// I004/076, Vertical Deviation in ft, LSB = 25ft
 			data.VerticalDeviation = (int16(item.Fixed.Data[0])<<8 + int16(item.Fixed.Data[1])) * 25
@@ -142,6 +147,220 @@ func (data *Cat004Model) write(rec goasterix.Record) {
 			data.AircraftTwo = &tmp
 		}
 	}
+}
+
+type ConflictTimingSeparation struct {
+	TimeToConflict              float64 `json:"timeToConflict,omitempty"`
+	TimeToClosestApproach       float64 `json:"timeToClosestApproach,omitempty"`
+	CurrentHorizontalSeparation float64 `json:"currentHorizontalSeparation,omitempty"`
+	MinimumHorizontalSeparation float64 `json:"minimumHorizontalSeparation,omitempty"`
+	CurrentVerticalSeparation   uint32  `json:"currentVerticalSeparation,omitempty"`
+	MinimumVerticalSeparation   uint32  `json:"minimumVerticalSeparation,omitempty"`
+}
+
+func getConflictTimingSeparation(items goasterix.Compound) *ConflictTimingSeparation {
+	var cts ConflictTimingSeparation
+	for _, item := range items.Secondary {
+		switch item.Meta.FRN {
+		case 1:
+			var payload [3]byte
+			copy(payload[:], item.Fixed.Data[:])
+			cts.TimeToConflict, _ = timeOfDay(payload)
+		case 2:
+			var payload [3]byte
+			copy(payload[:], item.Fixed.Data[:])
+			cts.TimeToClosestApproach, _ = timeOfDay(payload)
+		case 3:
+			cts.CurrentHorizontalSeparation = float64(uint32(item.Fixed.Data[0])<<16 + uint32(item.Fixed.Data[1])<<8 + uint32(item.Fixed.Data[2])) * 0.5
+		case 4:
+			cts.MinimumHorizontalSeparation = float64(uint16(item.Fixed.Data[0])<<8 + uint16(item.Fixed.Data[1])) * 0.5
+		case 5:
+			cts.CurrentVerticalSeparation = uint32(uint16(item.Fixed.Data[0])<<8 + uint16(item.Fixed.Data[1])) * 25
+		case 6:
+			cts.MinimumVerticalSeparation = uint32(uint16(item.Fixed.Data[0])<<8 + uint16(item.Fixed.Data[1])) * 25
+		}
+	}
+
+	return &cts
+}
+
+type ConflictCharacteristics struct {
+	ConflictNature         *ConflictNature         `json:"conflictNature,omitempty"`
+	ConflictClassification *ConflictClassification `json:"ConflictClassification,omitempty"`
+	ConflictProbability    float32                 `json:"conflictProbability,omitempty"`
+	ConflictDuration       float64                 `json:"conflictDuration,omitempty"`
+}
+
+type ConflictNature struct {
+	MAS      string `json:"mas"`
+	CAS      string `json:"cas"`
+	FLD      string `json:"fld"`
+	FVD      string `json:"fvd"`
+	Type     string `json:"type"`
+	Cross    string `json:"cross"`
+	Div      string `json:"div"`
+	RRC      string `json:"rrc,omitempty"`
+	RTC      string `json:"rtc,omitempty"`
+	MRVA     string `json:"mrva,omitempty"`
+	VRAMCRM  string `json:"vramcrm,omitempty"`
+	VRAMVRM  string `json:"vramvrm,omitempty"`
+	VRAMVTM  string `json:"vramvtm,omitempty"`
+	HAMHD    string `json:"hamhd,omitempty"`
+	HAMRD    string `json:"hamrd,omitempty"`
+	HAMVD    string `json:"hamvd,omitempty"`
+	DBPSMARR string `json:"dbpsmarr,omitempty"`
+	DBPSMDEP string `json:"dbpsmdep,omitempty"`
+	DBPSMTL  string `json:"dbpsmtl,omitempty"`
+	AIW      string `json:"aiw,omitempty"`
+}
+
+type ConflictClassification struct {
+	TableId            uint8  `json:"tableId"`
+	ConflictProperties uint8  `json:"conflictProperties"`
+	CS                 string `json:"cs"`
+}
+
+func getConflictNature(item goasterix.Extended) *ConflictNature {
+	var cn ConflictNature
+	if item.Primary[0]&0x80 != 0 {
+		cn.MAS = "conflict_predicted_to_occur_in_military_airspace"
+	} else {
+		cn.MAS = "conflict_not_predicted_to_occur_in_military_airspace"
+	}
+	if item.Primary[0]&0x40 != 0 {
+		cn.CAS = "conflict_predicted_to_occur_in_civil_airspace"
+	} else {
+		cn.CAS = "conflict_not_predicted_to_occur_in_civil_airspace"
+	}
+	if item.Primary[0]&0x20 != 0 {
+		cn.FLD = "aircraft_are_fast_diverging_laterally_at_current_time"
+	} else {
+		cn.FLD = "aircraft_are_not_fast_diverging_laterally_at_current_time"
+	}
+	if item.Primary[0]&0x10 != 0 {
+		cn.FVD = "aircraft_are_fast_diverging_vertically_at_current_time"
+	} else {
+		cn.FVD = "aircraft_are_not_fast_diverging_vertically_at_current_time"
+	}
+	if item.Primary[0]&0x08 != 0 {
+		cn.Type = "major_separation_infringement"
+	} else {
+		cn.Type = "minor_separation_infringement"
+	}
+	if item.Primary[0]&0x04 != 0 {
+		cn.Cross = "aircraft_have_crossed_at_starting_time_of_conflict"
+	} else {
+		cn.Cross = "aircraft_have_not_crossed_at_starting_time_of_conflict"
+	}
+	if item.Primary[0]&0x02 != 0 {
+		cn.Div = "aircraft_are_diverging_at_starting_time_of_conflict"
+	} else {
+		cn.Div = "aircraft_are_not_diverging_at_starting_time_of_conflict"
+	}
+	if item.Secondary != nil {
+		if item.Secondary[0]&0x80 != 0 {
+			cn.RRC = "runway_runway_crossing"
+		} else {
+			cn.RRC = "default"
+		}
+		if item.Secondary[0]&0x40 != 0 {
+			cn.RTC = "runway_taxiway_crossing"
+		} else {
+			cn.RTC = "default"
+		}
+		if item.Secondary[0]&0x20 != 0 {
+			cn.MRVA = "msg_type_4_indicates_mrva"
+		} else {
+			cn.MRVA = "default"
+		}
+		if item.Secondary[0]&0x10 != 0 {
+			cn.VRAMCRM = "msg_type_25_indicates_crm"
+		} else {
+			cn.VRAMCRM = "default"
+		}
+		if item.Secondary[0]&0x08 != 0 {
+			cn.VRAMVRM = "msg_type_25_indicates_vrm"
+		} else {
+			cn.VRAMVRM = "default"
+		}
+		if item.Secondary[0]&0x04 != 0 {
+			cn.VRAMVTM = "msg_type_25_indicates_vtm"
+		} else {
+			cn.VRAMVTM = "default"
+		}
+		if item.Secondary[0]&0x02 != 0 {
+			cn.HAMHD = "msg_type_29_indicates_hd"
+		} else {
+			cn.HAMHD = "default"
+		}
+
+		if item.Secondary[0]&0x01 != 0 {
+			if item.Secondary[1]&0x80 != 0 {
+				cn.HAMRD = "msg_type_29_indicates_rd"
+			} else {
+				cn.HAMRD = "default"
+			}
+			if item.Secondary[1]&0x40 != 0 {
+				cn.HAMVD = "msg_type_29_indicates_vd"
+			} else {
+				cn.HAMVD = "default"
+			}
+			if item.Secondary[1]&0x20 != 0 {
+				cn.DBPSMARR = "msg_type_20_indicates_arr"
+			} else {
+				cn.DBPSMARR = "default"
+			}
+			if item.Secondary[1]&0x10 != 0 {
+				cn.DBPSMDEP = "msg_type_20_indicates_dep"
+			} else {
+				cn.DBPSMDEP = "default"
+			}
+			if item.Secondary[1]&0x08 != 0 {
+				cn.DBPSMTL = "msg_type_20_indicates_above_tl"
+			} else {
+				cn.DBPSMTL = "default"
+			}
+			if item.Secondary[1]&0x04 != 0 {
+				cn.AIW = "msg_type_99_indicates_paiw_alert"
+			} else {
+				cn.AIW = "default"
+			}
+		}
+	}
+
+	return &cn
+}
+
+func getConflictClassification(item byte) *ConflictClassification {
+	var cc ConflictClassification
+	cc.TableId = item & 0xf0 >> 4
+	cc.ConflictProperties = item & 0x0e >> 1
+	if item&0x01 != 0 {
+		cc.CS = "high"
+	} else {
+		cc.CS = "low"
+	}
+	return &cc
+}
+
+func getConflictCharacteristics(items goasterix.Compound) *ConflictCharacteristics {
+	var cc ConflictCharacteristics
+	for _, item := range items.Secondary {
+		switch item.Meta.FRN {
+		case 1:
+			cc.ConflictNature = getConflictNature(*item.Extended)
+		case 2:
+			var payload = item.Fixed.Data[0]
+			cc.ConflictClassification = getConflictClassification(payload)
+		case 3:
+			cc.ConflictProbability = float32(item.Fixed.Data[0]) * 0.5
+		case 4:
+			var payload [3]byte
+			copy(payload[:], item.Fixed.Data[:])
+			cc.ConflictDuration, _ = timeOfDay(payload)
+		}
+	}
+	return &cc
 }
 
 type AreaDefinition struct {

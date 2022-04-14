@@ -1,5 +1,12 @@
 package transform
 
+import "errors"
+
+var (
+	// ErrCharUnknown reports which not found equivalent International Alphabet 5 char.
+	ErrCharUnknown = errors.New("[ASTERIX Error] char unknown")
+)
+
 type CartesianXYPosition struct {
 	X float64 `json:"x"`
 	Y float64 `json:"y"`

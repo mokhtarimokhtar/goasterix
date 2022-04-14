@@ -1,6 +1,6 @@
 package uap
 
-// Cat062V119 User Application Profile
+// Cat065V15 User Application Profile
 // version 1.19
 var Cat065V15 = StandardUAP{
 	Name:     "cat065_1.5",

@@ -2,17 +2,12 @@ package transform
 
 import (
 	"encoding/hex"
-	"errors"
 	"github.com/mokhtarimokhtar/goasterix"
 	"github.com/mokhtarimokhtar/goasterix/commbds"
 	"strconv"
 	"strings"
 )
 
-var (
-	// ErrCharUnknown reports which not found equivalent International Alphabet 5 char.
-	ErrCharUnknown = errors.New("[ASTERIX Error] char unknown")
-)
 
 // FL Flight Level, unit of altitude (expressed in 100's of feet)
 type FL struct {

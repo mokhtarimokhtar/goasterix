@@ -93,11 +93,22 @@ type Cat062Model struct {
 	RateOfClimbDescent    float32              `json:"rateOfClimbDescent,omitempty"`
 }
 
+// todo case 14
+// todo case 16
+// todo case 21
+// todo case 22
+// todo case 23
+// todo case 24
+// todo case 25
+// todo case 26
+// todo case 27
+// todo case 28
+// todo case 34
+// todo case 35
 // Write writes a single ASTERIX Record to Cat062Model.
 // CompoundItems is a slice of CompoundItems DataField.
 func (data *Cat062Model) write(rec goasterix.Record) {
 	for _, item := range rec.Items {
-
 		switch item.Meta.FRN {
 		case 1:
 			// decode sac sic
@@ -154,7 +165,6 @@ func (data *Cat062Model) write(rec goasterix.Record) {
 			// Aircraft Derived Data
 			tmp := extractDerivedData(*item.Compound)
 			data.AircraftDerivedData = &tmp
-
 		case 12:
 			// Track Number
 			var payload [2]byte
@@ -164,14 +174,12 @@ func (data *Cat062Model) write(rec goasterix.Record) {
 			// Track Status
 			tmp := extractTrackStatus(*item.Extended)
 			data.TrackStatus = &tmp
-		// todo case 14
 		case 15:
 			// Mode of Movement
 			var payload [1]byte
 			copy(payload[:], item.Fixed.Data[:])
 			tmp := extractModeOfMovement(payload)
 			data.ModeOfMovement = &tmp
-		// todo case 16
 		case 17:
 			// Measured Flight Level
 			var payload [2]byte
@@ -193,16 +201,7 @@ func (data *Cat062Model) write(rec goasterix.Record) {
 			var payload [2]byte
 			copy(payload[:], item.Fixed.Data[:])
 			data.RateOfClimbDescent = rateOfClimbDescent(payload)
-			// todo case 21
-			// todo case 22
-			// todo case 23
-			// todo case 24
-			// todo case 25
-			// todo case 26
-			// todo case 27
-			// todo case 28
-			// todo case 34
-			// todo case 35
+
 		}
 	}
 }

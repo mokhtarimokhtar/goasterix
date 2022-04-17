@@ -53,12 +53,14 @@ type ComSysConf struct {
 	Msc    string `json:"msc"`
 	Tsv    string `json:"tsv"`
 }
+
 type PsrSsrSysConf struct {
 	Ant  string `json:"ant"`
 	ChAB string `json:"chAB"`
 	Ovl  string `json:"ovl"`
 	Msc  string `json:"msc"`
 }
+
 type MdsSysConf struct {
 	Ant    string `json:"ant"`
 	ChAB   string `json:"chAB"`
@@ -69,6 +71,7 @@ type MdsSysConf struct {
 	Ovlscf string `json:"ovlscf"`
 	Ovldlf string `json:"ovldlf"`
 }
+
 type SysConf struct {
 	Com *ComSysConf    `json:"com,omitempty"`
 	Psr *PsrSsrSysConf `json:"psr,omitempty"`
@@ -101,37 +104,47 @@ type Cat034Model struct {
 
 func (data *Cat034Model) write(rec goasterix.Record) {
 	for _, item := range rec.Items {
-		switch item.Meta.FRN {
+		switch item.Frn() {
+		//switch item.Meta.FRN {
 		case 1:
 			// decode sac sic
 			var payload [2]byte
-			copy(payload[:], item.Fixed.Data[:])
+			//copy(payload[:], item.Fixed.Data[:])
+			copy(payload[:], item.(*goasterix.Fixed).Data[:])
 			tmp, _ := sacSic(payload)
 			data.SacSic = &tmp
 		case 2:
 			//decode messageTypeCat034
 			var payload [1]byte
-			copy(payload[:], item.Fixed.Data[:])
+			//copy(payload[:], item.Fixed.Data[:])
+			copy(payload[:], item.(*goasterix.Fixed).Data[:])
 			data.MessageType = messageTypeCat034(payload)
 		case 3:
 			// decode timeOfDay
 			var payload [3]byte
-			copy(payload[:], item.Fixed.Data[:])
+			//copy(payload[:], item.Fixed.Data[:])
+			copy(payload[:], item.(*goasterix.Fixed).Data[:])
 			data.TimeOfDay, _ = timeOfDay(payload)
 		case 4:
 			// decode sector number
 			// SectorNumber returns a float.
 			// Ref: 5.2.3 Records Item I034/020.
 			// Eight most significant bits of the antenna azimuth defining a particular azimuth sector.
-			data.SectorNumber = float64(item.Fixed.Data[0]) * 1.40625
+
+			//data.SectorNumber = float64(item.Fixed.Data[0]) * 1.40625
+			data.SectorNumber = float64(item.(*goasterix.Fixed).Data[0]) * 1.40625
 		case 5:
 			// AntennaRotationSpeed returns a float in second.
 			// Antenna rotation period as measured between two consecutive
 			// North crossings or as averaged during a period of time.
 			// Ref: 5.2.3 Records Item I034/041.
-			data.AntennaRotationSpeed = float64(uint16(item.Fixed.Data[0])<<8+uint16(item.Fixed.Data[1])) / 128
+
+			data.AntennaRotationSpeed = float64(
+				uint16(item.(*goasterix.Fixed).Data[0])<<8 + uint16(item.(*goasterix.Fixed).Data[1])
+				) / 128
 		case 6:
-			tmp := systemConfiguration(*item.Compound)
+			//tmp := systemConfiguration(*item.Compound)
+			tmp := systemConfiguration(*item.(*goasterix.Compound))
 			data.SystemConfiguration = &tmp
 		case 7:
 			tmp := systemProcessingMode(*item.Compound)
@@ -142,16 +155,19 @@ func (data *Cat034Model) write(rec goasterix.Record) {
 			data.MessageCountValues = tmp
 		case 9:
 			var payload [8]byte
-			copy(payload[:], item.Fixed.Data[:])
+			//copy(payload[:], item.Fixed.Data[:])
+			copy(payload[:], item.(*goasterix.Fixed).Data[:])
 			tmp := genericPolarWindow(payload)
 			data.GenericPolarWindow = &tmp
 		case 10:
 			var payload [1]byte
-			copy(payload[:], item.Fixed.Data[:])
+			//copy(payload[:], item.Fixed.Data[:])
+			copy(payload[:], item.(*goasterix.Fixed).Data[:])
 			data.DataFilter, _ = dataFilter(payload)
 		case 11:
 			var payload [8]byte
-			copy(payload[:], item.Fixed.Data[:])
+			//copy(payload[:], item.Fixed.Data[:])
+			copy(payload[:], item.(*goasterix.Fixed).Data[:])
 			tmp := position3DofDataSource(payload)
 			data.Position3DofDataSource = &tmp
 		case 12:

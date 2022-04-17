@@ -35,6 +35,7 @@ type DataField struct {
 	Repetitive  RepetitiveField
 	Explicit    ExplicitField
 	Compound    []DataField
+	RFS         []DataField
 	Conditional bool
 }
 type FixedField struct {
@@ -47,8 +48,7 @@ type ExtendedField struct {
 type RepetitiveField struct {
 	SubItemSize uint8
 }
-type ExplicitField struct {
-}
+type ExplicitField struct {}
 
 /*
 type TypeField struct {

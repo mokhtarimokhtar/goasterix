@@ -43,7 +43,7 @@ func (e Explicit) Payload() []byte {
 
 func (e Explicit) String() string {
 	tmp := []byte{e.Len}
-	return hex.EncodeToString(tmp) + hex.EncodeToString(e.Data)
+	return e.MetaItem.DataItem + ": " + hex.EncodeToString(tmp) + hex.EncodeToString(e.Data)
 }
 
 func (e Explicit) Frn() uint8 {

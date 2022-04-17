@@ -84,7 +84,7 @@ func (c Compound) Payload() []byte {
 
 func (c Compound) String() string {
 	var str string
-	str = "[primary: " + hex.EncodeToString(c.Primary) + "]"
+	str = c.MetaItem.DataItem + ": " + "[primary: " + hex.EncodeToString(c.Primary) + "]"
 	for _, item := range c.Secondary {
 		str = str + "[" + item.String() + "]"
 	}

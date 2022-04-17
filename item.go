@@ -14,28 +14,6 @@ type Item interface {
 	Frn() uint8
 }
 
-/*type Item struct {
-	Meta       MetaItem
-	Fixed      *Fixed
-	Extended   *Extended
-	Explicit   *Explicit
-	Repetitive *Repetitive
-	Compound   *Compound
-	RFS        *RandomFieldSequencing
-	SP         *SpecialPurpose
-}*/
-
-/*func NewItem(field uap.DataField) *Item {
-	return &Item{
-		Meta: MetaItem{
-			FRN:         field.FRN,
-			DataItem:    field.DataItem,
-			Description: field.Description,
-			Type:        field.Type,
-		},
-	}
-}*/
-
 /*func (i *Item) Payload() []byte {
 	var p []byte
 	switch i.Meta.Type {
@@ -52,23 +30,7 @@ type Item interface {
 	}
 	return p
 }
-func (i *Item) String() string {
-	var str string
-	str = i.Meta.DataItem
-	switch i.Meta.Type {
-	case uap.Fixed:
-		str = str + ": " + i.Fixed.String()
-	case uap.Extended:
-		str = str + ": " + i.Extended.String()
-	case uap.Explicit:
-		str = str + ": " + i.Explicit.String()
-	case uap.Repetitive:
-		str = str + ": " + i.Repetitive.String()
-	case uap.Compound:
-		str = str + ": " + i.Compound.String()
-	}
-	return str
-}
+
 */
 
 type MetaItem struct {

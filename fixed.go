@@ -35,7 +35,7 @@ func (f Fixed) Payload() []byte {
 }
 
 func (f Fixed) String() string {
-	return hex.EncodeToString(f.Data)
+	return f.MetaItem.DataItem + ": " + hex.EncodeToString(f.Data)
 }
 
 func (f Fixed) Frn() uint8 {

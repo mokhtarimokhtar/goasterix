@@ -12,6 +12,11 @@ type Repetitive struct {
 	Rep  uint8
 	Data []byte
 }
+
+// Reader extracts data item type Repetitive(1+rep*N byte).
+// The first byte is REP(factor), nb is the size of bytes to repetition.
+// Repetitive Data Fields, being of a variable length, shall comprise a one-octet Field Repetition Indicator (REP)
+// signalling the presence of N consecutive sub-fields each of the same pre-determined length.
 func (r *Repetitive) Reader(rb *bytes.Reader, field uap.DataField) error {
 	var err error
 	r.MetaItem.NewMetaItem(field)
@@ -40,7 +45,7 @@ func (r Repetitive) Payload() []byte {
 
 func (r Repetitive) String() string {
 	tmp := []byte{r.Rep}
-	return hex.EncodeToString(tmp) + hex.EncodeToString(r.Data)
+	return r.MetaItem.DataItem + ": " + hex.EncodeToString(tmp) + hex.EncodeToString(r.Data)
 }
 
 func (r Repetitive) Frn() uint8 {

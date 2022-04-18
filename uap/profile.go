@@ -16,5 +16,5 @@ var DefaultProfiles = map[uint8]StandardUAP{
 	65:  Cat065V15,
 
 	// Category for testing not exist
-	26: Cat4Test,
+	26: CatForTest,
 }

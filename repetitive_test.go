@@ -21,7 +21,7 @@ func TestRepetitiveReader(t *testing.T) {
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name:  "testcase 1",
+			Name:  "testCase 1",
 			input: "03 01 02 03 01 02 03 01 02 03",
 			uap: uap.DataField{
 				Type:       uap.Repetitive,
@@ -37,7 +37,7 @@ func TestRepetitiveReader(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testcase 2",
+			Name:  "testCase 2",
 			input: "04 01 02 03 01 02 03 01 02 03",
 			uap: uap.DataField{
 				Type:       uap.Repetitive,
@@ -53,7 +53,7 @@ func TestRepetitiveReader(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testcase 3",
+			Name:  "testCase 3",
 			input: "",
 			uap: uap.DataField{
 				Type:       uap.Repetitive,
@@ -104,7 +104,7 @@ func TestRepetitiveString(t *testing.T) {
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name: "testcase 1",
+			Name: "testCase 1",
 			input: Repetitive{
 				MetaItem: MetaItem{
 					FRN:         1,
@@ -118,7 +118,7 @@ func TestRepetitiveString(t *testing.T) {
 			output: "I000/010:02abcd",
 		},
 		{
-			Name: "testcase 2",
+			Name: "testCase 2",
 			input: Repetitive{
 				MetaItem: MetaItem{},
 				Rep:      0,
@@ -151,7 +151,7 @@ func TestRepetitivePayload(t *testing.T) {
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name: "testcase 1",
+			Name: "testCase 1",
 			input: Repetitive{
 				MetaItem: MetaItem{
 					FRN:         1,
@@ -165,7 +165,7 @@ func TestRepetitivePayload(t *testing.T) {
 			output: []byte{0x02, 0xab, 0xcd},
 		},
 		{
-			Name: "testcase 2",
+			Name: "testCase 2",
 			input: Repetitive{
 				MetaItem: MetaItem{},
 				Rep:      0,
@@ -198,7 +198,7 @@ func TestRepetitiveFrn(t *testing.T) {
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name: "testcase 1",
+			Name: "testCase 1",
 			input: Repetitive{
 				MetaItem: MetaItem{
 					FRN:         7,
@@ -212,7 +212,7 @@ func TestRepetitiveFrn(t *testing.T) {
 			output: 7,
 		},
 		{
-			Name: "testcase 2",
+			Name: "testCase 2",
 			input: Repetitive{
 				MetaItem: MetaItem{},
 				Rep:      0,

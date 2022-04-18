@@ -21,7 +21,7 @@ func TestFixedReader(t *testing.T) {
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name:  "testcase 1",
+			Name:  "testCase 1",
 			input: "01 02 03 04 05 06 07 08",
 			uap: uap.DataField{
 				FRN:         8,
@@ -42,7 +42,7 @@ func TestFixedReader(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testcase 2",
+			Name:  "testCase 2",
 			input: "01 02 03 04 05 06 07",
 			uap: uap.DataField{
 				FRN:         8,
@@ -97,7 +97,7 @@ func TestFixedString(t *testing.T) {
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name: "testcase 1",
+			Name: "testCase 1",
 			input: Fixed{
 				MetaItem: MetaItem{
 					FRN:         1,
@@ -110,7 +110,7 @@ func TestFixedString(t *testing.T) {
 			output: "I000/010:abcd",
 		},
 		{
-			Name: "testcase 2",
+			Name: "testCase 2",
 			input: Fixed{
 				MetaItem: MetaItem{},
 				Data:     []byte{},
@@ -142,7 +142,7 @@ func TestFixedPayload(t *testing.T) {
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name: "testcase 1",
+			Name: "testCase 1",
 			input: Fixed{
 				MetaItem: MetaItem{
 					FRN:         1,
@@ -155,7 +155,7 @@ func TestFixedPayload(t *testing.T) {
 			output: []byte{0xab, 0xcd},
 		},
 		{
-			Name: "testcase 2",
+			Name: "testCase 2",
 			input: Fixed{
 				MetaItem: MetaItem{},
 				Data:     nil,
@@ -187,7 +187,7 @@ func TestFixedFrn(t *testing.T) {
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name: "testcase 1",
+			Name: "testCase 1",
 			input: Fixed{
 				MetaItem: MetaItem{
 					FRN:         7,
@@ -200,7 +200,7 @@ func TestFixedFrn(t *testing.T) {
 			output: 7,
 		},
 		{
-			Name: "testcase 2",
+			Name: "testCase 2",
 			input: Fixed{
 				MetaItem: MetaItem{},
 				Data:     []byte{},

@@ -21,7 +21,7 @@ func TestCompoundReader(t *testing.T) {
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name:  "testcase 1",
+			Name:  "testCase 1",
 			input: "80 01",
 			uap: uap.DataField{
 				FRN:  16,
@@ -53,7 +53,7 @@ func TestCompoundReader(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testcase 2",
+			Name:  "testCase 2",
 			input: "d4 01 01fe 0201020102 030102",
 			uap: uap.DataField{
 				Type: uap.Compound,
@@ -133,7 +133,7 @@ func TestCompoundReader(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testcase 3",
+			Name:  "testCase 3",
 			input: "",
 			uap: uap.DataField{
 				Type: uap.Compound,
@@ -155,7 +155,7 @@ func TestCompoundReader(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testcase 4",
+			Name:  "testCase 4",
 			input: "80 01",
 			uap: uap.DataField{
 				FRN:  16,
@@ -182,7 +182,7 @@ func TestCompoundReader(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testcase 5",
+			Name:  "testCase 5",
 			input: "80 01",
 			uap: uap.DataField{
 				FRN:  16,
@@ -205,7 +205,7 @@ func TestCompoundReader(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testcase 6",
+			Name:  "testCase 6",
 			input: "80 02",
 			uap: uap.DataField{
 				FRN:  16,
@@ -228,7 +228,7 @@ func TestCompoundReader(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testcase 7",
+			Name:  "testCase 7",
 			input: "80 020102",
 			uap: uap.DataField{
 				FRN:  16,
@@ -287,7 +287,7 @@ func TestCompoundString(t *testing.T) {
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name: "testcase 1",
+			Name: "testCase 1",
 			input: Compound{
 				MetaItem: MetaItem{
 					FRN:         1,
@@ -341,7 +341,7 @@ func TestCompoundString(t *testing.T) {
 			output: "I000/000:[primary:aa][I000/010:abcd][I000/030:c1abcd][I000/050:04abcdef][I000/070:02abcd]",
 		},
 		{
-			Name: "testcase 2",
+			Name: "testCase 2",
 			input: Compound{
 				MetaItem:  MetaItem{},
 				Primary:   nil,
@@ -374,7 +374,7 @@ func TestCompoundPayload(t *testing.T) {
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name: "testcase 1",
+			Name: "testCase 1",
 			input: Compound{
 				MetaItem: MetaItem{
 					FRN:         1,
@@ -428,7 +428,7 @@ func TestCompoundPayload(t *testing.T) {
 			output: []byte{0xaa, 0xab, 0xcd, 0xc1, 0xab, 0xcd, 0x04, 0xab, 0xcd, 0xef, 0x02, 0xab, 0xcd},
 		},
 		{
-			Name: "testcase 2",
+			Name: "testCase 2",
 			input: Compound{
 				MetaItem:  MetaItem{},
 				Primary:   nil,
@@ -461,7 +461,7 @@ func TestCompoundFrn(t *testing.T) {
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name: "testcase 1",
+			Name: "testCase 1",
 			input: Compound{
 				MetaItem: MetaItem{
 					FRN:         7,
@@ -475,7 +475,7 @@ func TestCompoundFrn(t *testing.T) {
 			output: 7,
 		},
 		{
-			Name: "testcase 2",
+			Name: "testCase 2",
 			input: Compound{
 				MetaItem:  MetaItem{},
 				Primary:   nil,

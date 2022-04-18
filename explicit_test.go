@@ -21,7 +21,7 @@ func TestExplicitReader(t *testing.T) {
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name:  "testcase 1",
+			Name:  "testCase 1",
 			input: "08 01 02 03 04 05 06 07",
 			uap: uap.DataField{
 				FRN:         1,
@@ -43,7 +43,7 @@ func TestExplicitReader(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testcase 2",
+			Name:  "testCase 2",
 			input: "08 01 02 03 04 05 06",
 			uap: uap.DataField{
 				FRN:         1,
@@ -65,7 +65,7 @@ func TestExplicitReader(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testcase 3",
+			Name:  "testCase 3",
 			input: "",
 			uap: uap.DataField{
 				FRN:         1,
@@ -122,7 +122,7 @@ func TestExplicitString(t *testing.T) {
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name: "testcase 1",
+			Name: "testCase 1",
 			input: Explicit{
 				MetaItem: MetaItem{
 					FRN:         1,
@@ -136,7 +136,7 @@ func TestExplicitString(t *testing.T) {
 			output: "I000/010:04abcdef",
 		},
 		{
-			Name: "testcase 2",
+			Name: "testCase 2",
 			input: Explicit{
 				MetaItem: MetaItem{},
 				Len:      0,
@@ -169,7 +169,7 @@ func TestExplicitPayload(t *testing.T) {
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name: "testcase 1",
+			Name: "testCase 1",
 			input: Explicit{
 				MetaItem: MetaItem{
 					FRN:         1,
@@ -183,7 +183,7 @@ func TestExplicitPayload(t *testing.T) {
 			output: []byte{0x04, 0xab, 0xcd, 0xef},
 		},
 		{
-			Name: "testcase 2",
+			Name: "testCase 2",
 			input: Explicit{
 				MetaItem: MetaItem{},
 				Len:      0,
@@ -216,7 +216,7 @@ func TestExplicitFrn(t *testing.T) {
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name: "testcase 1",
+			Name: "testCase 1",
 			input: Explicit{
 				MetaItem: MetaItem{
 					FRN:         7,
@@ -230,7 +230,7 @@ func TestExplicitFrn(t *testing.T) {
 			output: 7,
 		},
 		{
-			Name: "testcase 2",
+			Name: "testCase 2",
 			input: Explicit{
 				MetaItem: MetaItem{},
 				Len:      0,

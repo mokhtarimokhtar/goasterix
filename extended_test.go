@@ -21,7 +21,7 @@ func TestExtendedReader(t *testing.T) {
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name:  "testcase 1",
+			Name:  "testCase 1",
 			input: "01 03 07 09 0b 0d 0f 0e",
 			uap: uap.DataField{
 				Type: uap.Extended,
@@ -40,7 +40,7 @@ func TestExtendedReader(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testcase 2",
+			Name:  "testCase 2",
 			input: "fe",
 			uap: uap.DataField{
 				Type: uap.Extended,
@@ -58,7 +58,7 @@ func TestExtendedReader(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testcase 3",
+			Name:  "testCase 3",
 			input: "",
 			uap: uap.DataField{
 				Type: uap.Extended,
@@ -76,7 +76,7 @@ func TestExtendedReader(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testcase 4",
+			Name:  "testCase 4",
 			input: "ff",
 			uap: uap.DataField{
 				Type: uap.Extended,
@@ -94,7 +94,7 @@ func TestExtendedReader(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testcase 5",
+			Name:  "testCase 5",
 			input: "ff",
 			uap: uap.DataField{
 				Type: uap.Extended,
@@ -112,7 +112,7 @@ func TestExtendedReader(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testcase 6",
+			Name:  "testCase 6",
 			input: "0001 000001 fffffe",
 			uap: uap.DataField{
 				Type: uap.Extended,
@@ -131,7 +131,7 @@ func TestExtendedReader(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testcase 7",
+			Name:  "testCase 7",
 			input: "0001 000001 ffff",
 			uap: uap.DataField{
 				Type: uap.Extended,
@@ -185,7 +185,7 @@ func TestExtendedString(t *testing.T) {
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name: "testcase 1",
+			Name: "testCase 1",
 			input: Extended{
 				MetaItem: MetaItem{
 					FRN:         1,
@@ -199,7 +199,7 @@ func TestExtendedString(t *testing.T) {
 			output: "I000/010:c1abcd",
 		},
 		{
-			Name: "testcase 2",
+			Name: "testCase 2",
 			input: Extended{
 				MetaItem:  MetaItem{},
 				Primary:   nil,
@@ -232,7 +232,7 @@ func TestExtendedPayload(t *testing.T) {
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name: "testcase 1",
+			Name: "testCase 1",
 			input: Extended{
 				MetaItem: MetaItem{
 					FRN:         1,
@@ -246,7 +246,7 @@ func TestExtendedPayload(t *testing.T) {
 			output: []byte{0xc1, 0xab, 0xcd},
 		},
 		{
-			Name: "testcase 2",
+			Name: "testCase 2",
 			input: Extended{
 				MetaItem:  MetaItem{},
 				Primary:   nil,
@@ -279,7 +279,7 @@ func TestExtendedFrn(t *testing.T) {
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name: "testcase 1",
+			Name: "testCase 1",
 			input: Extended{
 				MetaItem: MetaItem{
 					FRN:         7,
@@ -293,7 +293,7 @@ func TestExtendedFrn(t *testing.T) {
 			output: 7,
 		},
 		{
-			Name: "testcase 2",
+			Name: "testCase 2",
 			input: Extended{
 				MetaItem:  MetaItem{},
 				Primary:   nil,

@@ -1,9 +1,9 @@
 package uap
 
-// Cat4Test User Application Profile
+// CatForTest User Application Profile
 // Specific for testing
-var Cat4Test = StandardUAP{
-	Name:     "cat4test_0.1",
+var CatForTest = StandardUAP{
+	Name:     "catfortest_0.1",
 	Category: 26, // not exist
 	Version:  0.1,
 	Items: []DataField{

@@ -10,7 +10,7 @@ import (
 	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
-func TestRecord_Payload(t *testing.T) {
+/*func TestRecordPayload(t *testing.T) {
 	// Arrange
 	data, _ := util.HexStringToByte("ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020a0")
 	nbOfBytes := 42
@@ -26,7 +26,7 @@ func TestRecord_Payload(t *testing.T) {
 	} else {
 		t.Logf("MsgSuccessInValue: len(items) = %v; Expected: %v", len(items), nbOfBytes)
 	}
-}
+}*/
 
 func TestRecord_String(t *testing.T) {
 	// Arrange
@@ -130,21 +130,20 @@ func TestFspecIndex(t *testing.T) {
 
 }
 
-
 /*
 // RFSDataField
 func TestRFSDataFieldReader(t *testing.T) {
 	// Setup
-	type dataTest struct {
+	type testCase struct {
 		TestCaseName string
 		input        string
 		item         []uap.DataField
 		output       RandomFieldSequencing
 		err          error
 	}
-	dataSet := []dataTest{
+	dataSet := []testCase{
 		{
-			TestCaseName: "testcase 1",
+			TestCaseName: "testCase 1",
 			input:        "02 03 ffffffff 0a ff",
 			item:         uap.Cat001PlotV12,
 			output: RandomFieldSequencing{
@@ -179,7 +178,7 @@ func TestRFSDataFieldReader(t *testing.T) {
 			err: nil,
 		},
 		{
-			TestCaseName: "testcase 2",
+			TestCaseName: "testCase 2",
 			input:        "02",
 			item:         uap.Cat001PlotV12,
 			output: RandomFieldSequencing{
@@ -188,7 +187,7 @@ func TestRFSDataFieldReader(t *testing.T) {
 			err: io.EOF,
 		},
 		{
-			TestCaseName: "testcase 3",
+			TestCaseName: "testCase 3",
 			input:        "02 03 ffffffff 0a",
 			item:         uap.Cat001PlotV12,
 			output: RandomFieldSequencing{
@@ -211,7 +210,7 @@ func TestRFSDataFieldReader(t *testing.T) {
 			err: io.EOF,
 		},
 		{
-			TestCaseName: "testcase 4",
+			TestCaseName: "testCase 4",
 			input:        "",
 			item:         uap.Cat001PlotV12,
 			output:       RandomFieldSequencing{},
@@ -241,64 +240,80 @@ func TestRFSDataFieldReader(t *testing.T) {
 	}
 }
 */
-//Testing by record
-func TestRecordDecode_NbOfItems(t *testing.T) {
+
+// Testing integration record
+func TestRecordDecodeNbOfItems(t *testing.T) {
 	// setup
-	type dataTest struct {
+	type testCase struct {
+		Name      string
 		input     string          // data test one record = fspec + items
 		uap       uap.StandardUAP // Items of category corresponding to data test input
 		nbOfItems int
 		err       error // error expected
 	}
-	dataSet := []dataTest{
+	dataSet := []testCase{
 		{
+			Name:      "testcase 1",
 			input:     "f6083602429b7110940028200094008000",
 			uap:       uap.Cat034V127,
 			err:       nil,
 			nbOfItems: 6,
 		},
 		{
+			Name:      "testcase 2",
 			input:     "f6083602429b71109400282000940080",
 			uap:       uap.Cat034V127,
 			err:       io.EOF,
 			nbOfItems: 5,
 		},
 		{
+			Name:      "testcase 3",
 			input:     "ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020a0",
 			uap:       uap.Cat048V127,
 			err:       nil,
 			nbOfItems: 14,
 		},
 		{
-			// 0xA0 last byte is removed
+			Name:      "testcase 4", // 0xA0 last byte is removed
 			input:     "ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020",
 			uap:       uap.Cat048V127,
 			err:       io.ErrUnexpectedEOF,
 			nbOfItems: 13,
 		},
 		{
+			Name:      "testcase 5",
 			input:     "f0 0831 00 0a8abb2e 3802",
 			uap:       uap.Cat001V12,
 			err:       nil,
 			nbOfItems: 4,
 		},
 		{
+			Name:      "testcase 6",
 			input:     "f0 0831 00 0a8abb2e 38",
 			uap:       uap.Cat001V12,
 			err:       io.ErrUnexpectedEOF,
 			nbOfItems: 3,
 		},
 		{
+			Name:      "testcase 7",
 			input:     "f502 0831 98 01bf 0a1ebb43 022538e2 00",
 			uap:       uap.Cat001V12,
 			err:       nil,
 			nbOfItems: 6,
 		},
 		{
+			Name:      "testcase 8",
 			input:     "f502 0831 98 01bf 0a1ebb43 022538e2",
 			uap:       uap.Cat001V12,
 			err:       io.EOF,
 			nbOfItems: 5,
+		},
+		{
+			Name:      "testcase 9",
+			input:     "",
+			uap:       uap.Cat048V127,
+			nbOfItems: 0,
+			err:       io.EOF,
 		},
 	}
 
@@ -312,54 +327,131 @@ func TestRecordDecode_NbOfItems(t *testing.T) {
 
 		// Assert
 		if err != row.err {
-			t.Errorf("MsgFailInValue: error: %s; Expected: %v", err, row.err)
+			t.Errorf(util.MsgFailInValue, row.Name, err, row.err)
 		} else {
-			t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, row.err)
+			t.Logf(util.MsgSuccessInValue, row.Name, err, row.err)
 		}
+
 		if unRead != 0 {
-			t.Errorf("MsgFailInValue: unRead = %v; Expected: %v", unRead, 0)
+			t.Errorf(util.MsgFailInValue, row.Name, unRead, 0)
 		} else {
-			t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
+			t.Logf(util.MsgSuccessInValue, row.Name, unRead, 0)
 		}
+
 		if row.nbOfItems != len(rec.Items) {
-			t.Errorf("MsgFailInValue: nbOfItems = %v; Expected: %v", row.nbOfItems, len(rec.Items))
+			t.Errorf(util.MsgFailInValue, row.Name, row.nbOfItems, len(rec.Items))
 		} else {
-			t.Logf("MsgSuccessInValue: nbOfItems = %v; Expected: %v", row.nbOfItems, len(rec.Items))
+			t.Logf(util.MsgSuccessInValue, row.Name, row.nbOfItems, len(rec.Items))
 		}
 	}
 }
 
-func TestRecordDecode_Empty(t *testing.T) {
-	// Arrange
-	input := ""
-	var output []Item
-	uap048 := uap.Cat048V127
-	data, _ := util.HexStringToByte(input)
-	rec := NewRecord()
-
-	// Act
-	unRead, err := rec.Decode(data, uap048)
-
-	// Assert
-	if err != io.EOF {
-		t.Errorf("MsgFailInValue: error = %v; Expected: %v", err, io.EOF)
-	} else {
-		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, io.EOF)
+func TestRecordPayload(t *testing.T) {
+	// setup
+	type testCase struct {
+		Name   string
+		input  string          // data test one record = fspec + items
+		uap    uap.StandardUAP // Items of category corresponding to data test input
+		output []byte
+		err    error // error expected
 	}
-	if unRead != 0 {
-		t.Errorf("MsgFailInValue: unRead = %v; Expected: %v", unRead, 0)
-	} else {
-		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
+	dataSet := []testCase{
+		{
+			Name:  "testcase 1",
+			input: "f6083602429b7110940028200094008000",
+			uap:   uap.Cat034V127,
+			err:   nil,
+			output: []byte{0xf6, 0x08, 0x36, 0x02, 0x42, 0x9b, 0x71, 0x10, 0x94, 0x00, 0x28, 0x20, 0x00, 0x94, 0x00,
+				0x80, 0x00},
+		},
+		{
+			Name:   "testcase 2", // 0x00 last byte is removed
+			input:  "f6083602429b71109400282000940080",
+			uap:    uap.Cat034V127,
+			err:    io.EOF,
+			output: []byte{0xf6, 0x08, 0x36, 0x02, 0x42, 0x9b, 0x71, 0x10, 0x94, 0x00, 0x28, 0x20, 0x00},
+		},
+		{
+			Name:  "testcase 3",
+			input: "ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020a0",
+			uap:   uap.Cat048V127,
+			err:   nil,
+			output: []byte{0xff, 0xdf, 0x02, 0x93, 0x19, 0x37, 0x8d, 0x3d, 0xa2, 0x05, 0x6f, 0x13, 0x2d, 0x0f, 0xff,
+				0x00, 0x94, 0x60, 0x02, 0xde, 0x50, 0x6f, 0x84, 0x4c, 0xc3, 0xc3, 0x51, 0x23, 0x31, 0x00, 0x17, 0x01,
+				0x3b, 0x02, 0x6c, 0x00, 0x0c, 0x74, 0xa7, 0x40, 0x20, 0xa0},
+		},
+		{
+			Name:  "testcase 4", // 0xa0 last byte is removed
+			input: "ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020",
+			uap:   uap.Cat048V127,
+			err:   io.ErrUnexpectedEOF,
+			output: []byte{0xff, 0xdf, 0x02, 0x93, 0x19, 0x37, 0x8d, 0x3d, 0xa2, 0x05, 0x6f, 0x13, 0x2d, 0x0f, 0xff,
+				0x00, 0x94, 0x60, 0x02, 0xde, 0x50, 0x6f, 0x84, 0x4c, 0xc3, 0xc3, 0x51, 0x23, 0x31, 0x00, 0x17, 0x01,
+				0x3b, 0x02, 0x6c, 0x00, 0x0c, 0x74, 0xa7, 0x40},
+		},
+		{
+			Name:   "testcase 5",
+			input:  "f0 0831 00 0a8abb2e 3802",
+			uap:    uap.Cat001V12,
+			err:    nil,
+			output: []byte{},
+		},
+		{
+			Name:   "testcase 6",
+			input:  "f0 0831 00 0a8abb2e 38",
+			uap:    uap.Cat001V12,
+			err:    io.ErrUnexpectedEOF,
+			output: []byte{},
+		},
+		{
+			Name:   "testcase 7",
+			input:  "f502 0831 98 01bf 0a1ebb43 022538e2 00",
+			uap:    uap.Cat001V12,
+			err:    nil,
+			output: []byte{},
+		},
+		{
+			Name:   "testcase 8",
+			input:  "f502 0831 98 01bf 0a1ebb43 022538e2",
+			uap:    uap.Cat001V12,
+			err:    io.EOF,
+			output: []byte{},
+		},
+		{
+			Name:   "testcase 9",
+			input:  "",
+			uap:    uap.Cat048V127,
+			output: []byte{},
+			err:    io.EOF,
+		},
 	}
-	if reflect.DeepEqual(rec.Items, output) == false {
-		t.Errorf("MsgFailInValue: %v; Expected: %v", rec.Items, output)
-	} else {
-		t.Logf("MsgSuccessInValue: %v; Expected: %v", rec.Items, output)
+
+	for _, row := range dataSet {
+		// Arrange
+		data, _ := util.HexStringToByte(row.input)
+		rec := new(Record)
+		_, err := rec.Decode(data, row.uap)
+
+		// Act
+		res := rec.Payload()
+
+		// Assert
+		if err != row.err {
+			t.Errorf(util.MsgFailInValue, row.Name, err, row.err)
+		} else {
+			t.Logf(util.MsgSuccessInValue, row.Name, err, row.err)
+		}
+
+		if bytes.Equal(res, row.output) == false {
+			t.Errorf(util.MsgFailInHex, row.Name, res, row.output)
+		} else {
+			t.Logf(util.MsgSuccessInHex, row.Name, res, row.output)
+		}
 	}
 }
 
 /*
-// Testing : Decode Cat4Test
+// Testing : Decode CatForTest
 func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 	// Arrange
 	input := "fd 40 ffff fffffe 03ffff 02ffffffff ab80 ff fffe 02ffffffff 04ffffff ffff 0101ffff 03ffff"
@@ -514,7 +606,7 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 			},
 		},
 	}
-	uap4Test := uap.Cat4Test
+	uap4Test := uap.CatForTest
 	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
@@ -573,7 +665,7 @@ func TestRecordDecode_Cat4TestTrackFullRecord(t *testing.T) {
 			Fixed: &Fixed{Data: []byte{0xff, 0xff}},
 		},
 	}
-	uap4Test := uap.Cat4Test
+	uap4Test := uap.CatForTest
 	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
@@ -632,7 +724,7 @@ func TestRecordDecode_Cat4TestPlotFullRecord(t *testing.T) {
 			Fixed: &Fixed{Data: []byte{0xff}},
 		},
 	}
-	uap4Test := uap.Cat4Test
+	uap4Test := uap.CatForTest
 	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
@@ -661,23 +753,23 @@ func TestRecordDecode_Cat4TestPlotFullRecord(t *testing.T) {
 
 func TestRecordDecode_Cat4TestError(t *testing.T) {
 	// Setup
-	type dataTest struct {
+	type testCase struct {
 		TestCase string
 		input    string
 		output   []Item
 		unRead   int
 		err      error
 	}
-	dataSet := []dataTest{
+	dataSet := []testCase{
 		{
-			TestCase: "testcase 1",
+			TestCase: "testCase 1",
 			input:    "02 FFFF",
 			output:   nil,
 			unRead:   2,
 			err:      ErrDataFieldUnknown,
 		},
 		{
-			TestCase: "testcase 2",
+			TestCase: "testCase 2",
 			// Repetitive FRN 4
 			input:  "10 03FFFFFFFF",
 			output: nil,
@@ -685,7 +777,7 @@ func TestRecordDecode_Cat4TestError(t *testing.T) {
 			err:    io.ErrUnexpectedEOF,
 		},
 		{
-			TestCase: "testcase 3",
+			TestCase: "testCase 3",
 			// Explicit FRN 3
 			input:  "20 04FFFF",
 			output: nil,
@@ -693,7 +785,7 @@ func TestRecordDecode_Cat4TestError(t *testing.T) {
 			err:    io.ErrUnexpectedEOF,
 		},
 		{
-			TestCase: "testcase 4",
+			TestCase: "testCase 4",
 			// RFS FRN 6
 			input:  "04 0101",
 			output: nil,
@@ -701,7 +793,7 @@ func TestRecordDecode_Cat4TestError(t *testing.T) {
 			err:    io.EOF,
 		},
 		{
-			TestCase: "testcase 5",
+			TestCase: "testCase 5",
 			// RE FRN 8
 			input:  "0180 04FFFF",
 			output: nil,
@@ -712,7 +804,7 @@ func TestRecordDecode_Cat4TestError(t *testing.T) {
 
 	for _, row := range dataSet {
 		// Arrange
-		uap4Test := uap.Cat4Test
+		uap4Test := uap.CatForTest
 		data, _ := util.HexStringToByte(row.input)
 		rec := NewRecord()
 
@@ -738,8 +830,9 @@ func TestRecordDecode_Cat4TestError(t *testing.T) {
 	}
 }
 */
+
 // Testing : Decode by category
-func TestRecordDecode_CAT048(t *testing.T) {
+func TestRecordDecodeCAT048(t *testing.T) {
 	// Arrange
 	input := "fff702 0836 429b52 a0 94c70181 0913 02d0 6002b7 490d01 38a178cf4220 02e79a5d27a00c0060a3280030a4000040 063a 0743ce5b 40 20f5"
 	output := []Item{

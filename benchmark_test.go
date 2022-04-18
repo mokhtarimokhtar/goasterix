@@ -60,7 +60,7 @@ func BenchmarkRecordDecode_Len55(b *testing.B) {
 func BenchmarkRecordDecode_Len68(b *testing.B) {
 	benchmarkRecordDecode(
 		"fc ffff fffffe 03ffff 02ffffffff ab80 ff fffe 02ffffffff 04ffffff ffff 0101ffff",
-		uap.Cat4Test,
+		uap.CatForTest,
 		b)
 }
 func BenchmarkRecordDecode_Len73(b *testing.B) {

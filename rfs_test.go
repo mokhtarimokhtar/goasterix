@@ -17,7 +17,7 @@ func TestRandomFieldString(t *testing.T) {
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name: "testcase 1",
+			Name: "testCase 1",
 			input: RandomField{
 				FRN: 1,
 				Field: &Fixed{
@@ -33,7 +33,7 @@ func TestRandomFieldString(t *testing.T) {
 			output: "FRN:01 I000/010:abcd",
 		},
 		{
-			Name: "testcase 2",
+			Name: "testCase 2",
 			input: RandomField{
 				FRN: 0,
 				Field: &Fixed{
@@ -44,7 +44,7 @@ func TestRandomFieldString(t *testing.T) {
 			output: "FRN:00 :",
 		},
 		{
-			Name: "testcase 3",
+			Name: "testCase 3",
 			input: RandomField{
 				FRN: 3,
 				Field: &Extended{
@@ -85,7 +85,7 @@ func TestRandomFieldPayload(t *testing.T) {
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name: "testcase 1",
+			Name: "testCase 1",
 			input: RandomField{
 				FRN: 1,
 				Field: &Fixed{
@@ -101,7 +101,7 @@ func TestRandomFieldPayload(t *testing.T) {
 			output: []byte{0x01, 0xab, 0xcd},
 		},
 		{
-			Name: "testcase 2",
+			Name: "testCase 2",
 			input: RandomField{
 				FRN: 0,
 				Field: &Fixed{
@@ -112,7 +112,7 @@ func TestRandomFieldPayload(t *testing.T) {
 			output: []byte{0x00},
 		},
 		{
-			Name: "testcase 3",
+			Name: "testCase 3",
 			input: RandomField{
 				FRN: 16,
 				Field: &Extended{
@@ -153,7 +153,7 @@ func TestRandomFieldSequencingString(t *testing.T) {
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name: "testcase 1",
+			Name: "testCase 1",
 			input: RandomFieldSequencing{
 				MetaItem: MetaItem{
 					FRN:         0,
@@ -193,7 +193,7 @@ func TestRandomFieldSequencingString(t *testing.T) {
 			output: "I000/000:[N:02][FRN:01 I000/010:abcd][FRN:03 I000/030:c1abcd]",
 		},
 		{
-			Name: "testcase 2",
+			Name: "testCase 2",
 			input: RandomFieldSequencing{
 				MetaItem: MetaItem{},
 				N:        0,
@@ -226,7 +226,7 @@ func TestRandomFieldSequencingPayload(t *testing.T) {
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name: "testcase 1",
+			Name: "testCase 1",
 			input: RandomFieldSequencing{
 				MetaItem: MetaItem{
 					FRN:         0,
@@ -266,7 +266,7 @@ func TestRandomFieldSequencingPayload(t *testing.T) {
 			output: []byte{0x02, 0x10, 0xab, 0xcd, 0x03, 0xc1, 0xab, 0xcd},
 		},
 		{
-			Name: "testcase 2",
+			Name: "testCase 2",
 			input: RandomFieldSequencing{
 				MetaItem: MetaItem{},
 				N:        0,
@@ -299,7 +299,7 @@ func TestRandomFieldSequencingFrn(t *testing.T) {
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name: "testcase 1",
+			Name: "testCase 1",
 			input: RandomFieldSequencing{
 				MetaItem: MetaItem{
 					FRN:         7,
@@ -313,7 +313,7 @@ func TestRandomFieldSequencingFrn(t *testing.T) {
 			output: 7,
 		},
 		{
-			Name: "testcase 2",
+			Name: "testCase 2",
 			input: RandomFieldSequencing{
 				MetaItem: MetaItem{},
 				N:        0,

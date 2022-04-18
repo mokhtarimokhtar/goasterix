@@ -21,7 +21,7 @@ func TestSpecialPurposeReader(t *testing.T) {
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name:  "testcase 1",
+			Name:  "testCase 1",
 			input: "08 01 02 03 04 05 06 07",
 			uap: uap.DataField{
 				FRN:         1,
@@ -42,7 +42,7 @@ func TestSpecialPurposeReader(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testcase 2",
+			Name:  "testCase 2",
 			input: "08 01 02 03 04 05 06",
 			uap: uap.DataField{
 				FRN:         1,
@@ -63,7 +63,7 @@ func TestSpecialPurposeReader(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testcase 3",
+			Name:  "testCase 3",
 			input: "",
 			uap: uap.DataField{
 				FRN:         1,
@@ -119,7 +119,7 @@ func TestSpecialPurposeString(t *testing.T) {
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name: "testcase 1",
+			Name: "testCase 1",
 			input: SpecialPurpose{
 				MetaItem: MetaItem{
 					FRN:         1,
@@ -133,7 +133,7 @@ func TestSpecialPurposeString(t *testing.T) {
 			output: "I000/010:04abcdef",
 		},
 		{
-			Name: "testcase 2",
+			Name: "testCase 2",
 			input: SpecialPurpose{
 				MetaItem: MetaItem{},
 				Len:      0,
@@ -166,7 +166,7 @@ func TestSpecialPurposePayload(t *testing.T) {
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name: "testcase 1",
+			Name: "testCase 1",
 			input: SpecialPurpose{
 				MetaItem: MetaItem{
 					FRN:         1,
@@ -180,7 +180,7 @@ func TestSpecialPurposePayload(t *testing.T) {
 			output: []byte{0x04, 0xab, 0xcd, 0xef},
 		},
 		{
-			Name:   "testcase 2",
+			Name:   "testCase 2",
 			input:  SpecialPurpose{
 				MetaItem: MetaItem{},
 				Len:      0,
@@ -213,7 +213,7 @@ func TestSpecialPurposeFrn(t *testing.T) {
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name: "testcase 1",
+			Name: "testCase 1",
 			input: SpecialPurpose{
 				MetaItem: MetaItem{
 					FRN:         7,
@@ -227,7 +227,7 @@ func TestSpecialPurposeFrn(t *testing.T) {
 			output: 7,
 		},
 		{
-			Name: "testcase 2",
+			Name: "testCase 2",
 			input: SpecialPurpose{
 				MetaItem: MetaItem{},
 				Len:      0,

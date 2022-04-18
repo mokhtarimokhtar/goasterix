@@ -194,7 +194,7 @@ func TestDataBlockDecode(t *testing.T) {
 			unRead:       0,
 		},
 		{
-			TestCaseName: "Cat4Test full record",
+			TestCaseName: "CatForTest full record",
 			//
 			//input:       "1a 0026 FD80 FFFF FFFE AAFFFFFE 02FFFF FFFF 03FFFF 02FFFFFFFF 04FFFFFF 0101FFFF 04FFFFFF",
 			input:       "1a 0029 fd 40 ffff fffffe 03ffff 02ffffffff ab80 ff fffe 02ffffffff 04ffffff ffff 0101ffff 03ffff",
@@ -203,7 +203,7 @@ func TestDataBlockDecode(t *testing.T) {
 			unRead:      0,
 		},
 		{
-			TestCaseName: "Cat4Test EOF record",
+			TestCaseName: "CatForTest EOF record",
 			input:        "1a 0026 FD80 FFFF FFFE AAFFFFFE 02FFFF FFFF 03FFFF 02FFFFFFFF 04FFFFFF 0101FFFF 05FFFFFF",
 			err:          io.ErrUnexpectedEOF,
 			nbOfRecords:  1,

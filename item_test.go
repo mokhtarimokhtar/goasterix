@@ -17,7 +17,7 @@ func TestNewMetaItem(t *testing.T) {
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name: "testcase 1",
+			Name: "testCase 1",
 			input: uap.DataField{
 				FRN:         1,
 				DataItem:    "I000/010",
@@ -33,7 +33,7 @@ func TestNewMetaItem(t *testing.T) {
 			},
 		},
 		{
-			Name: "testcase 2",
+			Name: "testCase 2",
 			input: uap.DataField{
 				FRN:         0,
 				DataItem:    "",
@@ -44,7 +44,7 @@ func TestNewMetaItem(t *testing.T) {
 			output: MetaItem{},
 		},
 		{
-			Name: "testcase 3",
+			Name: "testCase 3",
 			input: uap.DataField{
 				FRN:         3,
 				DataItem:    "I000/030",
@@ -63,7 +63,7 @@ func TestNewMetaItem(t *testing.T) {
 			},
 		},
 		{
-			Name: "testcase 4",
+			Name: "testCase 4",
 			input: uap.DataField{
 				FRN:         4,
 				DataItem:    "I000/040",
@@ -79,7 +79,7 @@ func TestNewMetaItem(t *testing.T) {
 			},
 		},
 		{
-			Name: "testcase 5",
+			Name: "testCase 5",
 			input: uap.DataField{
 				FRN:         5,
 				DataItem:    "I000/050",
@@ -95,7 +95,7 @@ func TestNewMetaItem(t *testing.T) {
 			},
 		},
 		{
-			Name: "testcase 6",
+			Name: "testCase 6",
 			input: uap.DataField{
 				FRN:         6,
 				DataItem:    "I000/060",

@@ -100,3 +100,50 @@ func TestExtendedPayload(t *testing.T) {
 		}
 	}
 }
+
+func TestExtendedFrn(t *testing.T) {
+	// setup
+	type testCase struct {
+		Name   string
+		input  Extended
+		output uint8
+	}
+	// Arrange
+	dataSet := []testCase{
+		{
+			Name: "testcase 1",
+			input: Extended{
+				MetaItem: MetaItem{
+					FRN:         7,
+					DataItem:    "I000/070",
+					Description: "Test item",
+					Type:        uap.Extended,
+				},
+				Primary:   nil,
+				Secondary: nil,
+			},
+			output: 7,
+		},
+		{
+			Name: "testcase 2",
+			input: Extended{
+				MetaItem:  MetaItem{},
+				Primary:   nil,
+				Secondary: nil,
+			},
+			output: 0,
+		},
+	}
+
+	for _, row := range dataSet {
+		// Act
+		res := row.input.Frn()
+
+		// Assert
+		if res != row.output {
+			t.Errorf(util.MsgFailInValue, row.Name, res, row.output)
+		} else {
+			t.Logf(util.MsgSuccessInValue, row.Name, res, row.output)
+		}
+	}
+}

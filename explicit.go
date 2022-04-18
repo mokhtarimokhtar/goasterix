@@ -34,6 +34,7 @@ func (e *Explicit) Reader(rb *bytes.Reader, field uap.DataField) error {
 	return err
 }
 
+// Payload returns this field as bytes.
 func (e Explicit) Payload() []byte {
 	var p []byte
 	p = append(p, e.Len)
@@ -55,6 +56,7 @@ func (e Explicit) String() string {
 	return buf.String()
 }
 
+// Frn returns FRN number of field from UAP
 func (e Explicit) Frn() uint8 {
 	return e.MetaItem.FRN
 }

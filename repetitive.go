@@ -36,6 +36,7 @@ func (r *Repetitive) Reader(rb *bytes.Reader, field uap.DataField) error {
 	return err
 }
 
+// Payload returns this field as bytes.
 func (r Repetitive) Payload() []byte {
 	var p []byte
 	p = append(p, r.Rep)
@@ -43,6 +44,7 @@ func (r Repetitive) Payload() []byte {
 	return p
 }
 
+// String implements fmt.Stringer in hexadecimal
 func (r Repetitive) String() string {
 	var buf bytes.Buffer
 	buf.Reset()
@@ -54,11 +56,9 @@ func (r Repetitive) String() string {
 	buf.WriteByte(':')
 	buf.WriteString(hex.EncodeToString(tmp))
 	return buf.String()
-
-	//tmp := []byte{r.Rep}
-	//return r.MetaItem.DataItem + ": " + hex.EncodeToString(tmp) + hex.EncodeToString(r.Data)
 }
 
+// Frn returns FRN number of field from UAP
 func (r Repetitive) Frn() uint8 {
 	return r.MetaItem.FRN
 }

@@ -37,6 +37,7 @@ func (sp *SpecialPurpose) Reader(rb *bytes.Reader, field uap.DataField) error {
 	return err
 }
 
+// Payload returns this field as bytes.
 func (sp SpecialPurpose) Payload() []byte {
 	var p []byte
 	p = append(p, sp.Len)
@@ -44,6 +45,7 @@ func (sp SpecialPurpose) Payload() []byte {
 	return p
 }
 
+// String implements fmt.Stringer in hexadecimal
 func (sp SpecialPurpose) String() string {
 	var buf bytes.Buffer
 	buf.Reset()
@@ -57,6 +59,7 @@ func (sp SpecialPurpose) String() string {
 	return buf.String()
 }
 
+// Frn returns FRN number of field from UAP
 func (sp SpecialPurpose) Frn() uint8 {
 	return sp.MetaItem.FRN
 }

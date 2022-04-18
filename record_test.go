@@ -130,52 +130,8 @@ func TestFspecIndex(t *testing.T) {
 
 }
 
-/*// FixedDataField
-func TestFixedDataFieldReader_Valid(t *testing.T) {
-	// Arrange
-	input, _ := util.HexStringToByte("FF FE FD BF 00 01 02 03")
-	nb := uint8(8)
-	rb := bytes.NewReader(input)
-	output := []byte{0xFF, 0xFE, 0xFD, 0xBF, 0x00, 0x01, 0x02, 0x03}
 
-	// Act
-	item, err := FixedDataFieldReader(rb, nb)
-
-	// Assert
-	if err != nil {
-		t.Errorf("MsgFailInValue: error: %v; Expected: %v", err, nil)
-	} else {
-		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
-	}
-	if bytes.Equal(item.Data, output) == false {
-		t.Errorf("MsgFailInValue: sp = % X; Expected: % X", item, output)
-	} else {
-		t.Logf("MsgSuccessInValue: sp = % X; Expected: % X", item, output)
-	}
-}
-
-func TestFixedDataFieldReader_Invalid(t *testing.T) {
-	// Arrange
-	input, _ := util.HexStringToByte("FF FE BF 00 01 02")
-	nb := uint8(7)
-	rb := bytes.NewReader(input)
-
-	// Act
-	item, err := FixedDataFieldReader(rb, nb)
-
-	// Assert
-	if err != io.ErrUnexpectedEOF {
-		t.Errorf("MsgFailInValue: error: %v; Expected: %v", err, io.ErrUnexpectedEOF)
-	} else {
-		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, io.ErrUnexpectedEOF)
-	}
-	if item.Data != nil {
-		t.Errorf("MsgFailInValue: item = %v; Expected: %v", item, nil)
-	} else {
-		t.Logf("MsgSuccessInValue: item = %v; Expected: %v", item, nil)
-	}
-}
-
+/*
 // ExtendedDataField
 func TestExtendedDataFieldReader(t *testing.T) {
 	// setup

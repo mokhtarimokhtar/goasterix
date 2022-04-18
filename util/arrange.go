@@ -10,12 +10,12 @@ import (
 */
 
 const (
-	MsgFailInValue     = "FAIL: %s - Result %v - Expected %v"
+	MsgFailInValue     = "FAIL   : %s - Result %v - Expected %v"
 	MsgSuccessInValue  = "SUCCESS: %s - Result %v - Expected %v"
-	MsgFailInHex       = "FAIL: %s - Result %x - Expected %x"
+	MsgFailInHex       = "FAIL   : %s - Result %x - Expected %x"
 	MsgSuccessInHex    = "SUCCESS: %s - Result %x - Expected %x"
-	MsgFailInString    = "FAIL: %s - Result %x - Expected %x"
-	MsgSuccessInString = "SUCCESS: %s - Result %x - Expected %x"
+	MsgFailInString    = "FAIL   : %s - Result %s - Expected %s"
+	MsgSuccessInString = "SUCCESS: %s - Result %s - Expected %s"
 )
 
 // HexStringToByte converts a hexadecimal string format to an array of byte.

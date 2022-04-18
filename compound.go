@@ -72,6 +72,7 @@ func (c *Compound) Reader(rb *bytes.Reader, field uap.DataField) error {
 	return err
 }
 
+// Payload returns this field as bytes.
 func (c Compound) Payload() []byte {
 	var p []byte
 	p = append(p, c.Primary...)
@@ -82,6 +83,7 @@ func (c Compound) Payload() []byte {
 	return p
 }
 
+// String implements fmt.Stringer in hexadecimal
 func (c Compound) String() string {
 	var buf bytes.Buffer
 	buf.Reset()
@@ -101,6 +103,7 @@ func (c Compound) String() string {
 	return buf.String()
 }
 
+// Frn returns FRN number of field from UAP
 func (c Compound) Frn() uint8 {
 	return c.MetaItem.FRN
 }

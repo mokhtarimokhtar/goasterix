@@ -7,13 +7,13 @@ import (
 	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
+// Fixed length Data Fields shall comprise a fixed number of octets.
 type Fixed struct {
 	MetaItem
 	Data []byte
 }
 
 // Reader extracts a number(nb) of bytes(size) and returns a slice of bytes(data of item).
-// Fixed length Data Fields shall comprise a fixed number of octets.
 func (f *Fixed) Reader(rb *bytes.Reader, field uap.DataField) error {
 	var err error
 	f.MetaItem.NewMetaItem(field)
@@ -22,12 +22,13 @@ func (f *Fixed) Reader(rb *bytes.Reader, field uap.DataField) error {
 	f.Data = make([]byte, size)
 	err = binary.Read(rb, binary.BigEndian, &f.Data)
 	if err != nil {
+		f.Data = nil
 		return err
 	}
-
 	return err
 }
 
+// Payload returns this field as bytes.
 func (f Fixed) Payload() []byte {
 	var p []byte
 	p = append(p, f.Data...)
@@ -44,6 +45,7 @@ func (f Fixed) String() string {
 	return buf.String()
 }
 
+// Frn returns FRN number of field from UAP
 func (f Fixed) Frn() uint8 {
 	return f.MetaItem.FRN
 }

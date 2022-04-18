@@ -50,6 +50,7 @@ func (e *Extended) Reader(rb *bytes.Reader, field uap.DataField) error {
 	return err
 }
 
+// Payload returns this field as bytes.
 func (e Extended) Payload() []byte {
 	var p []byte
 	p = append(p, e.Primary...)
@@ -68,6 +69,7 @@ func (e Extended) String() string {
 	return buf.String()
 }
 
+// Frn returns FRN number of field from UAP
 func (e Extended) Frn() uint8 {
 	return e.MetaItem.FRN
 }

@@ -12,6 +12,7 @@ type RandomField struct {
 	Field Item
 }
 
+// Payload returns this field as bytes.
 func (rf RandomField) Payload() []byte {
 	var p []byte
 	p = append(p, rf.FRN)
@@ -19,6 +20,7 @@ func (rf RandomField) Payload() []byte {
 	return p
 }
 
+// String implements fmt.Stringer in hexadecimal
 func (rf RandomField) String() string {
 	var buf bytes.Buffer
 	tmp := []byte{rf.FRN}
@@ -82,6 +84,7 @@ func (rfs *RandomFieldSequencing) Reader(rb *bytes.Reader, field uap.DataField) 
 	return err
 }
 
+// Payload returns this field as bytes.
 func (rfs RandomFieldSequencing) Payload() []byte {
 	var p []byte
 	p = append(p, rfs.N)
@@ -91,6 +94,7 @@ func (rfs RandomFieldSequencing) Payload() []byte {
 	return p
 }
 
+// String implements fmt.Stringer in hexadecimal
 func (rfs RandomFieldSequencing) String() string {
 	var buf bytes.Buffer
 	buf.Reset()
@@ -111,6 +115,7 @@ func (rfs RandomFieldSequencing) String() string {
 	return buf.String()
 }
 
+// Frn returns FRN number of field from UAP
 func (rfs RandomFieldSequencing) Frn() uint8 {
 	return rfs.MetaItem.FRN
 }

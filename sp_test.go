@@ -4,8 +4,110 @@ import (
 	"bytes"
 	"github.com/mokhtarimokhtar/goasterix/uap"
 	"github.com/mokhtarimokhtar/goasterix/util"
+	"io"
+	"reflect"
 	"testing"
 )
+
+func TestSpecialPurposeReader(t *testing.T) {
+	// setup
+	type testCase struct {
+		Name   string
+		input  string
+		uap    uap.DataField
+		output SpecialPurpose
+		err    error
+	}
+	// Arrange
+	dataSet := []testCase{
+		{
+			Name:  "testcase 1",
+			input: "08 01 02 03 04 05 06 07",
+			uap: uap.DataField{
+				FRN:         1,
+				DataItem:    "I000/010",
+				Description: "Test item",
+				Type:        uap.SP,
+			},
+			err: nil,
+			output: SpecialPurpose{
+				MetaItem: MetaItem{
+					FRN:         1,
+					DataItem:    "I000/010",
+					Description: "Test item",
+					Type:        uap.SP,
+				},
+				Len: 0x08,
+				Data: []byte{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07},
+			},
+		},
+		{
+			Name:  "testcase 2",
+			input: "08 01 02 03 04 05 06",
+			uap: uap.DataField{
+				FRN:         1,
+				DataItem:    "I000/010",
+				Description: "Test item",
+				Type:        uap.SP,
+			},
+			err: io.ErrUnexpectedEOF,
+			output: SpecialPurpose{
+				MetaItem: MetaItem{
+					FRN:         1,
+					DataItem:    "I000/010",
+					Description: "Test item",
+					Type:        uap.SP,
+				},
+				Len: 0x08,
+				Data: nil,
+			},
+		},
+		{
+			Name:  "testcase 3",
+			input: "",
+			uap: uap.DataField{
+				FRN:         1,
+				DataItem:    "I000/010",
+				Description: "Test item",
+				Type:        uap.SP,
+			},
+			err: io.EOF,
+			output: SpecialPurpose{
+				MetaItem: MetaItem{
+					FRN:         1,
+					DataItem:    "I000/010",
+					Description: "Test item",
+					Type:        uap.SP,
+				},
+				Len: 0x00,
+				Data: nil,
+			},
+		},
+	}
+
+	for _, row := range dataSet {
+		// Arrange
+		input, _ := util.HexStringToByte(row.input)
+		rb := bytes.NewReader(input)
+		f := SpecialPurpose{}
+
+		// Act
+		err := f.Reader(rb, row.uap)
+
+		// Assert
+		if err != row.err {
+			t.Errorf(util.MsgFailInValue, row.Name, err, row.err)
+		} else {
+			t.Logf(util.MsgSuccessInValue, row.Name, err, row.err)
+		}
+
+		if reflect.DeepEqual(f, row.output) == false {
+			t.Errorf(util.MsgFailInValue, row.Name, f, row.output)
+		} else {
+			t.Logf(util.MsgSuccessInValue, row.Name, f, row.output)
+		}
+	}
+}
 
 func TestSpecialPurposeString(t *testing.T) {
 	// setup

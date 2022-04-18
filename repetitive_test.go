@@ -4,8 +4,95 @@ import (
 	"bytes"
 	"github.com/mokhtarimokhtar/goasterix/uap"
 	"github.com/mokhtarimokhtar/goasterix/util"
+	"io"
+	"reflect"
 	"testing"
 )
+
+func TestRepetitiveReader(t *testing.T) {
+	// setup
+	type testCase struct {
+		Name   string
+		input  string
+		uap    uap.DataField
+		output Repetitive
+		err    error
+	}
+	// Arrange
+	dataSet := []testCase{
+		{
+			Name:  "testcase 1",
+			input: "03 01 02 03 01 02 03 01 02 03",
+			uap: uap.DataField{
+				Type:       uap.Repetitive,
+				Repetitive: uap.RepetitiveField{SubItemSize: 3},
+			},
+			err: nil,
+			output: Repetitive{
+				MetaItem: MetaItem{
+					Type: uap.Repetitive,
+				},
+				Rep:  0x03,
+				Data: []byte{0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03},
+			},
+		},
+		{
+			Name:  "testcase 2",
+			input: "04 01 02 03 01 02 03 01 02 03",
+			uap: uap.DataField{
+				Type:       uap.Repetitive,
+				Repetitive: uap.RepetitiveField{SubItemSize: 3},
+			},
+			err: io.ErrUnexpectedEOF,
+			output: Repetitive{
+				MetaItem: MetaItem{
+					Type: uap.Repetitive,
+				},
+				Rep:  0x04,
+				Data: nil,
+			},
+		},
+		{
+			Name:  "testcase 3",
+			input: "",
+			uap: uap.DataField{
+				Type:       uap.Repetitive,
+				Repetitive: uap.RepetitiveField{SubItemSize: 3},
+			},
+			err: io.EOF,
+			output: Repetitive{
+				MetaItem: MetaItem{
+					Type: uap.Repetitive,
+				},
+				Rep:  0x00,
+				Data: nil,
+			},
+		},
+	}
+
+	for _, row := range dataSet {
+		// Arrange
+		input, _ := util.HexStringToByte(row.input)
+		rb := bytes.NewReader(input)
+		f := Repetitive{}
+
+		// Act
+		err := f.Reader(rb, row.uap)
+
+		// Assert
+		if err != row.err {
+			t.Errorf(util.MsgFailInValue, row.Name, err, row.err)
+		} else {
+			t.Logf(util.MsgSuccessInValue, row.Name, err, row.err)
+		}
+
+		if reflect.DeepEqual(f, row.output) == false {
+			t.Errorf(util.MsgFailInValue, row.Name, f, row.output)
+		} else {
+			t.Logf(util.MsgSuccessInValue, row.Name, f, row.output)
+		}
+	}
+}
 
 func TestRepetitiveString(t *testing.T) {
 	// setup

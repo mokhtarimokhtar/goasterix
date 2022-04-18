@@ -48,7 +48,7 @@ type ExtendedField struct {
 type RepetitiveField struct {
 	SubItemSize uint8
 }
-type ExplicitField struct {}
+type ExplicitField struct{}
 
 /*
 type TypeField struct {

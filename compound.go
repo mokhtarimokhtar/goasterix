@@ -83,12 +83,22 @@ func (c Compound) Payload() []byte {
 }
 
 func (c Compound) String() string {
-	var str string
-	str = c.MetaItem.DataItem + ": " + "[primary: " + hex.EncodeToString(c.Primary) + "]"
+	var buf bytes.Buffer
+	buf.Reset()
+	buf.WriteString(c.MetaItem.DataItem)
+	buf.WriteByte(':')
+	buf.WriteByte('[')
+	buf.WriteString("primary:")
+	buf.WriteString(hex.EncodeToString(c.Primary))
+	buf.WriteByte(']')
+
 	for _, item := range c.Secondary {
-		str = str + "[" + item.String() + "]"
+		buf.WriteByte('[')
+		buf.WriteString(item.String())
+		buf.WriteByte(']')
 	}
-	return str
+
+	return buf.String()
 }
 
 func (c Compound) Frn() uint8 {

@@ -16,9 +16,9 @@ func TestHexStringToByte_Valid(t *testing.T) {
 
 	// Assert
 	if bytes.Equal(data, output) == false {
-		t.Errorf("FAIL: data = % X; Expected: % X", data, output)
+		t.Errorf("MsgFailInValue: data = % X; Expected: % X", data, output)
 	} else {
-		t.Logf("SUCCESS: data = % X; Expected: % X", data, output)
+		t.Logf("MsgSuccessInValue: data = % X; Expected: % X", data, output)
 	}
 }
 
@@ -32,14 +32,14 @@ func TestHexStringToByte_Empty(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error: %s; Expected: %v", err, nil)
+		t.Errorf("MsgFailInValue: error: %s; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
 	}
 	if bytes.Equal(data, output) == false {
-		t.Errorf("FAIL: data = % X; Expected: % X", data, output)
+		t.Errorf("MsgFailInValue: data = % X; Expected: % X", data, output)
 	} else {
-		t.Logf("SUCCESS: data = % X; Expected: % X", data, output)
+		t.Logf("MsgSuccessInValue: data = % X; Expected: % X", data, output)
 	}
 }
 
@@ -53,14 +53,14 @@ func TestHexStringToByte_Error(t *testing.T) {
 
 	// Assert
 	if err != hex.ErrLength {
-		t.Errorf("FAIL: error: %s; Expected: %v", err, hex.ErrLength)
+		t.Errorf("MsgFailInValue: error: %s; Expected: %v", err, hex.ErrLength)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, hex.ErrLength)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, hex.ErrLength)
 	}
 	if bytes.Equal(data, output) == false {
-		t.Errorf("FAIL: % X; Expected: % X", data, output)
+		t.Errorf("MsgFailInValue: % X; Expected: % X", data, output)
 	} else {
-		t.Logf("SUCCESS: % X; Expected: % X", data, output)
+		t.Logf("MsgSuccessInValue: % X; Expected: % X", data, output)
 	}
 }
 
@@ -78,8 +78,8 @@ func TestCleanStringMultiline(t *testing.T) {
 
 	// Assert
 	if data != output {
-		t.Errorf("FAIL: result: %s - Expected: %s", data, output)
+		t.Errorf("MsgFailInValue: result: %s - Expected: %s", data, output)
 	} else {
-		t.Logf("SUCCESS: result: %s - Expected: %s", data, output)
+		t.Logf("MsgSuccessInValue: result: %s - Expected: %s", data, output)
 	}
 }

@@ -41,12 +41,20 @@ func (e Explicit) Payload() []byte {
 	return p
 }
 
+// String implements fmt.Stringer in hexadecimal
 func (e Explicit) String() string {
+	var buf bytes.Buffer
+	buf.Reset()
+
 	tmp := []byte{e.Len}
-	return e.MetaItem.DataItem + ": " + hex.EncodeToString(tmp) + hex.EncodeToString(e.Data)
+	tmp = append(tmp, e.Data...)
+
+	buf.WriteString(e.MetaItem.DataItem)
+	buf.WriteByte(':')
+	buf.WriteString(hex.EncodeToString(tmp))
+	return buf.String()
 }
 
 func (e Explicit) Frn() uint8 {
 	return e.MetaItem.FRN
 }
-

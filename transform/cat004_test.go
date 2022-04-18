@@ -72,9 +72,9 @@ func TestCat004Model_MessageTypeCat004(t *testing.T) {
 		// Assert
 		//if res != row.output {
 		if reflect.DeepEqual(res, row.output) == false {
-			t.Errorf("FAIL: %v; Expected: %v", res, row.output)
+			t.Errorf("MsgFailInValue: %v; Expected: %v", res, row.output)
 		} else {
-			t.Logf("SUCCESS: %v; Expected: %v", res, row.output)
+			t.Logf("MsgSuccessInValue: %v; Expected: %v", res, row.output)
 		}
 	}
 }
@@ -220,15 +220,15 @@ func TestCat004Model_write(t *testing.T) {
 
 		// Assert
 		if err != nil {
-			t.Errorf("FAIL: %s - error: %v - Expected: %v", row.Name, err, nil)
+			t.Errorf("MsgFailInValue: %s - error: %v - Expected: %v", row.Name, err, nil)
 		} else {
-			t.Logf("SUCCESS: %s - error: %v - Expected: %v", row.Name, err, nil)
+			t.Logf("MsgSuccessInValue: %s - error: %v - Expected: %v", row.Name, err, nil)
 		}
 
 		if reflect.DeepEqual(model, row.output) == false {
-			t.Errorf("FAIL: %s - %v - \nExpected: %v", row.Name, model, row.output)
+			t.Errorf("MsgFailInValue: %s - %v - \nExpected: %v", row.Name, model, row.output)
 		} else {
-			t.Logf("SUCCESS: %s - %v - \nExpected: %v", row.Name, model, row.output)
+			t.Logf("MsgSuccessInValue: %s - %v - \nExpected: %v", row.Name, model, row.output)
 		}
 	}
 }
@@ -284,15 +284,15 @@ func TestCat004Model_ToJsonRecord(t *testing.T) {
 
 		// Assert
 		if err != nil {
-			t.Errorf("FAIL: error = %v - Expected: %v", err, nil)
+			t.Errorf("MsgFailInValue: error = %v - Expected: %v", err, nil)
 		} else {
-			t.Logf("SUCCESS: error: %v - Expected: %v", err, nil)
+			t.Logf("MsgSuccessInValue: error: %v - Expected: %v", err, nil)
 		}
 
 		if reflect.DeepEqual(recJson, output) == false {
-			t.Errorf("FAIL: %s - %s - \nExpected: %s", row.Name, recJson, output)
+			t.Errorf("MsgFailInValue: %s - %s - \nExpected: %s", row.Name, recJson, output)
 		} else {
-			t.Logf("SUCCESS: %s - %s - \nExpected: %s", row.Name, recJson, output)
+			t.Logf("MsgSuccessInValue: %s - %s - \nExpected: %s", row.Name, recJson, output)
 		}
 	}
 }

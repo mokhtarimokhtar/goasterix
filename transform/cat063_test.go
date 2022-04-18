@@ -32,15 +32,15 @@ func TestCat063Model_ToJsonRecord(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+		t.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
 	}
 
 	if reflect.DeepEqual(recJson, output) == false {
-		t.Errorf("FAIL: %s; \nExpected: %s", recJson, output)
+		t.Errorf("MsgFailInValue: %s; \nExpected: %s", recJson, output)
 	} else {
-		t.Logf("SUCCESS: %s; Expected: %s", recJson, output)
+		t.Logf("MsgSuccessInValue: %s; Expected: %s", recJson, output)
 	}
 }
 
@@ -131,9 +131,9 @@ func TestExtractSensorStatus(t *testing.T) {
 
 		// Assert
 		if reflect.DeepEqual(res, row.output) == false {
-			t.Errorf(util.FAIL, row.Name, res, row.output)
+			t.Errorf(util.MsgFailInValue, row.Name, res, row.output)
 		} else {
-			t.Logf(util.SUCCESS, row.Name, res, row.output)
+			t.Logf(util.MsgSuccessInValue, row.Name, res, row.output)
 		}
 	}
 }

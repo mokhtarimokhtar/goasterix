@@ -22,9 +22,9 @@ func TestRecord_Payload(t *testing.T) {
 
 	// Assert
 	if len(items) != nbOfBytes {
-		t.Errorf("FAIL: len(items) = %v; Expected: %v", len(items), nbOfBytes)
+		t.Errorf("MsgFailInValue: len(items) = %v; Expected: %v", len(items), nbOfBytes)
 	} else {
-		t.Logf("SUCCESS: len(items) = %v; Expected: %v", len(items), nbOfBytes)
+		t.Logf("MsgSuccessInValue: len(items) = %v; Expected: %v", len(items), nbOfBytes)
 	}
 }
 
@@ -40,9 +40,9 @@ func TestRecord_String(t *testing.T) {
 
 	// Assert
 	if len(items) != nbOfItems {
-		t.Errorf("FAIL: len(items) = %v; Expected: %v", len(items), nbOfItems)
+		t.Errorf("MsgFailInValue: len(items) = %v; Expected: %v", len(items), nbOfItems)
 	} else {
-		t.Logf("SUCCESS: len(items) = %v; Expected: %v", len(items), nbOfItems)
+		t.Logf("MsgSuccessInValue: len(items) = %v; Expected: %v", len(items), nbOfItems)
 	}
 }
 
@@ -57,15 +57,15 @@ func TestFspecReader_Valid(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error: %s; Expected: %v", err, nil)
+		t.Errorf("MsgFailInValue: error: %s; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
 	}
 
 	if bytes.Equal(fspec, output) == false {
-		t.Errorf("FAIL: sp = % X; Expected: % X", fspec, output)
+		t.Errorf("MsgFailInValue: sp = % X; Expected: % X", fspec, output)
 	} else {
-		t.Logf("SUCCESS: sp = % X; Expected: % X", fspec, output)
+		t.Logf("MsgSuccessInValue: sp = % X; Expected: % X", fspec, output)
 	}
 }
 
@@ -80,15 +80,15 @@ func TestFspecReader_Invalid(t *testing.T) {
 
 	// Assert
 	if err != io.EOF {
-		t.Errorf("FAIL: error: %s; Expected: %v", err, io.EOF)
+		t.Errorf("MsgFailInValue: error: %s; Expected: %v", err, io.EOF)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, io.EOF)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, io.EOF)
 	}
 
 	if bytes.Equal(fspec, output) == false {
-		t.Errorf("FAIL: sp = % X; Expected: % X", fspec, output)
+		t.Errorf("MsgFailInValue: sp = % X; Expected: % X", fspec, output)
 	} else {
-		t.Logf("SUCCESS: sp = % X; Expected: % X", fspec, output)
+		t.Logf("MsgSuccessInValue: sp = % X; Expected: % X", fspec, output)
 	}
 }
 
@@ -122,9 +122,9 @@ func TestFspecIndex(t *testing.T) {
 
 		// Assert
 		if bytes.Equal(frnIndex, row.output) == false {
-			t.Errorf("FAIL: % X; Expected: % X", frnIndex, row.output)
+			t.Errorf("MsgFailInValue: % X; Expected: % X", frnIndex, row.output)
 		} else {
-			t.Logf("SUCCESS: % X; Expected: % X", frnIndex, row.output)
+			t.Logf("MsgSuccessInValue: % X; Expected: % X", frnIndex, row.output)
 		}
 	}
 
@@ -143,14 +143,14 @@ func TestFixedDataFieldReader_Valid(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error: %v; Expected: %v", err, nil)
+		t.Errorf("MsgFailInValue: error: %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
 	}
 	if bytes.Equal(item.Data, output) == false {
-		t.Errorf("FAIL: sp = % X; Expected: % X", item, output)
+		t.Errorf("MsgFailInValue: sp = % X; Expected: % X", item, output)
 	} else {
-		t.Logf("SUCCESS: sp = % X; Expected: % X", item, output)
+		t.Logf("MsgSuccessInValue: sp = % X; Expected: % X", item, output)
 	}
 }
 
@@ -165,14 +165,14 @@ func TestFixedDataFieldReader_Invalid(t *testing.T) {
 
 	// Assert
 	if err != io.ErrUnexpectedEOF {
-		t.Errorf("FAIL: error: %v; Expected: %v", err, io.ErrUnexpectedEOF)
+		t.Errorf("MsgFailInValue: error: %v; Expected: %v", err, io.ErrUnexpectedEOF)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, io.ErrUnexpectedEOF)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, io.ErrUnexpectedEOF)
 	}
 	if item.Data != nil {
-		t.Errorf("FAIL: item = %v; Expected: %v", item, nil)
+		t.Errorf("MsgFailInValue: item = %v; Expected: %v", item, nil)
 	} else {
-		t.Logf("SUCCESS: item = %v; Expected: %v", item, nil)
+		t.Logf("MsgSuccessInValue: item = %v; Expected: %v", item, nil)
 	}
 }
 
@@ -273,14 +273,14 @@ func TestExtendedDataFieldReader(t *testing.T) {
 
 		// Assert
 		if err != row.err {
-			t.Errorf("FAIL: %s - error: %v; Expected: %v", row.TestCaseName, err, row.err)
+			t.Errorf("MsgFailInValue: %s - error: %v; Expected: %v", row.TestCaseName, err, row.err)
 		} else {
-			t.Logf("SUCCESS: error: %v; Expected: %v", err, row.err)
+			t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, row.err)
 		}
 		if reflect.DeepEqual(item, row.output) == false {
-			t.Errorf("FAIL: %s - item = % X; Expected: % X", row.TestCaseName, item, row.output)
+			t.Errorf("MsgFailInValue: %s - item = % X; Expected: % X", row.TestCaseName, item, row.output)
 		} else {
-			t.Logf("SUCCESS: item = % X; Expected: % X", item, row.output)
+			t.Logf("MsgSuccessInValue: item = % X; Expected: % X", item, row.output)
 		}
 	}
 }
@@ -333,14 +333,14 @@ func TestExplicitDataFieldReader(t *testing.T) {
 
 		// Assert
 		if err != row.err {
-			t.Errorf("FAIL: %s - error: %v; Expected: %v", row.TestCaseName, err, row.err)
+			t.Errorf("MsgFailInValue: %s - error: %v; Expected: %v", row.TestCaseName, err, row.err)
 		} else {
-			t.Logf("SUCCESS: error: %v; Expected: %v", err, row.err)
+			t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, row.err)
 		}
 		if reflect.DeepEqual(item, row.output) == false {
-			t.Errorf("FAIL: %s - item = % X; Expected: % X", row.TestCaseName, item, row.output)
+			t.Errorf("MsgFailInValue: %s - item = % X; Expected: % X", row.TestCaseName, item, row.output)
 		} else {
-			t.Logf("SUCCESS: item = % X; Expected: % X", item, row.output)
+			t.Logf("MsgSuccessInValue: item = % X; Expected: % X", item, row.output)
 		}
 	}
 
@@ -398,14 +398,14 @@ func TestRepetitiveDataFieldReader(t *testing.T) {
 
 		// Assert
 		if err != row.err {
-			t.Errorf("FAIL: %s - error: %v; Expected: %v", row.TestCaseName, err, row.err)
+			t.Errorf("MsgFailInValue: %s - error: %v; Expected: %v", row.TestCaseName, err, row.err)
 		} else {
-			t.Logf("SUCCESS: error: %v; Expected: %v", err, row.err)
+			t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, row.err)
 		}
 		if reflect.DeepEqual(item, row.output) == false {
-			t.Errorf("FAIL: %s - item = % X; Expected: % X", row.TestCaseName, item, row.output)
+			t.Errorf("MsgFailInValue: %s - item = % X; Expected: % X", row.TestCaseName, item, row.output)
 		} else {
-			t.Logf("SUCCESS: item = % X; Expected: % X", item, row.output)
+			t.Logf("MsgSuccessInValue: item = % X; Expected: % X", item, row.output)
 		}
 	}
 }
@@ -575,14 +575,14 @@ func TestCompoundDataFieldReader(t *testing.T) {
 
 		// Assert
 		if err != row.err {
-			t.Errorf("FAIL: error: %v; Expected: %v", err, row.err)
+			t.Errorf("MsgFailInValue: error: %v; Expected: %v", err, row.err)
 		} else {
-			t.Logf("SUCCESS: error: %v; Expected: %v", err, row.err)
+			t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, row.err)
 		}
 		if reflect.DeepEqual(cp, row.output) == false {
-			t.Errorf("FAIL: %s - \nCompound = %v;\nExpected: %v", row.TestCaseName, cp, row.output)
+			t.Errorf("MsgFailInValue: %s - \nCompound = %v;\nExpected: %v", row.TestCaseName, cp, row.output)
 		} else {
-			t.Logf("SUCCESS: Compound = %v; Expected: %v", cp, row.output)
+			t.Logf("MsgSuccessInValue: Compound = %v; Expected: %v", cp, row.output)
 		}
 	}
 }
@@ -636,14 +636,14 @@ func TestSPAndREDataFieldReader(t *testing.T) {
 
 		// Assert
 		if err != row.err {
-			t.Errorf("FAIL: error: %v; Expected: %v", err, row.err)
+			t.Errorf("MsgFailInValue: error: %v; Expected: %v", err, row.err)
 		} else {
-			t.Logf("SUCCESS: error: %v; Expected: %v", err, row.err)
+			t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, row.err)
 		}
 		if reflect.DeepEqual(cp, row.output) == false {
-			t.Errorf("FAIL: %s - \nCompound = %v;\nExpected: %v", row.TestCaseName, cp, row.output)
+			t.Errorf("MsgFailInValue: %s - \nCompound = %v;\nExpected: %v", row.TestCaseName, cp, row.output)
 		} else {
-			t.Logf("SUCCESS: Compound = %v; Expected: %v", cp, row.output)
+			t.Logf("MsgSuccessInValue: Compound = %v; Expected: %v", cp, row.output)
 		}
 	}
 }
@@ -745,14 +745,14 @@ func TestRFSDataFieldReader(t *testing.T) {
 
 		// Assert
 		if err != row.err {
-			t.Errorf("FAIL: error: %v; Expected: %v", err, row.err)
+			t.Errorf("MsgFailInValue: error: %v; Expected: %v", err, row.err)
 		} else {
-			t.Logf("SUCCESS: error: %v; Expected: %v", err, row.err)
+			t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, row.err)
 		}
 		if reflect.DeepEqual(cp, row.output) == false {
-			t.Errorf("FAIL: %s - \nCompound = %v;\nExpected: %v", row.TestCaseName, cp, row.output)
+			t.Errorf("MsgFailInValue: %s - \nCompound = %v;\nExpected: %v", row.TestCaseName, cp, row.output)
 		} else {
-			t.Logf("SUCCESS: Compound = %v; Expected: %v", cp, row.output)
+			t.Logf("MsgSuccessInValue: Compound = %v; Expected: %v", cp, row.output)
 		}
 	}
 }
@@ -828,19 +828,19 @@ func TestRecordDecode_NbOfItems(t *testing.T) {
 
 		// Assert
 		if err != row.err {
-			t.Errorf("FAIL: error: %s; Expected: %v", err, row.err)
+			t.Errorf("MsgFailInValue: error: %s; Expected: %v", err, row.err)
 		} else {
-			t.Logf("SUCCESS: error: %v; Expected: %v", err, row.err)
+			t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, row.err)
 		}
 		if unRead != 0 {
-			t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
+			t.Errorf("MsgFailInValue: unRead = %v; Expected: %v", unRead, 0)
 		} else {
-			t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
+			t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 		}
 		if row.nbOfItems != len(rec.Items) {
-			t.Errorf("FAIL: nbOfItems = %v; Expected: %v", row.nbOfItems, len(rec.Items))
+			t.Errorf("MsgFailInValue: nbOfItems = %v; Expected: %v", row.nbOfItems, len(rec.Items))
 		} else {
-			t.Logf("SUCCESS: nbOfItems = %v; Expected: %v", row.nbOfItems, len(rec.Items))
+			t.Logf("MsgSuccessInValue: nbOfItems = %v; Expected: %v", row.nbOfItems, len(rec.Items))
 		}
 	}
 }
@@ -858,21 +858,22 @@ func TestRecordDecode_Empty(t *testing.T) {
 
 	// Assert
 	if err != io.EOF {
-		t.Errorf("FAIL: error = %v; Expected: %v", err, io.EOF)
+		t.Errorf("MsgFailInValue: error = %v; Expected: %v", err, io.EOF)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, io.EOF)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, io.EOF)
 	}
 	if unRead != 0 {
-		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
+		t.Errorf("MsgFailInValue: unRead = %v; Expected: %v", unRead, 0)
 	} else {
-		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
+		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
 	if reflect.DeepEqual(rec.Items, output) == false {
-		t.Errorf("FAIL: %v; Expected: %v", rec.Items, output)
+		t.Errorf("MsgFailInValue: %v; Expected: %v", rec.Items, output)
 	} else {
-		t.Logf("SUCCESS: %v; Expected: %v", rec.Items, output)
+		t.Logf("MsgSuccessInValue: %v; Expected: %v", rec.Items, output)
 	}
 }
+
 /*
 // Testing : Decode Cat4Test
 func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
@@ -1038,20 +1039,20 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+		t.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
 	}
 	if unRead != 0 {
-		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
+		t.Errorf("MsgFailInValue: unRead = %v; Expected: %v", unRead, 0)
 	} else {
-		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
+		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
 	for i, item := range rec.Items {
 		if reflect.DeepEqual(item, output[i]) == false {
-			t.Errorf("FAIL: %v; \nExpected: %v", item, output[i])
+			t.Errorf("MsgFailInValue: %v; \nExpected: %v", item, output[i])
 		} else {
-			t.Logf("SUCCESS: %v; Expected: %v", item, output[i])
+			t.Logf("MsgSuccessInValue: %v; Expected: %v", item, output[i])
 		}
 	}
 }
@@ -1097,20 +1098,20 @@ func TestRecordDecode_Cat4TestTrackFullRecord(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+		t.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
 	}
 	if unRead != 0 {
-		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
+		t.Errorf("MsgFailInValue: unRead = %v; Expected: %v", unRead, 0)
 	} else {
-		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
+		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
 	for i, item := range rec.Items {
 		if reflect.DeepEqual(item, output[i]) == false {
-			t.Errorf("FAIL: %v; \nExpected: %v", item, output[i])
+			t.Errorf("MsgFailInValue: %v; \nExpected: %v", item, output[i])
 		} else {
-			t.Logf("SUCCESS: %v; Expected: %v", item, output[i])
+			t.Logf("MsgSuccessInValue: %v; Expected: %v", item, output[i])
 		}
 	}
 }
@@ -1156,20 +1157,20 @@ func TestRecordDecode_Cat4TestPlotFullRecord(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+		t.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
 	}
 	if unRead != 0 {
-		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
+		t.Errorf("MsgFailInValue: unRead = %v; Expected: %v", unRead, 0)
 	} else {
-		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
+		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
 	for i, item := range rec.Items {
 		if reflect.DeepEqual(item, output[i]) == false {
-			t.Errorf("FAIL: %v; \nExpected: %v", item, output[i])
+			t.Errorf("MsgFailInValue: %v; \nExpected: %v", item, output[i])
 		} else {
-			t.Logf("SUCCESS: %v; Expected: %v", item, output[i])
+			t.Logf("MsgSuccessInValue: %v; Expected: %v", item, output[i])
 		}
 	}
 }
@@ -1236,19 +1237,19 @@ func TestRecordDecode_Cat4TestError(t *testing.T) {
 
 		// Assert
 		if err != row.err {
-			t.Errorf("FAIL: %s - error = %v; Expected: %v", row.TestCase, err, row.err)
+			t.Errorf("MsgFailInValue: %s - error = %v; Expected: %v", row.TestCase, err, row.err)
 		} else {
-			t.Logf("SUCCESS: error: %v; Expected: %v", err, row.err)
+			t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, row.err)
 		}
 		if remaining != row.unRead {
-			t.Errorf("FAIL: %s - unRead = %v; Expected: %v", row.TestCase, remaining, row.unRead)
+			t.Errorf("MsgFailInValue: %s - unRead = %v; Expected: %v", row.TestCase, remaining, row.unRead)
 		} else {
-			t.Logf("SUCCESS: unRead = %v; Expected: %v", remaining, row.unRead)
+			t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", remaining, row.unRead)
 		}
 		if reflect.DeepEqual(rec.Items, row.output) == false {
-			t.Errorf("FAIL: %s - %v; Expected: %v", row.TestCase, rec.Items, row.output)
+			t.Errorf("MsgFailInValue: %s - %v; Expected: %v", row.TestCase, rec.Items, row.output)
 		} else {
-			t.Logf("SUCCESS: %v; Expected: %v", rec.Items, row.output)
+			t.Logf("MsgSuccessInValue: %v; Expected: %v", rec.Items, row.output)
 		}
 	}
 }
@@ -1265,7 +1266,7 @@ func TestRecordDecode_CAT048(t *testing.T) {
 				Description: "Data Source Identifier",
 				Type:        uap.Fixed,
 			},
-			Data:     []byte{0x08, 0x36},
+			Data: []byte{0x08, 0x36},
 		},
 		&Fixed{
 			MetaItem: MetaItem{
@@ -1274,7 +1275,7 @@ func TestRecordDecode_CAT048(t *testing.T) {
 				Description: "Time-of-Day",
 				Type:        uap.Fixed,
 			},
-			Data:     []byte{0x42, 0x9b, 0x52},
+			Data: []byte{0x42, 0x9b, 0x52},
 		},
 		&Extended{
 			MetaItem: MetaItem{
@@ -1320,7 +1321,7 @@ func TestRecordDecode_CAT048(t *testing.T) {
 				Description: "Radar Plot Characteristics",
 				Type:        uap.Compound,
 			},
-			Primary:   []byte{0x60},
+			Primary: []byte{0x60},
 			Secondary: []Item{
 				&Fixed{
 					MetaItem: MetaItem{
@@ -1435,7 +1436,6 @@ func TestRecordDecode_CAT048(t *testing.T) {
 		}
 	}
 }
-
 
 /*
 func TestRecordDecode_CAT034(t *testing.T) {
@@ -1569,20 +1569,20 @@ func TestRecordDecode_CAT034(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+		t.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
 	}
 	if unRead != 0 {
-		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
+		t.Errorf("MsgFailInValue: unRead = %v; Expected: %v", unRead, 0)
 	} else {
-		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
+		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
 	for i, item := range rec.Items {
 		if reflect.DeepEqual(item, output[i]) == false {
-			t.Errorf("FAIL: %v; \nExpected: %v", item, output[i])
+			t.Errorf("MsgFailInValue: %v; \nExpected: %v", item, output[i])
 		} else {
-			t.Logf("SUCCESS: %v; Expected: %v", item, output[i])
+			t.Logf("MsgSuccessInValue: %v; Expected: %v", item, output[i])
 		}
 	}
 }
@@ -1695,20 +1695,20 @@ func TestRecordDecode_CAT063(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+		t.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
 	}
 	if unRead != 0 {
-		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
+		t.Errorf("MsgFailInValue: unRead = %v; Expected: %v", unRead, 0)
 	} else {
-		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
+		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
 	for i, item := range rec.Items {
 		if reflect.DeepEqual(item, output[i]) == false {
-			t.Errorf("FAIL: %v; \nExpected: %v", item, output[i])
+			t.Errorf("MsgFailInValue: %v; \nExpected: %v", item, output[i])
 		} else {
-			t.Logf("SUCCESS: %v; Expected: %v", item, output[i])
+			t.Logf("MsgSuccessInValue: %v; Expected: %v", item, output[i])
 		}
 	}
 }
@@ -1772,20 +1772,20 @@ func TestRecordDecode_CAT065(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+		t.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
 	}
 	if unRead != 0 {
-		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
+		t.Errorf("MsgFailInValue: unRead = %v; Expected: %v", unRead, 0)
 	} else {
-		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
+		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
 	for i, item := range rec.Items {
 		if reflect.DeepEqual(item, output[i]) == false {
-			t.Errorf("FAIL: %v; \nExpected: %v", item, output[i])
+			t.Errorf("MsgFailInValue: %v; \nExpected: %v", item, output[i])
 		} else {
-			t.Logf("SUCCESS: %v; Expected: %v", item, output[i])
+			t.Logf("MsgSuccessInValue: %v; Expected: %v", item, output[i])
 		}
 	}
 }
@@ -1969,20 +1969,20 @@ func TestRecordDecode_CAT004(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+		t.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
 	}
 	if unRead != 0 {
-		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
+		t.Errorf("MsgFailInValue: unRead = %v; Expected: %v", unRead, 0)
 	} else {
-		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
+		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
 	for i, item := range rec.Items {
 		if reflect.DeepEqual(item, output[i]) == false {
-			t.Errorf("FAIL: %v; \nExpected: %v", item, output[i])
+			t.Errorf("MsgFailInValue: %v; \nExpected: %v", item, output[i])
 		} else {
-			t.Logf("SUCCESS: %v; Expected: %v", item, output[i])
+			t.Logf("MsgSuccessInValue: %v; Expected: %v", item, output[i])
 		}
 	}
 }
@@ -2010,20 +2010,20 @@ func TestRecordDecode_CAT001Track(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+		t.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
 	}
 	if unRead != 0 {
-		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
+		t.Errorf("MsgFailInValue: unRead = %v; Expected: %v", unRead, 0)
 	} else {
-		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
+		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
 	for i, item := range rec.Items {
 		if bytes.Equal(item.Data, output[i]) == false {
-			t.Errorf("FAIL: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
 		} else {
-			t.Logf("SUCCESS: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Logf("MsgSuccessInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
 		}
 	}
 }
@@ -2048,20 +2048,20 @@ func TestRecordDecode_CAT001Plot(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+		t.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
 	}
 	if unRead != 0 {
-		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
+		t.Errorf("MsgFailInValue: unRead = %v; Expected: %v", unRead, 0)
 	} else {
-		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
+		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
 	for i, item := range rec.Items {
 		if bytes.Equal(item.Data, output[i]) == false {
-			t.Errorf("FAIL: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
 		} else {
-			t.Logf("SUCCESS: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Logf("MsgSuccessInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
 		}
 	}
 }
@@ -2086,20 +2086,20 @@ func TestRecordDecode_CAT002(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+		t.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
 	}
 	if unRead != 0 {
-		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
+		t.Errorf("MsgFailInValue: unRead = %v; Expected: %v", unRead, 0)
 	} else {
-		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
+		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
 	for i, item := range rec.Items {
 		if bytes.Equal(item.Data, output[i]) == false {
-			t.Errorf("FAIL: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
 		} else {
-			t.Logf("SUCCESS: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Logf("MsgSuccessInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
 		}
 	}
 }
@@ -2134,20 +2134,20 @@ func TestRecordDecode_CAT030STR(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+		t.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
 	}
 	if unRead != 0 {
-		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
+		t.Errorf("MsgFailInValue: unRead = %v; Expected: %v", unRead, 0)
 	} else {
-		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
+		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
 	for i, item := range rec.Items {
 		if bytes.Equal(item.Data, output[i]) == false {
-			t.Errorf("FAIL: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
 		} else {
-			t.Logf("SUCCESS: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Logf("MsgSuccessInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
 		}
 	}
 }
@@ -2170,20 +2170,20 @@ func TestRecordDecode_CAT032STR(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+		t.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
 	}
 	if unRead != 0 {
-		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
+		t.Errorf("MsgFailInValue: unRead = %v; Expected: %v", unRead, 0)
 	} else {
-		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
+		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
 	for i, item := range rec.Items {
 		if bytes.Equal(item.Data, output[i]) == false {
-			t.Errorf("FAIL: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
 		} else {
-			t.Logf("SUCCESS: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Logf("MsgSuccessInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
 		}
 	}
 }
@@ -2224,20 +2224,20 @@ func TestRecordDecode_CAT062(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+		t.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
 	}
 	if unRead != 0 {
-		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
+		t.Errorf("MsgFailInValue: unRead = %v; Expected: %v", unRead, 0)
 	} else {
-		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
+		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
 	for i, item := range rec.Items {
 		if bytes.Equal(item.Data, output[i]) == false {
-			t.Errorf("FAIL: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
 		} else {
-			t.Logf("SUCCESS: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Logf("MsgSuccessInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
 		}
 	}
 }
@@ -2260,20 +2260,20 @@ func TestRecordDecode_CAT255STR(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+		t.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
 	}
 	if unRead != 0 {
-		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
+		t.Errorf("MsgFailInValue: unRead = %v; Expected: %v", unRead, 0)
 	} else {
-		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
+		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
 	for i, item := range rec.Items {
 		if bytes.Equal(item.Data, output[i]) == false {
-			t.Errorf("FAIL: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
 		} else {
-			t.Logf("SUCCESS: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Logf("MsgSuccessInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
 		}
 	}
 }
@@ -2319,20 +2319,20 @@ func TestRecordDecode_CAT030ARTAS(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+		t.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
 	}
 	if unRead != 0 {
-		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
+		t.Errorf("MsgFailInValue: unRead = %v; Expected: %v", unRead, 0)
 	} else {
-		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
+		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
 	for i, item := range rec.Items {
 		if bytes.Equal(item.Data, output[i]) == false {
-			t.Errorf("FAIL: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
 		} else {
-			t.Logf("SUCCESS: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Logf("MsgSuccessInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
 		}
 	}
 }

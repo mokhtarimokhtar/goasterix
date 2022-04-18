@@ -7,11 +7,11 @@ import (
 	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
-
 type Fixed struct {
 	MetaItem
 	Data []byte
 }
+
 // Reader extracts a number(nb) of bytes(size) and returns a slice of bytes(data of item).
 // Fixed length Data Fields shall comprise a fixed number of octets.
 func (f *Fixed) Reader(rb *bytes.Reader, field uap.DataField) error {
@@ -34,11 +34,16 @@ func (f Fixed) Payload() []byte {
 	return p
 }
 
+// String implements fmt.Stringer in hexadecimal
 func (f Fixed) String() string {
-	return f.MetaItem.DataItem + ": " + hex.EncodeToString(f.Data)
+	var buf bytes.Buffer
+	buf.Reset()
+	buf.WriteString(f.MetaItem.DataItem)
+	buf.WriteByte(':')
+	buf.WriteString(hex.EncodeToString(f.Data))
+	return buf.String()
 }
 
 func (f Fixed) Frn() uint8 {
 	return f.MetaItem.FRN
 }
-

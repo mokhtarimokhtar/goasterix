@@ -12,10 +12,10 @@ func benchmarkRecordDecode(input string, items uap.StandardUAP, b *testing.B) {
 		rec := new(Record)
 		unRead, err := rec.Decode(data, items)
 		if err != nil {
-			b.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+			b.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 		}
 		if unRead != 0 {
-			b.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
+			b.Errorf("MsgFailInValue: unRead = %v; Expected: %v", unRead, 0)
 		}
 	}
 }
@@ -77,10 +77,10 @@ func benchmarkDataBlockDecode(input string, b *testing.B) {
 		unRead, err := dataB.Decode(data)
 
 		if err != nil {
-			b.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+			b.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 		}
 		if unRead != 0 {
-			b.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
+			b.Errorf("MsgFailInValue: unRead = %v; Expected: %v", unRead, 0)
 		}
 	}
 }
@@ -99,10 +99,10 @@ func benchmarkWrapperDataBlockDecode(input string, b *testing.B) {
 		unRead, err := dataB.Decode(data)
 
 		if err != nil {
-			b.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+			b.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 		}
 		if unRead != 0 {
-			b.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
+			b.Errorf("MsgFailInValue: unRead = %v; Expected: %v", unRead, 0)
 		}
 	}
 }

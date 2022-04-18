@@ -48,15 +48,15 @@ func TestCat030STRModel_ToJsonRecord(t *testing.T) {
 
 		// Assert
 		if err != nil {
-			t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+			t.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 		} else {
-			t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+			t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
 		}
 
 		if reflect.DeepEqual(recJson, row.output) == false {
-			t.Errorf("FAIL: %s; \nExpected: %s", recJson, row.output)
+			t.Errorf("MsgFailInValue: %s; \nExpected: %s", recJson, row.output)
 		} else {
-			t.Logf("SUCCESS: %s; Expected: %s", recJson, row.output)
+			t.Logf("MsgSuccessInValue: %s; Expected: %s", recJson, row.output)
 		}
 	}
 }
@@ -74,9 +74,9 @@ func TestCat030STRModel_VitCal(t *testing.T) {
 
 	// Assert
 	if reflect.DeepEqual(res, output) == false {
-		t.Errorf("FAIL: %v; Expected: %v", res, output)
+		t.Errorf("MsgFailInValue: %v; Expected: %v", res, output)
 	} else {
-		t.Logf("SUCCESS: %v; Expected: %v", res, output)
+		t.Logf("MsgSuccessInValue: %v; Expected: %v", res, output)
 	}
 
 }
@@ -115,9 +115,9 @@ func TestCat030STRModel_Flp(t *testing.T) {
 
 		// Assert
 		if reflect.DeepEqual(res, row.output) == false {
-			t.Errorf("FAIL: %v; Expected: %v", res, row.output)
+			t.Errorf("MsgFailInValue: %v; Expected: %v", res, row.output)
 		} else {
-			t.Logf("SUCCESS: %v; Expected: %v", res, row.output)
+			t.Logf("MsgSuccessInValue: %v; Expected: %v", res, row.output)
 		}
 	}
 }
@@ -135,9 +135,9 @@ func TestCat030STRModel_Pos(t *testing.T) {
 
 	// Assert
 	if reflect.DeepEqual(res, output) == false {
-		t.Errorf("FAIL: %v; Expected: %v", res, output)
+		t.Errorf("MsgFailInValue: %v; Expected: %v", res, output)
 	} else {
-		t.Logf("SUCCESS: %v; Expected: %v", res, output)
+		t.Logf("MsgSuccessInValue: %v; Expected: %v", res, output)
 	}
 
 }
@@ -191,9 +191,9 @@ func TestCat030STRModel_Num(t *testing.T) {
 
 		// Assert
 		if reflect.DeepEqual(res, row.output) == false {
-			t.Errorf("FAIL: %v; Expected: %v", res, row.output)
+			t.Errorf("MsgFailInValue: %v; Expected: %v", res, row.output)
 		} else {
-			t.Logf("SUCCESS: %v; Expected: %v", res, row.output)
+			t.Logf("MsgSuccessInValue: %v; Expected: %v", res, row.output)
 		}
 	}
 }
@@ -260,9 +260,9 @@ func TestCat030STRModel_Pist(t *testing.T) {
 
 		// Assert
 		if reflect.DeepEqual(res, row.output) == false {
-			t.Errorf("FAIL: %s - %v; Expected: %v", row.TestCaseName, res, row.output)
+			t.Errorf("MsgFailInValue: %s - %v; Expected: %v", row.TestCaseName, res, row.output)
 		} else {
-			t.Logf("SUCCESS: %v; Expected: %v", res, row.output)
+			t.Logf("MsgSuccessInValue: %v; Expected: %v", res, row.output)
 		}
 	}
 }
@@ -303,9 +303,9 @@ func TestCat030STRModel_Alis(t *testing.T) {
 
 		// Assert
 		if reflect.DeepEqual(res, row.output) == false {
-			t.Errorf("FAIL: %s %v; Expected: %v", row.TestCaseName, res, row.output)
+			t.Errorf("MsgFailInValue: %s %v; Expected: %v", row.TestCaseName, res, row.output)
 		} else {
-			t.Logf("SUCCESS: %v; Expected: %v", res, row.output)
+			t.Logf("MsgSuccessInValue: %v; Expected: %v", res, row.output)
 		}
 	}
 }
@@ -362,9 +362,9 @@ func TestCat030STRModel_Mov(t *testing.T) {
 
 		// Assert
 		if reflect.DeepEqual(res, row.output) == false {
-			t.Errorf("FAIL: %v; Expected: %v", res, row.output)
+			t.Errorf("MsgFailInValue: %v; Expected: %v", res, row.output)
 		} else {
-			t.Logf("SUCCESS: %v; Expected: %v", res, row.output)
+			t.Logf("MsgSuccessInValue: %v; Expected: %v", res, row.output)
 		}
 	}
 }
@@ -451,9 +451,9 @@ func TestCat030STRModel_Spe(t *testing.T) {
 
 		// Assert
 		if reflect.DeepEqual(res, row.output) == false {
-			t.Errorf("FAIL: %s - %v; Expected: %v", row.TestCaseName, res, row.output)
+			t.Errorf("MsgFailInValue: %s - %v; Expected: %v", row.TestCaseName, res, row.output)
 		} else {
-			t.Logf("SUCCESS: %v; Expected: %v", res, row.output)
+			t.Logf("MsgSuccessInValue: %v; Expected: %v", res, row.output)
 		}
 	}
 }
@@ -471,9 +471,9 @@ func TestCat030STRModel_Altic(t *testing.T) {
 
 	// Assert
 	if reflect.DeepEqual(res, output) == false {
-		t.Errorf("FAIL: %v; Expected: %v", res, output)
+		t.Errorf("MsgFailInValue: %v; Expected: %v", res, output)
 	} else {
-		t.Logf("SUCCESS: %v; Expected: %v", res, output)
+		t.Logf("MsgSuccessInValue: %v; Expected: %v", res, output)
 	}
 
 }

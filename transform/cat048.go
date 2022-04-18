@@ -8,7 +8,6 @@ import (
 	"strings"
 )
 
-
 // FL Flight Level, unit of altitude (expressed in 100's of feet)
 type FL struct {
 	V     string  `json:"v"`

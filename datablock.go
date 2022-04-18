@@ -150,5 +150,3 @@ func (db DataBlock) Payload() [][]byte {
 	}
 	return pd
 }
-
-

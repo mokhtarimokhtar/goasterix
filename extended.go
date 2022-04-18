@@ -17,6 +17,7 @@ type Extended struct {
 	Primary   []byte
 	Secondary []byte
 }
+
 // Reader extracts data item type Extended (FX: last bit = 1).
 // primarySize parameter defines the Primary Subitem of extended field.
 // secondarySize parameter defines the Secondary Subitem of extended field.
@@ -56,8 +57,15 @@ func (e Extended) Payload() []byte {
 	return p
 }
 
+// String implements fmt.Stringer in hexadecimal
 func (e Extended) String() string {
-	return e.MetaItem.DataItem + ": " + hex.EncodeToString(e.Primary) + hex.EncodeToString(e.Secondary)
+	var buf bytes.Buffer
+	buf.Reset()
+	buf.WriteString(e.MetaItem.DataItem)
+	buf.WriteByte(':')
+	buf.WriteString(hex.EncodeToString(e.Primary))
+	buf.WriteString(hex.EncodeToString(e.Secondary))
+	return buf.String()
 }
 
 func (e Extended) Frn() uint8 {

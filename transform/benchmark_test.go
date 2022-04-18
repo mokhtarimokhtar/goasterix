@@ -13,10 +13,10 @@ func benchmarkWriteModel(input string, items uap.StandardUAP, b *testing.B) {
 	rec := new(goasterix.Record)
 	unRead, err := rec.Decode(data, items)
 	if err != nil {
-		b.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+		b.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 	}
 	if unRead != 0 {
-		b.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
+		b.Errorf("MsgFailInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
 
 	for n := 0; n < b.N; n++ {

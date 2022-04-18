@@ -71,19 +71,19 @@ func TestWrapperDataBlockDecode(t *testing.T) {
 
 		// Assert
 		if err != row.err {
-			t.Errorf("FAIL: error: %s; Expected: %v", err, row.err)
+			t.Errorf("MsgFailInValue: error: %s; Expected: %v", err, row.err)
 		} else {
-			t.Logf("SUCCESS: error: %v; Expected: %v", err, row.err)
+			t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, row.err)
 		}
 		if unRead != row.unRead {
-			t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, row.unRead)
+			t.Errorf("MsgFailInValue: unRead = %v; Expected: %v", unRead, row.unRead)
 		} else {
-			t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, row.unRead)
+			t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, row.unRead)
 		}
 		if len(w.DataBlocks) != row.nbOfDataBlocks {
-			t.Errorf("FAIL: nbOfDataBlocks = %v; Expected: %v", len(w.DataBlocks), row.nbOfDataBlocks)
+			t.Errorf("MsgFailInValue: nbOfDataBlocks = %v; Expected: %v", len(w.DataBlocks), row.nbOfDataBlocks)
 		} else {
-			t.Logf("SUCCESS: nbOfDataBlocks = %v; Expected: %v", len(w.DataBlocks), row.nbOfDataBlocks)
+			t.Logf("MsgSuccessInValue: nbOfDataBlocks = %v; Expected: %v", len(w.DataBlocks), row.nbOfDataBlocks)
 		}
 	}
 }
@@ -242,19 +242,19 @@ func TestDataBlockDecode(t *testing.T) {
 
 		// Assert
 		if err != row.err {
-			t.Errorf("FAIL: %s error: %s; Expected: %v", row.TestCaseName, err, row.err)
+			t.Errorf("MsgFailInValue: %s error: %s; Expected: %v", row.TestCaseName, err, row.err)
 		} else {
-			t.Logf("SUCCESS: error: %v; Expected: %v", err, row.err)
+			t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, row.err)
 		}
 		if unRead != row.unRead {
-			t.Errorf("FAIL: %s unRead = %v; Expected: %v", row.TestCaseName, unRead, row.unRead)
+			t.Errorf("MsgFailInValue: %s unRead = %v; Expected: %v", row.TestCaseName, unRead, row.unRead)
 		} else {
-			t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, row.unRead)
+			t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, row.unRead)
 		}
 		if row.nbOfRecords != len(dataB.Records) {
-			t.Errorf("FAIL: %s nbOfRecords = %v; Expected: %v", row.TestCaseName, len(dataB.Records), row.nbOfRecords)
+			t.Errorf("MsgFailInValue: %s nbOfRecords = %v; Expected: %v", row.TestCaseName, len(dataB.Records), row.nbOfRecords)
 		} else {
-			t.Logf("SUCCESS: nbOfRecords = %v; Expected: %v", len(dataB.Records), row.nbOfRecords)
+			t.Logf("MsgSuccessInValue: nbOfRecords = %v; Expected: %v", len(dataB.Records), row.nbOfRecords)
 		}
 	}
 }
@@ -271,9 +271,9 @@ func TestDataBlockPayload(t *testing.T) {
 
 	// Assert
 	if len(records) != nbOfRecords {
-		t.Errorf("FAIL: len(items) = %v; Expected: %v", len(records), nbOfRecords)
+		t.Errorf("MsgFailInValue: len(items) = %v; Expected: %v", len(records), nbOfRecords)
 	} else {
-		t.Logf("SUCCESS: len(items) = %v; Expected: %v", len(records), nbOfRecords)
+		t.Logf("MsgSuccessInValue: len(items) = %v; Expected: %v", len(records), nbOfRecords)
 	}
 }
 
@@ -289,9 +289,9 @@ func TestDataBlock_String(t *testing.T) {
 
 	// Assert
 	if len(records) != nbOfRecords {
-		t.Errorf("FAIL: len(items) = %v; Expected: %v", len(records), nbOfRecords)
+		t.Errorf("MsgFailInValue: len(items) = %v; Expected: %v", len(records), nbOfRecords)
 	} else {
-		t.Logf("SUCCESS: len(items) = %v; Expected: %v", len(records), nbOfRecords)
+		t.Logf("MsgSuccessInValue: len(items) = %v; Expected: %v", len(records), nbOfRecords)
 	}
 }
 
@@ -318,23 +318,19 @@ func TestDataBlockDecode_ARTAS(t *testing.T) {
 
 		// Assert
 		if err != row.err {
-			t.Errorf("FAIL: error: %s; Expected: %v", err, row.err)
+			t.Errorf("MsgFailInValue: error: %s; Expected: %v", err, row.err)
 		} else {
-			t.Logf("SUCCESS: error: %v; Expected: %v", err, row.err)
+			t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, row.err)
 		}
 		if unRead != row.unRead {
-			t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, row.unRead)
+			t.Errorf("MsgFailInValue: unRead = %v; Expected: %v", unRead, row.unRead)
 		} else {
-			t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, row.unRead)
+			t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, row.unRead)
 		}
 		if row.nbOfRecords != len(dataB.Records) {
-			t.Errorf("FAIL: nbOfRecords = %v; Expected: %v", len(dataB.Records), row.nbOfRecords)
+			t.Errorf("MsgFailInValue: nbOfRecords = %v; Expected: %v", len(dataB.Records), row.nbOfRecords)
 		} else {
-			t.Logf("SUCCESS: nbOfRecords = %v; Expected: %v", len(dataB.Records), row.nbOfRecords)
+			t.Logf("MsgSuccessInValue: nbOfRecords = %v; Expected: %v", len(dataB.Records), row.nbOfRecords)
 		}
 	}
 }
-
-
-
-

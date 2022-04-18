@@ -44,8 +44,19 @@ func (r Repetitive) Payload() []byte {
 }
 
 func (r Repetitive) String() string {
+	var buf bytes.Buffer
+	buf.Reset()
+
 	tmp := []byte{r.Rep}
-	return r.MetaItem.DataItem + ": " + hex.EncodeToString(tmp) + hex.EncodeToString(r.Data)
+	tmp = append(tmp, r.Data...)
+
+	buf.WriteString(r.MetaItem.DataItem)
+	buf.WriteByte(':')
+	buf.WriteString(hex.EncodeToString(tmp))
+	return buf.String()
+
+	//tmp := []byte{r.Rep}
+	//return r.MetaItem.DataItem + ": " + hex.EncodeToString(tmp) + hex.EncodeToString(r.Data)
 }
 
 func (r Repetitive) Frn() uint8 {

@@ -28,15 +28,15 @@ func TestCat062Model_ToJsonRecord(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+		t.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
 	}
 
 	if reflect.DeepEqual(recJson, output) == false {
-		t.Errorf("FAIL: %s; \nExpected: %s", recJson, output)
+		t.Errorf("MsgFailInValue: %s; \nExpected: %s", recJson, output)
 	} else {
-		t.Logf("SUCCESS: %s; Expected: %s", recJson, output)
+		t.Logf("MsgSuccessInValue: %s; Expected: %s", recJson, output)
 	}
 }
 
@@ -53,9 +53,9 @@ func TestCat062Model_CalculatedAccelerationCartesian(t *testing.T) {
 
 	// Assert
 	if reflect.DeepEqual(res, output) == false {
-		t.Errorf("FAIL: %v; Expected: %v", res, output)
+		t.Errorf("MsgFailInValue: %v; Expected: %v", res, output)
 	} else {
-		t.Logf("SUCCESS: %v; Expected: %v", res, output)
+		t.Logf("MsgSuccessInValue: %v; Expected: %v", res, output)
 	}
 }
 
@@ -108,9 +108,9 @@ func TestCat062Model_TargetIdentification(t *testing.T) {
 
 		// Assert
 		if s != row.output {
-			t.Errorf("FAIL: %s - s = %s; Expected: %s", row.TestCaseName, s, row.output)
+			t.Errorf("MsgFailInValue: %s - s = %s; Expected: %s", row.TestCaseName, s, row.output)
 		} else {
-			t.Logf("SUCCESS: s = %s; Expected: %s", s, row.output)
+			t.Logf("MsgSuccessInValue: s = %s; Expected: %s", s, row.output)
 		}
 	}
 }
@@ -148,9 +148,9 @@ func TestCat062Model_TrackBarometricAltitude(t *testing.T) {
 
 		// Assert
 		if res != row.output {
-			t.Errorf("FAIL: %s - res = %v; Expected: %v", row.TestCaseName, res, row.output)
+			t.Errorf("MsgFailInValue: %s - res = %v; Expected: %v", row.TestCaseName, res, row.output)
 		} else {
-			t.Logf("SUCCESS: s = %v; Expected: %v", res, row.output)
+			t.Logf("MsgSuccessInValue: s = %v; Expected: %v", res, row.output)
 		}
 	}
 }
@@ -192,9 +192,9 @@ func TestCat062Model_Mode3ACode(t *testing.T) {
 
 		// Assert
 		if res != row.output {
-			t.Errorf("FAIL: %s - res = %v; Expected: %v", row.TestCaseName, res, row.output)
+			t.Errorf("MsgFailInValue: %s - res = %v; Expected: %v", row.TestCaseName, res, row.output)
 		} else {
-			t.Logf("SUCCESS: s = %v; Expected: %v", res, row.output)
+			t.Logf("MsgSuccessInValue: s = %v; Expected: %v", res, row.output)
 		}
 	}
 }
@@ -233,9 +233,9 @@ func TestCat062Model_CalculatedTrackPositionWGS84(t *testing.T) {
 
 		// Assert
 		if res != row.output {
-			t.Errorf("FAIL: %s - res = %v; Expected: %v", row.TestCaseName, res, row.output)
+			t.Errorf("MsgFailInValue: %s - res = %v; Expected: %v", row.TestCaseName, res, row.output)
 		} else {
-			t.Logf("SUCCESS: s = %v; Expected: %v", res, row.output)
+			t.Logf("MsgSuccessInValue: s = %v; Expected: %v", res, row.output)
 
 		}
 	}

@@ -28,15 +28,15 @@ func TestCat048Model_ToJsonRecord(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+		t.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
 	}
 
 	if reflect.DeepEqual(recJson, output) == false {
-		t.Errorf("FAIL: %s; \nExpected: %s", recJson, output)
+		t.Errorf("MsgFailInValue: %s; \nExpected: %s", recJson, output)
 	} else {
-		t.Logf("SUCCESS: %s; Expected: %s", recJson, output)
+		t.Logf("MsgSuccessInValue: %s; Expected: %s", recJson, output)
 	}
 }
 
@@ -50,9 +50,9 @@ func TestCat048Model_RhoTheta(t *testing.T) {
 
 	// Assert
 	if reflect.DeepEqual(res, output) == false {
-		t.Errorf("FAIL: %v; Expected: %v", res, output)
+		t.Errorf("MsgFailInValue: %v; Expected: %v", res, output)
 	} else {
-		t.Logf("SUCCESS: %v; Expected: %v", res, output)
+		t.Logf("MsgSuccessInValue: %v; Expected: %v", res, output)
 	}
 
 }
@@ -93,9 +93,9 @@ func TestCat048Model_Mode3ACodeVGL(t *testing.T) {
 
 		// Assert
 		if reflect.DeepEqual(res, row.output) == false {
-			t.Errorf("FAIL: %v; Expected: %v", res, row.output)
+			t.Errorf("MsgFailInValue: %v; Expected: %v", res, row.output)
 		} else {
-			t.Logf("SUCCESS: %v; Expected: %v", res, row.output)
+			t.Logf("MsgSuccessInValue: %v; Expected: %v", res, row.output)
 		}
 	}
 }
@@ -152,9 +152,9 @@ func TestCat048Model_FlightLevel(t *testing.T) {
 
 		// Assert
 		if reflect.DeepEqual(res, row.output) == false {
-			t.Errorf("FAIL: %v; Expected: %v", res, row.output)
+			t.Errorf("MsgFailInValue: %v; Expected: %v", res, row.output)
 		} else {
-			t.Logf("SUCCESS: %v; Expected: %v", res, row.output)
+			t.Logf("MsgSuccessInValue: %v; Expected: %v", res, row.output)
 		}
 	}
 }
@@ -172,15 +172,15 @@ func TestCat048Model_CartesianXY(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+		t.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
 	}
 
 	if reflect.DeepEqual(res, output) == false {
-		t.Errorf("FAIL: %v; Expected: %v", res, output)
+		t.Errorf("MsgFailInValue: %v; Expected: %v", res, output)
 	} else {
-		t.Logf("SUCCESS: %v; Expected: %v", res, output)
+		t.Logf("MsgSuccessInValue: %v; Expected: %v", res, output)
 	}
 }
 
@@ -197,15 +197,15 @@ func TestCat048Model_TrackVelocity(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+		t.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
 	}
 
 	if reflect.DeepEqual(res, output) == false {
-		t.Errorf("FAIL: %v; Expected: %v", res, output)
+		t.Errorf("MsgFailInValue: %v; Expected: %v", res, output)
 	} else {
-		t.Logf("SUCCESS: %v; Expected: %v", res, output)
+		t.Logf("MsgSuccessInValue: %v; Expected: %v", res, output)
 	}
 }
 
@@ -289,9 +289,9 @@ func TestCat048Model_TrackStatus(t *testing.T) {
 
 		// Assert
 		if reflect.DeepEqual(res, row.output) == false {
-			t.Errorf("FAIL: %v; Expected: %v", res, row.output)
+			t.Errorf("MsgFailInValue: %v; Expected: %v", res, row.output)
 		} else {
-			t.Logf("SUCCESS: %v; Expected: %v", res, row.output)
+			t.Logf("MsgSuccessInValue: %v; Expected: %v", res, row.output)
 		}
 	}
 }
@@ -393,9 +393,9 @@ func TestCat048Model_RadarPlotCharacteristics(t *testing.T) {
 
 		// Assert
 		if reflect.DeepEqual(res, row.output) == false {
-			t.Errorf("FAIL: %v; Expected: %v", res, row.output)
+			t.Errorf("MsgFailInValue: %v; Expected: %v", res, row.output)
 		} else {
-			t.Logf("SUCCESS: %v; Expected: %v", res, row.output)
+			t.Logf("MsgSuccessInValue: %v; Expected: %v", res, row.output)
 		}
 	}
 }
@@ -528,9 +528,9 @@ func TestCat048Model_ComACASCapabilityFlightStatus(t *testing.T) {
 
 		// Assert
 		if reflect.DeepEqual(res, row.output) == false {
-			t.Errorf("FAIL: %v; Expected: %v", res, row.output)
+			t.Errorf("MsgFailInValue: %v; Expected: %v", res, row.output)
 		} else {
-			t.Logf("SUCCESS: %v; Expected: %v", res, row.output)
+			t.Logf("MsgSuccessInValue: %v; Expected: %v", res, row.output)
 		}
 	}
 }

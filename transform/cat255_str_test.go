@@ -38,15 +38,15 @@ func TestCat255STRModel_ToJsonRecord(t *testing.T) {
 
 		// Assert
 		if err != nil {
-			t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+			t.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 		} else {
-			t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+			t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
 		}
 
 		if reflect.DeepEqual(recJson, row.output) == false {
-			t.Errorf("FAIL: %s; \nExpected: %s", recJson, row.output)
+			t.Errorf("MsgFailInValue: %s; \nExpected: %s", recJson, row.output)
 		} else {
-			t.Logf("SUCCESS: %s; Expected: %s", recJson, row.output)
+			t.Logf("MsgSuccessInValue: %s; Expected: %s", recJson, row.output)
 		}
 	}
 }
@@ -109,9 +109,9 @@ func TestCat255STRModel_SpeStpv(t *testing.T) {
 
 		// Assert
 		if reflect.DeepEqual(res, row.output) == false {
-			t.Errorf("FAIL: %s - %v; Expected: %v", row.TestCaseName, res, row.output)
+			t.Errorf("MsgFailInValue: %s - %v; Expected: %v", row.TestCaseName, res, row.output)
 		} else {
-			t.Logf("SUCCESS: %v; Expected: %v", res, row.output)
+			t.Logf("MsgSuccessInValue: %v; Expected: %v", res, row.output)
 		}
 	}
 }
@@ -140,9 +140,9 @@ func TestCat255STRModel_NivCarte(t *testing.T) {
 
 		// Assert
 		if reflect.DeepEqual(res, row.output) == false {
-			t.Errorf("FAIL: %s - %v; Expected: %v", row.TestCaseName, res, row.output)
+			t.Errorf("MsgFailInValue: %s - %v; Expected: %v", row.TestCaseName, res, row.output)
 		} else {
-			t.Logf("SUCCESS: %v; Expected: %v", res, row.output)
+			t.Logf("MsgSuccessInValue: %v; Expected: %v", res, row.output)
 		}
 	}
 }
@@ -191,15 +191,15 @@ func TestCat255STRModel_Carte(t *testing.T) {
 
 		// Assert
 		if err != row.err {
-			t.Errorf("FAIL: %s - error = %v; Expected: %v", row.TestCaseName, err, row.err)
+			t.Errorf("MsgFailInValue: %s - error = %v; Expected: %v", row.TestCaseName, err, row.err)
 		} else {
-			t.Logf("SUCCESS: error: %v; Expected: %v", err, row.err)
+			t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, row.err)
 		}
 
 		if reflect.DeepEqual(res, row.output) == false {
-			t.Errorf("FAIL: %s - %v; Expected: %v", row.TestCaseName, res, row.output)
+			t.Errorf("MsgFailInValue: %s - %v; Expected: %v", row.TestCaseName, res, row.output)
 		} else {
-			t.Logf("SUCCESS: %v; Expected: %v", res, row.output)
+			t.Logf("MsgSuccessInValue: %v; Expected: %v", res, row.output)
 		}
 	}
 }
@@ -243,9 +243,9 @@ func TestCat255STRModel_BiaisExtract(t *testing.T) {
 
 		// Assert
 		if reflect.DeepEqual(res, row.output) == false {
-			t.Errorf("FAIL: %s - %v; Expected: %v", row.TestCaseName, res, row.output)
+			t.Errorf("MsgFailInValue: %s - %v; Expected: %v", row.TestCaseName, res, row.output)
 		} else {
-			t.Logf("SUCCESS: %v; Expected: %v", res, row.output)
+			t.Logf("MsgSuccessInValue: %v; Expected: %v", res, row.output)
 		}
 	}
 }

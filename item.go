@@ -5,8 +5,6 @@ import (
 	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
-
-
 type Item interface {
 	Payload() []byte
 	String() string

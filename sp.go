@@ -45,8 +45,16 @@ func (sp SpecialPurpose) Payload() []byte {
 }
 
 func (sp SpecialPurpose) String() string {
+	var buf bytes.Buffer
+	buf.Reset()
+
 	tmp := []byte{sp.Len}
-	return hex.EncodeToString(tmp) + hex.EncodeToString(sp.Data)
+	tmp = append(tmp, sp.Data...)
+
+	buf.WriteString(sp.MetaItem.DataItem)
+	buf.WriteByte(':')
+	buf.WriteString(hex.EncodeToString(tmp))
+	return buf.String()
 }
 
 func (sp SpecialPurpose) Frn() uint8 {

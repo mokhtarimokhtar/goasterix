@@ -20,8 +20,14 @@ func (rf RandomField) Payload() []byte {
 }
 
 func (rf RandomField) String() string {
+	var buf bytes.Buffer
 	tmp := []byte{rf.FRN}
-	return hex.EncodeToString(tmp) + hex.EncodeToString(rf.Field.Payload())
+	buf.Reset()
+	buf.WriteString("FRN:")
+	buf.WriteString(hex.EncodeToString(tmp))
+	buf.WriteString(" ")
+	buf.WriteString(rf.Field.String())
+	return buf.String()
 }
 
 // RandomFieldSequencing
@@ -60,14 +66,14 @@ func (rfs *RandomFieldSequencing) Reader(rb *bytes.Reader, field uap.DataField) 
 				rf.FRN = frn
 				// todo: add other datafield use case (work just for Fixed)
 				switch uapItem.Type {
-					case uap.Fixed:
-						tmp := new(Fixed)
-						err = tmp.Reader(rb, uapItem)
-						if err != nil {
-							return err
-						}
-						rf.Field = tmp
-						rfs.Sequence = append(rfs.Sequence, *rf)
+				case uap.Fixed:
+					tmp := new(Fixed)
+					err = tmp.Reader(rb, uapItem)
+					if err != nil {
+						return err
+					}
+					rf.Field = tmp
+					rfs.Sequence = append(rfs.Sequence, *rf)
 				}
 			}
 		}
@@ -86,13 +92,23 @@ func (rfs RandomFieldSequencing) Payload() []byte {
 }
 
 func (rfs RandomFieldSequencing) String() string {
-	var str string
+	var buf bytes.Buffer
+	buf.Reset()
 	tmp := []byte{rfs.N}
-	str = hex.EncodeToString(tmp)
-	for _, field := range rfs.Sequence {
-		str = str + field.String()
+	buf.WriteString(rfs.MetaItem.DataItem)
+	buf.WriteByte(':')
+	buf.WriteByte('[')
+	buf.WriteString("N:")
+	buf.WriteString(hex.EncodeToString(tmp))
+	buf.WriteByte(']')
+
+	for _, item := range rfs.Sequence {
+		buf.WriteByte('[')
+		buf.WriteString(item.String())
+		buf.WriteByte(']')
 	}
-	return str
+
+	return buf.String()
 }
 
 func (rfs RandomFieldSequencing) Frn() uint8 {

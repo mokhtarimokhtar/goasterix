@@ -75,9 +75,9 @@ func TestWriteModel(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+		t.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
 	}
 	in := reflect.ValueOf(*cat048Model)
 	out := reflect.ValueOf(output)
@@ -85,9 +85,9 @@ func TestWriteModel(t *testing.T) {
 
 	for i := 0; i < in.NumField(); i++ {
 		if reflect.DeepEqual(in.Field(i).Interface(), out.Field(i).Interface()) == false {
-			t.Errorf("FAIL: %s - %v; Expected: %v", typeOfS.Field(i).Name, in.Field(i).Interface(), out.Field(i).Interface())
+			t.Errorf("MsgFailInValue: %s - %v; Expected: %v", typeOfS.Field(i).Name, in.Field(i).Interface(), out.Field(i).Interface())
 		} else {
-			t.Logf("SUCCESS: %s - %v; Expected: %v", typeOfS.Field(i).Name, in.Field(i).Interface(), out.Field(i).Interface())
+			t.Logf("MsgSuccessInValue: %s - %v; Expected: %v", typeOfS.Field(i).Name, in.Field(i).Interface(), out.Field(i).Interface())
 		}
 	}
 }
@@ -108,15 +108,15 @@ func TestWriteModelJSON(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+		t.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
 	}
 
 	if reflect.DeepEqual(recJson, output) == false {
-		t.Errorf("FAIL: %s; \nExpected: %s", recJson, output)
+		t.Errorf("MsgFailInValue: %s; \nExpected: %s", recJson, output)
 	} else {
-		t.Logf("SUCCESS: %s; Expected: %s", recJson, output)
+		t.Logf("MsgSuccessInValue: %s; Expected: %s", recJson, output)
 	}
 }
 
@@ -136,14 +136,14 @@ func TestWriteModelXML(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+		t.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
 	}
 
 	if reflect.DeepEqual(recJson, output) == false {
-		t.Errorf("FAIL: %s; \nExpected: %s", recJson, output)
+		t.Errorf("MsgFailInValue: %s; \nExpected: %s", recJson, output)
 	} else {
-		t.Logf("SUCCESS: %s; Expected: %s", recJson, output)
+		t.Logf("MsgSuccessInValue: %s; Expected: %s", recJson, output)
 	}
 }

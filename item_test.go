@@ -1,419 +1,129 @@
 package goasterix
 
 import (
-	"bytes"
+	"github.com/mokhtarimokhtar/goasterix/uap"
+	"github.com/mokhtarimokhtar/goasterix/util"
+	"reflect"
 	"testing"
 )
 
-func TestFixed_Payload(t *testing.T) {
-	// Arrange
-	fixed := new(Fixed)
-	fixed.Data = []byte{0xff, 0xff, 0xff, 0xff}
-	output := []byte{0xff, 0xff, 0xff, 0xff}
-
-	// Act
-	b := fixed.Payload()
-
-	// Assert
-	if len(b) != 4 {
-		t.Errorf("FAIL: len(items) = %v; Expected: %v", len(b), 4)
-	} else {
-		t.Logf("SUCCESS: len(items) = %v; Expected: %v", len(b), 4)
-	}
-	if bytes.Equal(b, output) == false {
-		t.Errorf("FAIL: sp = % X; Expected: % X", b, output)
-	} else {
-		t.Logf("SUCCESS: sp = % X; Expected: % X", b, output)
-	}
-}
-
-func TestExtended_Payload(t *testing.T) {
-	// Arrange
-	ext := new(Extended)
-	ext.Primary = []byte{0xff}
-	ext.Secondary = []byte{0xff, 0xff, 0xfe}
-	output := []byte{0xff, 0xff, 0xff, 0xfe}
-
-	// Act
-	b := ext.Payload()
-
-	// Assert
-	if len(b) != 4 {
-		t.Errorf("FAIL: len(items) = %v; Expected: %v", len(b), 4)
-	} else {
-		t.Logf("SUCCESS: len(items) = %v; Expected: %v", len(b), 4)
-	}
-	if bytes.Equal(b, output) == false {
-		t.Errorf("FAIL: sp = % X; Expected: % X", b, output)
-	} else {
-		t.Logf("SUCCESS: sp = % X; Expected: % X", b, output)
-	}
-}
-
-func TestExplicit_Payload(t *testing.T) {
-	// Arrange
-	exp := new(Explicit)
-	exp.Len = 0x04
-	exp.Data = []byte{0xff, 0xff, 0xfe}
-	output := []byte{0x04, 0xff, 0xff, 0xfe}
-
-	// Act
-	b := exp.Payload()
-
-	// Assert
-	if len(b) != 4 {
-		t.Errorf("FAIL: len(items) = %v; Expected: %v", len(b), 4)
-	} else {
-		t.Logf("SUCCESS: len(items) = %v; Expected: %v", len(b), 4)
-	}
-	if bytes.Equal(b, output) == false {
-		t.Errorf("FAIL: sp = % X; Expected: % X", b, output)
-	} else {
-		t.Logf("SUCCESS: sp = % X; Expected: % X", b, output)
-	}
-}
-
-func TestRepetitive_Payload(t *testing.T) {
-	// Arrange
-	rp := new(Repetitive)
-	rp.Rep = 0x03
-	rp.Data = []byte{0xff, 0xff, 0xfe}
-
-	output := []byte{0x03, 0xff, 0xff, 0xfe}
-	// Act
-	b := rp.Payload()
-
-	// Assert
-	if len(b) != 4 {
-		t.Errorf("FAIL: len(items) = %v; Expected: %v", len(b), 4)
-	} else {
-		t.Logf("SUCCESS: len(items) = %v; Expected: %v", len(b), 4)
-	}
-	if bytes.Equal(b, output) == false {
-		t.Errorf("FAIL: sp = % X; Expected: % X", b, output)
-	} else {
-		t.Logf("SUCCESS: sp = % X; Expected: % X", b, output)
-	}
-}
-
-/*func TestCompound_Payload(t *testing.T) {
-	// Arrange
-	cp := new(Compound)
-	cp.Primary = []byte{0xf0}
-	cp.Secondary = []Item{
-		{
-			Meta: MetaItem{
-				Type: uap.Fixed,
-			},
-			Fixed: &Fixed{
-				Data: []byte{0xff},
-			},
-		},
-		{
-			Meta: MetaItem{
-				Type: uap.Extended,
-			},
-			Extended: &Extended{
-				Primary:   []byte{0xff},
-				Secondary: []byte{0xff, 0xfe},
-			},
-		},
-		{
-			Meta: MetaItem{
-				Type: uap.Explicit,
-			},
-			Explicit: &Explicit{
-				Len:  0x02,
-				Data: []byte{0xff},
-			},
-		},
-		{
-			Meta: MetaItem{
-				Type: uap.Repetitive,
-			},
-			Repetitive: &Repetitive{
-				Rep:  0x02,
-				Data: []byte{0xff, 0xff},
-			},
-		},
-	}
-	output := []byte{0xf0, 0xff, 0xff, 0xff, 0xfe, 0x02, 0xff, 0x02, 0xff, 0xff}
-
-	// Act
-	b := cp.Payload()
-
-	// Assert
-	if len(b) != 10 {
-		t.Errorf("FAIL: len(items) = %v; Expected: %v", len(b), 10)
-	} else {
-		t.Logf("SUCCESS: len(items) = %v; Expected: %v", len(b), 10)
-	}
-	if bytes.Equal(b, output) == false {
-		t.Errorf("FAIL: cp = % X; Expected: % X", b, output)
-	} else {
-		t.Logf("SUCCESS: cp = % X; Expected: % X", b, output)
-	}
-}
-
-func TestItem_Payload(t *testing.T) {
-	// setup
-	type dataTest struct {
-		TestCaseName string
-		input        Item
-		output       []byte
-		len          int
-	}
-	dataSet := []dataTest{
-		{
-			TestCaseName: "testcase 1",
-			input: Item{
-				Meta: MetaItem{
-					FRN:         1,
-					DataItem:    "I000/010",
-					Description: "Test item",
-					Type:        uap.Fixed,
-				},
-				Fixed: &Fixed{
-					Data: []byte{0xff, 0xff},
-				},
-			},
-			output: []byte{0xff, 0xff},
-			len:    2,
-		},
-		{
-			TestCaseName: "testcase 2",
-			input: Item{
-				Meta: MetaItem{
-					FRN:         1,
-					DataItem:    "I000/010",
-					Description: "Test item",
-					Type:        uap.Extended,
-				},
-				Extended: &Extended{
-					Primary:   []byte{0xff},
-					Secondary: []byte{0xff, 0xfe},
-				},
-			},
-			output: []byte{0xff, 0xff, 0xfe},
-			len:    3,
-		},
-		{
-			TestCaseName: "testcase 3",
-			input: Item{
-				Meta: MetaItem{
-					FRN:         1,
-					DataItem:    "I000/010",
-					Description: "Test item",
-					Type:        uap.Explicit,
-				},
-				Explicit: &Explicit{
-					Len:  0x04,
-					Data: []byte{0xff, 0xff, 0xff},
-				},
-			},
-			output: []byte{0x04, 0xff, 0xff, 0xff},
-			len:    4,
-		},
-		{
-			TestCaseName: "testcase 4",
-			input: Item{
-				Meta: MetaItem{
-					FRN:         1,
-					DataItem:    "I000/010",
-					Description: "Test item",
-					Type:        uap.Repetitive,
-				},
-				Repetitive: &Repetitive{
-					Rep:  0x02,
-					Data: []byte{0xff, 0xff},
-				},
-			},
-			output: []byte{0x02, 0xff, 0xff},
-			len:    3,
-		},
-		{
-			TestCaseName: "testcase 5",
-			input: Item{
-				Meta: MetaItem{
-					FRN:         1,
-					DataItem:    "I000/010",
-					Description: "Test item",
-					Type:        uap.Compound,
-				},
-				Compound: &Compound{
-					Primary: []byte{0xc0},
-					Secondary: []Item{
-						{
-							Meta: MetaItem{
-								FRN:         1,
-								DataItem:    "I000/010",
-								Description: "Test item",
-								Type:        uap.Fixed,
-							},
-							Fixed: &Fixed{
-								Data: []byte{0xff, 0xff},
-							},
-						},
-						{
-							Meta: MetaItem{
-								FRN:         1,
-								DataItem:    "I000/010",
-								Description: "Test item",
-								Type:        uap.Fixed,
-							},
-							Fixed: &Fixed{
-								Data: []byte{0xff, 0xff},
-							},
-						},
-					},
-				},
-			},
-			output: []byte{0xc0, 0xff, 0xff, 0xff, 0xff},
-			len:    5,
-		},
-	}
-	for _, row := range dataSet {
-		// Arrange
-		// Act
-		b := row.input.Payload()
-
-		// Assert
-		if len(b) != row.len {
-			t.Errorf("FAIL: len(items) = %v; Expected: %v", len(b), row.len)
-		} else {
-			t.Logf("SUCCESS: len(items) = %v; Expected: %v", len(b), row.len)
-		}
-		if bytes.Equal(b, row.output) == false {
-			t.Errorf("FAIL: item = % X; Expected: % X", b, row.output)
-		} else {
-			t.Logf("SUCCESS: item = % X; Expected: % X", b, row.output)
-		}
-	}
-
-}
-
-// Test all item string
-func TestItem_String(t *testing.T) {
+func TestNewMetaItem(t *testing.T) {
 	// setup
 	type testCase struct {
 		Name   string
-		input  Item
-		output string
+		input  uap.DataField
+		output MetaItem
 	}
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name: "testcase 1",
-			input: Item{
-				Meta: MetaItem{
-					FRN:         1,
-					DataItem:    "I000/010",
-					Description: "Test item",
-					Type:        uap.Fixed,
-				},
-				Fixed: &Fixed{
-					Data: []byte{0xff, 0xff},
-				},
+			Name:   "testcase 1",
+			input:  uap.DataField{
+				FRN:         1,
+				DataItem:    "I000/010",
+				Description: "Test item",
+				Type:        uap.Fixed,
+				Fixed:       uap.FixedField{Size: 1},
 			},
-			output: "ffff",
+			output: MetaItem{
+				FRN:         1,
+				DataItem:    "I000/010",
+				Description: "Test item",
+				Type:        uap.Fixed,
+			},
 		},
 		{
-			Name: "testcase 2",
-			input: Item{
-				Meta: MetaItem{
-					FRN:         1,
-					DataItem:    "I000/020",
-					Description: "Test item",
-					Type:        uap.Extended,
-				},
-				Extended: &Extended{
-					Primary:   []byte{0xff},
-					Secondary: []byte{0xff, 0xfe},
-				},
+			Name:   "testcase 2",
+			input:  uap.DataField{
+				FRN:         0,
+				DataItem:    "",
+				Description: "",
+				Type:        0,
+				Fixed:       uap.FixedField{},
 			},
-			output: "fffffe",
+			output: MetaItem{},
 		},
 		{
-			Name: "testcase 3",
-			input: Item{
-				Meta: MetaItem{
-					FRN:         1,
-					DataItem:    "I000/030",
-					Description: "Test item",
-					Type:        uap.Explicit,
-				},
-				Explicit: &Explicit{
-					Len:  0x04,
-					Data: []byte{0xff, 0xff, 0xff},
+			Name:   "testcase 3",
+			input:  uap.DataField{
+				FRN:         3,
+				DataItem:    "I000/030",
+				Description: "Test item",
+				Type:        uap.Extended,
+				Extended: uap.ExtendedField{
+					PrimarySize:   1,
+					SecondarySize: 2,
 				},
 			},
-			output: "04ffffff",
+			output: MetaItem{
+				FRN:         3,
+				DataItem:    "I000/030",
+				Description: "Test item",
+				Type:        uap.Extended,
+			},
 		},
 		{
-			Name: "testcase 4",
-			input: Item{
-				Meta: MetaItem{
-					FRN:         1,
-					DataItem:    "I000/040",
-					Description: "Test item",
-					Type:        uap.Repetitive,
-				},
-				Repetitive: &Repetitive{
-					Rep:  0x02,
-					Data: []byte{0xff, 0xff},
-				},
+			Name:   "testcase 4",
+			input:  uap.DataField{
+				FRN:         4,
+				DataItem:    "I000/040",
+				Description: "Test item",
+				Type:        uap.Explicit,
+				Explicit: uap.ExplicitField{},
 			},
-			output: "02ffff",
+			output: MetaItem{
+				FRN:         4,
+				DataItem:    "I000/040",
+				Description: "Test item",
+				Type:        uap.Explicit,
+			},
 		},
 		{
-			Name: "testcase 5",
-			input: Item{
-				Meta: MetaItem{
-					FRN:         1,
-					DataItem:    "I000/050",
-					Description: "Test item",
-					Type:        uap.Compound,
-				},
-				Compound: &Compound{
-					Primary: []byte{0xc0},
-					Secondary: []Item{
-						{
-							Meta: MetaItem{
-								FRN:         1,
-								DataItem:    "I000/010",
-								Description: "Test item 010",
-								Type:        uap.Fixed,
-							},
-							Fixed: &Fixed{
-								Data: []byte{0xff, 0xff},
-							},
-						},
-						{
-							Meta: MetaItem{
-								FRN:         1,
-								DataItem:    "I000/020",
-								Description: "Test item 020",
-								Type:        uap.Fixed,
-							},
-							Fixed: &Fixed{
-								Data: []byte{0xff, 0xff},
-							},
-						},
-					},
-				},
+			Name:   "testcase 5",
+			input:  uap.DataField{
+				FRN:         5,
+				DataItem:    "I000/050",
+				Description: "Test item",
+				Type:        uap.Repetitive,
+				Repetitive: uap.RepetitiveField{SubItemSize: 2},
 			},
-			output: "[primary: c0][I000/010: ffff][I000/020: ffff]",
+			output: MetaItem{
+				FRN:         5,
+				DataItem:    "I000/050",
+				Description: "Test item",
+				Type:        uap.Repetitive,
+			},
+		},
+		{
+			Name:   "testcase 6",
+			input:  uap.DataField{
+				FRN:         6,
+				DataItem:    "I000/060",
+				Description: "Test item",
+				Type:        uap.Compound,
+				Compound: []uap.DataField{},
+			},
+			output: MetaItem{
+				FRN:         6,
+				DataItem:    "I000/060",
+				Description: "Test item",
+				Type:        uap.Compound,
+			},
 		},
 	}
+
 	for _, row := range dataSet {
+		// Arrange
+		m := MetaItem{}
 		// Act
-		s := row.input.String()
+		m.NewMetaItem(row.input)
 
 		// Assert
-		if s == row.output {
-			t.Errorf("FAIL: %s - item = %s; Expected: %s", row.Name, s, row.output)
+		if reflect.DeepEqual(m, row.output) == false {
+			t.Errorf(util.MsgFailInValue, row.Name, m, row.output)
 		} else {
-			t.Logf("SUCCESS: %s - item = %s; Expected: %s", row.Name, s, row.output)
+			t.Logf(util.MsgSuccessInValue, row.Name, m, row.output)
 		}
 	}
-}*/
+
+}

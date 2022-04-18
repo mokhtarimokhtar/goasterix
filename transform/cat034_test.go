@@ -31,9 +31,9 @@ func TestCat034Model_MessageType(t *testing.T) {
 
 		// Assert
 		if res != row.output {
-			t.Errorf("FAIL: %v; Expected: %v", res, row.output)
+			t.Errorf("MsgFailInValue: %v; Expected: %v", res, row.output)
 		} else {
-			t.Logf("SUCCESS: %v; Expected: %v", res, row.output)
+			t.Logf("MsgSuccessInValue: %v; Expected: %v", res, row.output)
 		}
 	}
 }
@@ -333,9 +333,9 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 
 		for i := 0; i < in.NumField(); i++ {
 			if reflect.DeepEqual(in.Field(i).Interface(), out.Field(i).Interface()) == false {
-				t.Errorf("FAIL: %s: %s - %v; Expected: %v", row.Name, typeOfS.Field(i).Name, in.Field(i).Interface(), out.Field(i).Interface())
+				t.Errorf("MsgFailInValue: %s: %s - %v; Expected: %v", row.Name, typeOfS.Field(i).Name, in.Field(i).Interface(), out.Field(i).Interface())
 			} else {
-				t.Logf("SUCCESS: %s - %v; Expected: %v", typeOfS.Field(i).Name, in.Field(i).Interface(), out.Field(i).Interface())
+				t.Logf("MsgSuccessInValue: %s - %v; Expected: %v", typeOfS.Field(i).Name, in.Field(i).Interface(), out.Field(i).Interface())
 			}
 		}
 	}
@@ -482,9 +482,9 @@ func TestCat034Model_SystemProcessingMode(t *testing.T) {
 
 		for i := 0; i < in.NumField(); i++ {
 			if reflect.DeepEqual(in.Field(i).Interface(), out.Field(i).Interface()) == false {
-				t.Errorf("FAIL: %s: %s - %v; Expected: %v", row.Name, typeOfS.Field(i).Name, in.Field(i).Interface(), out.Field(i).Interface())
+				t.Errorf("MsgFailInValue: %s: %s - %v; Expected: %v", row.Name, typeOfS.Field(i).Name, in.Field(i).Interface(), out.Field(i).Interface())
 			} else {
-				t.Logf("SUCCESS: %s - %v; Expected: %v", typeOfS.Field(i).Name, in.Field(i).Interface(), out.Field(i).Interface())
+				t.Logf("MsgSuccessInValue: %s - %v; Expected: %v", typeOfS.Field(i).Name, in.Field(i).Interface(), out.Field(i).Interface())
 			}
 		}
 
@@ -590,15 +590,15 @@ func TestCat034Model_MessageCountValues(t *testing.T) {
 
 		// Assert
 		if err != row.err {
-			t.Errorf("FAIL: error = %v; Expected: %v", err, row.err)
+			t.Errorf("MsgFailInValue: error = %v; Expected: %v", err, row.err)
 		} else {
-			t.Logf("SUCCESS: error: %v; Expected: %v", err, row.err)
+			t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, row.err)
 		}
 
 		if reflect.DeepEqual(res, row.output) == false {
-			t.Errorf("FAIL: %v; \nExpected: %v", res, row.output)
+			t.Errorf("MsgFailInValue: %v; \nExpected: %v", res, row.output)
 		} else {
-			t.Logf("SUCCESS: %v; Expected: %v", res, row.output)
+			t.Logf("MsgSuccessInValue: %v; Expected: %v", res, row.output)
 		}
 	}
 }
@@ -618,9 +618,9 @@ func TestCat034Model_GenericPolarWindow(t *testing.T) {
 
 	// Assert
 	if res != output {
-		t.Errorf("FAIL: %v; Expected: %v", res, output)
+		t.Errorf("MsgFailInValue: %v; Expected: %v", res, output)
 	} else {
-		t.Logf("SUCCESS: %v; Expected: %v", res, output)
+		t.Logf("MsgSuccessInValue: %v; Expected: %v", res, output)
 	}
 
 }
@@ -650,15 +650,15 @@ func TestCat034Model_DataFilter(t *testing.T) {
 
 		// Assert
 		if err != nil {
-			t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+			t.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 		} else {
-			t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+			t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
 		}
 
 		if res != row.output {
-			t.Errorf("FAIL: %v; Expected: %v", res, row.output)
+			t.Errorf("MsgFailInValue: %v; Expected: %v", res, row.output)
 		} else {
-			t.Logf("SUCCESS: %v; Expected: %v", res, row.output)
+			t.Logf("MsgSuccessInValue: %v; Expected: %v", res, row.output)
 		}
 	}
 }
@@ -677,9 +677,9 @@ func TestCat034Model_Position3DofDataSource(t *testing.T) {
 
 	// Assert
 	if res != output {
-		t.Errorf("FAIL: %v; Expected: %v", res, output)
+		t.Errorf("MsgFailInValue: %v; Expected: %v", res, output)
 	} else {
-		t.Logf("SUCCESS: %v; Expected: %v", res, output)
+		t.Logf("MsgSuccessInValue: %v; Expected: %v", res, output)
 	}
 }
 
@@ -701,14 +701,14 @@ func TestCat034Model_ToJsonRecord(t *testing.T) {
 
 	// Assert
 	if err != nil {
-		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+		t.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
 	} else {
-		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
 	}
 
 	if reflect.DeepEqual(recJson, output) == false {
-		t.Errorf("FAIL: %s; \nExpected: %s", recJson, output)
+		t.Errorf("MsgFailInValue: %s; \nExpected: %s", recJson, output)
 	} else {
-		t.Logf("SUCCESS: %s; Expected: %s", recJson, output)
+		t.Logf("MsgSuccessInValue: %s; Expected: %s", recJson, output)
 	}
 }

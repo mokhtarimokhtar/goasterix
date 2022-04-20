@@ -193,7 +193,7 @@ func TestDataBlockDecode(t *testing.T) {
 			nbOfRecords:  1,
 			unRead:       0,
 		},
-		{
+		/*{
 			TestCaseName: "CatForTest full record",
 			//
 			//input:       "1a 0026 FD80 FFFF FFFE AAFFFFFE 02FFFF FFFF 03FFFF 02FFFFFFFF 04FFFFFF 0101FFFF 04FFFFFF",
@@ -208,7 +208,7 @@ func TestDataBlockDecode(t *testing.T) {
 			err:          io.ErrUnexpectedEOF,
 			nbOfRecords:  1,
 			unRead:       0,
-		},
+		},*/
 		{
 			TestCaseName: "ErrCategoryUnknown",
 			input:        "00 0005FFFF",
@@ -242,19 +242,19 @@ func TestDataBlockDecode(t *testing.T) {
 
 		// Assert
 		if err != row.err {
-			t.Errorf("MsgFailInValue: %s error: %s; Expected: %v", row.TestCaseName, err, row.err)
+			t.Errorf(util.MsgFailInValue, row.TestCaseName, err, row.err)
 		} else {
-			t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, row.err)
+			t.Logf(util.MsgSuccessInValue, row.TestCaseName, err, row.err)
 		}
 		if unRead != row.unRead {
-			t.Errorf("MsgFailInValue: %s unRead = %v; Expected: %v", row.TestCaseName, unRead, row.unRead)
+			t.Errorf(util.MsgFailInValue, row.TestCaseName, unRead, row.unRead)
 		} else {
-			t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, row.unRead)
+			t.Logf(util.MsgSuccessInValue, row.TestCaseName, unRead, row.unRead)
 		}
 		if row.nbOfRecords != len(dataB.Records) {
-			t.Errorf("MsgFailInValue: %s nbOfRecords = %v; Expected: %v", row.TestCaseName, len(dataB.Records), row.nbOfRecords)
+			t.Errorf(util.MsgFailInValue, row.TestCaseName, len(dataB.Records), row.nbOfRecords)
 		} else {
-			t.Logf("MsgSuccessInValue: nbOfRecords = %v; Expected: %v", len(dataB.Records), row.nbOfRecords)
+			t.Logf(util.MsgSuccessInValue, row.TestCaseName, len(dataB.Records), row.nbOfRecords)
 		}
 	}
 }
@@ -300,6 +300,7 @@ func TestDataBlockDecode_ARTAS(t *testing.T) {
 	dataSet := []DataBlockTest{
 		{
 			// CAT030 ARTAS
+			TestCaseName: "ARTAS",
 			input:       "1e00f3afbbf317f1300883040070a8bcf3ff07070723f0a8800713feb7022b0389038b140704012c080811580000001e7004f04aa004b0012400544e49413531313206c84c45424c48454c584d413332300101a5389075c71ca0afbbf317f130088304002aa8bcf3ff04040447fda703f7d2008f0df705280528140700000008171158000000087002f0c3c00528012d006955414c3931202007314c4c42474b4557524842373757a290f3541339c60820afbbf31101300883040335a8bcf3ff0b0b0b2be9a9b5fffefffa0fff08c008c01d0e070000001484115800000200700400ffffffffffffffff344045df7df76021d3",
 			err:         nil,
 			nbOfRecords: 3,
@@ -318,19 +319,19 @@ func TestDataBlockDecode_ARTAS(t *testing.T) {
 
 		// Assert
 		if err != row.err {
-			t.Errorf("MsgFailInValue: error: %s; Expected: %v", err, row.err)
+			t.Errorf(util.MsgFailInValue, row.TestCaseName, err, row.err)
 		} else {
-			t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, row.err)
+			t.Logf(util.MsgSuccessInValue, row.TestCaseName, err, row.err)
 		}
 		if unRead != row.unRead {
-			t.Errorf("MsgFailInValue: unRead = %v; Expected: %v", unRead, row.unRead)
+			t.Errorf(util.MsgFailInValue, row.TestCaseName, unRead, row.unRead)
 		} else {
-			t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, row.unRead)
+			t.Logf(util.MsgSuccessInValue, row.TestCaseName, unRead, row.unRead)
 		}
 		if row.nbOfRecords != len(dataB.Records) {
-			t.Errorf("MsgFailInValue: nbOfRecords = %v; Expected: %v", len(dataB.Records), row.nbOfRecords)
+			t.Errorf(util.MsgFailInValue, row.TestCaseName, len(dataB.Records), row.nbOfRecords)
 		} else {
-			t.Logf("MsgSuccessInValue: nbOfRecords = %v; Expected: %v", len(dataB.Records), row.nbOfRecords)
+			t.Logf(util.MsgSuccessInValue, row.TestCaseName, len(dataB.Records), row.nbOfRecords)
 		}
 	}
 }

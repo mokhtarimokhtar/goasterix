@@ -46,10 +46,11 @@ type RandomFieldSequencing struct {
 	Sequence []RandomField
 }
 
-func NewRandomFieldSequencing(field uap.DataField) Item {
+func NewRandomFieldSequencing(field uap.IDataField) Item {
 	f := &RandomFieldSequencing{}
 	f.Base.NewBase(field)
-	f.Fields = field.RFS
+	//f.Fields = field.RFS
+	f.Fields = field.GetRFS()
 	return f
 }
 

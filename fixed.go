@@ -14,7 +14,6 @@ type Fixed struct {
 	Size uint8
 }
 
-//func NewFixed(field uap.DataField) Item {
 func NewFixed(field uap.IDataField) Item {
 	f := &Fixed{}
 	//f.Base.NewBase(field)

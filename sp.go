@@ -18,7 +18,7 @@ type SpecialPurpose struct {
 	Data []byte
 }
 
-func NewSpecialPurpose(field uap.DataField) Item {
+func NewSpecialPurpose(field uap.IDataField) Item {
 	f := &SpecialPurpose{}
 	f.Base.NewBase(field)
 	return f

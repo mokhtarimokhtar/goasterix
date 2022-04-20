@@ -52,10 +52,10 @@ func Readers(i Item, rb *bytes.Reader) error {
 
 // GetItem returns the corresponding Item type: Fixed, Extended, etc.
 // GetItem is a factory function
-func GetItem(df uap.DataField) (Item, error) {
+func GetItem(df uap.IDataField) (Item, error) {
 	var err error
 	var item Item
-	switch df.Type {
+	switch df.GetType() {
 	case uap.Fixed:
 		item = NewFixed(df)
 	case uap.Extended:
@@ -84,9 +84,7 @@ type Base struct {
 	Type        uap.TypeField
 }
 
-//func (b *Base) NewBase(field uap.DataField) {
 func (b *Base) NewBase(field uap.IDataField) {
-	//b.FRN = field.FRN
 	b.FRN = field.GetFrn()
 	b.DataItem = field.GetDataItem()
 	b.Description = field.GetDescription()

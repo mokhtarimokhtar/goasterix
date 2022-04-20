@@ -15,7 +15,7 @@ type Explicit struct {
 	Data []byte
 }
 
-func NewExplicit(field uap.DataField) Item {
+func NewExplicit(field uap.IDataField) Item {
 	f := &Explicit{}
 	f.Base.NewBase(field)
 	return f

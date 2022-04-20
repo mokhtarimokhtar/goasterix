@@ -30,6 +30,8 @@ type IDataField interface {
 	GetDescription() string
 	GetType() TypeField
 	GetSize() Size
+	GetCompound() []DataField
+	GetRFS() []DataField
 }
 
 // DataField describes FRN(Field Reference Number)
@@ -72,6 +74,13 @@ func (d DataField) GetSize() Size {
 		s.ForRepetitive = d.Repetitive.SubItemSize
 	}
 	return s
+}
+
+func (d DataField) GetCompound() []DataField {
+	return d.Compound
+}
+func (d DataField) GetRFS() []DataField {
+	return d.RFS
 }
 
 type Size struct {

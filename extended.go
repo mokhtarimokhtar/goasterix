@@ -20,7 +20,6 @@ type Extended struct {
 	Secondary         []byte
 }
 
-//func NewExtended(field uap.DataField) Item {
 func NewExtended(field uap.IDataField) Item {
 	f := &Extended{}
 	f.Base.NewBase(field)

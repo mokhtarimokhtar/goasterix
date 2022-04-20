@@ -18,10 +18,10 @@ type Compound struct {
 	Secondary []Item
 }
 
-func NewCompound(field uap.DataField) Item {
+func NewCompound(field uap.IDataField) Item {
 	f := &Compound{}
 	f.Base.NewBase(field)
-	f.Fields = field.Compound
+	f.Fields = field.GetCompound()
 	return f
 }
 

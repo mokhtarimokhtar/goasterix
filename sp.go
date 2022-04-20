@@ -11,16 +11,21 @@ import (
 // ref. EUROCONTROL-SPEC-0149 2.4
 // 4.3.5 Non-Standard Data Fields:
 // Reserved Expansion Data
-// Field Special Purpose field
+// Field Special Purpose dataField
 type SpecialPurpose struct {
-	MetaItem
+	Base
 	Len  uint8
 	Data []byte
 }
 
-func (sp *SpecialPurpose) Reader(rb *bytes.Reader, field uap.DataField) error {
+func NewSpecialPurpose(field uap.DataField) Item {
+	f := &SpecialPurpose{}
+	f.Base.NewBase(field)
+	return f
+}
+
+func (sp *SpecialPurpose) Reader(rb *bytes.Reader) error {
 	var err error
-	sp.MetaItem.NewMetaItem(field)
 
 	err = binary.Read(rb, binary.BigEndian, &sp.Len)
 	if err != nil {
@@ -37,7 +42,7 @@ func (sp *SpecialPurpose) Reader(rb *bytes.Reader, field uap.DataField) error {
 	return err
 }
 
-// Payload returns this field as bytes.
+// Payload returns this dataField as bytes.
 func (sp SpecialPurpose) Payload() []byte {
 	var p []byte
 	p = append(p, sp.Len)
@@ -53,13 +58,9 @@ func (sp SpecialPurpose) String() string {
 	tmp := []byte{sp.Len}
 	tmp = append(tmp, sp.Data...)
 
-	buf.WriteString(sp.MetaItem.DataItem)
+	buf.WriteString(sp.Base.DataItem)
 	buf.WriteByte(':')
 	buf.WriteString(hex.EncodeToString(tmp))
 	return buf.String()
 }
 
-// Frn returns FRN number of field from UAP
-func (sp SpecialPurpose) Frn() uint8 {
-	return sp.MetaItem.FRN
-}

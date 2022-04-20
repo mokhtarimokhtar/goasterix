@@ -311,7 +311,7 @@ func TestCat048Model_RadarPlotCharacteristics(t *testing.T) {
 				Primary: []byte{0xFE},
 				Secondary: []goasterix.Item{
 					{
-						Meta: goasterix.MetaItem{
+						Meta: goasterix.Base{
 							FRN:         1,
 							DataItem:    "SRL",
 							Description: "SSR plot runlength",
@@ -320,7 +320,7 @@ func TestCat048Model_RadarPlotCharacteristics(t *testing.T) {
 						Fixed: &goasterix.Fixed{Data: []byte{0x64}},
 					},
 					{
-						Meta: goasterix.MetaItem{
+						Meta: goasterix.Base{
 							FRN:         2,
 							DataItem:    "SRR",
 							Description: "Number of received replies",
@@ -329,7 +329,7 @@ func TestCat048Model_RadarPlotCharacteristics(t *testing.T) {
 						Fixed: &goasterix.Fixed{Data: []byte{0x64}},
 					},
 					{
-						Meta: goasterix.MetaItem{
+						Meta: goasterix.Base{
 							FRN:         3,
 							DataItem:    "SAM",
 							Description: "Amplitude of received replies for M(SSR)",
@@ -338,7 +338,7 @@ func TestCat048Model_RadarPlotCharacteristics(t *testing.T) {
 						Fixed: &goasterix.Fixed{Data: []byte{0x64}},
 					},
 					{
-						Meta: goasterix.MetaItem{
+						Meta: goasterix.Base{
 							FRN:         4,
 							DataItem:    "PRL",
 							Description: "PSR plot runlength",
@@ -347,7 +347,7 @@ func TestCat048Model_RadarPlotCharacteristics(t *testing.T) {
 						Fixed: &goasterix.Fixed{Data: []byte{0x64}},
 					},
 					{
-						Meta: goasterix.MetaItem{
+						Meta: goasterix.Base{
 							FRN:         5,
 							DataItem:    "PAM",
 							Description: "PSR amplitude",
@@ -356,7 +356,7 @@ func TestCat048Model_RadarPlotCharacteristics(t *testing.T) {
 						Fixed: &goasterix.Fixed{Data: []byte{0x64}},
 					},
 					{
-						Meta: goasterix.MetaItem{
+						Meta: goasterix.Base{
 							FRN:         6,
 							DataItem:    "RPD",
 							Description: "Difference in Range between PSR and SSR plot",
@@ -365,7 +365,7 @@ func TestCat048Model_RadarPlotCharacteristics(t *testing.T) {
 						Fixed: &goasterix.Fixed{Data: []byte{0x7f}},
 					},
 					{
-						Meta: goasterix.MetaItem{
+						Meta: goasterix.Base{
 							FRN:         7,
 							DataItem:    "APD",
 							Description: "Difference in Azimuth between PSR and SSR plot",

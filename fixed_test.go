@@ -12,10 +12,11 @@ import (
 func TestFixedReader(t *testing.T) {
 	// setup
 	type testCase struct {
-		Name   string
-		input  string
-		uap    uap.DataField
-		output Fixed
+		Name      string
+		input     string
+		dataField uap.DataField
+		//output Fixed
+		output Item
 		err    error
 	}
 	// Arrange
@@ -23,7 +24,7 @@ func TestFixedReader(t *testing.T) {
 		{
 			Name:  "testCase 1",
 			input: "01 02 03 04 05 06 07 08",
-			uap: uap.DataField{
+			dataField: uap.DataField{
 				FRN:         8,
 				DataItem:    "I000/080",
 				Description: "Test item",
@@ -31,33 +32,35 @@ func TestFixedReader(t *testing.T) {
 				Fixed:       uap.FixedField{Size: 8},
 			},
 			err: nil,
-			output: Fixed{
-				MetaItem: MetaItem{
+			output: &Fixed{
+				Base: Base{
 					FRN:         8,
 					DataItem:    "I000/080",
 					Description: "Test item",
 					Type:        uap.Fixed,
 				},
+				Size: 8,
 				Data: []byte{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08},
 			},
 		},
 		{
 			Name:  "testCase 2",
 			input: "01 02 03 04 05 06 07",
-			uap: uap.DataField{
+			dataField: uap.DataField{
 				FRN:         8,
 				DataItem:    "I000/080",
 				Description: "Test item",
 				Type:        uap.Fixed,
 				Fixed:       uap.FixedField{Size: 8},
 			},
-			output: Fixed{
-				MetaItem: MetaItem{
+			output: &Fixed{
+				Base: Base{
 					FRN:         8,
 					DataItem:    "I000/080",
 					Description: "Test item",
 					Type:        uap.Fixed,
 				},
+				Size: 8,
 			},
 			err: io.ErrUnexpectedEOF,
 		},
@@ -67,10 +70,12 @@ func TestFixedReader(t *testing.T) {
 		// Arrange
 		input, _ := util.HexStringToByte(row.input)
 		rb := bytes.NewReader(input)
-		f := Fixed{}
+		f := NewFixed(row.dataField)
 
 		// Act
-		err := f.Reader(rb, row.uap)
+		//err := f.Reader(rb, row.dataField)
+		err := f.Reader(rb)
+		//tmp, _ := f.(*Fixed)
 
 		// Assert
 		if err != row.err {
@@ -99,7 +104,7 @@ func TestFixedString(t *testing.T) {
 		{
 			Name: "testCase 1",
 			input: Fixed{
-				MetaItem: MetaItem{
+				Base: Base{
 					FRN:         1,
 					DataItem:    "I000/010",
 					Description: "Test item",
@@ -112,8 +117,8 @@ func TestFixedString(t *testing.T) {
 		{
 			Name: "testCase 2",
 			input: Fixed{
-				MetaItem: MetaItem{},
-				Data:     []byte{},
+				Base: Base{},
+				Data: []byte{},
 			},
 			output: ":",
 		},
@@ -144,7 +149,7 @@ func TestFixedPayload(t *testing.T) {
 		{
 			Name: "testCase 1",
 			input: Fixed{
-				MetaItem: MetaItem{
+				Base: Base{
 					FRN:         1,
 					DataItem:    "I000/010",
 					Description: "Test item",
@@ -157,8 +162,8 @@ func TestFixedPayload(t *testing.T) {
 		{
 			Name: "testCase 2",
 			input: Fixed{
-				MetaItem: MetaItem{},
-				Data:     nil,
+				Base: Base{},
+				Data: nil,
 			},
 			output: nil,
 		},
@@ -173,51 +178,6 @@ func TestFixedPayload(t *testing.T) {
 			t.Errorf(util.MsgFailInHex, row.Name, res, row.output)
 		} else {
 			t.Logf(util.MsgSuccessInHex, row.Name, res, row.output)
-		}
-	}
-}
-
-func TestFixedFrn(t *testing.T) {
-	// setup
-	type testCase struct {
-		Name   string
-		input  Fixed
-		output uint8
-	}
-	// Arrange
-	dataSet := []testCase{
-		{
-			Name: "testCase 1",
-			input: Fixed{
-				MetaItem: MetaItem{
-					FRN:         7,
-					DataItem:    "I000/070",
-					Description: "Test item",
-					Type:        uap.Fixed,
-				},
-				Data: []byte{0xab, 0xcd},
-			},
-			output: 7,
-		},
-		{
-			Name: "testCase 2",
-			input: Fixed{
-				MetaItem: MetaItem{},
-				Data:     []byte{},
-			},
-			output: 0,
-		},
-	}
-
-	for _, row := range dataSet {
-		// Act
-		res := row.input.Frn()
-
-		// Assert
-		if res != row.output {
-			t.Errorf(util.MsgFailInValue, row.Name, res, row.output)
-		} else {
-			t.Logf(util.MsgSuccessInValue, row.Name, res, row.output)
 		}
 	}
 }

@@ -21,7 +21,7 @@ func TestRandomFieldString(t *testing.T) {
 			input: RandomField{
 				FRN: 1,
 				Field: &Fixed{
-					MetaItem: MetaItem{
+					Base: Base{
 						FRN:         1,
 						DataItem:    "I000/010",
 						Description: "Test item",
@@ -37,8 +37,8 @@ func TestRandomFieldString(t *testing.T) {
 			input: RandomField{
 				FRN: 0,
 				Field: &Fixed{
-					MetaItem: MetaItem{},
-					Data:     nil,
+					Base: Base{},
+					Data: nil,
 				},
 			},
 			output: "FRN:00 :",
@@ -48,7 +48,7 @@ func TestRandomFieldString(t *testing.T) {
 			input: RandomField{
 				FRN: 3,
 				Field: &Extended{
-					MetaItem: MetaItem{
+					Base: Base{
 						FRN:         3,
 						DataItem:    "I000/030",
 						Description: "Test item",
@@ -89,7 +89,7 @@ func TestRandomFieldPayload(t *testing.T) {
 			input: RandomField{
 				FRN: 1,
 				Field: &Fixed{
-					MetaItem: MetaItem{
+					Base: Base{
 						FRN:         2,
 						DataItem:    "I000/020",
 						Description: "Test item",
@@ -105,8 +105,8 @@ func TestRandomFieldPayload(t *testing.T) {
 			input: RandomField{
 				FRN: 0,
 				Field: &Fixed{
-					MetaItem: MetaItem{},
-					Data:     nil,
+					Base: Base{},
+					Data: nil,
 				},
 			},
 			output: []byte{0x00},
@@ -116,7 +116,7 @@ func TestRandomFieldPayload(t *testing.T) {
 			input: RandomField{
 				FRN: 16,
 				Field: &Extended{
-					MetaItem: MetaItem{
+					Base: Base{
 						FRN:         3,
 						DataItem:    "I000/030",
 						Description: "Test item",
@@ -155,7 +155,7 @@ func TestRandomFieldSequencingString(t *testing.T) {
 		{
 			Name: "testCase 1",
 			input: RandomFieldSequencing{
-				MetaItem: MetaItem{
+				Base: Base{
 					FRN:         0,
 					DataItem:    "I000/000",
 					Description: "Test item",
@@ -166,7 +166,7 @@ func TestRandomFieldSequencingString(t *testing.T) {
 					{
 						FRN: 1,
 						Field: &Fixed{
-							MetaItem: MetaItem{
+							Base: Base{
 								FRN:         1,
 								DataItem:    "I000/010",
 								Description: "Test item",
@@ -178,7 +178,7 @@ func TestRandomFieldSequencingString(t *testing.T) {
 					{
 						FRN: 3,
 						Field: &Extended{
-							MetaItem: MetaItem{
+							Base: Base{
 								FRN:         3,
 								DataItem:    "I000/030",
 								Description: "Test item",
@@ -195,7 +195,7 @@ func TestRandomFieldSequencingString(t *testing.T) {
 		{
 			Name: "testCase 2",
 			input: RandomFieldSequencing{
-				MetaItem: MetaItem{},
+				Base:     Base{},
 				N:        0,
 				Sequence: nil,
 			},
@@ -228,7 +228,7 @@ func TestRandomFieldSequencingPayload(t *testing.T) {
 		{
 			Name: "testCase 1",
 			input: RandomFieldSequencing{
-				MetaItem: MetaItem{
+				Base: Base{
 					FRN:         0,
 					DataItem:    "I000/000",
 					Description: "Test item",
@@ -239,7 +239,7 @@ func TestRandomFieldSequencingPayload(t *testing.T) {
 					{
 						FRN: 16,
 						Field: &Fixed{
-							MetaItem: MetaItem{
+							Base: Base{
 								FRN:         1,
 								DataItem:    "I000/010",
 								Description: "Test item",
@@ -251,7 +251,7 @@ func TestRandomFieldSequencingPayload(t *testing.T) {
 					{
 						FRN: 3,
 						Field: &Extended{
-							MetaItem: MetaItem{
+							Base: Base{
 								FRN:         3,
 								DataItem:    "I000/030",
 								Description: "Test item",
@@ -268,7 +268,7 @@ func TestRandomFieldSequencingPayload(t *testing.T) {
 		{
 			Name: "testCase 2",
 			input: RandomFieldSequencing{
-				MetaItem: MetaItem{},
+				Base:     Base{},
 				N:        0,
 				Sequence: nil,
 			},
@@ -289,49 +289,3 @@ func TestRandomFieldSequencingPayload(t *testing.T) {
 	}
 }
 
-func TestRandomFieldSequencingFrn(t *testing.T) {
-	// setup
-	type testCase struct {
-		Name   string
-		input  RandomFieldSequencing
-		output uint8
-	}
-	// Arrange
-	dataSet := []testCase{
-		{
-			Name: "testCase 1",
-			input: RandomFieldSequencing{
-				MetaItem: MetaItem{
-					FRN:         7,
-					DataItem:    "I000/070",
-					Description: "Test item",
-					Type:        uap.RFS,
-				},
-				N:        0,
-				Sequence: nil,
-			},
-			output: 7,
-		},
-		{
-			Name: "testCase 2",
-			input: RandomFieldSequencing{
-				MetaItem: MetaItem{},
-				N:        0,
-				Sequence: nil,
-			},
-			output: 0,
-		},
-	}
-
-	for _, row := range dataSet {
-		// Act
-		res := row.input.Frn()
-
-		// Assert
-		if res != row.output {
-			t.Errorf(util.MsgFailInValue, row.Name, res, row.output)
-		} else {
-			t.Logf(util.MsgSuccessInValue, row.Name, res, row.output)
-		}
-	}
-}

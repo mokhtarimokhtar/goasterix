@@ -33,7 +33,6 @@ type DataField struct {
 	Fixed       FixedField
 	Extended    ExtendedField
 	Repetitive  RepetitiveField
-	Explicit    ExplicitField
 	Compound    []DataField
 	RFS         []DataField
 	Conditional bool
@@ -48,38 +47,4 @@ type ExtendedField struct {
 type RepetitiveField struct {
 	SubItemSize uint8
 }
-type ExplicitField struct{}
 
-/*
-type TypeField struct {
-	NameType TypeField
-	Size     uint8
-	PrimarySize   uint8    // used for extended
-	SecondarySize uint8    // used for extended
-	Primary       *Primary // used for compound
-}
-
-// Bit is a bit number position
-type Bit uint8
-
-// Size is the number of bytes (size) of the corresponding field
-type Size uint8
-
-// Primary subitem, followed by data subitems.
-// The Compound Data Item primary subitem determines the presence or absence of the subsequent
-// data subitems and is made of a first part of one octet extendible using the Field Extension (FX) mechanism
-type Primary []MetaField
-
-// MetaField contains a hashmap [number of bit key] <=> [type of field and size]
-type MetaField map[Bit]Subfield
-
-// Subfield describes the type of field and the size if necessary
-type Subfield struct {
-	NameType      TypeField
-	Size          uint8
-	PrimarySize   uint8
-	SecondarySize uint8
-	Item          string
-	Description   string
-}
-*/

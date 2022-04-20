@@ -68,14 +68,14 @@ func (db *DataBlock) Decode(data []byte) (int, error) {
 	var err error
 	rb := bytes.NewReader(data)
 
-	// retrieve category field
+	// retrieve category dataField
 	err = binary.Read(rb, binary.BigEndian, &db.Category)
 	if err != nil {
 		unRead = rb.Len()
 		return unRead, err // err = io.EOF
 	}
 
-	// retrieve length field
+	// retrieve length dataField
 	err = binary.Read(rb, binary.BigEndian, &db.Len)
 	if err != nil {
 		unRead = rb.Len()
@@ -116,7 +116,7 @@ LoopRecords:
 		if err != nil {
 			return unRead, err
 		}
-		// offset == lenData is for the case payload is oversize of LEN field asterix
+		// offset == lenData is for the case payload is oversize of LEN dataField asterix
 		// if unRead == 0 || offset == lenData {
 		if unRead == 0 {
 			break LoopRecords

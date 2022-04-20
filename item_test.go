@@ -7,12 +7,12 @@ import (
 	"testing"
 )
 
-func TestNewMetaItem(t *testing.T) {
+func TestNewBase(t *testing.T) {
 	// setup
 	type testCase struct {
 		Name   string
 		input  uap.DataField
-		output MetaItem
+		output Base
 	}
 	// Arrange
 	dataSet := []testCase{
@@ -25,7 +25,7 @@ func TestNewMetaItem(t *testing.T) {
 				Type:        uap.Fixed,
 				Fixed:       uap.FixedField{Size: 1},
 			},
-			output: MetaItem{
+			output: Base{
 				FRN:         1,
 				DataItem:    "I000/010",
 				Description: "Test item",
@@ -41,7 +41,7 @@ func TestNewMetaItem(t *testing.T) {
 				Type:        0,
 				Fixed:       uap.FixedField{},
 			},
-			output: MetaItem{},
+			output: Base{},
 		},
 		{
 			Name: "testCase 3",
@@ -55,7 +55,7 @@ func TestNewMetaItem(t *testing.T) {
 					SecondarySize: 2,
 				},
 			},
-			output: MetaItem{
+			output: Base{
 				FRN:         3,
 				DataItem:    "I000/030",
 				Description: "Test item",
@@ -69,9 +69,8 @@ func TestNewMetaItem(t *testing.T) {
 				DataItem:    "I000/040",
 				Description: "Test item",
 				Type:        uap.Explicit,
-				Explicit:    uap.ExplicitField{},
 			},
-			output: MetaItem{
+			output: Base{
 				FRN:         4,
 				DataItem:    "I000/040",
 				Description: "Test item",
@@ -87,7 +86,7 @@ func TestNewMetaItem(t *testing.T) {
 				Type:        uap.Repetitive,
 				Repetitive:  uap.RepetitiveField{SubItemSize: 2},
 			},
-			output: MetaItem{
+			output: Base{
 				FRN:         5,
 				DataItem:    "I000/050",
 				Description: "Test item",
@@ -103,7 +102,7 @@ func TestNewMetaItem(t *testing.T) {
 				Type:        uap.Compound,
 				Compound:    []uap.DataField{},
 			},
-			output: MetaItem{
+			output: Base{
 				FRN:         6,
 				DataItem:    "I000/060",
 				Description: "Test item",
@@ -114,9 +113,9 @@ func TestNewMetaItem(t *testing.T) {
 
 	for _, row := range dataSet {
 		// Arrange
-		m := MetaItem{}
+		m := Base{}
 		// Act
-		m.NewMetaItem(row.input)
+		m.NewBase(row.input)
 
 		// Assert
 		if reflect.DeepEqual(m, row.output) == false {
@@ -126,4 +125,43 @@ func TestNewMetaItem(t *testing.T) {
 		}
 	}
 
+}
+
+func TestBaseFrn(t *testing.T) {
+	// setup
+	type testCase struct {
+		Name   string
+		input  Base
+		output uint8
+	}
+	// Arrange
+	dataSet := []testCase{
+		{
+			Name: "testCase 1",
+			input: Base{
+					FRN:         7,
+					DataItem:    "I000/070",
+					Description: "Test item",
+					Type:        uap.Fixed,
+				},
+			output: 7,
+		},
+		{
+			Name: "testCase 2",
+			input: Base{},
+			output: 0,
+		},
+	}
+
+	for _, row := range dataSet {
+		// Act
+		res := row.input.Frn()
+
+		// Assert
+		if res != row.output {
+			t.Errorf(util.MsgFailInValue, row.Name, res, row.output)
+		} else {
+			t.Logf(util.MsgSuccessInValue, row.Name, res, row.output)
+		}
+	}
 }

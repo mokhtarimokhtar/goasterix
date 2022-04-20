@@ -110,7 +110,7 @@ func TestDataBlockDecode(t *testing.T) {
 			unRead:       0,
 		},
 		{
-			TestCaseName: "CAT048 only category field",
+			TestCaseName: "CAT048 only category dataField",
 			input:        "30",
 			err:          io.EOF,
 			nbOfRecords:  0,

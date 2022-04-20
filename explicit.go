@@ -8,18 +8,22 @@ import (
 )
 
 // Explicit length Data Fields shall start with a one-octet length indicator giving
-// the total field length in octets including the length indicator itself.
+// the total dataField length in octets including the length indicator itself.
 type Explicit struct {
-	MetaItem
+	Base
 	Len  uint8
 	Data []byte
 }
 
-// Reader extracts a number of bytes define by the first byte.
-func (e *Explicit) Reader(rb *bytes.Reader, field uap.DataField) error {
-	var err error
-	e.MetaItem.NewMetaItem(field)
+func NewExplicit(field uap.DataField) Item {
+	f := &Explicit{}
+	f.Base.NewBase(field)
+	return f
+}
 
+// Reader extracts a number of bytes define by the first byte.
+func (e *Explicit) Reader(rb *bytes.Reader) error {
+	var err error
 	err = binary.Read(rb, binary.BigEndian, &e.Len)
 	if err != nil {
 		return err
@@ -34,7 +38,7 @@ func (e *Explicit) Reader(rb *bytes.Reader, field uap.DataField) error {
 	return err
 }
 
-// Payload returns this field as bytes.
+// Payload returns this dataField as bytes.
 func (e Explicit) Payload() []byte {
 	var p []byte
 	p = append(p, e.Len)
@@ -50,13 +54,13 @@ func (e Explicit) String() string {
 	tmp := []byte{e.Len}
 	tmp = append(tmp, e.Data...)
 
-	buf.WriteString(e.MetaItem.DataItem)
+	buf.WriteString(e.Base.DataItem)
 	buf.WriteByte(':')
 	buf.WriteString(hex.EncodeToString(tmp))
 	return buf.String()
 }
 
-// Frn returns FRN number of field from UAP
+// Frn returns FRN number of dataField from UAP
 func (e Explicit) Frn() uint8 {
-	return e.MetaItem.FRN
+	return e.Base.FRN
 }

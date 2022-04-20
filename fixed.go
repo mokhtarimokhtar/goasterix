@@ -9,17 +9,25 @@ import (
 
 // Fixed length Data Fields shall comprise a fixed number of octets.
 type Fixed struct {
-	MetaItem
+	Base
 	Data []byte
+	Size uint8
+}
+
+func NewFixed(field uap.DataField) Item {
+	f := &Fixed{}
+	f.Base.NewBase(field)
+	f.Size = field.Fixed.Size
+	return f
 }
 
 // Reader extracts a number(nb) of bytes(size) and returns a slice of bytes(data of item).
-func (f *Fixed) Reader(rb *bytes.Reader, field uap.DataField) error {
+//func (f *Fixed) Reader(rb *bytes.Reader, dataField uap.DataField) error {
+func (f *Fixed) Reader(rb *bytes.Reader) error {
 	var err error
-	f.MetaItem.NewMetaItem(field)
-
-	size := field.Fixed.Size
-	f.Data = make([]byte, size)
+	//f.Base.NewBase(dataField)
+	//size := dataField.Fixed.Size
+	f.Data = make([]byte, f.Size)
 	err = binary.Read(rb, binary.BigEndian, &f.Data)
 	if err != nil {
 		f.Data = nil
@@ -28,7 +36,7 @@ func (f *Fixed) Reader(rb *bytes.Reader, field uap.DataField) error {
 	return err
 }
 
-// Payload returns this field as bytes.
+// Payload returns this dataField as bytes.
 func (f Fixed) Payload() []byte {
 	var p []byte
 	p = append(p, f.Data...)
@@ -39,13 +47,9 @@ func (f Fixed) Payload() []byte {
 func (f Fixed) String() string {
 	var buf bytes.Buffer
 	buf.Reset()
-	buf.WriteString(f.MetaItem.DataItem)
+	buf.WriteString(f.Base.DataItem)
 	buf.WriteByte(':')
 	buf.WriteString(hex.EncodeToString(f.Data))
 	return buf.String()
 }
 
-// Frn returns FRN number of field from UAP
-func (f Fixed) Frn() uint8 {
-	return f.MetaItem.FRN
-}

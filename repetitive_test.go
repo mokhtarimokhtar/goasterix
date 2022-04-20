@@ -13,9 +13,9 @@ func TestRepetitiveReader(t *testing.T) {
 	// setup
 	type testCase struct {
 		Name   string
-		input  string
-		uap    uap.DataField
-		output Repetitive
+		input     string
+		dataField uap.DataField
+		output    Item
 		err    error
 	}
 	// Arrange
@@ -23,15 +23,16 @@ func TestRepetitiveReader(t *testing.T) {
 		{
 			Name:  "testCase 1",
 			input: "03 01 02 03 01 02 03 01 02 03",
-			uap: uap.DataField{
+			dataField: uap.DataField{
 				Type:       uap.Repetitive,
 				Repetitive: uap.RepetitiveField{SubItemSize: 3},
 			},
 			err: nil,
-			output: Repetitive{
-				MetaItem: MetaItem{
+			output: &Repetitive{
+				Base: Base{
 					Type: uap.Repetitive,
 				},
+				SubItemSize: 3,
 				Rep:  0x03,
 				Data: []byte{0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03},
 			},
@@ -39,15 +40,16 @@ func TestRepetitiveReader(t *testing.T) {
 		{
 			Name:  "testCase 2",
 			input: "04 01 02 03 01 02 03 01 02 03",
-			uap: uap.DataField{
+			dataField: uap.DataField{
 				Type:       uap.Repetitive,
 				Repetitive: uap.RepetitiveField{SubItemSize: 3},
 			},
 			err: io.ErrUnexpectedEOF,
-			output: Repetitive{
-				MetaItem: MetaItem{
+			output: &Repetitive{
+				Base: Base{
 					Type: uap.Repetitive,
 				},
+				SubItemSize: 3,
 				Rep:  0x04,
 				Data: nil,
 			},
@@ -55,15 +57,16 @@ func TestRepetitiveReader(t *testing.T) {
 		{
 			Name:  "testCase 3",
 			input: "",
-			uap: uap.DataField{
+			dataField: uap.DataField{
 				Type:       uap.Repetitive,
 				Repetitive: uap.RepetitiveField{SubItemSize: 3},
 			},
 			err: io.EOF,
-			output: Repetitive{
-				MetaItem: MetaItem{
+			output: &Repetitive{
+				Base: Base{
 					Type: uap.Repetitive,
 				},
+				SubItemSize: 3,
 				Rep:  0x00,
 				Data: nil,
 			},
@@ -74,10 +77,11 @@ func TestRepetitiveReader(t *testing.T) {
 		// Arrange
 		input, _ := util.HexStringToByte(row.input)
 		rb := bytes.NewReader(input)
-		f := Repetitive{}
+		f := NewRepetitive(row.dataField)
 
 		// Act
-		err := f.Reader(rb, row.uap)
+		//err := f.Reader(rb, row.dataField)
+		err := f.Reader(rb)
 
 		// Assert
 		if err != row.err {
@@ -106,7 +110,7 @@ func TestRepetitiveString(t *testing.T) {
 		{
 			Name: "testCase 1",
 			input: Repetitive{
-				MetaItem: MetaItem{
+				Base: Base{
 					FRN:         1,
 					DataItem:    "I000/010",
 					Description: "Test item",
@@ -120,9 +124,9 @@ func TestRepetitiveString(t *testing.T) {
 		{
 			Name: "testCase 2",
 			input: Repetitive{
-				MetaItem: MetaItem{},
-				Rep:      0,
-				Data:     nil,
+				Base: Base{},
+				Rep:  0,
+				Data: nil,
 			},
 			output: ":00",
 		},
@@ -153,7 +157,7 @@ func TestRepetitivePayload(t *testing.T) {
 		{
 			Name: "testCase 1",
 			input: Repetitive{
-				MetaItem: MetaItem{
+				Base: Base{
 					FRN:         1,
 					DataItem:    "I000/010",
 					Description: "Test item",
@@ -167,9 +171,9 @@ func TestRepetitivePayload(t *testing.T) {
 		{
 			Name: "testCase 2",
 			input: Repetitive{
-				MetaItem: MetaItem{},
-				Rep:      0,
-				Data:     nil,
+				Base: Base{},
+				Rep:  0,
+				Data: nil,
 			},
 			output: []byte{0x00},
 		},
@@ -188,49 +192,3 @@ func TestRepetitivePayload(t *testing.T) {
 	}
 }
 
-func TestRepetitiveFrn(t *testing.T) {
-	// setup
-	type testCase struct {
-		Name   string
-		input  Repetitive
-		output uint8
-	}
-	// Arrange
-	dataSet := []testCase{
-		{
-			Name: "testCase 1",
-			input: Repetitive{
-				MetaItem: MetaItem{
-					FRN:         7,
-					DataItem:    "I000/070",
-					Description: "Test item",
-					Type:        uap.Repetitive,
-				},
-				Rep:  0,
-				Data: nil,
-			},
-			output: 7,
-		},
-		{
-			Name: "testCase 2",
-			input: Repetitive{
-				MetaItem: MetaItem{},
-				Rep:      0,
-				Data:     nil,
-			},
-			output: 0,
-		},
-	}
-
-	for _, row := range dataSet {
-		// Act
-		res := row.input.Frn()
-
-		// Assert
-		if res != row.output {
-			t.Errorf(util.MsgFailInValue, row.Name, res, row.output)
-		} else {
-			t.Logf(util.MsgSuccessInValue, row.Name, res, row.output)
-		}
-	}
-}

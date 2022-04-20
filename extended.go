@@ -13,35 +13,43 @@ import (
 // Least Significant Bit (LSB) of the last octet of the preceding part (either the primary part or a secondary part).
 // This bit which is reserved for that purpose is called the Field Extension Indicator (FX).
 type Extended struct {
-	MetaItem
-	Primary   []byte
-	Secondary []byte
+	Base
+	PrimaryItemSize   uint8
+	SecondaryItemSize uint8
+	Primary           []byte
+	Secondary         []byte
+}
+
+func NewExtended(field uap.DataField) Item {
+	f := &Extended{}
+	f.Base.NewBase(field)
+	f.PrimaryItemSize = field.Extended.PrimarySize
+	f.SecondaryItemSize = field.Extended.SecondarySize
+	return f
 }
 
 // Reader extracts data item type Extended (FX: last bit = 1).
-// primarySize parameter defines the Primary Subitem of extended field.
-// secondarySize parameter defines the Secondary Subitem of extended field.
-func (e *Extended) Reader(rb *bytes.Reader, field uap.DataField) error {
+// primarySize parameter defines the Primary Subitem of extended dataField.
+// secondarySize parameter defines the Secondary Subitem of extended dataField.
+//func (e *Extended) Reader(rb *bytes.Reader, dataField uap.DataField) error {
+func (e *Extended) Reader(rb *bytes.Reader) error {
 	var err error
-	e.MetaItem.NewMetaItem(field)
-	primarySize := field.Extended.PrimarySize
-	secondarySize := field.Extended.SecondarySize
-	tmp := make([]byte, primarySize)
+	tmp := make([]byte, e.PrimaryItemSize)
 	err = binary.Read(rb, binary.BigEndian, &tmp)
 	if err != nil {
 		return err
 	}
 	e.Primary = tmp
 
-	if tmp[primarySize-1]&0x01 != 0 {
+	if tmp[e.PrimaryItemSize-1]&0x01 != 0 {
 		for {
-			tmp := make([]byte, secondarySize)
+			tmp := make([]byte, e.SecondaryItemSize)
 			err = binary.Read(rb, binary.BigEndian, &tmp)
 			if err != nil {
 				return err
 			}
 			e.Secondary = append(e.Secondary, tmp...)
-			if tmp[secondarySize-1]&0x01 == 0 {
+			if tmp[e.SecondaryItemSize-1]&0x01 == 0 {
 				break
 			}
 		}
@@ -50,7 +58,7 @@ func (e *Extended) Reader(rb *bytes.Reader, field uap.DataField) error {
 	return err
 }
 
-// Payload returns this field as bytes.
+// Payload returns this dataField as bytes.
 func (e Extended) Payload() []byte {
 	var p []byte
 	p = append(p, e.Primary...)
@@ -62,14 +70,9 @@ func (e Extended) Payload() []byte {
 func (e Extended) String() string {
 	var buf bytes.Buffer
 	buf.Reset()
-	buf.WriteString(e.MetaItem.DataItem)
+	buf.WriteString(e.Base.DataItem)
 	buf.WriteByte(':')
 	buf.WriteString(hex.EncodeToString(e.Primary))
 	buf.WriteString(hex.EncodeToString(e.Secondary))
 	return buf.String()
-}
-
-// Frn returns FRN number of field from UAP
-func (e Extended) Frn() uint8 {
-	return e.MetaItem.FRN
 }

@@ -12,18 +12,18 @@ import (
 func TestExtendedReader(t *testing.T) {
 	// setup
 	type testCase struct {
-		Name   string
-		input  string
-		uap    uap.DataField
-		output Extended
-		err    error
+		Name      string
+		input     string
+		dataField uap.DataField
+		output    Item
+		err       error
 	}
 	// Arrange
 	dataSet := []testCase{
 		{
 			Name:  "testCase 1",
 			input: "01 03 07 09 0b 0d 0f 0e",
-			uap: uap.DataField{
+			dataField: uap.DataField{
 				Type: uap.Extended,
 				Extended: uap.ExtendedField{
 					PrimarySize:   1,
@@ -31,10 +31,12 @@ func TestExtendedReader(t *testing.T) {
 				},
 			},
 			err: nil,
-			output: Extended{
-				MetaItem: MetaItem{
+			output: &Extended{
+				Base: Base{
 					Type: uap.Extended,
 				},
+				PrimaryItemSize: 1,
+				SecondaryItemSize: 1,
 				Primary:   []byte{0x01},
 				Secondary: []byte{0x03, 0x07, 0x09, 0x0b, 0x0d, 0x0f, 0x0e},
 			},
@@ -42,7 +44,7 @@ func TestExtendedReader(t *testing.T) {
 		{
 			Name:  "testCase 2",
 			input: "fe",
-			uap: uap.DataField{
+			dataField: uap.DataField{
 				Type: uap.Extended,
 				Extended: uap.ExtendedField{
 					PrimarySize:   1,
@@ -50,17 +52,19 @@ func TestExtendedReader(t *testing.T) {
 				},
 			},
 			err: nil,
-			output: Extended{
-				MetaItem: MetaItem{
+			output: &Extended{
+				Base: Base{
 					Type: uap.Extended,
 				},
+				PrimaryItemSize: 1,
+				SecondaryItemSize: 1,
 				Primary: []byte{0xfe},
 			},
 		},
 		{
 			Name:  "testCase 3",
 			input: "",
-			uap: uap.DataField{
+			dataField: uap.DataField{
 				Type: uap.Extended,
 				Extended: uap.ExtendedField{
 					PrimarySize:   1,
@@ -68,17 +72,19 @@ func TestExtendedReader(t *testing.T) {
 				},
 			},
 			err: io.EOF,
-			output: Extended{
-				MetaItem: MetaItem{
+			output: &Extended{
+				Base: Base{
 					Type: uap.Extended,
 				},
+				PrimaryItemSize: 1,
+				SecondaryItemSize: 1,
 				Primary: nil,
 			},
 		},
 		{
 			Name:  "testCase 4",
 			input: "ff",
-			uap: uap.DataField{
+			dataField: uap.DataField{
 				Type: uap.Extended,
 				Extended: uap.ExtendedField{
 					PrimarySize:   1,
@@ -86,17 +92,19 @@ func TestExtendedReader(t *testing.T) {
 				},
 			},
 			err: io.EOF,
-			output: Extended{
-				MetaItem: MetaItem{
+			output: &Extended{
+				Base: Base{
 					Type: uap.Extended,
 				},
+				PrimaryItemSize: 1,
+				SecondaryItemSize: 1,
 				Primary: []byte{0xff},
 			},
 		},
 		{
 			Name:  "testCase 5",
 			input: "ff",
-			uap: uap.DataField{
+			dataField: uap.DataField{
 				Type: uap.Extended,
 				Extended: uap.ExtendedField{
 					PrimarySize:   2,
@@ -104,17 +112,19 @@ func TestExtendedReader(t *testing.T) {
 				},
 			},
 			err: io.ErrUnexpectedEOF,
-			output: Extended{
-				MetaItem: MetaItem{
+			output: &Extended{
+				Base: Base{
 					Type: uap.Extended,
 				},
+				PrimaryItemSize: 2,
+				SecondaryItemSize: 1,
 				Primary: nil,
 			},
 		},
 		{
 			Name:  "testCase 6",
 			input: "0001 000001 fffffe",
-			uap: uap.DataField{
+			dataField: uap.DataField{
 				Type: uap.Extended,
 				Extended: uap.ExtendedField{
 					PrimarySize:   2,
@@ -122,10 +132,12 @@ func TestExtendedReader(t *testing.T) {
 				},
 			},
 			err: nil,
-			output: Extended{
-				MetaItem: MetaItem{
+			output: &Extended{
+				Base: Base{
 					Type: uap.Extended,
 				},
+				PrimaryItemSize: 2,
+				SecondaryItemSize: 3,
 				Primary:   []byte{0x00, 0x01},
 				Secondary: []byte{0x00, 0x00, 0x01, 0xff, 0xff, 0xfe},
 			},
@@ -133,7 +145,7 @@ func TestExtendedReader(t *testing.T) {
 		{
 			Name:  "testCase 7",
 			input: "0001 000001 ffff",
-			uap: uap.DataField{
+			dataField: uap.DataField{
 				Type: uap.Extended,
 				Extended: uap.ExtendedField{
 					PrimarySize:   2,
@@ -141,10 +153,12 @@ func TestExtendedReader(t *testing.T) {
 				},
 			},
 			err: io.ErrUnexpectedEOF,
-			output: Extended{
-				MetaItem: MetaItem{
+			output: &Extended{
+				Base: Base{
 					Type: uap.Extended,
 				},
+				PrimaryItemSize: 2,
+				SecondaryItemSize: 3,
 				Primary:   []byte{0x00, 0x01},
 				Secondary: []byte{0x00, 0x00, 0x01},
 			},
@@ -155,10 +169,11 @@ func TestExtendedReader(t *testing.T) {
 		// Arrange
 		input, _ := util.HexStringToByte(row.input)
 		rb := bytes.NewReader(input)
-		f := Extended{}
+		f := NewExtended(row.dataField)
 
 		// Act
-		err := f.Reader(rb, row.uap)
+		//err := f.Reader(rb, row.dataField)
+		err := f.Reader(rb)
 
 		// Assert
 		if err != row.err {
@@ -187,7 +202,7 @@ func TestExtendedString(t *testing.T) {
 		{
 			Name: "testCase 1",
 			input: Extended{
-				MetaItem: MetaItem{
+				Base: Base{
 					FRN:         1,
 					DataItem:    "I000/010",
 					Description: "Test item",
@@ -201,7 +216,7 @@ func TestExtendedString(t *testing.T) {
 		{
 			Name: "testCase 2",
 			input: Extended{
-				MetaItem:  MetaItem{},
+				Base:      Base{},
 				Primary:   nil,
 				Secondary: nil,
 			},
@@ -234,7 +249,7 @@ func TestExtendedPayload(t *testing.T) {
 		{
 			Name: "testCase 1",
 			input: Extended{
-				MetaItem: MetaItem{
+				Base: Base{
 					FRN:         1,
 					DataItem:    "I000/010",
 					Description: "Test item",
@@ -248,7 +263,7 @@ func TestExtendedPayload(t *testing.T) {
 		{
 			Name: "testCase 2",
 			input: Extended{
-				MetaItem:  MetaItem{},
+				Base:      Base{},
 				Primary:   nil,
 				Secondary: nil,
 			},
@@ -269,49 +284,3 @@ func TestExtendedPayload(t *testing.T) {
 	}
 }
 
-func TestExtendedFrn(t *testing.T) {
-	// setup
-	type testCase struct {
-		Name   string
-		input  Extended
-		output uint8
-	}
-	// Arrange
-	dataSet := []testCase{
-		{
-			Name: "testCase 1",
-			input: Extended{
-				MetaItem: MetaItem{
-					FRN:         7,
-					DataItem:    "I000/070",
-					Description: "Test item",
-					Type:        uap.Extended,
-				},
-				Primary:   nil,
-				Secondary: nil,
-			},
-			output: 7,
-		},
-		{
-			Name: "testCase 2",
-			input: Extended{
-				MetaItem:  MetaItem{},
-				Primary:   nil,
-				Secondary: nil,
-			},
-			output: 0,
-		},
-	}
-
-	for _, row := range dataSet {
-		// Act
-		res := row.input.Frn()
-
-		// Assert
-		if res != row.output {
-			t.Errorf(util.MsgFailInValue, row.Name, res, row.output)
-		} else {
-			t.Logf(util.MsgSuccessInValue, row.Name, res, row.output)
-		}
-	}
-}

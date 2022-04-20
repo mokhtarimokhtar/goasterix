@@ -12,7 +12,7 @@ type RandomField struct {
 	Field Item
 }
 
-// Payload returns this field as bytes.
+// Payload returns this dataField as bytes.
 func (rf RandomField) Payload() []byte {
 	var p []byte
 	p = append(p, rf.FRN)
@@ -33,21 +33,28 @@ func (rf RandomField) String() string {
 }
 
 // RandomFieldSequencing
-// The RFS organised field is a collection of Data Fields which in
+// The RFS organised dataField is a collection of Data Fields which in
 // contrast to the OFS organisation, can occur in any order.
-// The RFS organised field shall be structured as follows:
+// The RFS organised dataField shall be structured as follows:
 // - the first octet provides the number, N, of Data Fields following;
 // - N fields in any arbitrary order each consisting of a one-octet FRN immediately followed by the contents of the
 // Data Item associated with the preceding FRN.
 type RandomFieldSequencing struct {
-	MetaItem
+	Base
+	Fields   []uap.DataField
 	N        uint8
 	Sequence []RandomField
 }
 
-func (rfs *RandomFieldSequencing) Reader(rb *bytes.Reader, field uap.DataField) error {
+func NewRandomFieldSequencing(field uap.DataField) Item {
+	f := &RandomFieldSequencing{}
+	f.Base.NewBase(field)
+	f.Fields = field.RFS
+	return f
+}
+
+func (rfs *RandomFieldSequencing) Reader(rb *bytes.Reader) error {
 	var err error
-	rfs.MetaItem.NewMetaItem(field)
 	// N is the total number of datafields
 	err = binary.Read(rb, binary.BigEndian, &rfs.N)
 	if err != nil {
@@ -62,7 +69,7 @@ func (rfs *RandomFieldSequencing) Reader(rb *bytes.Reader, field uap.DataField) 
 			return err
 		}
 
-		for _, uapItem := range field.RFS {
+		for _, uapItem := range rfs.Fields {
 			if frn == uapItem.FRN {
 				rf := new(RandomField)
 				rf.FRN = frn
@@ -70,7 +77,7 @@ func (rfs *RandomFieldSequencing) Reader(rb *bytes.Reader, field uap.DataField) 
 				switch uapItem.Type {
 				case uap.Fixed:
 					tmp := new(Fixed)
-					err = tmp.Reader(rb, uapItem)
+					err = tmp.Reader(rb)
 					if err != nil {
 						return err
 					}
@@ -84,7 +91,7 @@ func (rfs *RandomFieldSequencing) Reader(rb *bytes.Reader, field uap.DataField) 
 	return err
 }
 
-// Payload returns this field as bytes.
+// Payload returns this dataField as bytes.
 func (rfs RandomFieldSequencing) Payload() []byte {
 	var p []byte
 	p = append(p, rfs.N)
@@ -99,7 +106,7 @@ func (rfs RandomFieldSequencing) String() string {
 	var buf bytes.Buffer
 	buf.Reset()
 	tmp := []byte{rfs.N}
-	buf.WriteString(rfs.MetaItem.DataItem)
+	buf.WriteString(rfs.Base.DataItem)
 	buf.WriteByte(':')
 	buf.WriteByte('[')
 	buf.WriteString("N:")
@@ -113,9 +120,4 @@ func (rfs RandomFieldSequencing) String() string {
 	}
 
 	return buf.String()
-}
-
-// Frn returns FRN number of field from UAP
-func (rfs RandomFieldSequencing) Frn() uint8 {
-	return rfs.MetaItem.FRN
 }

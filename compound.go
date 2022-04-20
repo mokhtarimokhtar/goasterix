@@ -12,14 +12,21 @@ import (
 // The definition, structure and format of the data subfields are part of the description of the relevant Compound Data
 // Item. Data subfields shall be either fixed length, extended length, explicit length or repetitive, but not compound.
 type Compound struct {
-	MetaItem
+	Base
+	Fields    []uap.DataField
 	Primary   []byte
 	Secondary []Item
 }
 
-func (c *Compound) Reader(rb *bytes.Reader, field uap.DataField) error {
+func NewCompound(field uap.DataField) Item {
+	f := &Compound{}
+	f.Base.NewBase(field)
+	f.Fields = field.Compound
+	return f
+}
+
+func (c *Compound) Reader(rb *bytes.Reader) error {
 	var err error
-	c.MetaItem.NewMetaItem(field)
 
 	c.Primary, err = FspecReader(rb)
 	if err != nil {
@@ -28,36 +35,36 @@ func (c *Compound) Reader(rb *bytes.Reader, field uap.DataField) error {
 	frnIndex := FspecIndex(c.Primary)
 
 	for _, frn := range frnIndex {
-		uapItem := field.Compound[frn-1]
+		uapItem := c.Fields[frn-1]
 		var item Item
 		switch uapItem.Type {
 		case uap.Fixed:
-			tmp := new(Fixed)
-			err = tmp.Reader(rb, uapItem)
+			tmp := NewFixed(uapItem)
+			err = tmp.Reader(rb)
 			if err != nil {
 				return err
 			}
 			item = tmp
 
 		case uap.Extended:
-			tmp := new(Extended)
-			err = tmp.Reader(rb, uapItem)
+			tmp := NewExtended(uapItem)
+			err = tmp.Reader(rb)
 			if err != nil {
 				return err
 			}
 			item = tmp
 
 		case uap.Explicit:
-			tmp := new(Explicit)
-			err = tmp.Reader(rb, uapItem)
+			tmp := NewExplicit(uapItem)
+			err = tmp.Reader(rb)
 			if err != nil {
 				return err
 			}
 			item = tmp
 
 		case uap.Repetitive:
-			tmp := new(Repetitive)
-			err = tmp.Reader(rb, uapItem)
+			tmp := NewRepetitive(uapItem)
+			err = tmp.Reader(rb)
 			if err != nil {
 				return err
 			}
@@ -72,7 +79,7 @@ func (c *Compound) Reader(rb *bytes.Reader, field uap.DataField) error {
 	return err
 }
 
-// Payload returns this field as bytes.
+// Payload returns this dataField as bytes.
 func (c Compound) Payload() []byte {
 	var p []byte
 	p = append(p, c.Primary...)
@@ -87,7 +94,7 @@ func (c Compound) Payload() []byte {
 func (c Compound) String() string {
 	var buf bytes.Buffer
 	buf.Reset()
-	buf.WriteString(c.MetaItem.DataItem)
+	buf.WriteString(c.Base.DataItem)
 	buf.WriteByte(':')
 	buf.WriteByte('[')
 	buf.WriteString("primary:")
@@ -103,7 +110,7 @@ func (c Compound) String() string {
 	return buf.String()
 }
 
-// Frn returns FRN number of field from UAP
+// Frn returns FRN number of dataField from UAP
 func (c Compound) Frn() uint8 {
-	return c.MetaItem.FRN
+	return c.Base.FRN
 }

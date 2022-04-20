@@ -12,77 +12,74 @@ import (
 func TestExplicitReader(t *testing.T) {
 	// setup
 	type testCase struct {
-		Name   string
-		input  string
-		uap    uap.DataField
-		output Explicit
-		err    error
+		Name      string
+		input     string
+		dataField uap.DataField
+		output    Item
+		err       error
 	}
 	// Arrange
 	dataSet := []testCase{
 		{
 			Name:  "testCase 1",
 			input: "08 01 02 03 04 05 06 07",
-			uap: uap.DataField{
+			dataField: uap.DataField{
 				FRN:         1,
 				DataItem:    "I000/010",
 				Description: "Test item",
 				Type:        uap.Explicit,
-				Explicit:       uap.ExplicitField{},
 			},
 			err: nil,
-			output: Explicit{
-				MetaItem: MetaItem{
+			output: &Explicit{
+				Base: Base{
 					FRN:         1,
 					DataItem:    "I000/010",
 					Description: "Test item",
 					Type:        uap.Explicit,
 				},
-				Len: 0x08,
+				Len:  0x08,
 				Data: []byte{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07},
 			},
 		},
 		{
 			Name:  "testCase 2",
 			input: "08 01 02 03 04 05 06",
-			uap: uap.DataField{
+			dataField: uap.DataField{
 				FRN:         1,
 				DataItem:    "I000/010",
 				Description: "Test item",
 				Type:        uap.Explicit,
-				Explicit:       uap.ExplicitField{},
 			},
 			err: io.ErrUnexpectedEOF,
-			output: Explicit{
-				MetaItem: MetaItem{
+			output: &Explicit{
+				Base: Base{
 					FRN:         1,
 					DataItem:    "I000/010",
 					Description: "Test item",
 					Type:        uap.Explicit,
 				},
-				Len: 0x08,
+				Len:  0x08,
 				Data: nil,
 			},
 		},
 		{
 			Name:  "testCase 3",
 			input: "",
-			uap: uap.DataField{
+			dataField: uap.DataField{
 				FRN:         1,
 				DataItem:    "I000/010",
 				Description: "Test item",
 				Type:        uap.Explicit,
-				Explicit:       uap.ExplicitField{},
 			},
 			err: io.EOF,
-			output: Explicit{
-				MetaItem: MetaItem{
+			output: &Explicit{
+				Base: Base{
 					FRN:         1,
 					DataItem:    "I000/010",
 					Description: "Test item",
 					Type:        uap.Explicit,
 				},
-				Len: 0x00,
+				Len:  0x00,
 				Data: nil,
 			},
 		},
@@ -92,10 +89,11 @@ func TestExplicitReader(t *testing.T) {
 		// Arrange
 		input, _ := util.HexStringToByte(row.input)
 		rb := bytes.NewReader(input)
-		f := Explicit{}
+		f := NewExplicit(row.dataField)
 
 		// Act
-		err := f.Reader(rb, row.uap)
+		//err := f.Reader(rb, row.dataField)
+		err := f.Reader(rb)
 
 		// Assert
 		if err != row.err {
@@ -124,7 +122,7 @@ func TestExplicitString(t *testing.T) {
 		{
 			Name: "testCase 1",
 			input: Explicit{
-				MetaItem: MetaItem{
+				Base: Base{
 					FRN:         1,
 					DataItem:    "I000/010",
 					Description: "Test item",
@@ -138,9 +136,9 @@ func TestExplicitString(t *testing.T) {
 		{
 			Name: "testCase 2",
 			input: Explicit{
-				MetaItem: MetaItem{},
-				Len:      0,
-				Data:     nil,
+				Base: Base{},
+				Len:  0,
+				Data: nil,
 			},
 			output: ":00",
 		},
@@ -171,7 +169,7 @@ func TestExplicitPayload(t *testing.T) {
 		{
 			Name: "testCase 1",
 			input: Explicit{
-				MetaItem: MetaItem{
+				Base: Base{
 					FRN:         1,
 					DataItem:    "I000/010",
 					Description: "Test item",
@@ -185,9 +183,9 @@ func TestExplicitPayload(t *testing.T) {
 		{
 			Name: "testCase 2",
 			input: Explicit{
-				MetaItem: MetaItem{},
-				Len:      0,
-				Data:     nil,
+				Base: Base{},
+				Len:  0,
+				Data: nil,
 			},
 			output: []byte{0x00},
 		},
@@ -218,7 +216,7 @@ func TestExplicitFrn(t *testing.T) {
 		{
 			Name: "testCase 1",
 			input: Explicit{
-				MetaItem: MetaItem{
+				Base: Base{
 					FRN:         7,
 					DataItem:    "I000/070",
 					Description: "Test item",
@@ -232,9 +230,9 @@ func TestExplicitFrn(t *testing.T) {
 		{
 			Name: "testCase 2",
 			input: Explicit{
-				MetaItem: MetaItem{},
-				Len:      0,
-				Data:     nil,
+				Base: Base{},
+				Len:  0,
+				Data: nil,
 			},
 			output: 0,
 		},

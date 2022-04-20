@@ -15,7 +15,7 @@ import (
 	data, _ := util.HexStringToByte("ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020a0")
 	nbOfBytes := 42
 	rec := NewRecord()
-	_, _ = rec.Decode(data, uap.Cat048V127)
+	_, _ = rec.Decode(data, dataField.Cat048V127)
 
 	// Act
 	items := rec.Payload()
@@ -137,7 +137,7 @@ func TestRFSDataFieldReader(t *testing.T) {
 	type testCase struct {
 		TestCaseName string
 		input        string
-		item         []uap.DataField
+		item         []dataField.dataField
 		output       RandomFieldSequencing
 		err          error
 	}
@@ -145,18 +145,18 @@ func TestRFSDataFieldReader(t *testing.T) {
 		{
 			TestCaseName: "testCase 1",
 			input:        "02 03 ffffffff 0a ff",
-			item:         uap.Cat001PlotV12,
+			item:         dataField.Cat001PlotV12,
 			output: RandomFieldSequencing{
 				N: 0x02,
 				Sequence: []RandomField{
 					{
 						FRN: 0x03,
 						Field: Item{
-							Meta: MetaItem{
+							Meta: Base{
 								FRN:         3,
 								DataItem:    "I001/040",
 								Description: "Measured Position in Polar Coordinates",
-								Type:        uap.Fixed,
+								Type:        dataField.Fixed,
 							},
 							Fixed: &Fixed{Data: []byte{0xff, 0xff, 0xff, 0xff}},
 						},
@@ -164,11 +164,11 @@ func TestRFSDataFieldReader(t *testing.T) {
 					{
 						FRN: 0x0a,
 						Field: Item{
-							Meta: MetaItem{
+							Meta: Base{
 								FRN:         10,
 								DataItem:    "I001/131",
 								Description: "Received Power",
-								Type:        uap.Fixed,
+								Type:        dataField.Fixed,
 							},
 							Fixed: &Fixed{Data: []byte{0xff}},
 						},
@@ -180,7 +180,7 @@ func TestRFSDataFieldReader(t *testing.T) {
 		{
 			TestCaseName: "testCase 2",
 			input:        "02",
-			item:         uap.Cat001PlotV12,
+			item:         dataField.Cat001PlotV12,
 			output: RandomFieldSequencing{
 				N: 0x02,
 			},
@@ -189,18 +189,18 @@ func TestRFSDataFieldReader(t *testing.T) {
 		{
 			TestCaseName: "testCase 3",
 			input:        "02 03 ffffffff 0a",
-			item:         uap.Cat001PlotV12,
+			item:         dataField.Cat001PlotV12,
 			output: RandomFieldSequencing{
 				N: 0x02,
 				Sequence: []RandomField{
 					{
 						FRN: 0x03,
 						Field: Item{
-							Meta: MetaItem{
+							Meta: Base{
 								FRN:         3,
 								DataItem:    "I001/040",
 								Description: "Measured Position in Polar Coordinates",
-								Type:        uap.Fixed,
+								Type:        dataField.Fixed,
 							},
 							Fixed: &Fixed{Data: []byte{0xff, 0xff, 0xff, 0xff}},
 						},
@@ -212,7 +212,7 @@ func TestRFSDataFieldReader(t *testing.T) {
 		{
 			TestCaseName: "testCase 4",
 			input:        "",
-			item:         uap.Cat001PlotV12,
+			item:         dataField.Cat001PlotV12,
 			output:       RandomFieldSequencing{},
 			err:          io.EOF,
 		},
@@ -457,20 +457,20 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 	input := "fd 40 ffff fffffe 03ffff 02ffffffff ab80 ff fffe 02ffffffff 04ffffff ffff 0101ffff 03ffff"
 	output := []Item{
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         1,
 				DataItem:    "I026/001",
-				Description: "Fixed type field for test",
-				Type:        uap.Fixed,
+				Description: "Fixed type dataField for test",
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0xff, 0xff}},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         2,
 				DataItem:    "I026/002",
-				Description: "Extended type field for test",
-				Type:        uap.Extended,
+				Description: "Extended type dataField for test",
+				Type:        dataField.Extended,
 			},
 			Extended: &Extended{
 				Primary:   []byte{0xff},
@@ -478,11 +478,11 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 			},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         3,
 				DataItem:    "I026/003",
-				Description: "Explicit type field for test",
-				Type:        uap.Explicit,
+				Description: "Explicit type dataField for test",
+				Type:        dataField.Explicit,
 			},
 			Explicit: &Explicit{
 				Len:  0x03,
@@ -490,11 +490,11 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 			},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         4,
 				DataItem:    "I026/004",
-				Description: "Repetitive type field for test",
-				Type:        uap.Repetitive,
+				Description: "Repetitive type dataField for test",
+				Type:        dataField.Repetitive,
 			},
 			Repetitive: &Repetitive{
 				Rep:  0x02,
@@ -502,30 +502,30 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 			},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         5,
 				DataItem:    "I026/005",
-				Description: "Compound type field for test",
-				Type:        uap.Compound,
+				Description: "Compound type dataField for test",
+				Type:        dataField.Compound,
 			},
 			Compound: &Compound{
 				Primary: []byte{0xab, 0x80},
 				Secondary: []Item{
 					{
-						Meta: MetaItem{
+						Meta: Base{
 							FRN:         1,
 							DataItem:    "Compound/001",
-							Description: "Compound Fixed type field for test",
-							Type:        uap.Fixed,
+							Description: "Compound Fixed type dataField for test",
+							Type:        dataField.Fixed,
 						},
 						Fixed: &Fixed{Data: []byte{0xff}},
 					},
 					{
-						Meta: MetaItem{
+						Meta: Base{
 							FRN:         3,
 							DataItem:    "Compound/003",
-							Description: "Compound Extended type field for test",
-							Type:        uap.Extended,
+							Description: "Compound Extended type dataField for test",
+							Type:        dataField.Extended,
 						},
 						Extended: &Extended{
 							Primary:   []byte{0xff},
@@ -533,11 +533,11 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 						},
 					},
 					{
-						Meta: MetaItem{
+						Meta: Base{
 							FRN:         5,
 							DataItem:    "Compound/005",
-							Description: "Compound Repetitive type field for test",
-							Type:        uap.Repetitive,
+							Description: "Compound Repetitive type dataField for test",
+							Type:        dataField.Repetitive,
 						},
 						Repetitive: &Repetitive{
 							Rep:  0x02,
@@ -545,11 +545,11 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 						},
 					},
 					{
-						Meta: MetaItem{
+						Meta: Base{
 							FRN:         7,
 							DataItem:    "Compound/007",
-							Description: "Compound Explicit type field for test",
-							Type:        uap.Explicit,
+							Description: "Compound Explicit type dataField for test",
+							Type:        dataField.Explicit,
 						},
 						Explicit: &Explicit{
 							Len:  0x04,
@@ -557,11 +557,11 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 						},
 					},
 					{
-						Meta: MetaItem{
+						Meta: Base{
 							FRN:         8,
 							DataItem:    "Compound/008",
-							Description: "Compound Fixed type field for test",
-							Type:        uap.Fixed,
+							Description: "Compound Fixed type dataField for test",
+							Type:        dataField.Fixed,
 						},
 						Fixed: &Fixed{Data: []byte{0xff, 0xff}},
 					},
@@ -569,11 +569,11 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 			},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         6,
 				DataItem:    "I026/006",
-				Description: "RFS(Random Field Sequencing) type field for test",
-				Type:        uap.RFS,
+				Description: "RFS(Random Field Sequencing) type dataField for test",
+				Type:        dataField.RFS,
 			},
 			RFS: &RandomFieldSequencing{
 				N: 0x01,
@@ -581,11 +581,11 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 					{
 						FRN: 1,
 						Field: Item{
-							Meta: MetaItem{
+							Meta: Base{
 								FRN:         1,
 								DataItem:    "I026/001",
-								Description: "Fixed type field for test",
-								Type:        uap.Fixed,
+								Description: "Fixed type dataField for test",
+								Type:        dataField.Fixed,
 							},
 							Fixed: &Fixed{Data: []byte{0xff, 0xff}},
 						},
@@ -594,11 +594,11 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 			},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         9,
 				DataItem:    "SP",
-				Description: "SP (Special Purpose field) type field for test",
-				Type:        uap.SP,
+				Description: "SP (Special Purpose dataField) type dataField for test",
+				Type:        dataField.SP,
 			},
 			SP: &SpecialPurpose{
 				Len:  03,
@@ -606,7 +606,7 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 			},
 		},
 	}
-	uap4Test := uap.CatForTest
+	uap4Test := dataField.CatForTest
 	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
@@ -638,34 +638,34 @@ func TestRecordDecode_Cat4TestTrackFullRecord(t *testing.T) {
 	input := "01 38 80ff ffff"
 	output := []Item{
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         10,
 				DataItem:    "I026/010",
-				Description: "Fixed type field for test",
-				Type:        uap.Fixed,
+				Description: "Fixed type dataField for test",
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0x80}},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         11,
 				DataItem:    "I026/011",
-				Description: "Fixed type field for test",
-				Type:        uap.Fixed,
+				Description: "Fixed type dataField for test",
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0xff}},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         12,
 				DataItem:    "I026/012",
-				Description: "Fixed type field for test",
-				Type:        uap.Fixed,
+				Description: "Fixed type dataField for test",
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0xff, 0xff}},
 		},
 	}
-	uap4Test := uap.CatForTest
+	uap4Test := dataField.CatForTest
 	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
@@ -697,34 +697,34 @@ func TestRecordDecode_Cat4TestPlotFullRecord(t *testing.T) {
 	input := "01 38 00 ffffff ff"
 	output := []Item{
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         10,
 				DataItem:    "I026/010",
-				Description: "Fixed type field for test",
-				Type:        uap.Fixed,
+				Description: "Fixed type dataField for test",
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0x00}},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         11,
 				DataItem:    "I026/011",
-				Description: "Fixed type field for test",
-				Type:        uap.Fixed,
+				Description: "Fixed type dataField for test",
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0xff, 0xff, 0xff}},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         12,
 				DataItem:    "I026/012",
-				Description: "Fixed type field for test",
-				Type:        uap.Fixed,
+				Description: "Fixed type dataField for test",
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0xff}},
 		},
 	}
-	uap4Test := uap.CatForTest
+	uap4Test := dataField.CatForTest
 	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
@@ -804,7 +804,7 @@ func TestRecordDecode_Cat4TestError(t *testing.T) {
 
 	for _, row := range dataSet {
 		// Arrange
-		uap4Test := uap.CatForTest
+		uap4Test := dataField.CatForTest
 		data, _ := util.HexStringToByte(row.input)
 		rec := NewRecord()
 
@@ -837,152 +837,170 @@ func TestRecordDecodeCAT048(t *testing.T) {
 	input := "fff702 0836 429b52 a0 94c70181 0913 02d0 6002b7 490d01 38a178cf4220 02e79a5d27a00c0060a3280030a4000040 063a 0743ce5b 40 20f5"
 	output := []Item{
 		&Fixed{
-			MetaItem: MetaItem{
+			Base: Base{
 				FRN:         1,
 				DataItem:    "I048/010",
 				Description: "Data Source Identifier",
 				Type:        uap.Fixed,
 			},
+			Size: 2,
 			Data: []byte{0x08, 0x36},
 		},
 		&Fixed{
-			MetaItem: MetaItem{
+			Base: Base{
 				FRN:         2,
 				DataItem:    "I048/140",
 				Description: "Time-of-Day",
 				Type:        uap.Fixed,
 			},
+			Size: 3,
 			Data: []byte{0x42, 0x9b, 0x52},
 		},
 		&Extended{
-			MetaItem: MetaItem{
+			Base: Base{
 				FRN:         3,
 				DataItem:    "I048/020",
 				Description: "Target Report Descriptor",
 				Type:        uap.Extended,
 			},
-			Primary:   []byte{0xa0},
-			Secondary: nil,
+			PrimaryItemSize:   1,
+			SecondaryItemSize: 1,
+			Primary:           []byte{0xa0},
+			Secondary:         nil,
 		},
 		&Fixed{
-			MetaItem: MetaItem{
+			Base: Base{
 				FRN:         4,
 				DataItem:    "I048/040",
 				Description: "Measured Position in Slant Polar Coordinates",
 				Type:        uap.Fixed,
 			},
+			Size: 4,
 			Data: []byte{0x94, 0xc7, 0x01, 0x81},
 		},
 		&Fixed{
-			MetaItem: MetaItem{
+			Base: Base{
 				FRN:         5,
 				DataItem:    "I048/070",
 				Description: "Mode-3/A Code in Octal Representation",
 				Type:        uap.Fixed,
 			},
+			Size: 2,
 			Data: []byte{0x09, 0x13},
 		},
 		&Fixed{
-			MetaItem: MetaItem{
+			Base: Base{
 				FRN:         6,
 				DataItem:    "I048/090",
 				Description: "Flight Level in Binary Representation",
 				Type:        uap.Fixed,
 			},
+			Size: 2,
 			Data: []byte{0x02, 0xd0},
 		},
 		&Compound{
-			MetaItem: MetaItem{
+			Base: Base{
 				FRN:         7,
 				DataItem:    "I048/130",
 				Description: "Radar Plot Characteristics",
 				Type:        uap.Compound,
 			},
+			Fields: uap.Cat048V127.Items[6].Compound,
 			Primary: []byte{0x60},
 			Secondary: []Item{
 				&Fixed{
-					MetaItem: MetaItem{
+					Base: Base{
 						FRN:         2,
 						DataItem:    "SRR",
 						Description: "Number of received replies",
 						Type:        uap.Fixed,
 					},
+					Size: 1,
 					Data: []byte{0x02},
 				},
 				&Fixed{
-					MetaItem: MetaItem{
+					Base: Base{
 						FRN:         3,
 						DataItem:    "SAM",
 						Description: "Amplitude of received replies for M(SSR)",
 						Type:        uap.Fixed,
 					},
+					Size: 1,
 					Data: []byte{0xb7},
 				},
 			},
 		},
 		&Fixed{
-			MetaItem: MetaItem{
+			Base: Base{
 				FRN:         8,
 				DataItem:    "I048/220",
 				Description: "Aircraft Address",
 				Type:        uap.Fixed,
 			},
+			Size: 3,
 			Data: []byte{0x49, 0x0d, 0x01},
 		},
 		&Fixed{
-			MetaItem: MetaItem{
+			Base: Base{
 				FRN:         9,
 				DataItem:    "I048/240",
 				Description: "Aircraft Identification",
 				Type:        uap.Fixed,
 			},
+			Size: 6,
 			Data: []byte{0x38, 0xa1, 0x78, 0xcf, 0x42, 0x20},
 		},
 		&Repetitive{
-			MetaItem: MetaItem{
+			Base: Base{
 				FRN:         10,
 				DataItem:    "I048/250",
 				Description: "Mode S MB Data",
 				Type:        uap.Repetitive,
 			},
+			SubItemSize: 8,
 			Rep:  0x02,
 			Data: []byte{0xe7, 0x9a, 0x5d, 0x27, 0xa0, 0x0c, 0x00, 0x60, 0xa3, 0x28, 0x00, 0x30, 0xa4, 0x00, 0x00, 0x40},
 		},
 		&Fixed{
-			MetaItem: MetaItem{
+			Base: Base{
 				FRN:         11,
 				DataItem:    "I048/161",
 				Description: "Track Number",
 				Type:        uap.Fixed,
 			},
+			Size: 2,
 			Data: []byte{0x06, 0x3a},
 		},
 		&Fixed{
-			MetaItem: MetaItem{
+			Base: Base{
 				FRN:         13,
 				DataItem:    "I048/200",
 				Description: "Calculated Track Velocity in Polar Representation",
 				Type:        uap.Fixed,
 			},
+			Size: 4,
 			Data: []byte{0x07, 0x43, 0xce, 0x5b},
 		},
 		&Extended{
-			MetaItem: MetaItem{
+			Base: Base{
 				FRN:         14,
 				DataItem:    "I048/170",
 				Description: "Track Status",
 				Type:        uap.Extended,
 			},
-			Primary:   []byte{0x40},
-			Secondary: nil,
+			PrimaryItemSize:   1,
+			SecondaryItemSize: 1,
+			Primary:           []byte{0x40},
+			Secondary:         nil,
 		},
 		&Fixed{
-			MetaItem: MetaItem{
+			Base: Base{
 				FRN:         21,
 				DataItem:    "I048/230",
 				Description: "Communications / ACAS Capability and Flight Status",
 				Type:        uap.Fixed,
 			},
+			Size: 2,
 			Data: []byte{0x20, 0xf5},
 		},
 	}
@@ -1020,75 +1038,75 @@ func TestRecordDecode_CAT034(t *testing.T) {
 	input := "f6 0836 02 429b61 08 9400282000 94008000"
 	output := []Item{
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         1,
 				DataItem:    "I034/010",
 				Description: "Data Source Identifier",
-				Type:        uap.Fixed,
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0x08, 0x36}},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         2,
 				DataItem:    "I034/000",
 				Description: "Message Type",
-				Type:        uap.Fixed,
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0x02}},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         3,
 				DataItem:    "I034/030",
 				Description: "Time-of-Day",
-				Type:        uap.Fixed,
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0x42, 0x9b, 0x61}},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         4,
 				DataItem:    "I034/020",
 				Description: "Sector Number",
-				Type:        uap.Fixed,
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0x08}},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         6,
 				DataItem:    "I034/050",
 				Description: "System Configuration and Status",
-				Type:        uap.Compound,
+				Type:        dataField.Compound,
 			},
 			Compound: &Compound{
 				Primary: []byte{0x94},
 				Secondary: []Item{
 					{
-						Meta: MetaItem{
+						Meta: Base{
 							FRN:         1,
 							DataItem:    "COM",
 							Description: "Common Part",
-							Type:        uap.Fixed,
+							Type:        dataField.Fixed,
 						},
 						Fixed: &Fixed{Data: []byte{0x00}},
 					},
 					{
-						Meta: MetaItem{
+						Meta: Base{
 							FRN:         4,
 							DataItem:    "PSR",
 							Description: "Specific Status for PSR Sensor",
-							Type:        uap.Fixed,
+							Type:        dataField.Fixed,
 						},
 						Fixed: &Fixed{Data: []byte{0x28}},
 					},
 					{
-						Meta: MetaItem{
+						Meta: Base{
 							FRN:         6,
 							DataItem:    "MDS",
 							Description: "Specific Status for Mode S Sensor",
-							Type:        uap.Fixed,
+							Type:        dataField.Fixed,
 						},
 						Fixed: &Fixed{Data: []byte{0x20, 0x00}},
 					},
@@ -1096,39 +1114,39 @@ func TestRecordDecode_CAT034(t *testing.T) {
 			},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         7,
 				DataItem:    "I034/060",
 				Description: "System Processing Mode",
-				Type:        uap.Compound,
+				Type:        dataField.Compound,
 			},
 			Compound: &Compound{
 				Primary: []byte{0x94}, //1001-0100 94 00 80 00
 				Secondary: []Item{
 					{
-						Meta: MetaItem{
+						Meta: Base{
 							FRN:         1,
 							DataItem:    "COM",
 							Description: "Common Part",
-							Type:        uap.Fixed,
+							Type:        dataField.Fixed,
 						},
 						Fixed: &Fixed{Data: []byte{0x00}},
 					},
 					{
-						Meta: MetaItem{
+						Meta: Base{
 							FRN:         4,
 							DataItem:    "PSR",
 							Description: "Specific Processing Mode information for PSR Sensor",
-							Type:        uap.Fixed,
+							Type:        dataField.Fixed,
 						},
 						Fixed: &Fixed{Data: []byte{0x80}},
 					},
 					{
-						Meta: MetaItem{
+						Meta: Base{
 							FRN:         6,
 							DataItem:    "MDS",
 							Description: "Specific Processing Mode information for Mode S Sensor",
-							Type:        uap.Fixed,
+							Type:        dataField.Fixed,
 						},
 						Fixed: &Fixed{Data: []byte{0x00}},
 					},
@@ -1137,7 +1155,7 @@ func TestRecordDecode_CAT034(t *testing.T) {
 		},
 	}
 
-	uap034 := uap.Cat034V127
+	uap034 := dataField.Cat034V127
 	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
@@ -1169,38 +1187,38 @@ func TestRecordDecode_CAT063(t *testing.T) {
 	input := "bff0090c7cd2cc08294000000000000000000000000000000000"
 	output := []Item{
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         1,
 				DataItem:    "I063/010",
 				Description: "Data Source Identifier",
-				Type:        uap.Fixed,
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0x09, 0x0c}},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         3,
 				DataItem:    "I063/030",
 				Description: "Time of Message",
-				Type:        uap.Fixed,
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0x7c, 0xd2, 0xcc}},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         4,
 				DataItem:    "I063/050",
 				Description: "Sensor Identifier",
-				Type:        uap.Fixed,
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0x08, 0x29}},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         5,
 				DataItem:    "I063/060",
 				Description: "Sensor Configuration and Status",
-				Type:        uap.Extended,
+				Type:        dataField.Extended,
 			},
 			Extended: &Extended{
 				Primary:   []byte{0x40},
@@ -1208,62 +1226,62 @@ func TestRecordDecode_CAT063(t *testing.T) {
 			},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         6,
 				DataItem:    "I063/070",
 				Description: "Time Stamping Bias",
-				Type:        uap.Fixed,
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0x00, 0x00}},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         7,
 				DataItem:    "I063/080",
 				Description: "SSR/Mode S Range Gain and Bias",
-				Type:        uap.Fixed,
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0x00, 0x00, 0x00, 0x00}},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         8,
 				DataItem:    "I063/081",
 				Description: "SSR/Mode S Azimuth Bias",
-				Type:        uap.Fixed,
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0x00, 0x00}},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         9,
 				DataItem:    "I063/090",
 				Description: "PSR Range Gain and Bias",
-				Type:        uap.Fixed,
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0x00, 0x00, 0x00, 0x00}},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         10,
 				DataItem:    "I063/091",
 				Description: "PSR Azimuth Bias",
-				Type:        uap.Fixed,
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0x00, 0x00}},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         11,
 				DataItem:    "I063/092",
 				Description: "PSR Elevation Bias",
-				Type:        uap.Fixed,
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0x00, 0x00}},
 		},
 	}
 
-	uap063 := uap.Cat063V16
+	uap063 := dataField.Cat063V16
 	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
@@ -1295,52 +1313,52 @@ func TestRecordDecode_CAT065(t *testing.T) {
 	input := "f8090c0203424cf30a"
 	output := []Item{
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         1,
 				DataItem:    "I065/010",
 				Description: "Data Source Identifier",
-				Type:        uap.Fixed,
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0x09, 0x0c}},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         2,
 				DataItem:    "I065/000",
 				Description: "Message Type",
-				Type:        uap.Fixed,
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0x02}},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         3,
 				DataItem:    "I065/015",
 				Description: "Service Identification",
-				Type:        uap.Fixed,
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0x03}},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         4,
 				DataItem:    "I065/030",
 				Description: "Time Of Message",
-				Type:        uap.Fixed,
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0x42, 0x4c, 0xf3}},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         5,
 				DataItem:    "I065/020",
 				Description: "Batch Number",
-				Type:        uap.Fixed,
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0x0a}},
 		},
 	}
-	uap065 := uap.Cat065V15
+	uap065 := dataField.Cat065V15
 	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
@@ -1372,29 +1390,29 @@ func TestRecordDecode_CAT004(t *testing.T) {
 	input := "fdcb80 08a2 08 010882 6ae180 0000 08 0001 d1c0 41504d30303031 0001 0bc51ef7a55900f5 050370c30c40 00003039 ff50 ffd8a8 80 404cb3820820"
 	output := []Item{
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         1,
 				DataItem:    "I004/010",
 				Description: "Data Source Identifier",
-				Type:        uap.Fixed,
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0x08, 0xa2}},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         2,
 				DataItem:    "I004/000",
 				Description: "Message Type",
-				Type:        uap.Fixed,
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0x08}},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         3,
 				DataItem:    "I004/015",
 				Description: "SDPS Identifier",
-				Type:        uap.Repetitive,
+				Type:        dataField.Repetitive,
 			},
 			Repetitive: &Repetitive{
 				Rep:  0x01,
@@ -1402,93 +1420,93 @@ func TestRecordDecode_CAT004(t *testing.T) {
 			},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         4,
 				DataItem:    "I004/020",
 				Description: "Time Of Message",
-				Type:        uap.Fixed,
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0x6a, 0xe1, 0x80}},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         5,
 				DataItem:    "I004/040",
 				Description: "Alert Identifier",
-				Type:        uap.Fixed,
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0x00, 0x00}},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         6,
 				DataItem:    "I004/045",
 				Description: "Alert Status",
-				Type:        uap.Fixed,
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0x08}},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         8,
 				DataItem:    "I004/030",
 				Description: "Track Number 1",
-				Type:        uap.Fixed,
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0x00, 0x01}},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         9,
 				DataItem:    "I004/170",
 				Description: "Aircraft Identification & Characteristics 1",
-				Type:        uap.Compound,
+				Type:        dataField.Compound,
 			},
 			Compound: &Compound{
 				Primary: []byte{0xd1, 0xc0}, //1101-0001 1100-0000
 				Secondary: []Item{
 					{
-						Meta: MetaItem{
+						Meta: Base{
 							FRN:         1,
 							DataItem:    "AI1",
 							Description: "Aircraft Identifier 1",
-							Type:        uap.Fixed,
+							Type:        dataField.Fixed,
 						},
 						Fixed: &Fixed{Data: []byte{0x41, 0x50, 0x4d, 0x30, 0x30, 0x30, 0x31}},
 					},
 					{
-						Meta: MetaItem{
+						Meta: Base{
 							FRN:         2,
 							DataItem:    "M31",
 							Description: "Mode 3/A Code Aircraft 1",
-							Type:        uap.Fixed,
+							Type:        dataField.Fixed,
 						},
 						Fixed: &Fixed{Data: []byte{0x00, 0x01}},
 					},
 					{
-						Meta: MetaItem{
+						Meta: Base{
 							FRN:         4,
 							DataItem:    "CPC",
 							Description: "Predicted Conflict Position 1 (Cartesian Coordinates)",
-							Type:        uap.Fixed,
+							Type:        dataField.Fixed,
 						},
 						Fixed: &Fixed{Data: []byte{0x0b, 0xc5, 0x1e, 0xf7, 0xa5, 0x59, 0x00, 0xf5}},
 					},
 					{
-						Meta: MetaItem{
+						Meta: Base{
 							FRN:         8,
 							DataItem:    "MS1",
 							Description: "Mode S Identifier Aircraft 1",
-							Type:        uap.Fixed,
+							Type:        dataField.Fixed,
 						},
 						Fixed: &Fixed{Data: []byte{0x05, 0x03, 0x70, 0xc3, 0x0c, 0x40}},
 					},
 					{
-						Meta: MetaItem{
+						Meta: Base{
 							FRN:         9,
 							DataItem:    "FP1",
 							Description: "Flight Plan Number Aircraft 1",
-							Type:        uap.Fixed,
+							Type:        dataField.Fixed,
 						},
 						Fixed: &Fixed{Data: []byte{0x00, 0x00, 0x30, 0x39}},
 					},
@@ -1496,39 +1514,39 @@ func TestRecordDecode_CAT004(t *testing.T) {
 			},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         12,
 				DataItem:    "I004/076",
 				Description: "Vertical Deviation",
-				Type:        uap.Fixed,
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0xff, 0x50}},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         14,
 				DataItem:    "I004/075",
 				Description: "Transversal Distance Deviation",
-				Type:        uap.Fixed,
+				Type:        dataField.Fixed,
 			},
 			Fixed: &Fixed{Data: []byte{0xff, 0xd8, 0xa8}},
 		},
 		{
-			Meta: MetaItem{
+			Meta: Base{
 				FRN:         15,
 				DataItem:    "I004/100",
 				Description: "Area Definitions",
-				Type:        uap.Compound,
+				Type:        dataField.Compound,
 			},
 			Compound: &Compound{
 				Primary: []byte{0x80},
 				Secondary: []Item{
 					{
-						Meta: MetaItem{
+						Meta: Base{
 							FRN:         1,
 							DataItem:    "AN",
 							Description: "Area Name",
-							Type:        uap.Fixed,
+							Type:        dataField.Fixed,
 						},
 						Fixed: &Fixed{Data: []byte{0x40, 0x4c, 0xb3, 0x82, 0x08, 0x20}},
 					},
@@ -1537,7 +1555,7 @@ func TestRecordDecode_CAT004(t *testing.T) {
 		},
 	}
 
-	uap004 := uap.Cat004V112
+	uap004 := dataField.Cat004V112
 	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
@@ -1578,7 +1596,7 @@ func TestRecordDecode_CAT001Track(t *testing.T) {
 		{0x00},
 	}
 
-	uap001 := uap.Cat001V12
+	uap001 := dataField.Cat001V12
 	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
@@ -1616,7 +1634,7 @@ func TestRecordDecode_CAT001Plot(t *testing.T) {
 		{0x38, 0x02},
 	}
 
-	uap001 := uap.Cat001V12
+	uap001 := dataField.Cat001V12
 	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
@@ -1654,7 +1672,7 @@ func TestRecordDecode_CAT002(t *testing.T) {
 		{0x02},
 	}
 
-	uap002 := uap.Cat002V10
+	uap002 := dataField.Cat002V10
 	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
@@ -1702,7 +1720,7 @@ func TestRecordDecode_CAT030STR(t *testing.T) {
 		{0x48, 0x45, 0x5b},
 		{0x2c, 0xc3, 0x71, 0xcf, 0x1d, 0xe0},
 	}
-	uap030 := uap.Cat030StrV51
+	uap030 := dataField.Cat030StrV51
 	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
@@ -1738,7 +1756,7 @@ func TestRecordDecode_CAT032STR(t *testing.T) {
 		{0x00, 0x13, 0x00, 0x00, 0x00, 0x8f, 0x00, 0x2f, 0x00, 0x89, 0x48, 0x00, 0x6a, 0x00, 0x7c},
 	}
 
-	uap030 := uap.Cat032StrV70
+	uap030 := dataField.Cat032StrV70
 	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
@@ -1792,7 +1810,7 @@ func TestRecordDecode_CAT062(t *testing.T) {
 		{0x10, 0xe0, 0x01, 0x62, 0x2b, 0x05, 0x01, 0x0d, 0x01, 0x62, 0x29, 0x02, 0xfe, 0xa6, 0x01, 0x77},
 	}
 
-	uap062 := uap.Cat062V119
+	uap062 := dataField.Cat062V119
 	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
@@ -1828,7 +1846,7 @@ func TestRecordDecode_CAT255STR(t *testing.T) {
 		{0x58},
 	}
 
-	uap255 := uap.Cat255StrV51
+	uap255 := dataField.Cat255StrV51
 	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
@@ -1887,7 +1905,7 @@ func TestRecordDecode_CAT030ARTAS(t *testing.T) {
 		{0x38, 0x90, 0x75, 0xc7, 0x1c, 0xa0},
 	}
 
-	uap030 := uap.Cat030ArtasV62
+	uap030 := dataField.Cat030ArtasV62
 	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 

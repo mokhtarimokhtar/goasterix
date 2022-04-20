@@ -13,9 +13,9 @@ func TestSpecialPurposeReader(t *testing.T) {
 	// setup
 	type testCase struct {
 		Name   string
-		input  string
-		uap    uap.DataField
-		output SpecialPurpose
+		input     string
+		dataField uap.DataField
+		output    Item
 		err    error
 	}
 	// Arrange
@@ -23,15 +23,15 @@ func TestSpecialPurposeReader(t *testing.T) {
 		{
 			Name:  "testCase 1",
 			input: "08 01 02 03 04 05 06 07",
-			uap: uap.DataField{
+			dataField: uap.DataField{
 				FRN:         1,
 				DataItem:    "I000/010",
 				Description: "Test item",
 				Type:        uap.SP,
 			},
 			err: nil,
-			output: SpecialPurpose{
-				MetaItem: MetaItem{
+			output: &SpecialPurpose{
+				Base: Base{
 					FRN:         1,
 					DataItem:    "I000/010",
 					Description: "Test item",
@@ -44,15 +44,15 @@ func TestSpecialPurposeReader(t *testing.T) {
 		{
 			Name:  "testCase 2",
 			input: "08 01 02 03 04 05 06",
-			uap: uap.DataField{
+			dataField: uap.DataField{
 				FRN:         1,
 				DataItem:    "I000/010",
 				Description: "Test item",
 				Type:        uap.SP,
 			},
 			err: io.ErrUnexpectedEOF,
-			output: SpecialPurpose{
-				MetaItem: MetaItem{
+			output: &SpecialPurpose{
+				Base: Base{
 					FRN:         1,
 					DataItem:    "I000/010",
 					Description: "Test item",
@@ -65,15 +65,15 @@ func TestSpecialPurposeReader(t *testing.T) {
 		{
 			Name:  "testCase 3",
 			input: "",
-			uap: uap.DataField{
+			dataField: uap.DataField{
 				FRN:         1,
 				DataItem:    "I000/010",
 				Description: "Test item",
 				Type:        uap.SP,
 			},
 			err: io.EOF,
-			output: SpecialPurpose{
-				MetaItem: MetaItem{
+			output: &SpecialPurpose{
+				Base: Base{
 					FRN:         1,
 					DataItem:    "I000/010",
 					Description: "Test item",
@@ -89,10 +89,11 @@ func TestSpecialPurposeReader(t *testing.T) {
 		// Arrange
 		input, _ := util.HexStringToByte(row.input)
 		rb := bytes.NewReader(input)
-		f := SpecialPurpose{}
+		f := NewSpecialPurpose(row.dataField)
 
 		// Act
-		err := f.Reader(rb, row.uap)
+		//err := f.Reader(rb, row.dataField)
+		err := f.Reader(rb)
 
 		// Assert
 		if err != row.err {
@@ -121,7 +122,7 @@ func TestSpecialPurposeString(t *testing.T) {
 		{
 			Name: "testCase 1",
 			input: SpecialPurpose{
-				MetaItem: MetaItem{
+				Base: Base{
 					FRN:         1,
 					DataItem:    "I000/010",
 					Description: "Test item",
@@ -135,9 +136,9 @@ func TestSpecialPurposeString(t *testing.T) {
 		{
 			Name: "testCase 2",
 			input: SpecialPurpose{
-				MetaItem: MetaItem{},
-				Len:      0,
-				Data:     nil,
+				Base: Base{},
+				Len:  0,
+				Data: nil,
 			},
 			output: ":00",
 		},
@@ -168,7 +169,7 @@ func TestSpecialPurposePayload(t *testing.T) {
 		{
 			Name: "testCase 1",
 			input: SpecialPurpose{
-				MetaItem: MetaItem{
+				Base: Base{
 					FRN:         1,
 					DataItem:    "I000/010",
 					Description: "Test item",
@@ -182,9 +183,9 @@ func TestSpecialPurposePayload(t *testing.T) {
 		{
 			Name:   "testCase 2",
 			input:  SpecialPurpose{
-				MetaItem: MetaItem{},
-				Len:      0,
-				Data:     nil,
+				Base: Base{},
+				Len:  0,
+				Data: nil,
 			},
 			output: []byte{0x00},
 		},
@@ -199,53 +200,6 @@ func TestSpecialPurposePayload(t *testing.T) {
 			t.Errorf(util.MsgFailInHex, row.Name, res, row.output)
 		} else {
 			t.Logf(util.MsgSuccessInHex, row.Name, res, row.output)
-		}
-	}
-}
-
-func TestSpecialPurposeFrn(t *testing.T) {
-	// setup
-	type testCase struct {
-		Name   string
-		input  SpecialPurpose
-		output uint8
-	}
-	// Arrange
-	dataSet := []testCase{
-		{
-			Name: "testCase 1",
-			input: SpecialPurpose{
-				MetaItem: MetaItem{
-					FRN:         7,
-					DataItem:    "I000/070",
-					Description: "Test item",
-					Type:        uap.SP,
-				},
-				Len:  0,
-				Data: nil,
-			},
-			output: 7,
-		},
-		{
-			Name: "testCase 2",
-			input: SpecialPurpose{
-				MetaItem: MetaItem{},
-				Len:      0,
-				Data:     nil,
-			},
-			output: 0,
-		},
-	}
-
-	for _, row := range dataSet {
-		// Act
-		res := row.input.Frn()
-
-		// Assert
-		if res != row.output {
-			t.Errorf(util.MsgFailInValue, row.Name, res, row.output)
-		} else {
-			t.Logf(util.MsgSuccessInValue, row.Name, res, row.output)
 		}
 	}
 }

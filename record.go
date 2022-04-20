@@ -45,83 +45,35 @@ func (rec *Record) Decode(data []byte, stdUAP uap.StandardUAP) (unRead int, err 
 	for _, frn := range frnIndex {
 		uapItem := stdUAP.Items[frn-1-offset] // here the index corresponds to the FRN
 		var item Item
-		switch uapItem.Type {
-		case uap.Fixed:
-			tmp := new(Fixed)
-			err = tmp.Reader(rb, uapItem)
-			if err != nil {
-				unRead = rb.Len()
-				return unRead, err
-			}
-			item = tmp
-
-		case uap.Extended:
-			tmp := new(Extended)
-			err = tmp.Reader(rb, uapItem)
-			if err != nil {
-				unRead = rb.Len()
-				return unRead, err
-			}
-			item = tmp
-
-		case uap.Explicit:
-			tmp := new(Explicit)
-			err = tmp.Reader(rb, uapItem)
-			if err != nil {
-				unRead = rb.Len()
-				return unRead, err
-			}
-			item = tmp
-
-		case uap.Repetitive:
-			tmp := new(Repetitive)
-			err = tmp.Reader(rb, uapItem)
-			if err != nil {
-				unRead = rb.Len()
-				return unRead, err
-			}
-			item = tmp
-
-		case uap.Compound:
-			tmp := new(Compound)
-			err = tmp.Reader(rb, uapItem)
-			if err != nil {
-				unRead = rb.Len()
-				return unRead, err
-			}
-			item = tmp
-
-		case uap.SP, uap.RE:
-			tmp := new(SpecialPurpose)
-			err = tmp.Reader(rb, uapItem)
-			if err != nil {
-				unRead = rb.Len()
-				return unRead, err
-			}
-			item = tmp
-
-		case uap.RFS:
-			tmp := new(RandomFieldSequencing)
-			err = tmp.Reader(rb, uapItem)
-			if err != nil {
-				unRead = rb.Len()
-				return unRead, err
-			}
-			item = tmp
-
-		default:
-			err = ErrDataFieldUnknown
+		item, err = GetItem(uapItem)
+		if err != nil {
+			unRead = rb.Len()
 			return unRead, err
 		}
+		//err = Readers(item, rb, uapItem)
+		err = Readers(item, rb)
+		if err != nil {
+			unRead = rb.Len()
+			return unRead, err
+		}
+		/*
+			contextType := new(ContextType)
+			err = contextType.setReader(uapItem.Type)
+			err = contextType.Reader(rb, uapItem)
+		*/
+
 		unRead = rb.Len()
+		//rec.Items = append(rec.Items, contextType.Item)
 		rec.Items = append(rec.Items, item)
 
 		if uapItem.Conditional {
 			switch uapItem.Type {
 			case uap.Fixed:
 				stdUAP.Items = selectUAPConditional(stdUAP.Category, item.Payload())
+				//stdUAP.Items = selectUAPConditional(stdUAP.Category, contextType.Item.Payload())
 			case uap.Extended:
 				stdUAP.Items = selectUAPConditional(stdUAP.Category, item.Payload())
+				//stdUAP.Items = selectUAPConditional(stdUAP.Category, contextType.Item.Payload())
 			}
 			offset = frn
 		}

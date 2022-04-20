@@ -52,7 +52,7 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 				Primary: []byte{0x9c},
 				Secondary: []goasterix.Item{
 					{
-						Meta: goasterix.MetaItem{
+						Meta: goasterix.Base{
 							FRN:         1,
 							DataItem:    "COM",
 							Description: "Common Part",
@@ -61,7 +61,7 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 						Fixed: &goasterix.Fixed{Data: []byte{0x00}},
 					},
 					{
-						Meta: goasterix.MetaItem{
+						Meta: goasterix.Base{
 							FRN:         4,
 							DataItem:    "PSR",
 							Description: "Specific Status for PSR Sensor",
@@ -70,7 +70,7 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 						Fixed: &goasterix.Fixed{Data: []byte{0x00}},
 					},
 					{
-						Meta: goasterix.MetaItem{
+						Meta: goasterix.Base{
 							FRN:         5,
 							DataItem:    "SSR",
 							Description: "Specific Status for SSR Sensor",
@@ -79,7 +79,7 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 						Fixed: &goasterix.Fixed{Data: []byte{0x00}},
 					},
 					{
-						Meta: goasterix.MetaItem{
+						Meta: goasterix.Base{
 							FRN:         6,
 							DataItem:    "MDS",
 							Description: "Specific Status for Mode S Sensor",
@@ -129,7 +129,7 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 				Primary: []byte{0x9c},
 				Secondary: []goasterix.Item{
 					{
-						Meta: goasterix.MetaItem{
+						Meta: goasterix.Base{
 							FRN:         1,
 							DataItem:    "COM",
 							Description: "Common Part",
@@ -138,7 +138,7 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 						Fixed: &goasterix.Fixed{Data: []byte{0xfe}},
 					},
 					{
-						Meta: goasterix.MetaItem{
+						Meta: goasterix.Base{
 							FRN:         4,
 							DataItem:    "PSR",
 							Description: "Specific Status for PSR Sensor",
@@ -147,7 +147,7 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 						Fixed: &goasterix.Fixed{Data: []byte{0xb8}},
 					},
 					{
-						Meta: goasterix.MetaItem{
+						Meta: goasterix.Base{
 							FRN:         5,
 							DataItem:    "SSR",
 							Description: "Specific Status for SSR Sensor",
@@ -156,7 +156,7 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 						Fixed: &goasterix.Fixed{Data: []byte{0xb8}},
 					},
 					{
-						Meta: goasterix.MetaItem{
+						Meta: goasterix.Base{
 							FRN:         6,
 							DataItem:    "MDS",
 							Description: "Specific Status for Mode S Sensor",
@@ -206,7 +206,7 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 				Primary: []byte{0x1c},
 				Secondary: []goasterix.Item{
 					{
-						Meta: goasterix.MetaItem{
+						Meta: goasterix.Base{
 							FRN:         4,
 							DataItem:    "PSR",
 							Description: "Specific Status for PSR Sensor",
@@ -215,7 +215,7 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 						Fixed: &goasterix.Fixed{Data: []byte{0x40}},
 					},
 					{
-						Meta: goasterix.MetaItem{
+						Meta: goasterix.Base{
 							FRN:         5,
 							DataItem:    "SSR",
 							Description: "Specific Status for SSR Sensor",
@@ -224,7 +224,7 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 						Fixed: &goasterix.Fixed{Data: []byte{0x40}},
 					},
 					{
-						Meta: goasterix.MetaItem{
+						Meta: goasterix.Base{
 							FRN:         6,
 							DataItem:    "MDS",
 							Description: "Specific Status for Mode S Sensor",
@@ -266,7 +266,7 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 				Primary: []byte{0x1c},
 				Secondary: []goasterix.Item{
 					{
-						Meta: goasterix.MetaItem{
+						Meta: goasterix.Base{
 							FRN:         4,
 							DataItem:    "PSR",
 							Description: "Specific Status for PSR Sensor",
@@ -275,7 +275,7 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 						Fixed: &goasterix.Fixed{Data: []byte{0x60}},
 					},
 					{
-						Meta: goasterix.MetaItem{
+						Meta: goasterix.Base{
 							FRN:         5,
 							DataItem:    "SSR",
 							Description: "Specific Status for SSR Sensor",
@@ -284,7 +284,7 @@ func TestCat034Model_SystemConfiguration(t *testing.T) {
 						Fixed: &goasterix.Fixed{Data: []byte{0x60}},
 					},
 					{
-						Meta: goasterix.MetaItem{
+						Meta: goasterix.Base{
 							FRN:         6,
 							DataItem:    "MDS",
 							Description: "Specific Status for Mode S Sensor",
@@ -355,7 +355,7 @@ func TestCat034Model_SystemProcessingMode(t *testing.T) {
 				Primary: []byte{0x9c},
 				Secondary: []goasterix.Item{
 					{
-						Meta: goasterix.MetaItem{
+						Meta: goasterix.Base{
 							FRN:         1,
 							DataItem:    "COM",
 							Description: "Common Part",
@@ -364,7 +364,7 @@ func TestCat034Model_SystemProcessingMode(t *testing.T) {
 						Fixed: &goasterix.Fixed{Data: []byte{0x00}},
 					},
 					{
-						Meta: goasterix.MetaItem{
+						Meta: goasterix.Base{
 							FRN:         4,
 							DataItem:    "PSR",
 							Description: "Specific Processing Mode information for PSR Sensor",
@@ -373,7 +373,7 @@ func TestCat034Model_SystemProcessingMode(t *testing.T) {
 						Fixed: &goasterix.Fixed{Data: []byte{0x00}},
 					},
 					{
-						Meta: goasterix.MetaItem{
+						Meta: goasterix.Base{
 							FRN:         5,
 							DataItem:    "SSR",
 							Description: "Specific Processing Mode information for SSR Sensor",
@@ -382,7 +382,7 @@ func TestCat034Model_SystemProcessingMode(t *testing.T) {
 						Fixed: &goasterix.Fixed{Data: []byte{0x00}},
 					},
 					{
-						Meta: goasterix.MetaItem{
+						Meta: goasterix.Base{
 							FRN:         6,
 							DataItem:    "MDS",
 							Description: "Specific Processing Mode information for Mode S Sensor",
@@ -415,7 +415,7 @@ func TestCat034Model_SystemProcessingMode(t *testing.T) {
 				Primary: []byte{0x9c},
 				Secondary: []goasterix.Item{
 					{
-						Meta: goasterix.MetaItem{
+						Meta: goasterix.Base{
 							FRN:         1,
 							DataItem:    "COM",
 							Description: "Common Part",
@@ -424,7 +424,7 @@ func TestCat034Model_SystemProcessingMode(t *testing.T) {
 						Fixed: &goasterix.Fixed{Data: []byte{0x12}},
 					},
 					{
-						Meta: goasterix.MetaItem{
+						Meta: goasterix.Base{
 							FRN:         4,
 							DataItem:    "PSR",
 							Description: "Specific Processing Mode information for PSR Sensor",
@@ -433,7 +433,7 @@ func TestCat034Model_SystemProcessingMode(t *testing.T) {
 						Fixed: &goasterix.Fixed{Data: []byte{0x94}},
 					},
 					{
-						Meta: goasterix.MetaItem{
+						Meta: goasterix.Base{
 							FRN:         5,
 							DataItem:    "SSR",
 							Description: "Specific Processing Mode information for SSR Sensor",
@@ -442,7 +442,7 @@ func TestCat034Model_SystemProcessingMode(t *testing.T) {
 						Fixed: &goasterix.Fixed{Data: []byte{0x20}},
 					},
 					{
-						Meta: goasterix.MetaItem{
+						Meta: goasterix.Base{
 							FRN:         6,
 							DataItem:    "MDS",
 							Description: "Specific Processing Mode information for Mode S Sensor",

@@ -20,18 +20,20 @@ type Extended struct {
 	Secondary         []byte
 }
 
-func NewExtended(field uap.DataField) Item {
+//func NewExtended(field uap.DataField) Item {
+func NewExtended(field uap.IDataField) Item {
 	f := &Extended{}
 	f.Base.NewBase(field)
-	f.PrimaryItemSize = field.Extended.PrimarySize
-	f.SecondaryItemSize = field.Extended.SecondarySize
+	//f.PrimaryItemSize = field.Extended.PrimarySize
+	f.PrimaryItemSize = field.GetSize().ForExtendedPrimary
+	//f.SecondaryItemSize = field.Extended.SecondarySize
+	f.SecondaryItemSize = field.GetSize().ForExtendedSecondary
 	return f
 }
 
 // Reader extracts data item type Extended (FX: last bit = 1).
 // primarySize parameter defines the Primary Subitem of extended dataField.
 // secondarySize parameter defines the Secondary Subitem of extended dataField.
-//func (e *Extended) Reader(rb *bytes.Reader, dataField uap.DataField) error {
 func (e *Extended) Reader(rb *bytes.Reader) error {
 	var err error
 	tmp := make([]byte, e.PrimaryItemSize)

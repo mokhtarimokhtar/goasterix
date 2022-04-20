@@ -139,16 +139,16 @@ func TestBaseFrn(t *testing.T) {
 		{
 			Name: "testCase 1",
 			input: Base{
-					FRN:         7,
-					DataItem:    "I000/070",
-					Description: "Test item",
-					Type:        uap.Fixed,
-				},
+				FRN:         7,
+				DataItem:    "I000/070",
+				Description: "Test item",
+				Type:        uap.Fixed,
+			},
 			output: 7,
 		},
 		{
-			Name: "testCase 2",
-			input: Base{},
+			Name:   "testCase 2",
+			input:  Base{},
 			output: 0,
 		},
 	}

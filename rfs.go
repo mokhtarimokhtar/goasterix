@@ -64,7 +64,7 @@ func (rfs *RandomFieldSequencing) Reader(rb *bytes.Reader) error {
 	for i := uint8(0); i < rfs.N; i++ {
 		// retrieve random FRN
 		var frn uint8
-		err := binary.Read(rb, binary.BigEndian, &frn)
+		err = binary.Read(rb, binary.BigEndian, &frn)
 		if err != nil {
 			return err
 		}

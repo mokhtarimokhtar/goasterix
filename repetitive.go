@@ -14,10 +14,12 @@ type Repetitive struct {
 	Data        []byte
 }
 
-func NewRepetitive(field uap.DataField) Item {
+//func NewRepetitive(field uap.DataField) Item {
+func NewRepetitive(field uap.IDataField) Item {
 	f := &Repetitive{}
 	f.Base.NewBase(field)
-	f.SubItemSize = field.Repetitive.SubItemSize
+	//f.SubItemSize = field.Repetitive.SubItemSize
+	f.SubItemSize = field.GetSize().ForRepetitive
 	return f
 }
 

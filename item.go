@@ -44,6 +44,7 @@ type Item interface {
 	Frn() uint8
 }
 
+// Readers extracts data from the corresponding Item type.
 func Readers(i Item, rb *bytes.Reader) error {
 	err := i.Reader(rb)
 	return err
@@ -76,7 +77,6 @@ func GetItem(df uap.DataField) (Item, error) {
 	return item, err
 }
 
-
 type Base struct {
 	FRN         uint8
 	DataItem    string
@@ -84,11 +84,13 @@ type Base struct {
 	Type        uap.TypeField
 }
 
-func (b *Base) NewBase(field uap.DataField) {
-	b.FRN = field.FRN
-	b.DataItem = field.DataItem
-	b.Description = field.Description
-	b.Type = field.Type
+//func (b *Base) NewBase(field uap.DataField) {
+func (b *Base) NewBase(field uap.IDataField) {
+	//b.FRN = field.FRN
+	b.FRN = field.GetFrn()
+	b.DataItem = field.GetDataItem()
+	b.Description = field.GetDescription()
+	b.Type = field.GetType()
 }
 
 // Frn returns FRN number of dataField from UAP

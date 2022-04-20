@@ -24,6 +24,14 @@ type StandardUAP struct {
 	Items    []DataField
 }
 
+type IDataField interface {
+	GetFrn() uint8
+	GetDataItem() string
+	GetDescription() string
+	GetType() TypeField
+	GetSize() Size
+}
+
 // DataField describes FRN(Field Reference Number)
 type DataField struct {
 	FRN         uint8
@@ -36,7 +44,43 @@ type DataField struct {
 	Compound    []DataField
 	RFS         []DataField
 	Conditional bool
+	Size        Size
 }
+
+
+func (d DataField) GetFrn() uint8 {
+	return d.FRN
+}
+func (d DataField) GetDataItem() string {
+	return d.DataItem
+}
+func (d DataField) GetDescription() string {
+	return d.Description
+}
+func (d DataField) GetType() TypeField {
+	return d.Type
+}
+func (d DataField) GetSize() Size {
+	var s Size
+	switch d.Type {
+	case Fixed:
+		s.ForFixed = d.Fixed.Size
+	case Extended:
+		s.ForExtendedPrimary = d.Extended.PrimarySize
+		s.ForExtendedSecondary = d.Extended.SecondarySize
+	case Repetitive:
+		s.ForRepetitive = d.Repetitive.SubItemSize
+	}
+	return s
+}
+
+type Size struct {
+	ForFixed             uint8
+	ForExtendedPrimary   uint8
+	ForExtendedSecondary uint8
+	ForRepetitive        uint8
+}
+
 type FixedField struct {
 	Size uint8
 }

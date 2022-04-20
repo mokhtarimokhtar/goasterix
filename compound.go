@@ -110,7 +110,3 @@ func (c Compound) String() string {
 	return buf.String()
 }
 
-// Frn returns FRN number of dataField from UAP
-func (c Compound) Frn() uint8 {
-	return c.Base.FRN
-}

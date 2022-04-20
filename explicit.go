@@ -60,7 +60,3 @@ func (e Explicit) String() string {
 	return buf.String()
 }
 
-// Frn returns FRN number of dataField from UAP
-func (e Explicit) Frn() uint8 {
-	return e.Base.FRN
-}

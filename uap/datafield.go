@@ -40,15 +40,21 @@ type DataField struct {
 	DataItem    string
 	Description string
 	Type        TypeField
-	Fixed       FixedField
-	Extended    ExtendedField
-	Repetitive  RepetitiveField
 	Compound    []DataField
 	RFS         []DataField
 	Conditional bool
 	Size        Size
 }
 
+func DataFieldFactory(frn uint8, dataItem string, desc string, t TypeField, s Size) IDataField {
+	var d = &DataField{}
+	d.FRN = frn
+	d.DataItem = dataItem
+	d.Description = desc
+	d.Type = t
+	d.Size = s
+	return d
+}
 
 func (d DataField) GetFrn() uint8 {
 	return d.FRN
@@ -63,19 +69,8 @@ func (d DataField) GetType() TypeField {
 	return d.Type
 }
 func (d DataField) GetSize() Size {
-	var s Size
-	switch d.Type {
-	case Fixed:
-		s.ForFixed = d.Fixed.Size
-	case Extended:
-		s.ForExtendedPrimary = d.Extended.PrimarySize
-		s.ForExtendedSecondary = d.Extended.SecondarySize
-	case Repetitive:
-		s.ForRepetitive = d.Repetitive.SubItemSize
-	}
-	return s
+	return d.Size
 }
-
 func (d DataField) GetCompound() []DataField {
 	return d.Compound
 }
@@ -89,15 +84,3 @@ type Size struct {
 	ForExtendedSecondary uint8
 	ForRepetitive        uint8
 }
-
-type FixedField struct {
-	Size uint8
-}
-type ExtendedField struct {
-	PrimarySize   uint8
-	SecondarySize uint8
-}
-type RepetitiveField struct {
-	SubItemSize uint8
-}
-

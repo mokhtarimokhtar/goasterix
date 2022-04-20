@@ -12,8 +12,8 @@ var Cat048V127 = StandardUAP{
 			DataItem:    "I048/010",
 			Description: "Data Source Identifier",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -21,8 +21,8 @@ var Cat048V127 = StandardUAP{
 			DataItem:    "I048/140",
 			Description: "Time-of-Day",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 3,
+			Size: Size{
+				ForFixed: 3,
 			},
 		},
 		{
@@ -30,9 +30,9 @@ var Cat048V127 = StandardUAP{
 			DataItem:    "I048/020",
 			Description: "Target Report Descriptor",
 			Type:        Extended,
-			Extended: ExtendedField{
-				PrimarySize:   1,
-				SecondarySize: 1,
+			Size: Size{
+				ForExtendedPrimary:   1,
+				ForExtendedSecondary: 1,
 			},
 		},
 		{
@@ -40,8 +40,8 @@ var Cat048V127 = StandardUAP{
 			DataItem:    "I048/040",
 			Description: "Measured Position in Slant Polar Coordinates",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 4,
+			Size: Size{
+				ForFixed: 4,
 			},
 		},
 		{
@@ -49,8 +49,8 @@ var Cat048V127 = StandardUAP{
 			DataItem:    "I048/070",
 			Description: "Mode-3/A Code in Octal Representation",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -58,8 +58,8 @@ var Cat048V127 = StandardUAP{
 			DataItem:    "I048/090",
 			Description: "Flight Level in Binary Representation",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -73,8 +73,8 @@ var Cat048V127 = StandardUAP{
 					DataItem:    "SRL",
 					Description: "SSR plot runlength",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 1,
+					Size: Size{
+						ForFixed: 1,
 					},
 				},
 				{
@@ -82,8 +82,8 @@ var Cat048V127 = StandardUAP{
 					DataItem:    "SRR",
 					Description: "Number of received replies",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 1,
+					Size: Size{
+						ForFixed: 1,
 					},
 				},
 				{
@@ -91,8 +91,8 @@ var Cat048V127 = StandardUAP{
 					DataItem:    "SAM",
 					Description: "Amplitude of received replies for M(SSR)",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 1,
+					Size: Size{
+						ForFixed: 1,
 					},
 				},
 				{
@@ -100,8 +100,8 @@ var Cat048V127 = StandardUAP{
 					DataItem:    "PRL",
 					Description: "PSR plot runlength",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 1,
+					Size: Size{
+						ForFixed: 1,
 					},
 				},
 				{
@@ -109,8 +109,8 @@ var Cat048V127 = StandardUAP{
 					DataItem:    "PAM",
 					Description: "PSR amplitude",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 1,
+					Size: Size{
+						ForFixed: 1,
 					},
 				},
 				{
@@ -118,8 +118,8 @@ var Cat048V127 = StandardUAP{
 					DataItem:    "RPD",
 					Description: "Difference in Range between PSR and SSR plot",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 1,
+					Size: Size{
+						ForFixed: 1,
 					},
 				},
 				{
@@ -127,8 +127,8 @@ var Cat048V127 = StandardUAP{
 					DataItem:    "APD",
 					Description: "Difference in Azimuth between PSR and SSR plot",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 1,
+					Size: Size{
+						ForFixed: 1,
 					},
 				},
 			},
@@ -139,8 +139,8 @@ var Cat048V127 = StandardUAP{
 			DataItem:    "I048/220",
 			Description: "Aircraft Address",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 3,
+			Size: Size{
+				ForFixed: 3,
 			},
 		},
 		{
@@ -148,8 +148,8 @@ var Cat048V127 = StandardUAP{
 			DataItem:    "I048/240",
 			Description: "Aircraft Identification",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 6,
+			Size: Size{
+				ForFixed: 6,
 			},
 		},
 		{
@@ -157,8 +157,8 @@ var Cat048V127 = StandardUAP{
 			DataItem:    "I048/250",
 			Description: "Mode S MB Data",
 			Type:        Repetitive,
-			Repetitive: RepetitiveField{
-				SubItemSize: 8,
+			Size: Size{
+				ForRepetitive: 8,
 			},
 		},
 		{
@@ -166,8 +166,8 @@ var Cat048V127 = StandardUAP{
 			DataItem:    "I048/161",
 			Description: "Track Number",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -175,8 +175,8 @@ var Cat048V127 = StandardUAP{
 			DataItem:    "I048/042",
 			Description: "Calculated Position in Cartesian Coordinates",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 4,
+			Size: Size{
+				ForFixed: 4,
 			},
 		},
 		{
@@ -184,8 +184,8 @@ var Cat048V127 = StandardUAP{
 			DataItem:    "I048/200",
 			Description: "Calculated Track Velocity in Polar Representation",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 4,
+			Size: Size{
+				ForFixed: 4,
 			},
 		},
 		{
@@ -193,9 +193,9 @@ var Cat048V127 = StandardUAP{
 			DataItem:    "I048/170",
 			Description: "Track Status",
 			Type:        Extended,
-			Extended: ExtendedField{
-				PrimarySize:   1,
-				SecondarySize: 1,
+			Size: Size{
+				ForExtendedPrimary:   1,
+				ForExtendedSecondary: 1,
 			},
 		},
 		{
@@ -203,8 +203,8 @@ var Cat048V127 = StandardUAP{
 			DataItem:    "I048/210",
 			Description: "Track Quality",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 4,
+			Size: Size{
+				ForFixed: 4,
 			},
 		},
 		{
@@ -212,9 +212,9 @@ var Cat048V127 = StandardUAP{
 			DataItem:    "I048/030",
 			Description: "Warning/Error Conditions/Target Classification",
 			Type:        Extended,
-			Extended: ExtendedField{
-				PrimarySize:   1,
-				SecondarySize: 1,
+			Size: Size{
+				ForExtendedPrimary:   1,
+				ForExtendedSecondary: 1,
 			},
 		},
 		{
@@ -222,8 +222,8 @@ var Cat048V127 = StandardUAP{
 			DataItem:    "I048/080",
 			Description: "Mode-3/A Code Confidence Indicator",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -231,8 +231,8 @@ var Cat048V127 = StandardUAP{
 			DataItem:    "I048/100",
 			Description: "Mode-C Code and Confidence Indicator",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 4,
+			Size: Size{
+				ForFixed: 4,
 			},
 		},
 		{
@@ -240,8 +240,8 @@ var Cat048V127 = StandardUAP{
 			DataItem:    "I048/110",
 			Description: "Height Measured by 3D Radar",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -255,8 +255,8 @@ var Cat048V127 = StandardUAP{
 					DataItem:    "CAL",
 					Description: "Calculated Doppler Speed",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 2,
+					Size: Size{
+						ForFixed: 2,
 					},
 				},
 				{
@@ -264,8 +264,8 @@ var Cat048V127 = StandardUAP{
 					DataItem:    "RDS",
 					Description: "Raw Doppler Speed",
 					Type:        Repetitive,
-					Repetitive: RepetitiveField{
-						SubItemSize: 2,
+					Size: Size{
+						ForRepetitive: 2,
 					},
 				},
 				{
@@ -295,8 +295,8 @@ var Cat048V127 = StandardUAP{
 			DataItem:    "I048/230",
 			Description: "Communications / ACAS Capability and Flight Status",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -304,8 +304,8 @@ var Cat048V127 = StandardUAP{
 			DataItem:    "I048/260",
 			Description: "ACAS Resolution Advisory Report",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 7,
+			Size: Size{
+				ForFixed: 7,
 			},
 		},
 		{
@@ -313,8 +313,8 @@ var Cat048V127 = StandardUAP{
 			DataItem:    "I048/055",
 			Description: "Mode-1 Code in Octal Representation",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 1,
+			Size: Size{
+				ForFixed: 1,
 			},
 		},
 		{
@@ -322,8 +322,8 @@ var Cat048V127 = StandardUAP{
 			DataItem:    "I048/050",
 			Description: "Mode-2 Code in Octal Representation",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -331,8 +331,8 @@ var Cat048V127 = StandardUAP{
 			DataItem:    "I048/065",
 			Description: "Mode-1 Code Confidence Indicator",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 1,
+			Size: Size{
+				ForFixed: 1,
 			},
 		},
 		{
@@ -340,8 +340,8 @@ var Cat048V127 = StandardUAP{
 			DataItem:    "I048/060",
 			Description: "Mode-2 Code Confidence Indicator",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{

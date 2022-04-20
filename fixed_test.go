@@ -14,8 +14,11 @@ func TestFixedReader(t *testing.T) {
 	type testCase struct {
 		Name      string
 		input     string
-		dataField uap.DataField
-		//output Fixed
+		FRN         uint8
+		DataItem    string
+		Description string
+		Type        uap.TypeField
+		Size        uap.Size
 		output Item
 		err    error
 	}
@@ -24,12 +27,12 @@ func TestFixedReader(t *testing.T) {
 		{
 			Name:  "testCase 1",
 			input: "01 02 03 04 05 06 07 08",
-			dataField: uap.DataField{
-				FRN:         8,
-				DataItem:    "I000/080",
-				Description: "Test item",
-				Type:        uap.Fixed,
-				Fixed:       uap.FixedField{Size: 8},
+			FRN:         8,
+			DataItem:    "I000/080",
+			Description: "Test item",
+			Type:        uap.Fixed,
+			Size: uap.Size{
+				ForFixed:             8,
 			},
 			err: nil,
 			output: &Fixed{
@@ -46,12 +49,12 @@ func TestFixedReader(t *testing.T) {
 		{
 			Name:  "testCase 2",
 			input: "01 02 03 04 05 06 07",
-			dataField: uap.DataField{
-				FRN:         8,
-				DataItem:    "I000/080",
-				Description: "Test item",
-				Type:        uap.Fixed,
-				Fixed:       uap.FixedField{Size: 8},
+			FRN:         8,
+			DataItem:    "I000/080",
+			Description: "Test item",
+			Type:        uap.Fixed,
+			Size: uap.Size{
+				ForFixed:             8,
 			},
 			output: &Fixed{
 				Base: Base{
@@ -70,12 +73,13 @@ func TestFixedReader(t *testing.T) {
 		// Arrange
 		input, _ := util.HexStringToByte(row.input)
 		rb := bytes.NewReader(input)
-		f := NewFixed(row.dataField)
+		d := uap.DataFieldFactory(row.FRN, row.DataItem, row.Description, row.Type, row.Size)
+
+		//f := NewFixed(row.dataField)
+		f := NewFixed(d)
 
 		// Act
-		//err := f.Reader(rb, row.dataField)
 		err := f.Reader(rb)
-		//tmp, _ := f.(*Fixed)
 
 		// Assert
 		if err != row.err {

@@ -23,9 +23,7 @@ type Extended struct {
 func NewExtended(field uap.IDataField) Item {
 	f := &Extended{}
 	f.Base.NewBase(field)
-	//f.PrimaryItemSize = field.Extended.PrimarySize
 	f.PrimaryItemSize = field.GetSize().ForExtendedPrimary
-	//f.SecondaryItemSize = field.Extended.SecondarySize
 	f.SecondaryItemSize = field.GetSize().ForExtendedSecondary
 	return f
 }

@@ -11,8 +11,8 @@ var Cat002V10 = StandardUAP{
 			DataItem:    "I002/010",
 			Description: "Data Source Identifier",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -20,8 +20,8 @@ var Cat002V10 = StandardUAP{
 			DataItem:    "I002/000",
 			Description: "Message Type",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 1,
+			Size: Size{
+				ForFixed: 1,
 			},
 		},
 		{
@@ -29,8 +29,8 @@ var Cat002V10 = StandardUAP{
 			DataItem:    "I002/020",
 			Description: "Sector Number",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 1,
+			Size: Size{
+				ForFixed: 1,
 			},
 		},
 		{
@@ -38,8 +38,8 @@ var Cat002V10 = StandardUAP{
 			DataItem:    "I002/030",
 			Description: "Time of Day",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 3,
+			Size: Size{
+				ForFixed: 3,
 			},
 		},
 		{
@@ -47,8 +47,8 @@ var Cat002V10 = StandardUAP{
 			DataItem:    "I002/041",
 			Description: "Antenna Rotation Period",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -56,9 +56,9 @@ var Cat002V10 = StandardUAP{
 			DataItem:    "I002/050",
 			Description: "Station Configuration Status",
 			Type:        Extended,
-			Extended: ExtendedField{
-				PrimarySize:   1,
-				SecondarySize: 1,
+			Size: Size{
+				ForExtendedPrimary:   1,
+				ForExtendedSecondary: 1,
 			},
 		},
 		{
@@ -66,9 +66,9 @@ var Cat002V10 = StandardUAP{
 			DataItem:    "I002/060",
 			Description: "Station Processing Mode",
 			Type:        Extended,
-			Extended: ExtendedField{
-				PrimarySize:   1,
-				SecondarySize: 1,
+			Size: Size{
+				ForExtendedPrimary:   1,
+				ForExtendedSecondary: 1,
 			},
 		},
 		{
@@ -76,8 +76,8 @@ var Cat002V10 = StandardUAP{
 			DataItem:    "I002/070",
 			Description: "Plot Count Values",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -85,8 +85,8 @@ var Cat002V10 = StandardUAP{
 			DataItem:    "I002/100",
 			Description: "Dynamic Window - Type 1",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 8,
+			Size: Size{
+				ForFixed: 8,
 			},
 		},
 		{
@@ -94,8 +94,8 @@ var Cat002V10 = StandardUAP{
 			DataItem:    "I002/090",
 			Description: "Collimation Error",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -103,9 +103,9 @@ var Cat002V10 = StandardUAP{
 			DataItem:    "I002/080",
 			Description: "Warning/Error Conditions",
 			Type:        Extended,
-			Extended: ExtendedField{
-				PrimarySize:   1,
-				SecondarySize: 1,
+			Size: Size{
+				ForExtendedPrimary:   1,
+				ForExtendedSecondary: 1,
 			},
 		},
 		{

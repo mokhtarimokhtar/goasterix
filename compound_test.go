@@ -30,7 +30,9 @@ func TestCompoundReader(t *testing.T) {
 					{
 						FRN:   1,
 						Type:  uap.Fixed,
-						Fixed: uap.FixedField{Size: 1},
+						Size: uap.Size{
+							ForFixed:             1,
+						},
 					},
 				},
 			},
@@ -44,7 +46,9 @@ func TestCompoundReader(t *testing.T) {
 					{
 						FRN:   1,
 						Type:  uap.Fixed,
-						Fixed: uap.FixedField{Size: 1},
+						Size: uap.Size{
+							ForFixed:             1,
+						},
 					},
 				},
 				Primary: []byte{0x80},
@@ -69,25 +73,25 @@ func TestCompoundReader(t *testing.T) {
 					{
 						FRN:   1,
 						Type:  uap.Fixed,
-						Fixed: uap.FixedField{Size: 1},
+						Size: uap.Size{ForFixed: 1},
 					},
 					{
 						FRN:  2,
 						Type: uap.Extended,
-						Extended: uap.ExtendedField{
-							PrimarySize:   1,
-							SecondarySize: 1,
+						Size: uap.Size{
+							ForExtendedPrimary:   1,
+							ForExtendedSecondary: 1,
 						},
 					},
 					{
 						FRN:   3,
 						Type:  uap.Fixed,
-						Fixed: uap.FixedField{Size: 1},
+						Size: uap.Size{ForFixed: 1},
 					},
 					{
 						FRN:        4,
 						Type:       uap.Repetitive,
-						Repetitive: uap.RepetitiveField{SubItemSize: 2},
+						Size: uap.Size{ForRepetitive: 2},
 					},
 					{
 						FRN:  5,
@@ -108,25 +112,25 @@ func TestCompoundReader(t *testing.T) {
 					{
 						FRN:   1,
 						Type:  uap.Fixed,
-						Fixed: uap.FixedField{Size: 1},
+						Size: uap.Size{ForFixed: 1},
 					},
 					{
 						FRN:  2,
 						Type: uap.Extended,
-						Extended: uap.ExtendedField{
-							PrimarySize:   1,
-							SecondarySize: 1,
+						Size: uap.Size{
+							ForExtendedPrimary:   1,
+							ForExtendedSecondary: 1,
 						},
 					},
 					{
 						FRN:   3,
 						Type:  uap.Fixed,
-						Fixed: uap.FixedField{Size: 1},
+						Size: uap.Size{ForFixed: 1},
 					},
 					{
 						FRN:        4,
 						Type:       uap.Repetitive,
-						Repetitive: uap.RepetitiveField{SubItemSize: 2},
+						Size: uap.Size{ForRepetitive: 2},
 					},
 					{
 						FRN:  5,
@@ -186,7 +190,7 @@ func TestCompoundReader(t *testing.T) {
 					{
 						FRN:   1,
 						Type:  uap.Fixed,
-						Fixed: uap.FixedField{Size: 1},
+						Size: uap.Size{ForFixed: 1},
 					},
 				},
 			},
@@ -199,7 +203,7 @@ func TestCompoundReader(t *testing.T) {
 					{
 						FRN:   1,
 						Type:  uap.Fixed,
-						Fixed: uap.FixedField{Size: 1},
+						Size: uap.Size{ForFixed: 1},
 					},
 				},
 				Primary:   nil,
@@ -216,9 +220,9 @@ func TestCompoundReader(t *testing.T) {
 					{
 						FRN:  1,
 						Type: uap.Extended,
-						Extended: uap.ExtendedField{
-							PrimarySize:   1,
-							SecondarySize: 1,
+						Size: uap.Size{
+							ForExtendedPrimary:   1,
+							ForExtendedSecondary: 1,
 						},
 					},
 				},
@@ -233,9 +237,9 @@ func TestCompoundReader(t *testing.T) {
 					{
 						FRN:  1,
 						Type: uap.Extended,
-						Extended: uap.ExtendedField{
-							PrimarySize:   1,
-							SecondarySize: 1,
+						Size: uap.Size{
+							ForExtendedPrimary:   1,
+							ForExtendedSecondary: 1,
 						},
 					},
 				},
@@ -311,7 +315,7 @@ func TestCompoundReader(t *testing.T) {
 					{
 						FRN:        1,
 						Type:       uap.Repetitive,
-						Repetitive: uap.RepetitiveField{SubItemSize: 2},
+						Size: uap.Size{ForRepetitive: 2},
 					},
 				},
 			},
@@ -325,7 +329,7 @@ func TestCompoundReader(t *testing.T) {
 					{
 						FRN:        1,
 						Type:       uap.Repetitive,
-						Repetitive: uap.RepetitiveField{SubItemSize: 2},
+						Size: uap.Size{ForRepetitive: 2},
 					},
 				},
 				Primary:   []byte{0x80},
@@ -533,49 +537,3 @@ func TestCompoundPayload(t *testing.T) {
 	}
 }
 
-func TestCompoundFrn(t *testing.T) {
-	// setup
-	type testCase struct {
-		Name   string
-		input  Compound
-		output uint8
-	}
-	// Arrange
-	dataSet := []testCase{
-		{
-			Name: "testCase 1",
-			input: Compound{
-				Base: Base{
-					FRN:         7,
-					DataItem:    "I000/070",
-					Description: "Test item",
-					Type:        uap.Compound,
-				},
-				Primary:   nil,
-				Secondary: nil,
-			},
-			output: 7,
-		},
-		{
-			Name: "testCase 2",
-			input: Compound{
-				Base:      Base{},
-				Primary:   nil,
-				Secondary: nil,
-			},
-			output: 0,
-		},
-	}
-
-	for _, row := range dataSet {
-		// Act
-		res := row.input.Frn()
-
-		// Assert
-		if res != row.output {
-			t.Errorf(util.MsgFailInValue, row.Name, res, row.output)
-		} else {
-			t.Logf(util.MsgSuccessInValue, row.Name, res, row.output)
-		}
-	}
-}

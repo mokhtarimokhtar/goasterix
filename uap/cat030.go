@@ -12,8 +12,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/010",
 			Description: "SERVER IDENTIFICATION TAG",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -21,8 +21,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/015",
 			Description: "USER NUMBER",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -30,9 +30,9 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/030",
 			Description: "SERVICE IDENTIFICATION",
 			Type:        Extended,
-			Extended: ExtendedField{
-				PrimarySize:   1,
-				SecondarySize: 1,
+			Size: Size{
+				ForExtendedPrimary:   1,
+				ForExtendedSecondary: 1,
 			},
 		},
 		{
@@ -40,8 +40,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/035",
 			Description: "TYPE OF MESSAGE",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 1,
+			Size: Size{
+				ForFixed: 1,
 			},
 		},
 		{
@@ -49,8 +49,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/040",
 			Description: "TRACK NUMBER",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -58,8 +58,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/070",
 			Description: "TIME OF LAST UPDATE",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 3,
+			Size: Size{
+				ForFixed: 3,
 			},
 		},
 		{
@@ -67,8 +67,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/170",
 			Description: "TRACK AGES",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 4,
+			Size: Size{
+				ForFixed: 4,
 			},
 		},
 		{
@@ -76,8 +76,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/100",
 			Description: "CALCULATED TRACK POSITION (CARTESIAN)",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 4,
+			Size: Size{
+				ForFixed: 4,
 			},
 		},
 		{
@@ -85,8 +85,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/180",
 			Description: "CALCULATED TRACK VELOCITY (POLAR)",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 4,
+			Size: Size{
+				ForFixed: 4,
 			},
 		},
 		{
@@ -94,8 +94,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/181",
 			Description: "CALCULATED TRACK VELOCITY (CARTESIAN)",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 4,
+			Size: Size{
+				ForFixed: 4,
 			},
 		},
 		{
@@ -103,8 +103,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/060",
 			Description: "TRACK MODE 3/A",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -112,8 +112,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/150",
 			Description: "MEASURED TRACK MODE C",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -121,8 +121,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/130",
 			Description: "CALCULATED TRACK ALTITUDE",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -130,8 +130,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/160",
 			Description: "CALCULATED TRACK FLIGHT LEVEL",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -139,9 +139,9 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/080",
 			Description: "ARTAS TRACK STATUS",
 			Type:        Extended,
-			Extended: ExtendedField{
-				PrimarySize:   1,
-				SecondarySize: 1,
+			Size: Size{
+				ForExtendedPrimary:   1,
+				ForExtendedSecondary: 1,
 			},
 		},
 		{
@@ -149,8 +149,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/090",
 			Description: "ARTAS TRACK QUALITY",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 1,
+			Size: Size{
+				ForFixed: 1,
 			},
 		},
 		{
@@ -158,8 +158,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/200",
 			Description: "MODE OF FLIGHT",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 1,
+			Size: Size{
+				ForFixed: 1,
 			},
 		},
 		{
@@ -167,8 +167,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/220",
 			Description: "CALCULATED RATE OF CLIMB/DESCENT",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -176,8 +176,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/240",
 			Description: "CALCULATED RATE OF TURN",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 1,
+			Size: Size{
+				ForFixed: 1,
 			},
 		},
 		{
@@ -185,8 +185,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/290",
 			Description: "PLOT AGES",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -194,8 +194,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/260",
 			Description: "RADAR IDENTIFICATION TAG",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -203,8 +203,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/360",
 			Description: "MEASURED POSITION",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 4,
+			Size: Size{
+				ForFixed: 4,
 			},
 		},
 		{
@@ -212,8 +212,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/140",
 			Description: "LAST MEASURED MODE C",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -221,8 +221,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/340",
 			Description: "LAST MEASURED MODE 3/A",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -230,8 +230,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/RE",
 			Description: "RESERVED EXPANSION DATA FIELD",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 3,
+			Size: Size{
+				ForFixed: 3,
 			},
 		},
 		{
@@ -239,8 +239,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/390",
 			Description: "FPPS IDENTIFICATION TAG",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -248,8 +248,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/400",
 			Description: "CALLSIGN",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 7,
+			Size: Size{
+				ForFixed: 7,
 			},
 		},
 		{
@@ -257,8 +257,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/410",
 			Description: "PLN NUMBER",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -266,8 +266,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/440",
 			Description: "DEPARTURE AIRPORT",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 4,
+			Size: Size{
+				ForFixed: 4,
 			},
 		},
 		{
@@ -275,8 +275,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/450",
 			Description: "DESTINATION AIRPORT",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 4,
+			Size: Size{
+				ForFixed: 4,
 			},
 		},
 		{
@@ -284,8 +284,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/435",
 			Description: "CATEGORY OF TURBULENCE",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 1,
+			Size: Size{
+				ForFixed: 1,
 			},
 		},
 		{
@@ -293,8 +293,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/430",
 			Description: "TYPE OF AIRCRAFT",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 4,
+			Size: Size{
+				ForFixed: 4,
 			},
 		},
 		{
@@ -302,8 +302,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/460",
 			Description: "ALLOCATED SSR CODES",
 			Type:        Repetitive,
-			Repetitive: RepetitiveField{
-				SubItemSize: 2,
+			Size: Size{
+				ForRepetitive: 2,
 			},
 		},
 		{
@@ -311,8 +311,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/480",
 			Description: "CURRENT CLEARED FLIGHT LEVEL",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -320,8 +320,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/420",
 			Description: "FLIGHT CATEGORY",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 1,
+			Size: Size{
+				ForFixed: 1,
 			},
 		},
 		{
@@ -329,8 +329,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/490",
 			Description: "CURRENT CONTROL POSITION",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -338,8 +338,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/020",
 			Description: "TIME OF MESSAGE",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 3,
+			Size: Size{
+				ForFixed: 3,
 			},
 		},
 		{
@@ -347,8 +347,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/382",
 			Description: "AIRCRAFT ADDRESS",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 3,
+			Size: Size{
+				ForFixed: 3,
 			},
 		},
 		{
@@ -356,8 +356,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/384",
 			Description: "AIRCRAFT IDENTIFICATION",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 6,
+			Size: Size{
+				ForFixed: 6,
 			},
 		},
 		{
@@ -365,8 +365,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/386",
 			Description: "COMMUNICATIONS CAPABILITY AND FLIGHT STATUS",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 1,
+			Size: Size{
+				ForFixed: 1,
 			},
 		},
 		{
@@ -374,8 +374,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/110",
 			Description: "ESTIMATED ACCURACY OF TRACK POSITION (CARTESIAN)",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 4,
+			Size: Size{
+				ForFixed: 4,
 			},
 		},
 		{
@@ -383,8 +383,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/190",
 			Description: "ESTIMATED ACCURACY OF TRACK VELOCITY (POLAR)",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 4,
+			Size: Size{
+				ForFixed: 4,
 			},
 		},
 		{
@@ -392,8 +392,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/191",
 			Description: "ESTIMATED ACCURACY OF TRACK VELOCITY (CARTESIAN)",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 4,
+			Size: Size{
+				ForFixed: 4,
 			},
 		},
 		{
@@ -401,8 +401,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/135",
 			Description: "ESTIMATED ACCURACY OF TRACK ALTITUDE",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -410,8 +410,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/165",
 			Description: "ESTIMATED ACCURACY OF CALCULATED TRACK FLIGHT LEVEL",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -419,8 +419,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/230",
 			Description: "ESTIMATED ACCURACY OF RATE OF CLIMB/DESCENT",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -428,8 +428,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/250",
 			Description: "ESTIMATED ACCURACY OF RATE OF TURN",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 1,
+			Size: Size{
+				ForFixed: 1,
 			},
 		},
 		{
@@ -437,8 +437,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/210",
 			Description: "MODE OF FLIGHT PROBABILITIES",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 3,
+			Size: Size{
+				ForFixed: 3,
 			},
 		},
 		{
@@ -446,8 +446,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/120",
 			Description: "TRACK MODE 2 CODE",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -455,9 +455,9 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/050",
 			Description: "ARTAS TRACK NUMBER",
 			Type:        Extended,
-			Extended: ExtendedField{
-				PrimarySize:   3,
-				SecondarySize: 3,
+			Size: Size{
+				ForExtendedPrimary:   3,
+				ForExtendedSecondary: 3,
 			},
 		},
 		{
@@ -465,8 +465,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/270",
 			Description: "LOCAL TRACK NUMBER",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -474,8 +474,8 @@ var Cat030ArtasV70 = StandardUAP{
 			DataItem:    "I030/370",
 			Description: "MEASURED 3-D HEIGHT",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -507,8 +507,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/010",
 			Description: "SERVER IDENTIFICATION TAG",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -516,8 +516,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/015",
 			Description: "USER NUMBER",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -525,9 +525,9 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/030",
 			Description: "SERVICE IDENTIFICATION",
 			Type:        Extended,
-			Extended: ExtendedField{
-				PrimarySize:   1,
-				SecondarySize: 1,
+			Size: Size{
+				ForExtendedPrimary:   1,
+				ForExtendedSecondary: 1,
 			},
 		},
 		{
@@ -535,8 +535,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/035",
 			Description: "TYPE OF MESSAGE",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 1,
+			Size: Size{
+				ForFixed: 1,
 			},
 		},
 		{
@@ -544,8 +544,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/040",
 			Description: "TRACK NUMBER",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -553,8 +553,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/070",
 			Description: "TIME OF LAST UPDATE",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 3,
+			Size: Size{
+				ForFixed: 3,
 			},
 		},
 		{
@@ -562,8 +562,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/170",
 			Description: "TRACK AGES",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 4,
+			Size: Size{
+				ForFixed: 4,
 			},
 		},
 		{
@@ -571,8 +571,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/100",
 			Description: "CALCULATED TRACK POSITION (CARTESIAN)",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 4,
+			Size: Size{
+				ForFixed: 4,
 			},
 		},
 		{
@@ -580,8 +580,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/180",
 			Description: "CALCULATED TRACK VELOCITY (POLAR)",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 4,
+			Size: Size{
+				ForFixed: 4,
 			},
 		},
 		{
@@ -589,8 +589,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/181",
 			Description: "CALCULATED TRACK VELOCITY (CARTESIAN)",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 4,
+			Size: Size{
+				ForFixed: 4,
 			},
 		},
 		{
@@ -598,8 +598,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/060",
 			Description: "TRACK MODE 3/A",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -607,8 +607,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/150",
 			Description: "MEASURED TRACK MODE C",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -616,8 +616,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/130",
 			Description: "CALCULATED TRACK ALTITUDE",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -625,8 +625,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/160",
 			Description: "CALCULATED TRACK FLIGHT LEVEL",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -634,9 +634,9 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/080",
 			Description: "ARTAS TRACK STATUS",
 			Type:        Extended,
-			Extended: ExtendedField{
-				PrimarySize:   1,
-				SecondarySize: 1,
+			Size: Size{
+				ForExtendedPrimary:   1,
+				ForExtendedSecondary: 1,
 			},
 		},
 		{
@@ -644,8 +644,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/090",
 			Description: "ARTAS TRACK QUALITY",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 1,
+			Size: Size{
+				ForFixed: 1,
 			},
 		},
 		{
@@ -653,8 +653,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/200",
 			Description: "MODE OF FLIGHT",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 1,
+			Size: Size{
+				ForFixed: 1,
 			},
 		},
 		{
@@ -662,8 +662,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/220",
 			Description: "CALCULATED RATE OF CLIMB/DESCENT",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -671,8 +671,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/240",
 			Description: "CALCULATED RATE OF TURN",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 1,
+			Size: Size{
+				ForFixed: 1,
 			},
 		},
 		{
@@ -680,8 +680,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/290",
 			Description: "PLOT AGES",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -689,8 +689,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/260",
 			Description: "RADAR IDENTIFICATION TAG",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -698,8 +698,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/360",
 			Description: "MEASURED POSITION",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 4,
+			Size: Size{
+				ForFixed: 4,
 			},
 		},
 		{
@@ -707,8 +707,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/140",
 			Description: "LAST MEASURED MODE C",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -716,8 +716,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/340",
 			Description: "LAST MEASURED MODE 3/A",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -731,8 +731,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/390",
 			Description: "FPPS IDENTIFICATION TAG",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -740,8 +740,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/400",
 			Description: "CALLSIGN",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 7,
+			Size: Size{
+				ForFixed: 7,
 			},
 		},
 		{
@@ -749,8 +749,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/410",
 			Description: "PLN NUMBER",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -758,8 +758,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/440",
 			Description: "DEPARTURE AIRPORT",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 4,
+			Size: Size{
+				ForFixed: 4,
 			},
 		},
 		{
@@ -767,8 +767,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/450",
 			Description: "DESTINATION AIRPORT",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 4,
+			Size: Size{
+				ForFixed: 4,
 			},
 		},
 		{
@@ -776,8 +776,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/435",
 			Description: "CATEGORY OF TURBULENCE",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 1,
+			Size: Size{
+				ForFixed: 1,
 			},
 		},
 		{
@@ -785,8 +785,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/430",
 			Description: "TYPE OF AIRCRAFT",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 4,
+			Size: Size{
+				ForFixed: 4,
 			},
 		},
 		{
@@ -794,8 +794,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/460",
 			Description: "ALLOCATED SSR CODES",
 			Type:        Repetitive,
-			Repetitive: RepetitiveField{
-				SubItemSize: 2,
+			Size: Size{
+				ForRepetitive: 2,
 			},
 		},
 		{
@@ -803,8 +803,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/480",
 			Description: "CURRENT CLEARED FLIGHT LEVEL",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -812,8 +812,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/420",
 			Description: "FLIGHT CATEGORY",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 1,
+			Size: Size{
+				ForFixed: 1,
 			},
 		},
 		{
@@ -821,8 +821,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/490",
 			Description: "CURRENT CONTROL POSITION",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -830,8 +830,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/020",
 			Description: "TIME OF MESSAGE",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 3,
+			Size: Size{
+				ForFixed: 3,
 			},
 		},
 		{
@@ -839,8 +839,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/382",
 			Description: "AIRCRAFT ADDRESS",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 3,
+			Size: Size{
+				ForFixed: 3,
 			},
 		},
 		{
@@ -848,8 +848,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/384",
 			Description: "AIRCRAFT IDENTIFICATION",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 6,
+			Size: Size{
+				ForFixed: 6,
 			},
 		},
 		{
@@ -857,8 +857,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/386",
 			Description: "COMMUNICATIONS CAPABILITY AND FLIGHT STATUS",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 1,
+			Size: Size{
+				ForFixed: 1,
 			},
 		},
 		{
@@ -866,8 +866,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/110",
 			Description: "ESTIMATED ACCURACY OF TRACK POSITION (CARTESIAN)",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 4,
+			Size: Size{
+				ForFixed: 4,
 			},
 		},
 		{
@@ -875,8 +875,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/190",
 			Description: "ESTIMATED ACCURACY OF TRACK VELOCITY (POLAR)",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 4,
+			Size: Size{
+				ForFixed: 4,
 			},
 		},
 		{
@@ -884,8 +884,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/191",
 			Description: "ESTIMATED ACCURACY OF TRACK VELOCITY (CARTESIAN)",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 4,
+			Size: Size{
+				ForFixed: 4,
 			},
 		},
 		{
@@ -893,8 +893,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/135",
 			Description: "ESTIMATED ACCURACY OF TRACK ALTITUDE",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -902,8 +902,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/165",
 			Description: "ESTIMATED ACCURACY OF CALCULATED TRACK FLIGHT LEVEL",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -911,8 +911,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/230",
 			Description: "ESTIMATED ACCURACY OF RATE OF CLIMB/DESCENT",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -920,8 +920,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/250",
 			Description: "ESTIMATED ACCURACY OF RATE OF TURN",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 1,
+			Size: Size{
+				ForFixed: 1,
 			},
 		},
 		{
@@ -929,8 +929,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/210",
 			Description: "MODE OF FLIGHT PROBABILITIES",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 3,
+			Size: Size{
+				ForFixed: 3,
 			},
 		},
 		{
@@ -938,8 +938,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/120",
 			Description: "TRACK MODE 2 CODE",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -947,9 +947,9 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/050",
 			Description: "ARTAS TRACK NUMBER",
 			Type:        Extended,
-			Extended: ExtendedField{
-				PrimarySize:   3,
-				SecondarySize: 3,
+			Size: Size{
+				ForExtendedPrimary:   3,
+				ForExtendedSecondary: 3,
 			},
 		},
 		{
@@ -957,8 +957,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/270",
 			Description: "LOCAL TRACK NUMBER",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -966,8 +966,8 @@ var Cat030ArtasV62 = StandardUAP{
 			DataItem:    "I030/370",
 			Description: "MEASURED 3-D HEIGHT",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{

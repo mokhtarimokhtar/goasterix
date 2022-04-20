@@ -12,8 +12,8 @@ var Cat065V15 = StandardUAP{
 			DataItem:    "I065/010",
 			Description: "Data Source Identifier",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -21,8 +21,8 @@ var Cat065V15 = StandardUAP{
 			DataItem:    "I065/000",
 			Description: "Message Type",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 1,
+			Size: Size{
+				ForFixed: 1,
 			},
 		},
 		{
@@ -30,8 +30,8 @@ var Cat065V15 = StandardUAP{
 			DataItem:    "I065/015",
 			Description: "Service Identification",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 1,
+			Size: Size{
+				ForFixed: 1,
 			},
 		},
 		{
@@ -39,8 +39,8 @@ var Cat065V15 = StandardUAP{
 			DataItem:    "I065/030",
 			Description: "Time Of Message",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 3,
+			Size: Size{
+				ForFixed: 3,
 			},
 		},
 		{
@@ -48,8 +48,8 @@ var Cat065V15 = StandardUAP{
 			DataItem:    "I065/020",
 			Description: "Batch Number",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 1,
+			Size: Size{
+				ForFixed: 1,
 			},
 		},
 		{
@@ -57,8 +57,8 @@ var Cat065V15 = StandardUAP{
 			DataItem:    "I065/040",
 			Description: "SDPS Configuration and Status",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 1,
+			Size: Size{
+				ForFixed: 1,
 			},
 		},
 		{
@@ -66,8 +66,8 @@ var Cat065V15 = StandardUAP{
 			DataItem:    "I065/050",
 			Description: "Service Status Report",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 1,
+			Size: Size{
+				ForFixed: 1,
 			},
 		},
 		//FX : Field Extension Indicator
@@ -91,7 +91,6 @@ var Cat065V15 = StandardUAP{
 			FRN:  12,
 			Type: Spare,
 		},
-
 		{
 			FRN:         13,
 			DataItem:    "RE-Data Item",

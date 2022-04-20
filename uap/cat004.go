@@ -12,8 +12,8 @@ var Cat004V112 = StandardUAP{
 			DataItem:    "I004/010",
 			Description: "Data Source Identifier",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -21,8 +21,8 @@ var Cat004V112 = StandardUAP{
 			DataItem:    "I004/000",
 			Description: "Message Type",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 1,
+			Size: Size{
+				ForFixed: 1,
 			},
 		},
 		{
@@ -30,8 +30,8 @@ var Cat004V112 = StandardUAP{
 			DataItem:    "I004/015",
 			Description: "SDPS Identifier",
 			Type:        Repetitive,
-			Repetitive: RepetitiveField{
-				SubItemSize: 2,
+			Size: Size{
+				ForRepetitive: 2,
 			},
 		},
 		{
@@ -39,8 +39,8 @@ var Cat004V112 = StandardUAP{
 			DataItem:    "I004/020",
 			Description: "Time Of Message",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 3,
+			Size: Size{
+				ForFixed: 3,
 			},
 		},
 		{
@@ -48,8 +48,8 @@ var Cat004V112 = StandardUAP{
 			DataItem:    "I004/040",
 			Description: "Alert Identifier",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -57,8 +57,8 @@ var Cat004V112 = StandardUAP{
 			DataItem:    "I004/045",
 			Description: "Alert Status",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 1,
+			Size: Size{
+				ForFixed: 1,
 			},
 		},
 		{
@@ -66,9 +66,9 @@ var Cat004V112 = StandardUAP{
 			DataItem:    "I004/060",
 			Description: "Safety Net Function & System Status",
 			Type:        Extended,
-			Extended: ExtendedField{
-				PrimarySize:   1,
-				SecondarySize: 1,
+			Size: Size{
+				ForExtendedPrimary:   1,
+				ForExtendedSecondary: 1,
 			},
 		},
 		// FX
@@ -77,8 +77,8 @@ var Cat004V112 = StandardUAP{
 			DataItem:    "I004/030",
 			Description: "Track Number 1",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -92,8 +92,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "AI1",
 					Description: "Aircraft Identifier 1",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 7,
+					Size: Size{
+						ForFixed: 7,
 					},
 				},
 				{
@@ -101,8 +101,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "M31",
 					Description: "Mode 3/A Code Aircraft 1",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 2,
+					Size: Size{
+						ForFixed: 2,
 					},
 				},
 				{
@@ -110,8 +110,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "CPW",
 					Description: "Predicted Conflict Position 1 (WGS84)",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 10,
+					Size: Size{
+						ForFixed: 10,
 					},
 				},
 				{
@@ -119,8 +119,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "CPC",
 					Description: "Predicted Conflict Position 1 (Cartesian Coordinates)",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 8,
+					Size: Size{
+						ForFixed: 8,
 					},
 				},
 				{
@@ -128,8 +128,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "TT1",
 					Description: "Time to Threshold Aircraft 1",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 3,
+					Size: Size{
+						ForFixed: 3,
 					},
 				},
 				{
@@ -137,8 +137,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "DT1",
 					Description: "Distance to Threshold Aircraft 1",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 2,
+					Size: Size{
+						ForFixed: 2,
 					},
 				},
 				{
@@ -146,9 +146,9 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "AC1",
 					Description: "Aircraft Characteristics Aircraft 1",
 					Type:        Extended,
-					Extended: ExtendedField{
-						PrimarySize:   1,
-						SecondarySize: 1,
+					Size: Size{
+						ForExtendedPrimary:   1,
+						ForExtendedSecondary: 1,
 					},
 				},
 				// FX
@@ -157,8 +157,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "MS1",
 					Description: "Mode S Identifier Aircraft 1",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 6,
+					Size: Size{
+						ForFixed: 6,
 					},
 				},
 				{
@@ -166,8 +166,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "FP1",
 					Description: "Flight Plan Number Aircraft 1",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 4,
+					Size: Size{
+						ForFixed: 4,
 					},
 				},
 				{
@@ -175,8 +175,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "CF1",
 					Description: "Cleared Flight Level Aircraft 1",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 2,
+					Size: Size{
+						ForFixed: 2,
 					},
 				},
 				{
@@ -209,9 +209,9 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "CN",
 					Description: "Conflict Nature",
 					Type:        Extended,
-					Extended: ExtendedField{
-						PrimarySize:   1,
-						SecondarySize: 1,
+					Size: Size{
+						ForExtendedPrimary:   1,
+						ForExtendedSecondary: 1,
 					},
 				},
 				{
@@ -219,8 +219,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "CC",
 					Description: "Conflict Classification",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 1,
+					Size: Size{
+						ForFixed: 1,
 					},
 				},
 				{
@@ -228,8 +228,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "CP",
 					Description: "Conflict Probability",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 1,
+					Size: Size{
+						ForFixed: 1,
 					},
 				},
 				{
@@ -237,8 +237,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "CD",
 					Description: "Conflict Duration",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 3,
+					Size: Size{
+						ForFixed: 3,
 					},
 				},
 				{
@@ -267,8 +267,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "TC",
 					Description: "Time to Conflict",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 3,
+					Size: Size{
+						ForFixed: 3,
 					},
 				},
 				{
@@ -276,8 +276,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "TCA",
 					Description: "Time to Closest Approach",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 3,
+					Size: Size{
+						ForFixed: 3,
 					},
 				},
 				{
@@ -285,8 +285,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "CHS",
 					Description: "Current Horizontal Separation",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 3,
+					Size: Size{
+						ForFixed: 3,
 					},
 				},
 				{
@@ -294,8 +294,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "MHS",
 					Description: "Estimated Minimum Horizontal Separation",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 2,
+					Size: Size{
+						ForFixed: 2,
 					},
 				},
 				{
@@ -303,8 +303,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "CVS",
 					Description: "Current Vertical Separation",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 2,
+					Size: Size{
+						ForFixed: 2,
 					},
 				},
 				{
@@ -312,8 +312,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "MVS",
 					Description: "Estimated Minimum Vertical Separation",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 2,
+					Size: Size{
+						ForFixed: 2,
 					},
 				},
 				{
@@ -328,8 +328,8 @@ var Cat004V112 = StandardUAP{
 			DataItem:    "I004/076",
 			Description: "Vertical Deviation",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -337,8 +337,8 @@ var Cat004V112 = StandardUAP{
 			DataItem:    "I004/074",
 			Description: "Longitudinal Deviation",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -346,8 +346,8 @@ var Cat004V112 = StandardUAP{
 			DataItem:    "I004/075",
 			Description: "Transversal Distance Deviation",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 3,
+			Size: Size{
+				ForFixed: 3,
 			},
 		},
 		// FX
@@ -362,8 +362,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "AN",
 					Description: "Area Name",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 6,
+					Size: Size{
+						ForFixed: 6,
 					},
 				},
 				{
@@ -371,8 +371,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "CAN",
 					Description: "Crossing Area Name",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 7,
+					Size: Size{
+						ForFixed: 7,
 					},
 				},
 				{
@@ -380,8 +380,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "RT1",
 					Description: "Runway/Taxiway Designator 1",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 7,
+					Size: Size{
+						ForFixed: 7,
 					},
 				},
 				{
@@ -389,8 +389,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "RT2",
 					Description: "Runway/Taxiway Designator 2",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 7,
+					Size: Size{
+						ForFixed: 7,
 					},
 				},
 				{
@@ -398,8 +398,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "SB",
 					Description: "Stop Bar Designator",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 7,
+					Size: Size{
+						ForFixed: 7,
 					},
 				},
 				{
@@ -407,8 +407,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "G",
 					Description: "Gate Designator",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 7,
+					Size: Size{
+						ForFixed: 7,
 					},
 				},
 				{
@@ -423,8 +423,8 @@ var Cat004V112 = StandardUAP{
 			DataItem:    "I004/035",
 			Description: "Track Number 2",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -438,8 +438,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "AI2",
 					Description: "Aircraft Identifier 2",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 7,
+					Size: Size{
+						ForFixed: 7,
 					},
 				},
 				{
@@ -447,8 +447,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "M32",
 					Description: "Mode 3/A Code Aircraft 2",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 2,
+					Size: Size{
+						ForFixed: 2,
 					},
 				},
 				{
@@ -456,8 +456,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "CPW",
 					Description: "Predicted Conflict Position 2 (WGS84)",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 10,
+					Size: Size{
+						ForFixed: 10,
 					},
 				},
 				{
@@ -465,8 +465,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "CPC",
 					Description: "Predicted Conflict Position 2 (Cartesian Coordinates)",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 8,
+					Size: Size{
+						ForFixed: 8,
 					},
 				},
 				{
@@ -474,8 +474,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "TT2",
 					Description: "Time to Threshold Aircraft 2",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 3,
+					Size: Size{
+						ForFixed: 3,
 					},
 				},
 				{
@@ -483,8 +483,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "DT2",
 					Description: "Distance to Threshold Aircraft 2",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 2,
+					Size: Size{
+						ForFixed: 2,
 					},
 				},
 				{
@@ -492,9 +492,9 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "AC2",
 					Description: "Aircraft Characteristics Aircraft 2",
 					Type:        Extended,
-					Extended: ExtendedField{
-						PrimarySize:   1,
-						SecondarySize: 1,
+					Size: Size{
+						ForExtendedPrimary:   1,
+						ForExtendedSecondary: 1,
 					},
 				},
 				// FX
@@ -503,8 +503,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "MS2",
 					Description: "Mode S Identifier Aircraft 2",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 6,
+					Size: Size{
+						ForFixed: 6,
 					},
 				},
 				{
@@ -512,8 +512,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "FP2",
 					Description: "Flight Plan Number Aircraft 2",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 4,
+					Size: Size{
+						ForFixed: 4,
 					},
 				},
 				{
@@ -521,8 +521,8 @@ var Cat004V112 = StandardUAP{
 					DataItem:    "CF2",
 					Description: "Cleared Flight Level Aircraft 2",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 2,
+					Size: Size{
+						ForFixed: 2,
 					},
 				},
 				{
@@ -549,8 +549,8 @@ var Cat004V112 = StandardUAP{
 			DataItem:    "I004/110",
 			Description: "FDPS Sector Control Identifier",
 			Type:        Repetitive,
-			Repetitive: RepetitiveField{
-				SubItemSize: 2,
+			Size: Size{
+				ForRepetitive: 2,
 			},
 		},
 		{

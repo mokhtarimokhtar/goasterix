@@ -12,8 +12,8 @@ var Cat063V16 = StandardUAP{
 			DataItem:    "I063/010",
 			Description: "Data Source Identifier",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -21,8 +21,8 @@ var Cat063V16 = StandardUAP{
 			DataItem:    "I063/015",
 			Description: "Service Identification",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 1,
+			Size: Size{
+				ForFixed: 1,
 			},
 		},
 		{
@@ -30,8 +30,8 @@ var Cat063V16 = StandardUAP{
 			DataItem:    "I063/030",
 			Description: "Time of Message",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 3,
+			Size: Size{
+				ForFixed: 3,
 			},
 		},
 		{
@@ -39,8 +39,8 @@ var Cat063V16 = StandardUAP{
 			DataItem:    "I063/050",
 			Description: "Sensor Identifier",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -48,9 +48,9 @@ var Cat063V16 = StandardUAP{
 			DataItem:    "I063/060",
 			Description: "Sensor Configuration and Status",
 			Type:        Extended,
-			Extended: ExtendedField{
-				PrimarySize:   1,
-				SecondarySize: 1,
+			Size: Size{
+				ForExtendedPrimary:   1,
+				ForExtendedSecondary: 1,
 			},
 		},
 		{
@@ -58,8 +58,8 @@ var Cat063V16 = StandardUAP{
 			DataItem:    "I063/070",
 			Description: "Time Stamping Bias",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -67,8 +67,8 @@ var Cat063V16 = StandardUAP{
 			DataItem:    "I063/080",
 			Description: "SSR/Mode S Range Gain and Bias",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 4,
+			Size: Size{
+				ForFixed: 4,
 			},
 		},
 		//FX : Field Extension Indicator
@@ -77,8 +77,8 @@ var Cat063V16 = StandardUAP{
 			DataItem:    "I063/081",
 			Description: "SSR/Mode S Azimuth Bias",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -86,8 +86,8 @@ var Cat063V16 = StandardUAP{
 			DataItem:    "I063/090",
 			Description: "PSR Range Gain and Bias",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 4,
+			Size: Size{
+				ForFixed: 4,
 			},
 		},
 		{
@@ -95,8 +95,8 @@ var Cat063V16 = StandardUAP{
 			DataItem:    "I063/091",
 			Description: "PSR Azimuth Bias",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -104,8 +104,8 @@ var Cat063V16 = StandardUAP{
 			DataItem:    "I063/092",
 			Description: "PSR Elevation Bias",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{

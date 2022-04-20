@@ -10,8 +10,8 @@ var Cat001V12 = StandardUAP{
 			DataItem:    "I001/010",
 			Description: "Data Source Identifier",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -20,9 +20,9 @@ var Cat001V12 = StandardUAP{
 			Description: "Target Report Descriptor",
 			Conditional: true,
 			Type:        Extended,
-			Extended: ExtendedField{
-				PrimarySize:   1,
-				SecondarySize: 1,
+			Size: Size{
+				ForExtendedPrimary:   1,
+				ForExtendedSecondary: 1,
 			},
 		},
 	},
@@ -33,8 +33,8 @@ var Cat001PlotV12 = []DataField{
 		DataItem:    "I001/040",
 		Description: "Measured Position in Polar Coordinates",
 		Type:        Fixed,
-		Fixed: FixedField{
-			Size: 4,
+		Size: Size{
+			ForFixed: 4,
 		},
 	},
 	{
@@ -42,8 +42,8 @@ var Cat001PlotV12 = []DataField{
 		DataItem:    "I001/070",
 		Description: "Mode-3/A Code in Octal Representation",
 		Type:        Fixed,
-		Fixed: FixedField{
-			Size: 2,
+		Size: Size{
+			ForFixed: 2,
 		},
 	},
 	{
@@ -51,8 +51,8 @@ var Cat001PlotV12 = []DataField{
 		DataItem:    "I001/090",
 		Description: "Mode-C Code in Binary Representation",
 		Type:        Fixed,
-		Fixed: FixedField{
-			Size: 2,
+		Size: Size{
+			ForFixed: 2,
 		},
 	},
 	{
@@ -60,9 +60,9 @@ var Cat001PlotV12 = []DataField{
 		DataItem:    "I001/130",
 		Description: "Radar Plot Characteristics",
 		Type:        Extended,
-		Extended: ExtendedField{
-			PrimarySize:   1,
-			SecondarySize: 1,
+		Size: Size{
+			ForExtendedPrimary:   1,
+			ForExtendedSecondary: 1,
 		},
 	},
 	{
@@ -70,8 +70,8 @@ var Cat001PlotV12 = []DataField{
 		DataItem:    "I001/141",
 		Description: "Truncated Time of Day",
 		Type:        Fixed,
-		Fixed: FixedField{
-			Size: 2,
+		Size: Size{
+			ForFixed: 2,
 		},
 	},
 	{
@@ -79,8 +79,8 @@ var Cat001PlotV12 = []DataField{
 		DataItem:    "I001/050",
 		Description: "Mode-2 Code in Octal Representation",
 		Type:        Fixed,
-		Fixed: FixedField{
-			Size: 2,
+		Size: Size{
+			ForFixed: 2,
 		},
 	},
 	{
@@ -88,8 +88,8 @@ var Cat001PlotV12 = []DataField{
 		DataItem:    "I001/120",
 		Description: "Measured Radial Doppler Speed",
 		Type:        Fixed,
-		Fixed: FixedField{
-			Size: 1,
+		Size: Size{
+			ForFixed: 1,
 		},
 	},
 	{
@@ -97,8 +97,8 @@ var Cat001PlotV12 = []DataField{
 		DataItem:    "I001/131",
 		Description: "Received Power",
 		Type:        Fixed,
-		Fixed: FixedField{
-			Size: 1,
+		Size: Size{
+			ForFixed: 1,
 		},
 	},
 	{
@@ -106,8 +106,8 @@ var Cat001PlotV12 = []DataField{
 		DataItem:    "I001/080",
 		Description: "Mode-3/A Code Confidence Indicator",
 		Type:        Fixed,
-		Fixed: FixedField{
-			Size: 2,
+		Size: Size{
+			ForFixed: 2,
 		},
 	},
 	{
@@ -115,8 +115,8 @@ var Cat001PlotV12 = []DataField{
 		DataItem:    "I001/100",
 		Description: "Mode-C Code and Code Confidence Indicator",
 		Type:        Fixed,
-		Fixed: FixedField{
-			Size: 4,
+		Size: Size{
+			ForFixed: 4,
 		},
 	},
 	{
@@ -124,8 +124,8 @@ var Cat001PlotV12 = []DataField{
 		DataItem:    "I001/060",
 		Description: "Mode-2 Code Confidence Indicator",
 		Type:        Fixed,
-		Fixed: FixedField{
-			Size: 2,
+		Size: Size{
+			ForFixed: 2,
 		},
 	},
 	{
@@ -133,9 +133,9 @@ var Cat001PlotV12 = []DataField{
 		DataItem:    "I001/030",
 		Description: "Warning/Error Conditions",
 		Type:        Extended,
-		Extended: ExtendedField{
-			PrimarySize:   1,
-			SecondarySize: 1,
+		Size: Size{
+			ForExtendedPrimary:   1,
+			ForExtendedSecondary: 1,
 		},
 	},
 	{
@@ -143,8 +143,8 @@ var Cat001PlotV12 = []DataField{
 		DataItem:    "I001/150",
 		Description: "Presence of X-Pulse",
 		Type:        Fixed,
-		Fixed: FixedField{
-			Size: 1,
+		Size: Size{
+			ForFixed: 1,
 		},
 	},
 	{
@@ -192,8 +192,8 @@ var Cat001TrackV12 = []DataField{
 		DataItem:    "I001/161",
 		Description: "Track/Plot Number",
 		Type:        Fixed,
-		Fixed: FixedField{
-			Size: 2,
+		Size: Size{
+			ForFixed: 2,
 		},
 	},
 	{
@@ -201,8 +201,8 @@ var Cat001TrackV12 = []DataField{
 		DataItem:    "I001/040",
 		Description: "Measured Position in Polar Coordinates",
 		Type:        Fixed,
-		Fixed: FixedField{
-			Size: 4,
+		Size: Size{
+			ForFixed: 4,
 		},
 	},
 	{
@@ -210,8 +210,8 @@ var Cat001TrackV12 = []DataField{
 		DataItem:    "I001/042",
 		Description: "Calculated Position in Cartesian Coordinates",
 		Type:        Fixed,
-		Fixed: FixedField{
-			Size: 4,
+		Size: Size{
+			ForFixed: 4,
 		},
 	},
 	{
@@ -219,8 +219,8 @@ var Cat001TrackV12 = []DataField{
 		DataItem:    "I001/200",
 		Description: "Calculated Track Velocity in polar Coordinates",
 		Type:        Fixed,
-		Fixed: FixedField{
-			Size: 4,
+		Size: Size{
+			ForFixed: 4,
 		},
 	},
 	{
@@ -228,8 +228,8 @@ var Cat001TrackV12 = []DataField{
 		DataItem:    "I001/070",
 		Description: "Mode-3/A Code in Octal Representation",
 		Type:        Fixed,
-		Fixed: FixedField{
-			Size: 2,
+		Size: Size{
+			ForFixed: 2,
 		},
 	},
 	{
@@ -237,8 +237,8 @@ var Cat001TrackV12 = []DataField{
 		DataItem:    "I001/090",
 		Description: "Mode-C Code in Binary Representation",
 		Type:        Fixed,
-		Fixed: FixedField{
-			Size: 2,
+		Size: Size{
+			ForFixed: 2,
 		},
 	},
 	{
@@ -246,17 +246,17 @@ var Cat001TrackV12 = []DataField{
 		DataItem:    "I001/141",
 		Description: "Truncated Time of Day",
 		Type:        Fixed,
-		Fixed: FixedField{
-			Size: 2,
+		Size: Size{
+			ForFixed: 2,
 		},
 	},
 	{
 		FRN:         10,
 		DataItem:    "I001/130",
 		Description: "Radar Plot Characteristics",
-		Extended: ExtendedField{
-			PrimarySize:   1,
-			SecondarySize: 1,
+		Size: Size{
+			ForExtendedPrimary:   1,
+			ForExtendedSecondary: 1,
 		},
 	},
 	{
@@ -264,8 +264,8 @@ var Cat001TrackV12 = []DataField{
 		DataItem:    "I001/131",
 		Description: "Received Power",
 		Type:        Fixed,
-		Fixed: FixedField{
-			Size: 1,
+		Size: Size{
+			ForFixed: 1,
 		},
 	},
 	{
@@ -273,8 +273,8 @@ var Cat001TrackV12 = []DataField{
 		DataItem:    "I001/120",
 		Description: "Measured Radial Doppler Speed",
 		Type:        Fixed,
-		Fixed: FixedField{
-			Size: 1,
+		Size: Size{
+			ForFixed: 1,
 		},
 	},
 	{
@@ -282,9 +282,9 @@ var Cat001TrackV12 = []DataField{
 		DataItem:    "I001/170",
 		Description: "Track Status",
 		Type:        Extended,
-		Extended: ExtendedField{
-			PrimarySize:   1,
-			SecondarySize: 1,
+		Size: Size{
+			ForExtendedPrimary:   1,
+			ForExtendedSecondary: 1,
 		},
 	},
 	{
@@ -292,9 +292,9 @@ var Cat001TrackV12 = []DataField{
 		DataItem:    "I001/210",
 		Description: "Track Quality",
 		Type:        Extended,
-		Extended: ExtendedField{
-			PrimarySize:   1,
-			SecondarySize: 1,
+		Size: Size{
+			ForExtendedPrimary:   1,
+			ForExtendedSecondary: 1,
 		},
 	},
 	{
@@ -302,8 +302,8 @@ var Cat001TrackV12 = []DataField{
 		DataItem:    "I001/050",
 		Description: "Mode-2 Code in Octal Representation",
 		Type:        Fixed,
-		Fixed: FixedField{
-			Size: 2,
+		Size: Size{
+			ForFixed: 2,
 		},
 	},
 	{
@@ -311,8 +311,8 @@ var Cat001TrackV12 = []DataField{
 		DataItem:    "I001/080",
 		Description: "Mode-3/A Code Confidence Indicator",
 		Type:        Fixed,
-		Fixed: FixedField{
-			Size: 2,
+		Size: Size{
+			ForFixed: 2,
 		},
 	},
 	{
@@ -320,8 +320,8 @@ var Cat001TrackV12 = []DataField{
 		DataItem:    "I001/100",
 		Description: "Mode-C Code and Code Confidence Indicator",
 		Type:        Fixed,
-		Fixed: FixedField{
-			Size: 4,
+		Size: Size{
+			ForFixed: 4,
 		},
 	},
 	{
@@ -329,8 +329,8 @@ var Cat001TrackV12 = []DataField{
 		DataItem:    "I001/060",
 		Description: "Mode-2 Code Confidence Indicator",
 		Type:        Fixed,
-		Fixed: FixedField{
-			Size: 2,
+		Size: Size{
+			ForFixed: 2,
 		},
 	},
 	{
@@ -338,9 +338,9 @@ var Cat001TrackV12 = []DataField{
 		DataItem:    "I001/030",
 		Description: "Warning/Error Conditions",
 		Type:        Extended,
-		Extended: ExtendedField{
-			PrimarySize:   1,
-			SecondarySize: 1,
+		Size: Size{
+			ForExtendedPrimary:   1,
+			ForExtendedSecondary: 1,
 		},
 	},
 	{
@@ -360,8 +360,8 @@ var Cat001TrackV12 = []DataField{
 		DataItem:    "I001/150",
 		Description: "Presence of X-Pulse",
 		Type:        Fixed,
-		Fixed: FixedField{
-			Size: 1,
+		Size: Size{
+			ForFixed: 1,
 		},
 	},
 }

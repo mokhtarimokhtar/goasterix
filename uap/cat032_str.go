@@ -11,41 +11,41 @@ var Cat032StrV70 = StandardUAP{
 			FRN:      1,
 			DataItem: "I032/010",
 			Type:     Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
 			FRN:      2,
 			DataItem: "I032/020",
 			Type:     Fixed,
-			Fixed: FixedField{
-				Size: 3,
+			Size: Size{
+				ForFixed: 3,
 			},
 		},
 		{
 			FRN:      3,
 			DataItem: "I032/060",
 			Type:     Fixed,
-			Fixed: FixedField{
-				Size: 4,
+			Size: Size{
+				ForFixed: 4,
 			},
 		},
 		{
 			FRN:      4,
 			DataItem: "I032/070",
 			Type:     Fixed,
-			Fixed: FixedField{
-				Size: 15,
+			Size: Size{
+				ForFixed: 15,
 			},
 		},
 		{
 			FRN:      5,
 			DataItem: "I032/080",
 			Type:     Extended,
-			Extended: ExtendedField{
-				PrimarySize:   12,
-				SecondarySize: 1,
+			Size: Size{
+				ForExtendedPrimary:   12,
+				ForExtendedSecondary: 1,
 			},
 		},
 	},

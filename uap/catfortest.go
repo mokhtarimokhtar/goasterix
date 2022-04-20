@@ -12,8 +12,8 @@ var CatForTest = StandardUAP{
 			DataItem:    "I026/001",
 			Description: "Fixed type field for test",
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 2,
+			Size: Size{
+				ForFixed: 2,
 			},
 		},
 		{
@@ -21,9 +21,9 @@ var CatForTest = StandardUAP{
 			DataItem:    "I026/002",
 			Description: "Extended type field for test",
 			Type:        Extended,
-			Extended: ExtendedField{
-				PrimarySize:   1,
-				SecondarySize: 2,
+			Size: Size{
+				ForExtendedPrimary:   1,
+				ForExtendedSecondary: 2,
 			},
 		},
 		{
@@ -37,8 +37,8 @@ var CatForTest = StandardUAP{
 			DataItem:    "I026/004",
 			Description: "Repetitive type field for test",
 			Type:        Repetitive,
-			Repetitive: RepetitiveField{
-				SubItemSize: 2,
+			Size: Size{
+				ForRepetitive: 2,
 			},
 		},
 		{
@@ -52,8 +52,8 @@ var CatForTest = StandardUAP{
 					DataItem:    "Compound/001",
 					Description: "Compound Fixed type field for test",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 1,
+					Size: Size{
+						ForFixed: 1,
 					},
 				},
 				{
@@ -65,9 +65,9 @@ var CatForTest = StandardUAP{
 					DataItem:    "Compound/003",
 					Description: "Compound Extended type field for test",
 					Type:        Extended,
-					Extended: ExtendedField{
-						PrimarySize:   1,
-						SecondarySize: 1,
+					Size: Size{
+						ForExtendedPrimary:   1,
+						ForExtendedSecondary: 1,
 					},
 				},
 				{
@@ -79,8 +79,8 @@ var CatForTest = StandardUAP{
 					DataItem:    "Compound/005",
 					Description: "Compound Repetitive type field for test",
 					Type:        Repetitive,
-					Repetitive: RepetitiveField{
-						SubItemSize: 2,
+					Size: Size{
+						ForRepetitive: 2,
 					},
 				},
 				{
@@ -98,8 +98,8 @@ var CatForTest = StandardUAP{
 					DataItem:    "Compound/008",
 					Description: "Compound Fixed type field for test",
 					Type:        Fixed,
-					Fixed: FixedField{
-						Size: 2,
+					Size: Size{
+						ForFixed: 2,
 					},
 				},
 			},
@@ -109,6 +109,7 @@ var CatForTest = StandardUAP{
 			DataItem:    "I026/006",
 			Description: "RFS(Random Field Sequencing) type field for test",
 			Type:        RFS,
+			RFS: []DataField{},
 		},
 		{
 			FRN:      7,
@@ -133,8 +134,8 @@ var CatForTest = StandardUAP{
 			Description: "Fixed type field for test",
 			Conditional: true,
 			Type:        Fixed,
-			Fixed: FixedField{
-				Size: 1,
+			Size: Size{
+				ForFixed: 1,
 			},
 		},
 	},
@@ -146,8 +147,8 @@ var Cat4TestTrack = []DataField{
 		DataItem:    "I026/011",
 		Description: "Fixed type field for test",
 		Type:        Fixed,
-		Fixed: FixedField{
-			Size: 1,
+		Size: Size{
+			ForFixed: 1,
 		},
 	},
 	{
@@ -155,8 +156,8 @@ var Cat4TestTrack = []DataField{
 		DataItem:    "I026/012",
 		Description: "Fixed type field for test",
 		Type:        Fixed,
-		Fixed: FixedField{
-			Size: 2,
+		Size: Size{
+			ForFixed: 2,
 		},
 	},
 }
@@ -167,8 +168,8 @@ var Cat4TestPlot = []DataField{
 		DataItem:    "I026/011",
 		Description: "Fixed type field for test",
 		Type:        Fixed,
-		Fixed: FixedField{
-			Size: 3,
+		Size: Size{
+			ForFixed: 3,
 		},
 	},
 	{
@@ -176,8 +177,8 @@ var Cat4TestPlot = []DataField{
 		DataItem:    "I026/012",
 		Description: "Fixed type field for test",
 		Type:        Fixed,
-		Fixed: FixedField{
-			Size: 1,
+		Size: Size{
+			ForFixed: 1,
 		},
 	},
 }

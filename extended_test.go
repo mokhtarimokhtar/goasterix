@@ -25,9 +25,9 @@ func TestExtendedReader(t *testing.T) {
 			input: "01 03 07 09 0b 0d 0f 0e",
 			dataField: uap.DataField{
 				Type: uap.Extended,
-				Extended: uap.ExtendedField{
-					PrimarySize:   1,
-					SecondarySize: 1,
+				Size: uap.Size{
+					ForExtendedPrimary:   1,
+					ForExtendedSecondary: 1,
 				},
 			},
 			err: nil,
@@ -35,10 +35,10 @@ func TestExtendedReader(t *testing.T) {
 				Base: Base{
 					Type: uap.Extended,
 				},
-				PrimaryItemSize: 1,
+				PrimaryItemSize:   1,
 				SecondaryItemSize: 1,
-				Primary:   []byte{0x01},
-				Secondary: []byte{0x03, 0x07, 0x09, 0x0b, 0x0d, 0x0f, 0x0e},
+				Primary:           []byte{0x01},
+				Secondary:         []byte{0x03, 0x07, 0x09, 0x0b, 0x0d, 0x0f, 0x0e},
 			},
 		},
 		{
@@ -46,9 +46,9 @@ func TestExtendedReader(t *testing.T) {
 			input: "fe",
 			dataField: uap.DataField{
 				Type: uap.Extended,
-				Extended: uap.ExtendedField{
-					PrimarySize:   1,
-					SecondarySize: 1,
+				Size: uap.Size{
+					ForExtendedPrimary:   1,
+					ForExtendedSecondary: 1,
 				},
 			},
 			err: nil,
@@ -56,9 +56,9 @@ func TestExtendedReader(t *testing.T) {
 				Base: Base{
 					Type: uap.Extended,
 				},
-				PrimaryItemSize: 1,
+				PrimaryItemSize:   1,
 				SecondaryItemSize: 1,
-				Primary: []byte{0xfe},
+				Primary:           []byte{0xfe},
 			},
 		},
 		{
@@ -66,9 +66,9 @@ func TestExtendedReader(t *testing.T) {
 			input: "",
 			dataField: uap.DataField{
 				Type: uap.Extended,
-				Extended: uap.ExtendedField{
-					PrimarySize:   1,
-					SecondarySize: 1,
+				Size: uap.Size{
+					ForExtendedPrimary:   1,
+					ForExtendedSecondary: 1,
 				},
 			},
 			err: io.EOF,
@@ -76,9 +76,9 @@ func TestExtendedReader(t *testing.T) {
 				Base: Base{
 					Type: uap.Extended,
 				},
-				PrimaryItemSize: 1,
+				PrimaryItemSize:   1,
 				SecondaryItemSize: 1,
-				Primary: nil,
+				Primary:           nil,
 			},
 		},
 		{
@@ -86,9 +86,9 @@ func TestExtendedReader(t *testing.T) {
 			input: "ff",
 			dataField: uap.DataField{
 				Type: uap.Extended,
-				Extended: uap.ExtendedField{
-					PrimarySize:   1,
-					SecondarySize: 1,
+				Size: uap.Size{
+					ForExtendedPrimary:   1,
+					ForExtendedSecondary: 1,
 				},
 			},
 			err: io.EOF,
@@ -96,9 +96,9 @@ func TestExtendedReader(t *testing.T) {
 				Base: Base{
 					Type: uap.Extended,
 				},
-				PrimaryItemSize: 1,
+				PrimaryItemSize:   1,
 				SecondaryItemSize: 1,
-				Primary: []byte{0xff},
+				Primary:           []byte{0xff},
 			},
 		},
 		{
@@ -106,9 +106,9 @@ func TestExtendedReader(t *testing.T) {
 			input: "ff",
 			dataField: uap.DataField{
 				Type: uap.Extended,
-				Extended: uap.ExtendedField{
-					PrimarySize:   2,
-					SecondarySize: 1,
+				Size: uap.Size{
+					ForExtendedPrimary:   2,
+					ForExtendedSecondary: 1,
 				},
 			},
 			err: io.ErrUnexpectedEOF,
@@ -116,9 +116,9 @@ func TestExtendedReader(t *testing.T) {
 				Base: Base{
 					Type: uap.Extended,
 				},
-				PrimaryItemSize: 2,
+				PrimaryItemSize:   2,
 				SecondaryItemSize: 1,
-				Primary: nil,
+				Primary:           nil,
 			},
 		},
 		{
@@ -126,9 +126,9 @@ func TestExtendedReader(t *testing.T) {
 			input: "0001 000001 fffffe",
 			dataField: uap.DataField{
 				Type: uap.Extended,
-				Extended: uap.ExtendedField{
-					PrimarySize:   2,
-					SecondarySize: 3,
+				Size: uap.Size{
+					ForExtendedPrimary:   2,
+					ForExtendedSecondary: 3,
 				},
 			},
 			err: nil,
@@ -136,10 +136,10 @@ func TestExtendedReader(t *testing.T) {
 				Base: Base{
 					Type: uap.Extended,
 				},
-				PrimaryItemSize: 2,
+				PrimaryItemSize:   2,
 				SecondaryItemSize: 3,
-				Primary:   []byte{0x00, 0x01},
-				Secondary: []byte{0x00, 0x00, 0x01, 0xff, 0xff, 0xfe},
+				Primary:           []byte{0x00, 0x01},
+				Secondary:         []byte{0x00, 0x00, 0x01, 0xff, 0xff, 0xfe},
 			},
 		},
 		{
@@ -147,9 +147,9 @@ func TestExtendedReader(t *testing.T) {
 			input: "0001 000001 ffff",
 			dataField: uap.DataField{
 				Type: uap.Extended,
-				Extended: uap.ExtendedField{
-					PrimarySize:   2,
-					SecondarySize: 3,
+				Size: uap.Size{
+					ForExtendedPrimary:   2,
+					ForExtendedSecondary: 3,
 				},
 			},
 			err: io.ErrUnexpectedEOF,
@@ -157,10 +157,10 @@ func TestExtendedReader(t *testing.T) {
 				Base: Base{
 					Type: uap.Extended,
 				},
-				PrimaryItemSize: 2,
+				PrimaryItemSize:   2,
 				SecondaryItemSize: 3,
-				Primary:   []byte{0x00, 0x01},
-				Secondary: []byte{0x00, 0x00, 0x01},
+				Primary:           []byte{0x00, 0x01},
+				Secondary:         []byte{0x00, 0x00, 0x01},
 			},
 		},
 	}
@@ -172,7 +172,6 @@ func TestExtendedReader(t *testing.T) {
 		f := NewExtended(row.dataField)
 
 		// Act
-		//err := f.Reader(rb, row.dataField)
 		err := f.Reader(rb)
 
 		// Assert
@@ -283,4 +282,3 @@ func TestExtendedPayload(t *testing.T) {
 		}
 	}
 }
-

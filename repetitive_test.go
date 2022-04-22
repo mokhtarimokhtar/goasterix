@@ -25,7 +25,7 @@ func TestRepetitiveReader(t *testing.T) {
 			input: "03 01 02 03 01 02 03 01 02 03",
 			dataField: uap.DataField{
 				Type:       uap.Repetitive,
-				Size: uap.Size{ForRepetitive: 3},
+				Size: uap.SizeField{ForRepetitive: 3},
 			},
 			err: nil,
 			output: &Repetitive{
@@ -42,7 +42,7 @@ func TestRepetitiveReader(t *testing.T) {
 			input: "04 01 02 03 01 02 03 01 02 03",
 			dataField: uap.DataField{
 				Type:       uap.Repetitive,
-				Size: uap.Size{ForRepetitive: 3},
+				Size: uap.SizeField{ForRepetitive: 3},
 			},
 			err: io.ErrUnexpectedEOF,
 			output: &Repetitive{
@@ -59,7 +59,7 @@ func TestRepetitiveReader(t *testing.T) {
 			input: "",
 			dataField: uap.DataField{
 				Type:       uap.Repetitive,
-				Size: uap.Size{ForRepetitive: 3},
+				Size: uap.SizeField{ForRepetitive: 3},
 			},
 			err: io.EOF,
 			output: &Repetitive{

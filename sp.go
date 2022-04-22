@@ -27,17 +27,17 @@ func NewSpecialPurpose(field uap.IDataField) Item {
 func (sp *SpecialPurpose) Reader(rb *bytes.Reader) error {
 	var err error
 
-	err = binary.Read(rb, binary.BigEndian, &sp.Len)
+	sp.Len, err = rb.ReadByte()
 	if err != nil {
 		return err
 	}
 
-	tmp := make([]byte, sp.Len-1)
-	err = binary.Read(rb, binary.BigEndian, &tmp)
+	sp.Data = make([]byte, sp.Len-1)
+	err = binary.Read(rb, binary.BigEndian, &sp.Data)
 	if err != nil {
+		sp.Data = nil
 		return err
 	}
-	sp.Data = tmp
 
 	return err
 }

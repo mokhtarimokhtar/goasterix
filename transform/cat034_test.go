@@ -40,12 +40,12 @@ func TestCat034Model_MessageType(t *testing.T) {
 
 func TestCat034Model_SystemConfiguration(t *testing.T) {
 	// setup
-	type dataTest struct {
+	type testCase struct {
 		Name   string
 		input  goasterix.Compound
 		output SysConf
 	}
-	dataset := []dataTest{
+	dataset := []testCase{
 		{
 			Name: "testcase 1: full subfield",
 			input: goasterix.Compound{

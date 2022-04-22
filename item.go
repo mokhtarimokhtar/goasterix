@@ -5,38 +5,6 @@ import (
 	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
-/*type ContextType struct {
-	Item Item
-}
-func (c *ContextType) setReader(tf dataField.TypeField) error {
-	var err error
-	switch tf {
-	case dataField.Fixed:
-		c.Item = new(Fixed)
-	case dataField.Extended:
-		c.Item = new(Extended)
-	case dataField.Explicit:
-		c.Item = new(Explicit)
-	case dataField.Repetitive:
-		c.Item = new(Repetitive)
-	case dataField.Compound:
-		c.Item = new(Compound)
-	case dataField.SP, dataField.RE:
-		c.Item = new(SpecialPurpose)
-	case dataField.RFS:
-		c.Item = new(RandomFieldSequencing)
-	default:
-		err = ErrDataFieldUnknown
-		return err
-	}
-	return err
-}
-
-func (c *ContextType) Reader(rb *bytes.Reader, df dataField.dataField) error {
-	err := c.Item.Reader(rb, df)
-	return err
-}*/
-
 type Item interface {
 	Payload() []byte
 	String() string
@@ -57,7 +25,7 @@ func GetItem(df uap.IDataField) (Item, error) {
 	var item Item
 	switch df.GetType() {
 	case uap.Fixed:
-		item = NewFixed(df)
+		item = newFixed(df)
 	case uap.Extended:
 		item = NewExtended(df)
 	case uap.Repetitive:
@@ -70,6 +38,27 @@ func GetItem(df uap.IDataField) (Item, error) {
 		item = NewSpecialPurpose(df)
 	case uap.RFS:
 		item = NewRandomFieldSequencing(df)
+	default:
+		err = ErrDataFieldUnknown
+		return nil, err
+	}
+	return item, err
+}
+
+// GetItemCompound returns the corresponding Item type: Fixed, Extended, etc.
+// GetItemCompound is a factory function for compound item type
+func GetItemCompound(df uap.IDataField) (Item, error) {
+	var err error
+	var item Item
+	switch df.GetType() {
+	case uap.Fixed:
+		item = newFixed(df)
+	case uap.Extended:
+		item = NewExtended(df)
+	case uap.Repetitive:
+		item = NewRepetitive(df)
+	case uap.Explicit:
+		item = NewExplicit(df)
 	default:
 		err = ErrDataFieldUnknown
 		return nil, err

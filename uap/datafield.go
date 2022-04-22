@@ -18,10 +18,10 @@ const (
 // Cat is ASTERIX Category number (integer)
 // Version is ASTERIX version for a category
 type StandardUAP struct {
-	Name     string
-	Category uint8
-	Version  float64
-	Items    []DataField
+	Name      string
+	Category  uint8
+	Version   float64
+	DataItems []DataField
 }
 
 type IDataField interface {
@@ -29,7 +29,7 @@ type IDataField interface {
 	GetDataItem() string
 	GetDescription() string
 	GetType() TypeField
-	GetSize() Size
+	GetSize() SizeField
 	GetCompound() []DataField
 	GetRFS() []DataField
 }
@@ -43,10 +43,17 @@ type DataField struct {
 	Compound    []DataField
 	RFS         []DataField
 	Conditional bool
-	Size        Size
+	Size        SizeField
 }
 
-func DataFieldFactory(frn uint8, dataItem string, desc string, t TypeField, s Size) IDataField {
+type SizeField struct {
+	ForFixed             uint8
+	ForExtendedPrimary   uint8
+	ForExtendedSecondary uint8
+	ForRepetitive        uint8
+}
+
+func DataFieldFactory(frn uint8, dataItem string, desc string, t TypeField, s SizeField) IDataField {
 	var d = &DataField{}
 	d.FRN = frn
 	d.DataItem = dataItem
@@ -68,7 +75,7 @@ func (d DataField) GetDescription() string {
 func (d DataField) GetType() TypeField {
 	return d.Type
 }
-func (d DataField) GetSize() Size {
+func (d DataField) GetSize() SizeField {
 	return d.Size
 }
 func (d DataField) GetCompound() []DataField {
@@ -78,9 +85,4 @@ func (d DataField) GetRFS() []DataField {
 	return d.RFS
 }
 
-type Size struct {
-	ForFixed             uint8
-	ForExtendedPrimary   uint8
-	ForExtendedSecondary uint8
-	ForRepetitive        uint8
-}
+

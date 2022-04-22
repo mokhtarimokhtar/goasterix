@@ -6,12 +6,12 @@ package uap
 var Cat032StrV70 = StandardUAP{
 	Category: 32,
 	Version:  7.0,
-	Items: []DataField{
+	DataItems: []DataField{
 		{
 			FRN:      1,
 			DataItem: "I032/010",
 			Type:     Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 2,
 			},
 		},
@@ -19,7 +19,7 @@ var Cat032StrV70 = StandardUAP{
 			FRN:      2,
 			DataItem: "I032/020",
 			Type:     Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 3,
 			},
 		},
@@ -27,7 +27,7 @@ var Cat032StrV70 = StandardUAP{
 			FRN:      3,
 			DataItem: "I032/060",
 			Type:     Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 4,
 			},
 		},
@@ -35,7 +35,7 @@ var Cat032StrV70 = StandardUAP{
 			FRN:      4,
 			DataItem: "I032/070",
 			Type:     Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 15,
 			},
 		},
@@ -43,7 +43,7 @@ var Cat032StrV70 = StandardUAP{
 			FRN:      5,
 			DataItem: "I032/080",
 			Type:     Extended,
-			Size: Size{
+			Size: SizeField{
 				ForExtendedPrimary:   12,
 				ForExtendedSecondary: 1,
 			},

@@ -93,12 +93,12 @@ func TestFspecReader_Invalid(t *testing.T) {
 }
 
 func TestFspecIndex(t *testing.T) {
-	type frnIndexTest struct {
+	type testCase struct {
 		input  []byte
 		output []uint8
 	}
 	// Arrange
-	dataSet := []frnIndexTest{
+	dataSet := []testCase{
 		{input: []byte{0x80}, output: []uint8{1}},
 		{input: []byte{0x40}, output: []uint8{2}},
 		{input: []byte{0x20}, output: []uint8{3}},
@@ -122,9 +122,9 @@ func TestFspecIndex(t *testing.T) {
 
 		// Assert
 		if bytes.Equal(frnIndex, row.output) == false {
-			t.Errorf("MsgFailInValue: % X; Expected: % X", frnIndex, row.output)
+			t.Errorf(util.MsgFailInHex, "", frnIndex, row.output)
 		} else {
-			t.Logf("MsgSuccessInValue: % X; Expected: % X", frnIndex, row.output)
+			t.Logf(util.MsgSuccessInHex, "", frnIndex, row.output)
 		}
 	}
 
@@ -247,7 +247,7 @@ func TestRecordDecodeNbOfItems(t *testing.T) {
 	type testCase struct {
 		Name      string
 		input     string          // data test one record = fspec + items
-		uap       uap.StandardUAP // Items of category corresponding to data test input
+		uap       uap.StandardUAP // DataItems of category corresponding to data test input
 		nbOfItems int
 		err       error // error expected
 	}
@@ -351,7 +351,7 @@ func TestRecordPayload(t *testing.T) {
 	type testCase struct {
 		Name   string
 		input  string          // data test one record = fspec + items
-		uap    uap.StandardUAP // Items of category corresponding to data test input
+		uap    uap.StandardUAP // DataItems of category corresponding to data test input
 		output []byte
 		err    error // error expected
 	}
@@ -624,7 +624,7 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 	} else {
 		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
-	for i, item := range rec.Items {
+	for i, item := range rec.DataItems {
 		if reflect.DeepEqual(item, output[i]) == false {
 			t.Errorf("MsgFailInValue: %v; \nExpected: %v", item, output[i])
 		} else {
@@ -683,7 +683,7 @@ func TestRecordDecode_Cat4TestTrackFullRecord(t *testing.T) {
 	} else {
 		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
-	for i, item := range rec.Items {
+	for i, item := range rec.DataItems {
 		if reflect.DeepEqual(item, output[i]) == false {
 			t.Errorf("MsgFailInValue: %v; \nExpected: %v", item, output[i])
 		} else {
@@ -742,7 +742,7 @@ func TestRecordDecode_Cat4TestPlotFullRecord(t *testing.T) {
 	} else {
 		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
-	for i, item := range rec.Items {
+	for i, item := range rec.DataItems {
 		if reflect.DeepEqual(item, output[i]) == false {
 			t.Errorf("MsgFailInValue: %v; \nExpected: %v", item, output[i])
 		} else {
@@ -822,10 +822,10 @@ func TestRecordDecode_Cat4TestError(t *testing.T) {
 		} else {
 			t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", remaining, row.unRead)
 		}
-		if reflect.DeepEqual(rec.Items, row.output) == false {
-			t.Errorf("MsgFailInValue: %s - %v; Expected: %v", row.TestCase, rec.Items, row.output)
+		if reflect.DeepEqual(rec.DataItems, row.output) == false {
+			t.Errorf("MsgFailInValue: %s - %v; Expected: %v", row.TestCase, rec.DataItems, row.output)
 		} else {
-			t.Logf("MsgSuccessInValue: %v; Expected: %v", rec.Items, row.output)
+			t.Logf("MsgSuccessInValue: %v; Expected: %v", rec.DataItems, row.output)
 		}
 	}
 }
@@ -905,7 +905,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 				Description: "Radar Plot Characteristics",
 				Type:        uap.Compound,
 			},
-			Fields: uap.Cat048V127.Items[6].Compound,
+			Fields: uap.Cat048V127.DataItems[6].Compound,
 			Primary: []byte{0x60},
 			Secondary: []Item{
 				&Fixed{
@@ -1173,7 +1173,7 @@ func TestRecordDecode_CAT034(t *testing.T) {
 	} else {
 		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
-	for i, item := range rec.Items {
+	for i, item := range rec.DataItems {
 		if reflect.DeepEqual(item, output[i]) == false {
 			t.Errorf("MsgFailInValue: %v; \nExpected: %v", item, output[i])
 		} else {
@@ -1299,7 +1299,7 @@ func TestRecordDecode_CAT063(t *testing.T) {
 	} else {
 		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
-	for i, item := range rec.Items {
+	for i, item := range rec.DataItems {
 		if reflect.DeepEqual(item, output[i]) == false {
 			t.Errorf("MsgFailInValue: %v; \nExpected: %v", item, output[i])
 		} else {
@@ -1376,7 +1376,7 @@ func TestRecordDecode_CAT065(t *testing.T) {
 	} else {
 		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
-	for i, item := range rec.Items {
+	for i, item := range rec.DataItems {
 		if reflect.DeepEqual(item, output[i]) == false {
 			t.Errorf("MsgFailInValue: %v; \nExpected: %v", item, output[i])
 		} else {
@@ -1573,7 +1573,7 @@ func TestRecordDecode_CAT004(t *testing.T) {
 	} else {
 		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
-	for i, item := range rec.Items {
+	for i, item := range rec.DataItems {
 		if reflect.DeepEqual(item, output[i]) == false {
 			t.Errorf("MsgFailInValue: %v; \nExpected: %v", item, output[i])
 		} else {
@@ -1614,7 +1614,7 @@ func TestRecordDecode_CAT001Track(t *testing.T) {
 	} else {
 		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
-	for i, item := range rec.Items {
+	for i, item := range rec.DataItems {
 		if bytes.Equal(item.Data, output[i]) == false {
 			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
 		} else {
@@ -1652,7 +1652,7 @@ func TestRecordDecode_CAT001Plot(t *testing.T) {
 	} else {
 		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
-	for i, item := range rec.Items {
+	for i, item := range rec.DataItems {
 		if bytes.Equal(item.Data, output[i]) == false {
 			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
 		} else {
@@ -1690,7 +1690,7 @@ func TestRecordDecode_CAT002(t *testing.T) {
 	} else {
 		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
-	for i, item := range rec.Items {
+	for i, item := range rec.DataItems {
 		if bytes.Equal(item.Data, output[i]) == false {
 			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
 		} else {
@@ -1738,7 +1738,7 @@ func TestRecordDecode_CAT030STR(t *testing.T) {
 	} else {
 		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
-	for i, item := range rec.Items {
+	for i, item := range rec.DataItems {
 		if bytes.Equal(item.Data, output[i]) == false {
 			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
 		} else {
@@ -1774,7 +1774,7 @@ func TestRecordDecode_CAT032STR(t *testing.T) {
 	} else {
 		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
-	for i, item := range rec.Items {
+	for i, item := range rec.DataItems {
 		if bytes.Equal(item.Data, output[i]) == false {
 			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
 		} else {
@@ -1828,7 +1828,7 @@ func TestRecordDecode_CAT062(t *testing.T) {
 	} else {
 		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
-	for i, item := range rec.Items {
+	for i, item := range rec.DataItems {
 		if bytes.Equal(item.Data, output[i]) == false {
 			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
 		} else {
@@ -1864,7 +1864,7 @@ func TestRecordDecode_CAT255STR(t *testing.T) {
 	} else {
 		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
-	for i, item := range rec.Items {
+	for i, item := range rec.DataItems {
 		if bytes.Equal(item.Data, output[i]) == false {
 			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
 		} else {
@@ -1923,7 +1923,7 @@ func TestRecordDecode_CAT030ARTAS(t *testing.T) {
 	} else {
 		t.Logf("MsgSuccessInValue: unRead = %v; Expected: %v", unRead, 0)
 	}
-	for i, item := range rec.Items {
+	for i, item := range rec.DataItems {
 		if bytes.Equal(item.Data, output[i]) == false {
 			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
 		} else {

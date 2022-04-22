@@ -28,17 +28,18 @@ func NewRepetitive(field uap.IDataField) Item {
 // signalling the presence of N consecutive sub-fields each of the same pre-determined length.
 func (r *Repetitive) Reader(rb *bytes.Reader) error {
 	var err error
-	err = binary.Read(rb, binary.BigEndian, &r.Rep)
-	if err != nil {
-		return err
-	}
-	tmp := make([]byte, r.Rep*r.SubItemSize)
-	err = binary.Read(rb, binary.BigEndian, &tmp)
-	if err != nil {
-		return err
-	}
-	r.Data = tmp
 
+	r.Rep, err = rb.ReadByte()
+	if err != nil {
+		return err
+	}
+
+	r.Data = make([]byte, r.Rep*r.SubItemSize)
+	err = binary.Read(rb, binary.BigEndian, &r.Data)
+	if err != nil {
+		r.Data = nil
+		return err
+	}
 	return err
 }
 

@@ -22,6 +22,7 @@ type ModeSRange struct {
 	SRG float64 `json:"srg"`
 	SRB float64 `json:"srb"`
 }
+
 type PSRRange struct {
 	PRG float64 `json:"prg"`
 	PRB float64 `json:"prb"`

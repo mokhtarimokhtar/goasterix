@@ -23,7 +23,7 @@ func TestNewBase(t *testing.T) {
 				DataItem:    "I000/010",
 				Description: "Test item",
 				Type:        uap.Fixed,
-				Size: uap.Size{ForFixed: 1},
+				Size: uap.SizeField{ForFixed: 1},
 			},
 			output: Base{
 				FRN:         1,
@@ -39,7 +39,7 @@ func TestNewBase(t *testing.T) {
 				DataItem:    "",
 				Description: "",
 				Type:        0,
-				Size:       uap.Size{},
+				Size:       uap.SizeField{},
 			},
 			output: Base{},
 		},
@@ -50,7 +50,7 @@ func TestNewBase(t *testing.T) {
 				DataItem:    "I000/030",
 				Description: "Test item",
 				Type:        uap.Extended,
-				Size: uap.Size{
+				Size: uap.SizeField{
 					ForExtendedPrimary:   1,
 					ForExtendedSecondary: 2,
 				},
@@ -84,7 +84,7 @@ func TestNewBase(t *testing.T) {
 				DataItem:    "I000/050",
 				Description: "Test item",
 				Type:        uap.Repetitive,
-				Size: uap.Size{ForRepetitive: 2},
+				Size: uap.SizeField{ForRepetitive: 2},
 			},
 			output: Base{
 				FRN:         5,

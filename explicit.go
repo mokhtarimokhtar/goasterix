@@ -24,16 +24,17 @@ func NewExplicit(field uap.IDataField) Item {
 // Reader extracts a number of bytes define by the first byte.
 func (e *Explicit) Reader(rb *bytes.Reader) error {
 	var err error
-	err = binary.Read(rb, binary.BigEndian, &e.Len)
+	e.Len, err = rb.ReadByte()
 	if err != nil {
 		return err
 	}
-	tmp := make([]byte, e.Len-1)
-	err = binary.Read(rb, binary.BigEndian, &tmp)
+
+	e.Data = make([]byte, e.Len-1) // tmp is for if err case then e.Data = nil
+	err = binary.Read(rb, binary.BigEndian, &e.Data)
 	if err != nil {
+		e.Data = nil
 		return err
 	}
-	e.Data = tmp
 
 	return err
 }

@@ -18,7 +18,7 @@ func TestFixedReader(t *testing.T) {
 		DataItem    string
 		Description string
 		Type        uap.TypeField
-		Size        uap.Size
+		Size        uap.SizeField
 		output Item
 		err    error
 	}
@@ -31,7 +31,7 @@ func TestFixedReader(t *testing.T) {
 			DataItem:    "I000/080",
 			Description: "Test item",
 			Type:        uap.Fixed,
-			Size: uap.Size{
+			Size: uap.SizeField{
 				ForFixed:             8,
 			},
 			err: nil,
@@ -53,7 +53,7 @@ func TestFixedReader(t *testing.T) {
 			DataItem:    "I000/080",
 			Description: "Test item",
 			Type:        uap.Fixed,
-			Size: uap.Size{
+			Size: uap.SizeField{
 				ForFixed:             8,
 			},
 			output: &Fixed{
@@ -75,8 +75,8 @@ func TestFixedReader(t *testing.T) {
 		rb := bytes.NewReader(input)
 		d := uap.DataFieldFactory(row.FRN, row.DataItem, row.Description, row.Type, row.Size)
 
-		//f := NewFixed(row.dataField)
-		f := NewFixed(d)
+		//f := newFixed(row.dataField)
+		f := newFixed(d)
 
 		// Act
 		err := f.Reader(rb)

@@ -7,13 +7,13 @@ var Cat021v10 = StandardUAP{
 	Name:     "cat021_2.5",
 	Category: 21,
 	Version:  2.5,
-	Items: []DataField{
+	DataItems: []DataField{
 		{
 			FRN:      1,
 			DataItem: "I021/010",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     2,
+				SizeField:     2,
 			},
 		},
 		{
@@ -32,7 +32,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Track Number",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     2,
+				SizeField:     2,
 			},
 		},
 		{
@@ -41,7 +41,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Service Identification",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     1,
+				SizeField:     1,
 			},
 		},
 		{
@@ -50,7 +50,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Time of Applicability for Position",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     3,
+				SizeField:     3,
 			},
 		},
 		{
@@ -59,7 +59,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Position in WGS-84 co-ordinates",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     6,
+				SizeField:     6,
 			},
 		},
 		{
@@ -68,7 +68,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Position in WGS-84 co-ordinates, high res",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     8,
+				SizeField:     8,
 			},
 		},
 		{
@@ -77,7 +77,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Time of Applicability for Velocity",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     3,
+				SizeField:     3,
 			},
 		},
 		{
@@ -86,7 +86,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Air Speed",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     2,
+				SizeField:     2,
 			},
 		},
 		{
@@ -95,7 +95,7 @@ var Cat021v10 = StandardUAP{
 			Description: "True Air Speed",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     2,
+				SizeField:     2,
 			},
 		},
 		{
@@ -104,7 +104,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Target Address",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     3,
+				SizeField:     3,
 			},
 		},
 		{
@@ -113,7 +113,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Time of Message Reception of Position",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     3,
+				SizeField:     3,
 			},
 		},
 		{
@@ -122,7 +122,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Time of Message Reception of Position-High Precision",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     4,
+				SizeField:     4,
 			},
 		},
 		{
@@ -131,7 +131,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Time of Message Reception of Velocity",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     3,
+				SizeField:     3,
 			},
 		},
 		{
@@ -140,7 +140,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Time of Message Reception of Velocity-High Precision",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     4,
+				SizeField:     4,
 			},
 		},
 		{
@@ -149,7 +149,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Geometric Height",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     2,
+				SizeField:     2,
 			},
 		},
 		{
@@ -168,7 +168,7 @@ var Cat021v10 = StandardUAP{
 			Description: "MOPS Version",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     1,
+				SizeField:     1,
 			},
 		},
 		{
@@ -177,7 +177,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Mode 3/A Code",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     2,
+				SizeField:     2,
 			},
 		},
 		{
@@ -186,7 +186,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Roll Angle",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     2,
+				SizeField:     2,
 			},
 		},
 		{
@@ -195,7 +195,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Flight Level",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     2,
+				SizeField:     2,
 			},
 		},
 		{
@@ -204,7 +204,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Magnetic Heading",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     2,
+				SizeField:     2,
 			},
 		},
 		{
@@ -213,7 +213,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Target Status",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     1,
+				SizeField:     1,
 			},
 		},
 		{
@@ -222,7 +222,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Barometric Vertical Rate",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     2,
+				SizeField:     2,
 			},
 		},
 		{
@@ -231,7 +231,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Geometric Vertical Rate",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     2,
+				SizeField:     2,
 			},
 		},
 		{
@@ -240,7 +240,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Airborne Ground Vector",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     4,
+				SizeField:     4,
 			},
 		},
 		{
@@ -249,7 +249,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Track Angle Rate",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     2,
+				SizeField:     2,
 			},
 		},
 		{
@@ -258,7 +258,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Time of Report Transmission",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     3,
+				SizeField:     3,
 			},
 		},
 		{
@@ -267,7 +267,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Target Identification",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     6,
+				SizeField:     6,
 			},
 		},
 		{
@@ -276,7 +276,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Emitter Category",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     1,
+				SizeField:     1,
 			},
 		},
 		{
@@ -287,10 +287,10 @@ var Cat021v10 = StandardUAP{
 				NameType: Compound,
 				Primary: &Primary{
 					MetaField{
-						8: {NameType: Fixed, Size: 2},
-						7: {NameType: Fixed, Size: 2},
-						6: {NameType: Fixed, Size: 2},
-						5: {NameType: Fixed, Size: 1},
+						8: {NameType: Fixed, SizeField: 2},
+						7: {NameType: Fixed, SizeField: 2},
+						6: {NameType: Fixed, SizeField: 2},
+						5: {NameType: Fixed, SizeField: 1},
 						4: {NameType: Spare},
 						3: {NameType: Spare},
 						2: {NameType: Spare},
@@ -304,7 +304,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Selected Altitude",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     2,
+				SizeField:     2,
 			},
 		},
 		{
@@ -313,7 +313,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Final State Selected Altitude",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     2,
+				SizeField:     2,
 			},
 		},
 		{
@@ -324,8 +324,8 @@ var Cat021v10 = StandardUAP{
 				NameType: Compound,
 				Primary: &Primary{
 					MetaField{
-						8: {NameType: Fixed, Size: 1},
-						7: {NameType: Repetitive, Size: 15},
+						8: {NameType: Fixed, SizeField: 1},
+						7: {NameType: Repetitive, SizeField: 15},
 						6: {NameType: Spare},
 						5: {NameType: Spare},
 						4: {NameType: Spare},
@@ -341,7 +341,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Service Management",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     1,
+				SizeField:     1,
 			},
 		},
 		{
@@ -350,7 +350,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Aircraft Operational Status",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     1,
+				SizeField:     1,
 			},
 		},
 		{
@@ -369,7 +369,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Message Amplitude",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     1,
+				SizeField:     1,
 			},
 		},
 		{
@@ -378,7 +378,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Mode S MB Data",
 			Type: TypeField{
 				NameType: Repetitive,
-				Size:     8,
+				SizeField:     8,
 			},
 		},
 		{
@@ -387,7 +387,7 @@ var Cat021v10 = StandardUAP{
 			Description: "ACAS Resolution Advisory Report",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     7,
+				SizeField:     7,
 			},
 		},
 		{
@@ -396,7 +396,7 @@ var Cat021v10 = StandardUAP{
 			Description: "Receiver ID",
 			Type: TypeField{
 				NameType: Fixed,
-				Size:     1,
+				SizeField:     1,
 			},
 		},
 		{
@@ -407,13 +407,13 @@ var Cat021v10 = StandardUAP{
 				NameType: Compound,
 				Primary: &Primary{
 					MetaField{
-						8: {NameType: Fixed, Size: 1},
-						7: {NameType: Fixed, Size: 1},
-						6: {NameType: Fixed, Size: 1},
-						5: {NameType: Fixed, Size: 1},
-						4: {NameType: Fixed, Size: 1},
-						3: {NameType: Fixed, Size: 1},
-						2: {NameType: Fixed, Size: 1},
+						8: {NameType: Fixed, SizeField: 1},
+						7: {NameType: Fixed, SizeField: 1},
+						6: {NameType: Fixed, SizeField: 1},
+						5: {NameType: Fixed, SizeField: 1},
+						4: {NameType: Fixed, SizeField: 1},
+						3: {NameType: Fixed, SizeField: 1},
+						2: {NameType: Fixed, SizeField: 1},
 					},
 				},
 			},

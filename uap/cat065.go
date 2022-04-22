@@ -6,13 +6,13 @@ var Cat065V15 = StandardUAP{
 	Name:     "cat065_1.5",
 	Category: 65,
 	Version:  1.5,
-	Items: []DataField{
+	DataItems: []DataField{
 		{
 			FRN:         1,
 			DataItem:    "I065/010",
 			Description: "Data Source Identifier",
 			Type:        Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 2,
 			},
 		},
@@ -21,7 +21,7 @@ var Cat065V15 = StandardUAP{
 			DataItem:    "I065/000",
 			Description: "Message Type",
 			Type:        Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 1,
 			},
 		},
@@ -30,7 +30,7 @@ var Cat065V15 = StandardUAP{
 			DataItem:    "I065/015",
 			Description: "Service Identification",
 			Type:        Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 1,
 			},
 		},
@@ -39,7 +39,7 @@ var Cat065V15 = StandardUAP{
 			DataItem:    "I065/030",
 			Description: "Time Of Message",
 			Type:        Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 3,
 			},
 		},
@@ -48,7 +48,7 @@ var Cat065V15 = StandardUAP{
 			DataItem:    "I065/020",
 			Description: "Batch Number",
 			Type:        Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 1,
 			},
 		},
@@ -57,7 +57,7 @@ var Cat065V15 = StandardUAP{
 			DataItem:    "I065/040",
 			Description: "SDPS Configuration and Status",
 			Type:        Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 1,
 			},
 		},
@@ -66,7 +66,7 @@ var Cat065V15 = StandardUAP{
 			DataItem:    "I065/050",
 			Description: "Service Status Report",
 			Type:        Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 1,
 			},
 		},

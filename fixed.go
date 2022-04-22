@@ -14,11 +14,11 @@ type Fixed struct {
 	Size uint8
 }
 
-func NewFixed(field uap.IDataField) Item {
+func newFixed(field uap.IDataField) Item {
 	f := &Fixed{}
 	//f.Base.NewBase(field)
 	f.Base.NewBase(field)
-	//f.Size = field.Fixed.Size
+	//f.SizeField = field.Fixed.SizeField
 	f.Size = field.GetSize().ForFixed
 	return f
 }

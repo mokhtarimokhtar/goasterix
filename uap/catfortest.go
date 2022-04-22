@@ -6,13 +6,13 @@ var CatForTest = StandardUAP{
 	Name:     "catfortest_0.1",
 	Category: 26, // not exist
 	Version:  0.1,
-	Items: []DataField{
+	DataItems: []DataField{
 		{
 			FRN:         1,
 			DataItem:    "I026/001",
 			Description: "Fixed type field for test",
 			Type:        Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 2,
 			},
 		},
@@ -21,7 +21,7 @@ var CatForTest = StandardUAP{
 			DataItem:    "I026/002",
 			Description: "Extended type field for test",
 			Type:        Extended,
-			Size: Size{
+			Size: SizeField{
 				ForExtendedPrimary:   1,
 				ForExtendedSecondary: 2,
 			},
@@ -37,7 +37,7 @@ var CatForTest = StandardUAP{
 			DataItem:    "I026/004",
 			Description: "Repetitive type field for test",
 			Type:        Repetitive,
-			Size: Size{
+			Size: SizeField{
 				ForRepetitive: 2,
 			},
 		},
@@ -52,7 +52,7 @@ var CatForTest = StandardUAP{
 					DataItem:    "Compound/001",
 					Description: "Compound Fixed type field for test",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -65,7 +65,7 @@ var CatForTest = StandardUAP{
 					DataItem:    "Compound/003",
 					Description: "Compound Extended type field for test",
 					Type:        Extended,
-					Size: Size{
+					Size: SizeField{
 						ForExtendedPrimary:   1,
 						ForExtendedSecondary: 1,
 					},
@@ -79,7 +79,7 @@ var CatForTest = StandardUAP{
 					DataItem:    "Compound/005",
 					Description: "Compound Repetitive type field for test",
 					Type:        Repetitive,
-					Size: Size{
+					Size: SizeField{
 						ForRepetitive: 2,
 					},
 				},
@@ -98,7 +98,7 @@ var CatForTest = StandardUAP{
 					DataItem:    "Compound/008",
 					Description: "Compound Fixed type field for test",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -134,7 +134,7 @@ var CatForTest = StandardUAP{
 			Description: "Fixed type field for test",
 			Conditional: true,
 			Type:        Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 1,
 			},
 		},
@@ -147,7 +147,7 @@ var Cat4TestTrack = []DataField{
 		DataItem:    "I026/011",
 		Description: "Fixed type field for test",
 		Type:        Fixed,
-		Size: Size{
+		Size: SizeField{
 			ForFixed: 1,
 		},
 	},
@@ -156,7 +156,7 @@ var Cat4TestTrack = []DataField{
 		DataItem:    "I026/012",
 		Description: "Fixed type field for test",
 		Type:        Fixed,
-		Size: Size{
+		Size: SizeField{
 			ForFixed: 2,
 		},
 	},
@@ -168,7 +168,7 @@ var Cat4TestPlot = []DataField{
 		DataItem:    "I026/011",
 		Description: "Fixed type field for test",
 		Type:        Fixed,
-		Size: Size{
+		Size: SizeField{
 			ForFixed: 3,
 		},
 	},
@@ -177,7 +177,7 @@ var Cat4TestPlot = []DataField{
 		DataItem:    "I026/012",
 		Description: "Fixed type field for test",
 		Type:        Fixed,
-		Size: Size{
+		Size: SizeField{
 			ForFixed: 1,
 		},
 	},

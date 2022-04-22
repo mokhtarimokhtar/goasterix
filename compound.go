@@ -33,46 +33,20 @@ func (c *Compound) Reader(rb *bytes.Reader) error {
 		return err
 	}
 	frnIndex := FspecIndex(c.Primary)
+	c.Secondary = make([]Item, 0, len(frnIndex))
 
 	for _, frn := range frnIndex {
 		uapItem := c.Fields[frn-1]
 		var item Item
-		switch uapItem.Type {
-		case uap.Fixed:
-			tmp := NewFixed(uapItem)
-			err = tmp.Reader(rb)
-			if err != nil {
-				return err
-			}
-			item = tmp
-
-		case uap.Extended:
-			tmp := NewExtended(uapItem)
-			err = tmp.Reader(rb)
-			if err != nil {
-				return err
-			}
-			item = tmp
-
-		case uap.Explicit:
-			tmp := NewExplicit(uapItem)
-			err = tmp.Reader(rb)
-			if err != nil {
-				return err
-			}
-			item = tmp
-
-		case uap.Repetitive:
-			tmp := NewRepetitive(uapItem)
-			err = tmp.Reader(rb)
-			if err != nil {
-				return err
-			}
-			item = tmp
-		default:
-			err = ErrDataFieldUnknown
+		item, err = GetItemCompound(uapItem)
+		if err != nil {
 			return err
 		}
+		err = Readers(item, rb)
+		if err != nil {
+			return err
+		}
+
 		c.Secondary = append(c.Secondary, item)
 	}
 

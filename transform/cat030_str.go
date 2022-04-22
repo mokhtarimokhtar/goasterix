@@ -115,7 +115,7 @@ type Cat030STRModel struct {
 }
 
 // Write writes a single ASTERIX Record to Cat030STRModel.
-// Items is a slice of Items DataField.
+// DataItems is a slice of DataItems DataField.
 func (data *Cat030STRModel) write(rec goasterix.Record) {
 	for _, item := range rec.Items {
 		switch item.Meta.FRN {

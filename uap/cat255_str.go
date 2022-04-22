@@ -6,12 +6,12 @@ package uap
 var Cat255StrV51 = StandardUAP{
 	Category: 255,
 	Version:  5.1,
-	Items: []DataField{
+	DataItems: []DataField{
 		{
 			FRN:      1,
 			DataItem: "I255/010",
 			Type:     Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 2,
 			},
 		},
@@ -19,7 +19,7 @@ var Cat255StrV51 = StandardUAP{
 			FRN:      2,
 			DataItem: "I255/020",
 			Type:     Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 3,
 			},
 		},
@@ -27,7 +27,7 @@ var Cat255StrV51 = StandardUAP{
 			FRN:      3,
 			DataItem: "I255/030",
 			Type:     Extended,
-			Size: Size{
+			Size: SizeField{
 				ForExtendedPrimary:   1,
 				ForExtendedSecondary: 1,
 			},
@@ -36,7 +36,7 @@ var Cat255StrV51 = StandardUAP{
 			FRN:      4,
 			DataItem: "I255/050",
 			Type:     Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 4,
 			},
 		},
@@ -44,7 +44,7 @@ var Cat255StrV51 = StandardUAP{
 			FRN:      5,
 			DataItem: "I255/060",
 			Type:     Repetitive,
-			Size: Size{
+			Size: SizeField{
 				ForRepetitive: 1,
 			},
 		},
@@ -52,7 +52,7 @@ var Cat255StrV51 = StandardUAP{
 			FRN:      6,
 			DataItem: "I255/070",
 			Type:     Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 9,
 			},
 		},
@@ -60,7 +60,7 @@ var Cat255StrV51 = StandardUAP{
 			FRN:      7,
 			DataItem: "I255/040",
 			Type:     Repetitive,
-			Size: Size{
+			Size: SizeField{
 				ForRepetitive: 10,
 			},
 		},

@@ -6,13 +6,13 @@ var Cat062V119 = StandardUAP{
 	Name:     "cat062_1.19",
 	Category: 62,
 	Version:  1.19,
-	Items: []DataField{
+	DataItems: []DataField{
 		{
 			FRN:         1,
 			DataItem:    "I062/010",
 			Description: "Data Source Identifier",
 			Type:        Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 2,
 			},
 		},
@@ -26,7 +26,7 @@ var Cat062V119 = StandardUAP{
 			DataItem:    "I062/015",
 			Description: "Service Identification",
 			Type:        Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 1,
 			},
 		},
@@ -35,7 +35,7 @@ var Cat062V119 = StandardUAP{
 			DataItem:    "I062/070",
 			Description: "Time Of Track Information",
 			Type:        Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 3,
 			},
 		},
@@ -44,7 +44,7 @@ var Cat062V119 = StandardUAP{
 			DataItem:    "I062/105",
 			Description: "Calculated Track Position (WGS-84)",
 			Type:        Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 8,
 			},
 		},
@@ -53,7 +53,7 @@ var Cat062V119 = StandardUAP{
 			DataItem:    "I062/100",
 			Description: "Calculated Track Position (Cartesian)",
 			Type:        Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 6,
 			},
 		},
@@ -62,7 +62,7 @@ var Cat062V119 = StandardUAP{
 			DataItem:    "I062/185",
 			Description: "Calculated Track Velocity (Cartesian)",
 			Type:        Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 4,
 			},
 		},
@@ -71,7 +71,7 @@ var Cat062V119 = StandardUAP{
 			DataItem:    "I062/210",
 			Description: "Calculated Acceleration (Cartesian)",
 			Type:        Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 2,
 			},
 		},
@@ -81,7 +81,7 @@ var Cat062V119 = StandardUAP{
 			DataItem:    "I062/060",
 			Description: "Track Mode 3/A Code",
 			Type:        Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 2,
 			},
 		},
@@ -90,7 +90,7 @@ var Cat062V119 = StandardUAP{
 			DataItem:    "I062/245",
 			Description: "Target Identification",
 			Type:        Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 7,
 			},
 		},
@@ -105,7 +105,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "ADR",
 					Description: "Target Adress",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 3,
 					},
 				},
@@ -114,7 +114,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "ID",
 					Description: "Target Identification",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 6,
 					},
 				},
@@ -123,7 +123,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "MHG",
 					Description: "Magnetic Heading",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -132,7 +132,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "IAS",
 					Description: "Indicated Airspeed",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -141,7 +141,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "TAS",
 					Description: "True Airspeed",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -150,7 +150,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "SAL",
 					Description: "Selected Altitude",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -159,7 +159,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "FSS",
 					Description: "Final State Selected Altitude",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -169,7 +169,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "TIS",
 					Description: "Trajectory Intent Status",
 					Type:        Extended,
-					Size: Size{
+					Size: SizeField{
 						ForExtendedPrimary:   1,
 						ForExtendedSecondary: 1,
 					},
@@ -179,7 +179,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "TID",
 					Description: "Trajectory Intent Data",
 					Type:        Repetitive,
-					Size: Size{
+					Size: SizeField{
 						ForRepetitive: 15,
 					},
 				},
@@ -188,7 +188,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "COM",
 					Description: "Communications / ACAS",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -197,7 +197,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "SAB",
 					Description: "Status Reported by ADS-B",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -206,7 +206,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "ACS",
 					Description: "ACAS Resolution Advisory Reports",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 7,
 					},
 				},
@@ -215,7 +215,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "BVR",
 					Description: "Barometric Vertical Rate",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -224,7 +224,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "GVR",
 					Description: "Geometric Vertical Rate",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -234,7 +234,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "RAN",
 					Description: "Roll Angle",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -243,7 +243,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "TAR",
 					Description: "Track Angle Rate",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -252,7 +252,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "TAN",
 					Description: "Track Angle",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -261,7 +261,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "GSP",
 					Description: "Ground Speed",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -270,7 +270,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "VUN",
 					Description: "Velocity Uncertainty",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -279,7 +279,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "MET",
 					Description: "Meteorological Data",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 8,
 					},
 				},
@@ -288,7 +288,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "EMC",
 					Description: "Emitter Category",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -298,7 +298,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "POS",
 					Description: "Position Data",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 6,
 					},
 				},
@@ -307,7 +307,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "GAL",
 					Description: "Geometric Altitude Data",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -316,7 +316,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "PUN",
 					Description: "Position Uncertainty Data",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -325,7 +325,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "MB",
 					Description: "Mode S MB Data",
 					Type:        Repetitive,
-					Size: Size{
+					Size: SizeField{
 						ForRepetitive: 8,
 					},
 				},
@@ -334,7 +334,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "IAR",
 					Description: "Indicated Airspeed",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -343,7 +343,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "MAC",
 					Description: "Mach Number",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -352,7 +352,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "BPS",
 					Description: "Barometric Pressure Setting",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -363,7 +363,7 @@ var Cat062V119 = StandardUAP{
 			DataItem:    "I062/040",
 			Description: "Track Number",
 			Type:        Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 2,
 			},
 		},
@@ -372,7 +372,7 @@ var Cat062V119 = StandardUAP{
 			DataItem:    "I062/080",
 			Description: "Track Status",
 			Type:        Extended,
-			Size: Size{
+			Size: SizeField{
 				ForExtendedPrimary:   1,
 				ForExtendedSecondary: 1,
 			},
@@ -388,7 +388,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "TRK",
 					Description: "Track age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -397,7 +397,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "PSR",
 					Description: "PSR age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -406,7 +406,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "SSR",
 					Description: "SSR age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -415,7 +415,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "MDS",
 					Description: "Mode S age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -424,7 +424,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "ADS",
 					Description: "ADS-C age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -433,7 +433,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "ES",
 					Description: "ADS-B Extended Squitter age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -442,7 +442,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "VDL",
 					Description: "ADS-B VDL Mode 4 age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -452,7 +452,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "UAT",
 					Description: "ADS-B UAT age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -461,7 +461,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "LOP",
 					Description: "Loop age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -470,7 +470,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "MLT",
 					Description: "Multilateration age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -499,7 +499,7 @@ var Cat062V119 = StandardUAP{
 			DataItem:    "I062/200",
 			Description: "Mode of Movement",
 			Type:        Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 1,
 			},
 		},
@@ -514,7 +514,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "MFL",
 					Description: "Measured Flight Level age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -523,7 +523,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "MD1",
 					Description: "Mode 1 age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -532,7 +532,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "MD2",
 					Description: "Mode 2 age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -541,7 +541,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "MDA",
 					Description: "Mode 3/A age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -550,7 +550,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "MD4",
 					Description: "True Mode 4 age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -559,7 +559,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "MD5",
 					Description: "Mode 5 age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -568,7 +568,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "MHG",
 					Description: "Magnetic Heading age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -578,7 +578,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "IAS",
 					Description: "Indicated Airspeed/Mach Nb age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -587,7 +587,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "TAS",
 					Description: "True Airspeed age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -596,7 +596,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "SAL",
 					Description: "Selected ALtitude Age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -605,7 +605,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "FSS",
 					Description: "Final State Slected Altitude Age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -614,7 +614,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "COM",
 					Description: "Communications / ACAS Capability and Flight Status age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -623,7 +623,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "TID",
 					Description: "Trajectory Intent Data age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -632,7 +632,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "SAB",
 					Description: "Status Reported by ADS-B age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -642,7 +642,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "ACS",
 					Description: "ACAS Resolution Advisory Report age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -651,7 +651,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "BVR",
 					Description: "Barometric Vertical Rate age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -660,7 +660,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "GVR",
 					Description: "Geometric Vertical Rate age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -669,7 +669,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "RAN",
 					Description: "Roll Angle age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -678,7 +678,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "TAR",
 					Description: "Track Angle Rate age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -687,7 +687,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "TAN",
 					Description: "Track Angle age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -696,7 +696,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "GSP",
 					Description: "Ground Speed age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -706,7 +706,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "VUN",
 					Description: "Velocity Uncertainity age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -715,7 +715,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "MET",
 					Description: "Meteorological Data age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -724,7 +724,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "EMC",
 					Description: "Emitter Category age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -733,7 +733,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "POS",
 					Description: "Position Data age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -742,7 +742,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "GAL",
 					Description: "Geometric Altitude Data age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -751,7 +751,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "PUN",
 					Description: "Position Uncertainty Data age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -760,7 +760,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "MB",
 					Description: "Mode S MB Data age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -770,7 +770,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "IAR",
 					Description: "Indicated Airspeed Data age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -779,7 +779,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "MAC",
 					Description: "Mac Number Data age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -788,7 +788,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "BPS",
 					Description: "Barometric Pressure Setting Data age",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -816,7 +816,7 @@ var Cat062V119 = StandardUAP{
 			DataItem:    "I062/136",
 			Description: "Measured Flight Level",
 			Type:        Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 2,
 			},
 		},
@@ -825,7 +825,7 @@ var Cat062V119 = StandardUAP{
 			DataItem:    "I062/130",
 			Description: "Calculated Track Geometric Altitude",
 			Type:        Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 2,
 			},
 		},
@@ -834,7 +834,7 @@ var Cat062V119 = StandardUAP{
 			DataItem:    "I062/135",
 			Description: "Calculated Track Barometric Altitude",
 			Type:        Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 2,
 			},
 		},
@@ -843,7 +843,7 @@ var Cat062V119 = StandardUAP{
 			DataItem:    "I062/220",
 			Description: "Calculated Rate Of Climb/Descent",
 			Type:        Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 2,
 			},
 		},
@@ -858,7 +858,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "TAG",
 					Description: "FPPS Identification Tag",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -867,7 +867,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "CSN",
 					Description: "Callsign",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 7,
 					},
 				},
@@ -876,7 +876,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "IFI",
 					Description: "IFPS_FLIGHT_ID",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 4,
 					},
 				},
@@ -885,7 +885,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "FCT",
 					Description: "Flight Category",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -894,7 +894,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "TAC",
 					Description: "Type of Aircraft",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 4,
 					},
 				},
@@ -903,7 +903,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "WTC",
 					Description: "Wake Turbulence Category",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -912,7 +912,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "DEP",
 					Description: "Departure Airport",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 4,
 					},
 				},
@@ -922,7 +922,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "DST",
 					Description: "Destination Airport",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 4,
 					},
 				},
@@ -931,7 +931,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "RDS",
 					Description: "Runaway Designation",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 3,
 					},
 				},
@@ -940,7 +940,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "CFL",
 					Description: "Current Cleared Flight Level",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -949,7 +949,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "CTL",
 					Description: "Current Control Position",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -958,7 +958,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "TOD",
 					Description: "Time Of Departure / Arrival",
 					Type:        Repetitive,
-					Size: Size{
+					Size: SizeField{
 						ForRepetitive: 4,
 					},
 				},
@@ -967,7 +967,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "AST",
 					Description: "Aircraft Stand",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 6,
 					},
 				},
@@ -976,7 +976,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "STS",
 					Description: "Stand Status",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -986,7 +986,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "STD",
 					Description: "Standard Instrument Departure",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 7,
 					},
 				},
@@ -995,7 +995,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "STA",
 					Description: "STandard Instrument Arrival",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 7,
 					},
 				},
@@ -1004,7 +1004,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "PEM",
 					Description: "Pre-emergency Mode 3/A code",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -1013,7 +1013,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "PEC",
 					Description: "Pre-emergency Callsign",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 7,
 					},
 				},
@@ -1036,9 +1036,9 @@ var Cat062V119 = StandardUAP{
 		{
 			FRN:         22,
 			DataItem:    "I062/270",
-			Description: "Target Size & Orientation",
+			Description: "Target SizeField & Orientation",
 			Type:        Extended,
-			Size: Size{
+			Size: SizeField{
 				ForExtendedPrimary:   1,
 				ForExtendedSecondary: 1,
 			},
@@ -1048,7 +1048,7 @@ var Cat062V119 = StandardUAP{
 			DataItem:    "I062/300",
 			Description: "Vehicle Fleet Identification",
 			Type:        Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 1,
 			},
 		},
@@ -1063,7 +1063,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "SUM",
 					Description: "SMode 5 Summary",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -1072,7 +1072,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "PMN",
 					Description: "Mode 5 PIN/ National Origin/ Mission Code",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 4,
 					},
 				},
@@ -1081,7 +1081,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "POS",
 					Description: "Mode 5 Reported Position",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 6,
 					},
 				},
@@ -1090,7 +1090,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "GA",
 					Description: "Mode 5 GNSS-derived Altitude",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -1099,7 +1099,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "EM1",
 					Description: "Extended Mode 1 Code in Octal Representation",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -1108,7 +1108,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "TOS",
 					Description: "Time Offset for POS and GA",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -1117,7 +1117,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "XP",
 					Description: "X Pulse Presence",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -1128,7 +1128,7 @@ var Cat062V119 = StandardUAP{
 			DataItem:    "I062/120",
 			Description: "Track Mode 2 Code",
 			Type:        Fixed,
-			Size: Size{
+			Size: SizeField{
 				ForFixed: 2,
 			},
 		},
@@ -1137,7 +1137,7 @@ var Cat062V119 = StandardUAP{
 			DataItem:    "I062/510",
 			Description: "Composed Track Number",
 			Type:        Extended,
-			Size: Size{
+			Size: SizeField{
 				ForExtendedPrimary:   3,
 				ForExtendedSecondary: 3,
 			},
@@ -1153,7 +1153,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "APC",
 					Description: "Accuracy Of Track Position (Cartesian)",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 4,
 					},
 				},
@@ -1162,7 +1162,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "COV",
 					Description: "XY Covariance",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -1171,7 +1171,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "APW",
 					Description: "Estimated Accuracy Of Track Position (WGS-84)",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 4,
 					},
 				},
@@ -1180,7 +1180,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "AGA",
 					Description: "Estimated Accuracy Of Calculated Track Geometric",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -1189,7 +1189,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "ABA",
 					Description: "Estimated Accuracy Of Calculated Track Barometric",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -1198,7 +1198,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "ATV",
 					Description: "Estimated Accuracy Of Track Velocity (Cartesian)",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -1207,7 +1207,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "AA",
 					Description: "Estimated Accuracy Of Acceleration (Cartesian)",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -1217,7 +1217,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "ARC",
 					Description: "Estimated Accuracy Of Rate Of Climb/Descent",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -1259,7 +1259,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "SID",
 					Description: "Sensor Identification",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -1268,7 +1268,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "POS",
 					Description: "Measured Position",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 4,
 					},
 				},
@@ -1277,7 +1277,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "HEI",
 					Description: "Measured 3-D Height",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -1286,7 +1286,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "MDC",
 					Description: "Last Measured Mode C code",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -1295,7 +1295,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "MDA",
 					Description: "Last Measured Mode 3/A code",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -1304,7 +1304,7 @@ var Cat062V119 = StandardUAP{
 					DataItem:    "TYP",
 					Description: "Report Type",
 					Type:        Fixed,
-					Size: Size{
+					Size: SizeField{
 						ForFixed: 1,
 					},
 				},

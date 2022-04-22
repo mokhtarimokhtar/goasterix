@@ -1,10 +1,28 @@
 package goasterix
 
 import (
+	"bytes"
 	"github.com/mokhtarimokhtar/goasterix/uap"
 	"github.com/mokhtarimokhtar/goasterix/util"
 	"testing"
 )
+
+
+func BenchmarkFspecReader(b *testing.B) {
+	input := []byte{0xFF, 0x01, 0xF2}
+	rb := bytes.NewReader(input)
+
+	for n := 0; n < b.N; n++ {
+		_, _ = FspecReader(rb)
+	}
+}
+func BenchmarkFspecIndex(b *testing.B) {
+	input := []byte{0xef, 0x98}
+
+	for n := 0; n < b.N; n++ {
+		_ = FspecIndex(input)
+	}
+}
 
 func benchmarkRecordDecode(input string, items uap.StandardUAP, b *testing.B) {
 	data, _ := util.HexStringToByte(input)

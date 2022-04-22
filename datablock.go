@@ -69,7 +69,7 @@ func (db *DataBlock) Decode(data []byte) (int, error) {
 	rb := bytes.NewReader(data)
 
 	// retrieve category dataField
-	err = binary.Read(rb, binary.BigEndian, &db.Category)
+	db.Category, err = rb.ReadByte()
 	if err != nil {
 		unRead = rb.Len()
 		return unRead, err // err = io.EOF

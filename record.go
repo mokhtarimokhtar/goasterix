@@ -2,12 +2,8 @@ package goasterix
 
 import (
 	"bytes"
-	"encoding/binary"
 	"encoding/hex"
 	"errors"
-	"io"
-	"math/bits"
-
 	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
@@ -16,10 +12,17 @@ var (
 	ErrDataFieldUnknown = errors.New("type of datafield not found")
 )
 
+type IRecord interface {
+	GetItems() []Item
+}
 type Record struct {
 	Cat   uint8
 	Fspec []byte
 	Items []Item
+}
+
+func (rec Record) GetItems() []Item {
+	return rec.Items
 }
 
 func NewRecord() *Record {
@@ -41,9 +44,10 @@ func (rec *Record) Decode(data []byte, stdUAP uap.StandardUAP) (unRead int, err 
 
 	frnIndex := FspecIndex(rec.Fspec)
 	offset := uint8(0) // offset shifts the index for a conditional UAP
+	rec.Items = make([]Item, 0, len(frnIndex))
 
 	for _, frn := range frnIndex {
-		uapItem := stdUAP.Items[frn-1-offset] // here the index corresponds to the FRN
+		uapItem := stdUAP.DataItems[frn-1-offset] // here the index corresponds to the FRN
 		var item Item
 		item, err = GetItem(uapItem)
 		if err != nil {
@@ -63,17 +67,17 @@ func (rec *Record) Decode(data []byte, stdUAP uap.StandardUAP) (unRead int, err 
 		*/
 
 		unRead = rb.Len()
-		//rec.Items = append(rec.Items, contextType.Item)
+		//rec.DataItems = append(rec.DataItems, contextType.Item)
 		rec.Items = append(rec.Items, item)
 
 		if uapItem.Conditional {
 			switch uapItem.Type {
 			case uap.Fixed:
-				stdUAP.Items = selectUAPConditional(stdUAP.Category, item.Payload())
-				//stdUAP.Items = selectUAPConditional(stdUAP.Category, contextType.Item.Payload())
+				stdUAP.DataItems = selectUAPConditional(stdUAP.Category, item.Payload())
+				//stdUAP.DataItems = selectUAPConditional(stdUAP.Category, contextType.Item.Payload())
 			case uap.Extended:
-				stdUAP.Items = selectUAPConditional(stdUAP.Category, item.Payload())
-				//stdUAP.Items = selectUAPConditional(stdUAP.Category, contextType.Item.Payload())
+				stdUAP.DataItems = selectUAPConditional(stdUAP.Category, item.Payload())
+				//stdUAP.DataItems = selectUAPConditional(stdUAP.Category, contextType.Item.Payload())
 			}
 			offset = frn
 		}
@@ -126,12 +130,12 @@ func selectUAPConditional(category uint8, field []byte) []uap.DataField {
 }
 
 // FspecReader returns a slice of FSPEC data record asterix.
-func FspecReader(reader io.Reader) ([]byte, error) {
+func FspecReader(rb *bytes.Reader) ([]byte, error) {
 	var fspec []byte
 	var err error
+	var tmp byte
 	for {
-		var tmp uint8
-		err = binary.Read(reader, binary.BigEndian, &tmp)
+		tmp, err = rb.ReadByte()
 		if err != nil {
 			return nil, err
 		}
@@ -143,17 +147,18 @@ func FspecReader(reader io.Reader) ([]byte, error) {
 	return fspec, err
 }
 
-// FspecIndex returns an array of uint8 corresponding to number FRN(Field Reference Number of Items).
+// FspecIndex returns an array of uint8 corresponding to number FRN(Field Reference Number of DataItems).
 // In other words, it transposes a fspec bits to an array FRNs.
 // e.g. fspec = 1010 1010 => frnIndex = []uint8{1, 3, 5, 7}
 func FspecIndex(fspec []byte) []uint8 {
-	var frnIndex []uint8
-	for j, val := range fspec {
-		for i := 0; i < 7; i++ {
-			frn := 7*j + i + 1
-			tmp := bits.RotateLeft8(val, i)
-			if tmp&0x80 != 0 {
-				frnIndex = append(frnIndex, uint8(frn))
+	l := uint8(len(fspec))
+	var frnIndex = make([]uint8, 0, l*7)
+	var tmp byte
+	for j := uint8(0); j < l; j++ {
+		for i := uint8(0); i < 7; i++ {
+			tmp = fspec[j] << i
+			if tmp&0x80 != 0  {
+				frnIndex = append(frnIndex, 7*j+i+1)
 			}
 		}
 	}

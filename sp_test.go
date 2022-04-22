@@ -12,11 +12,11 @@ import (
 func TestSpecialPurposeReader(t *testing.T) {
 	// setup
 	type testCase struct {
-		Name   string
+		Name      string
 		input     string
 		dataField uap.DataField
 		output    Item
-		err    error
+		err       error
 	}
 	// Arrange
 	dataSet := []testCase{
@@ -37,7 +37,7 @@ func TestSpecialPurposeReader(t *testing.T) {
 					Description: "Test item",
 					Type:        uap.SP,
 				},
-				Len: 0x08,
+				Len:  0x08,
 				Data: []byte{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07},
 			},
 		},
@@ -58,7 +58,7 @@ func TestSpecialPurposeReader(t *testing.T) {
 					Description: "Test item",
 					Type:        uap.SP,
 				},
-				Len: 0x08,
+				Len:  0x08,
 				Data: nil,
 			},
 		},
@@ -79,7 +79,7 @@ func TestSpecialPurposeReader(t *testing.T) {
 					Description: "Test item",
 					Type:        uap.SP,
 				},
-				Len: 0x00,
+				Len:  0x00,
 				Data: nil,
 			},
 		},
@@ -181,8 +181,8 @@ func TestSpecialPurposePayload(t *testing.T) {
 			output: []byte{0x04, 0xab, 0xcd, 0xef},
 		},
 		{
-			Name:   "testCase 2",
-			input:  SpecialPurpose{
+			Name: "testCase 2",
+			input: SpecialPurpose{
 				Base: Base{},
 				Len:  0,
 				Data: nil,

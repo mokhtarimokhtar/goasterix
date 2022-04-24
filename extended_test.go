@@ -25,7 +25,7 @@ func TestExtendedReader(t *testing.T) {
 			input: "01 03 07 09 0b 0d 0f 0e",
 			dataField: uap.DataField{
 				Type: uap.Extended,
-				Size: uap.SizeField{
+				SizeItem: uap.SizeField{
 					ForExtendedPrimary:   1,
 					ForExtendedSecondary: 1,
 				},
@@ -46,7 +46,7 @@ func TestExtendedReader(t *testing.T) {
 			input: "fe",
 			dataField: uap.DataField{
 				Type: uap.Extended,
-				Size: uap.SizeField{
+				SizeItem: uap.SizeField{
 					ForExtendedPrimary:   1,
 					ForExtendedSecondary: 1,
 				},
@@ -66,7 +66,7 @@ func TestExtendedReader(t *testing.T) {
 			input: "",
 			dataField: uap.DataField{
 				Type: uap.Extended,
-				Size: uap.SizeField{
+				SizeItem: uap.SizeField{
 					ForExtendedPrimary:   1,
 					ForExtendedSecondary: 1,
 				},
@@ -86,7 +86,7 @@ func TestExtendedReader(t *testing.T) {
 			input: "ff",
 			dataField: uap.DataField{
 				Type: uap.Extended,
-				Size: uap.SizeField{
+				SizeItem: uap.SizeField{
 					ForExtendedPrimary:   1,
 					ForExtendedSecondary: 1,
 				},
@@ -106,7 +106,7 @@ func TestExtendedReader(t *testing.T) {
 			input: "ff",
 			dataField: uap.DataField{
 				Type: uap.Extended,
-				Size: uap.SizeField{
+				SizeItem: uap.SizeField{
 					ForExtendedPrimary:   2,
 					ForExtendedSecondary: 1,
 				},
@@ -126,7 +126,7 @@ func TestExtendedReader(t *testing.T) {
 			input: "0001 000001 fffffe",
 			dataField: uap.DataField{
 				Type: uap.Extended,
-				Size: uap.SizeField{
+				SizeItem: uap.SizeField{
 					ForExtendedPrimary:   2,
 					ForExtendedSecondary: 3,
 				},
@@ -147,7 +147,7 @@ func TestExtendedReader(t *testing.T) {
 			input: "0001 000001 ffff",
 			dataField: uap.DataField{
 				Type: uap.Extended,
-				Size: uap.SizeField{
+				SizeItem: uap.SizeField{
 					ForExtendedPrimary:   2,
 					ForExtendedSecondary: 3,
 				},

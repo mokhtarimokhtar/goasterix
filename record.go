@@ -148,7 +148,7 @@ func FspecReader(rb *bytes.Reader) ([]byte, error) {
 }
 
 // FspecIndex returns an array of uint8 corresponding to number FRN(Field Reference Number of DataItems).
-// In other words, it transposes a fspec bits to an array FRNs.
+// In other words, it transposes a fspec pos to an array FRNs.
 // e.g. fspec = 1010 1010 => frnIndex = []uint8{1, 3, 5, 7}
 func FspecIndex(fspec []byte) []uint8 {
 	l := uint8(len(fspec))

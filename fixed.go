@@ -10,16 +10,26 @@ import (
 // Fixed length Data Fields shall comprise a fixed number of octets.
 type Fixed struct {
 	Base
-	Data []byte
-	Size uint8
+	Data     []byte
+	Size     uint8
+	SubItems []SubItem
 }
 
 func newFixed(field uap.IDataField) Item {
 	f := &Fixed{}
-	//f.Base.NewBase(field)
 	f.Base.NewBase(field)
-	//f.SizeField = field.Fixed.SizeField
 	f.Size = field.GetSize().ForFixed
+	/*for _, item := range field.GetSubItems() {
+		tmp := SubItem{
+			Name: item.Name,
+			Pos: BitPosition{
+				Bit:  item.Bit,
+				From: item.From,
+				To:   item.To,
+			},
+		}
+		f.SubItems = append(f.SubItems, tmp)
+	}*/
 	return f
 }
 
@@ -32,6 +42,12 @@ func (f *Fixed) Reader(rb *bytes.Reader) error {
 		f.Data = nil
 		return err
 	}
+	//tmp := f.Data
+	//for _, subItem := range f.SubItems {
+	//	//tmp := make([]byte, subItem.SizeBit)
+	//	//subItem.Pos.From
+	//}
+
 	return err
 }
 
@@ -51,4 +67,3 @@ func (f Fixed) String() string {
 	buf.WriteString(hex.EncodeToString(f.Data))
 	return buf.String()
 }
-

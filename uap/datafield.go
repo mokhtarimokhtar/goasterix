@@ -12,6 +12,8 @@ const (
 	RE
 	RFS
 	Spare
+	Bit
+	FromTo
 )
 
 // StandardUAP is User Application Profile
@@ -32,6 +34,7 @@ type IDataField interface {
 	GetSize() SizeField
 	GetCompound() []DataField
 	GetRFS() []DataField
+	GetSubItems() []SubItem
 }
 
 // DataField describes FRN(Field Reference Number)
@@ -43,7 +46,19 @@ type DataField struct {
 	Compound    []DataField
 	RFS         []DataField
 	Conditional bool
-	Size        SizeField
+	SizeItem    SizeField
+	SubItems    []SubItem
+}
+
+type SubItem struct {
+	Name string
+	Type TypeField
+	BitPosition
+}
+type BitPosition struct {
+	Bit  uint8
+	From uint8
+	To   uint8
 }
 
 type SizeField struct {
@@ -59,7 +74,7 @@ func DataFieldFactory(frn uint8, dataItem string, desc string, t TypeField, s Si
 	d.DataItem = dataItem
 	d.Description = desc
 	d.Type = t
-	d.Size = s
+	d.SizeItem = s
 	return d
 }
 
@@ -76,7 +91,7 @@ func (d DataField) GetType() TypeField {
 	return d.Type
 }
 func (d DataField) GetSize() SizeField {
-	return d.Size
+	return d.SizeItem
 }
 func (d DataField) GetCompound() []DataField {
 	return d.Compound
@@ -84,5 +99,6 @@ func (d DataField) GetCompound() []DataField {
 func (d DataField) GetRFS() []DataField {
 	return d.RFS
 }
-
-
+func (d DataField) GetSubItems() []SubItem {
+	return d.SubItems
+}

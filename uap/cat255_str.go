@@ -11,7 +11,7 @@ var Cat255StrV51 = StandardUAP{
 			FRN:      1,
 			DataItem: "I255/010",
 			Type:     Fixed,
-			Size: SizeField{
+			SizeItem: SizeField{
 				ForFixed: 2,
 			},
 		},
@@ -19,7 +19,7 @@ var Cat255StrV51 = StandardUAP{
 			FRN:      2,
 			DataItem: "I255/020",
 			Type:     Fixed,
-			Size: SizeField{
+			SizeItem: SizeField{
 				ForFixed: 3,
 			},
 		},
@@ -27,7 +27,7 @@ var Cat255StrV51 = StandardUAP{
 			FRN:      3,
 			DataItem: "I255/030",
 			Type:     Extended,
-			Size: SizeField{
+			SizeItem: SizeField{
 				ForExtendedPrimary:   1,
 				ForExtendedSecondary: 1,
 			},
@@ -36,7 +36,7 @@ var Cat255StrV51 = StandardUAP{
 			FRN:      4,
 			DataItem: "I255/050",
 			Type:     Fixed,
-			Size: SizeField{
+			SizeItem: SizeField{
 				ForFixed: 4,
 			},
 		},
@@ -44,7 +44,7 @@ var Cat255StrV51 = StandardUAP{
 			FRN:      5,
 			DataItem: "I255/060",
 			Type:     Repetitive,
-			Size: SizeField{
+			SizeItem: SizeField{
 				ForRepetitive: 1,
 			},
 		},
@@ -52,7 +52,7 @@ var Cat255StrV51 = StandardUAP{
 			FRN:      6,
 			DataItem: "I255/070",
 			Type:     Fixed,
-			Size: SizeField{
+			SizeItem: SizeField{
 				ForFixed: 9,
 			},
 		},
@@ -60,7 +60,7 @@ var Cat255StrV51 = StandardUAP{
 			FRN:      7,
 			DataItem: "I255/040",
 			Type:     Repetitive,
-			Size: SizeField{
+			SizeItem: SizeField{
 				ForRepetitive: 10,
 			},
 		},

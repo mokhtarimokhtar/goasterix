@@ -11,7 +11,7 @@ var Cat034V127 = StandardUAP{
 			DataItem:    "I034/010",
 			Description: "Data Source Identifier",
 			Type:        Fixed,
-			Size: SizeField{
+			SizeItem: SizeField{
 				ForFixed: 2,
 			},
 		},
@@ -20,7 +20,7 @@ var Cat034V127 = StandardUAP{
 			DataItem:    "I034/000",
 			Description: "Message Type",
 			Type:        Fixed,
-			Size: SizeField{
+			SizeItem: SizeField{
 				ForFixed: 1,
 			},
 		},
@@ -29,7 +29,7 @@ var Cat034V127 = StandardUAP{
 			DataItem:    "I034/030",
 			Description: "Time-of-Day",
 			Type:        Fixed,
-			Size: SizeField{
+			SizeItem: SizeField{
 				ForFixed: 3,
 			},
 		},
@@ -38,7 +38,7 @@ var Cat034V127 = StandardUAP{
 			DataItem:    "I034/020",
 			Description: "Sector Number",
 			Type:        Fixed,
-			Size: SizeField{
+			SizeItem: SizeField{
 				ForFixed: 1,
 			},
 		},
@@ -47,7 +47,7 @@ var Cat034V127 = StandardUAP{
 			DataItem:    "I034/041",
 			Description: "Antenna Rotation Period",
 			Type:        Fixed,
-			Size: SizeField{
+			SizeItem: SizeField{
 				ForFixed: 2,
 			},
 		},
@@ -61,7 +61,7 @@ var Cat034V127 = StandardUAP{
 					DataItem:    "COM",
 					Description: "Common Part",
 					Type:        Fixed,
-					Size: SizeField{
+					SizeItem: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -78,7 +78,7 @@ var Cat034V127 = StandardUAP{
 					DataItem:    "PSR",
 					Description: "Specific Status for PSR Sensor",
 					Type:        Fixed,
-					Size: SizeField{
+					SizeItem: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -87,7 +87,7 @@ var Cat034V127 = StandardUAP{
 					DataItem:    "SSR",
 					Description: "Specific Status for SSR Sensor",
 					Type:        Fixed,
-					Size: SizeField{
+					SizeItem: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -96,7 +96,7 @@ var Cat034V127 = StandardUAP{
 					DataItem:    "MDS",
 					Description: "Specific Status for Mode S Sensor",
 					Type:        Fixed,
-					Size: SizeField{
+					SizeItem: SizeField{
 						ForFixed: 2,
 					},
 				},
@@ -116,7 +116,7 @@ var Cat034V127 = StandardUAP{
 					DataItem:    "COM",
 					Description: "Common Part",
 					Type:        Fixed,
-					Size: SizeField{
+					SizeItem: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -133,7 +133,7 @@ var Cat034V127 = StandardUAP{
 					DataItem:    "PSR",
 					Description: "Specific Processing Mode information for PSR Sensor",
 					Type:        Fixed,
-					Size: SizeField{
+					SizeItem: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -142,7 +142,7 @@ var Cat034V127 = StandardUAP{
 					DataItem:    "SSR",
 					Description: "Specific Processing Mode information for SSR Sensor",
 					Type:        Fixed,
-					Size: SizeField{
+					SizeItem: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -151,7 +151,7 @@ var Cat034V127 = StandardUAP{
 					DataItem:    "MDS",
 					Description: "Specific Processing Mode information for Mode S Sensor",
 					Type:        Fixed,
-					Size: SizeField{
+					SizeItem: SizeField{
 						ForFixed: 1,
 					},
 				},
@@ -166,7 +166,7 @@ var Cat034V127 = StandardUAP{
 			DataItem:    "I034/070",
 			Description: "Message Count Values",
 			Type:        Repetitive,
-			Size: SizeField{
+			SizeItem: SizeField{
 				ForRepetitive: 2,
 			},
 		},
@@ -175,7 +175,7 @@ var Cat034V127 = StandardUAP{
 			DataItem:    "I034/100",
 			Description: "Generic Polar Window",
 			Type:        Fixed,
-			Size: SizeField{
+			SizeItem: SizeField{
 				ForFixed: 8,
 			},
 		},
@@ -184,7 +184,7 @@ var Cat034V127 = StandardUAP{
 			DataItem:    "I034/110",
 			Description: "Data Filter",
 			Type:        Fixed,
-			Size: SizeField{
+			SizeItem: SizeField{
 				ForFixed: 1,
 			},
 		},
@@ -193,7 +193,7 @@ var Cat034V127 = StandardUAP{
 			DataItem:    "I034/120",
 			Description: "3D-Position of Data Source",
 			Type:        Fixed,
-			Size: SizeField{
+			SizeItem: SizeField{
 				ForFixed: 8,
 			},
 		},
@@ -202,7 +202,7 @@ var Cat034V127 = StandardUAP{
 			DataItem:    "I034/090",
 			Description: "Collimation Error",
 			Type:        Fixed,
-			Size: SizeField{
+			SizeItem: SizeField{
 				ForFixed: 2,
 			},
 		},

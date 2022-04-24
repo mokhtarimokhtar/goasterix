@@ -12,27 +12,27 @@ import (
 func TestFixedReader(t *testing.T) {
 	// setup
 	type testCase struct {
-		Name      string
-		input     string
+		Name        string
+		input       string
 		FRN         uint8
 		DataItem    string
 		Description string
 		Type        uap.TypeField
 		Size        uap.SizeField
-		output Item
-		err    error
+		output      Item
+		err         error
 	}
 	// Arrange
 	dataSet := []testCase{
 		{
-			Name:  "testCase 1",
-			input: "01 02 03 04 05 06 07 08",
+			Name:        "testCase 1",
+			input:       "01 02 03 04 05 06 07 08",
 			FRN:         8,
 			DataItem:    "I000/080",
 			Description: "Test item",
 			Type:        uap.Fixed,
 			Size: uap.SizeField{
-				ForFixed:             8,
+				ForFixed: 8,
 			},
 			err: nil,
 			output: &Fixed{
@@ -47,14 +47,14 @@ func TestFixedReader(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testCase 2",
-			input: "01 02 03 04 05 06 07",
+			Name:        "testCase 2",
+			input:       "01 02 03 04 05 06 07",
 			FRN:         8,
 			DataItem:    "I000/080",
 			Description: "Test item",
 			Type:        uap.Fixed,
 			Size: uap.SizeField{
-				ForFixed:             8,
+				ForFixed: 8,
 			},
 			output: &Fixed{
 				Base: Base{

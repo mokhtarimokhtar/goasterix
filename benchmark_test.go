@@ -7,7 +7,6 @@ import (
 	"testing"
 )
 
-
 func BenchmarkFspecReader(b *testing.B) {
 	input := []byte{0xFF, 0x01, 0xF2}
 	rb := bytes.NewReader(input)
@@ -16,11 +15,70 @@ func BenchmarkFspecReader(b *testing.B) {
 		_, _ = FspecReader(rb)
 	}
 }
+
 func BenchmarkFspecIndex(b *testing.B) {
 	input := []byte{0xef, 0x98}
 
 	for n := 0; n < b.N; n++ {
 		_ = FspecIndex(input)
+	}
+}
+
+func BenchmarkSubItemBitReader(b *testing.B) {
+	input := []byte{0x10, 0x00, 0x00, 0x00}
+	for n := 0; n < b.N; n++ {
+		sub := new(SubItemBit)
+		sub.Name = "item1"
+		sub.Type = uap.Bit
+		sub.Pos = 29
+		_ = sub.Reader(input)
+	}
+}
+
+func BenchmarkGetBitsFromTo(b *testing.B) {
+	var input = []byte{0xdd, 0x75}
+	var from = uint8(13)
+	var to = uint8(3)
+	for n := 0; n < b.N; n++ {
+		_ = GetBitsFromTo(input, from, to)
+	}
+}
+
+// BitReader
+func BenchmarkOneBitReader(b *testing.B) {
+	var input byte = 0xd5
+	var pos = uint8(6)
+
+	for n := 0; n < b.N; n++ {
+		_ = OneBitReader(input, pos)
+	}
+}
+
+func BenchmarkFromToBitReader8(b *testing.B) {
+	var input byte = 0xd5
+	var from = uint8(7)
+	var to = uint8(2)
+	for n := 0; n < b.N; n++ {
+		_ = FromToBitReader8(input, from, to)
+	}
+}
+
+func BenchmarkFromToBitReader16(b *testing.B) {
+	//var input uint16 = 0xdd75
+	var input = []byte{0xdd, 0x75}
+	var from = uint8(13)
+	var to = uint8(3)
+	for n := 0; n < b.N; n++ {
+		_ = FromToBitReader16(input, from, to)
+	}
+}
+
+func BenchmarkFromToBitReader32(b *testing.B) {
+	var input uint32 = 0xdd75cc33
+	var from = uint8(13)
+	var to = uint8(3)
+	for n := 0; n < b.N; n++ {
+		_ = FromToBitReader32(input, from, to)
 	}
 }
 
@@ -75,6 +133,7 @@ func BenchmarkRecordDecode_Len55(b *testing.B) {
 		uap.Cat048V127,
 		b)
 }
+
 /*func BenchmarkRecordDecode_Len68(b *testing.B) {
 	benchmarkRecordDecode(
 		"fc ffff fffffe 03ffff 02ffffffff ab80 ff fffe 02ffffffff 04ffffff ffff 0101ffff",

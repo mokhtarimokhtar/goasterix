@@ -1,4 +1,4 @@
-package uap
+package _uap
 
 // Cat048V127 User Application Profile
 // version 1.27

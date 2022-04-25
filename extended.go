@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/binary"
 	"encoding/hex"
-	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
 // Extended length Data Fields, being of a variable length, shall contain a primary part of predetermined length,
@@ -20,12 +19,21 @@ type Extended struct {
 	Secondary         []byte
 }
 
-func NewExtended(field uap.IDataField) Item {
+func NewExtended(field Item) Item {
 	f := &Extended{}
 	f.Base.NewBase(field)
 	f.PrimaryItemSize = field.GetSize().ForExtendedPrimary
 	f.SecondaryItemSize = field.GetSize().ForExtendedSecondary
 	return f
+}
+func (e Extended) GetSize() SizeField {
+	s := SizeField{}
+	s.ForExtendedPrimary = e.PrimaryItemSize
+	s.ForExtendedSecondary = e.SecondaryItemSize
+	return s
+}
+func (e Extended) GetCompound() []Item {
+	return nil // not used, it's for implement Item interface
 }
 
 // Reader extracts data item type Extended (FX: last bit = 1).

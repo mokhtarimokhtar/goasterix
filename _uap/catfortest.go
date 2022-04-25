@@ -1,4 +1,4 @@
-package uap
+package _uap
 
 // CatForTest User Application Profile
 // Specific for testing

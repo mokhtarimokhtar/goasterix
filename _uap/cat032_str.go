@@ -1,4 +1,4 @@
-package uap
+package _uap
 
 // Cat032StrV70 User Application Profile
 // version 5.1

@@ -3,14 +3,37 @@ package goasterix
 import (
 	"bytes"
 	"encoding/binary"
-	"github.com/mokhtarimokhtar/goasterix/uap"
+	//"github.com/mokhtarimokhtar/goasterix/_uap"
 )
 
+type TypeField uint8
+
+const (
+	FixedField TypeField = iota + 1
+	ExtendedField
+	CompoundField
+	RepetitiveField
+	ExplicitField
+	SPField
+	REField
+	RFSField
+	SpareField
+	BitField
+	FromToField
+)
+
+/*type ICompound interface {
+	GetCompound() []Item
+	Item
+}*/
+
 type Item interface {
+	IBase
 	Payload() []byte
 	String() string
 	Reader(*bytes.Reader) error
-	Frn() uint8
+	GetSize() SizeField
+	GetCompound() []Item
 }
 
 // Readers extracts data from the corresponding Item type.
@@ -21,24 +44,29 @@ func Readers(i Item, rb *bytes.Reader) error {
 
 // GetItem returns the corresponding Item type: Fixed, Extended, etc.
 // GetItem is a factory function
-func GetItem(df uap.IDataField) (Item, error) {
+//func GetItem(df _uap.IDataField) (Item, error) {
+func GetItem(i Item) (Item, error) {
 	var err error
 	var item Item
-	switch df.GetType() {
-	case uap.Fixed:
-		item = newFixed(df)
-	case uap.Extended:
-		item = NewExtended(df)
-	case uap.Repetitive:
-		item = NewRepetitive(df)
-	case uap.Explicit:
-		item = NewExplicit(df)
-	case uap.Compound:
-		item = NewCompound(df)
-	case uap.SP, uap.RE:
-		item = NewSpecialPurpose(df)
-	case uap.RFS:
-		item = NewRandomFieldSequencing(df)
+	switch i.GetType() {
+	case FixedField:
+		item = newFixed(i)
+	case ExtendedField:
+		item = NewExtended(i)
+	case ExplicitField:
+		item = NewExplicit(i)
+	case RepetitiveField:
+		item = NewRepetitive(i)
+	case SPField:
+		item = NewSpecialPurpose(i)
+	case REField:
+		item = NewReservedExpansion(i)
+	case CompoundField:
+		//var c ICompound
+		item = NewCompound(i)
+		/*
+			case uap.RFS:
+				item = NewRandomFieldSequencing(i)*/
 	default:
 		err = ErrDataFieldUnknown
 		return nil, err
@@ -48,18 +76,19 @@ func GetItem(df uap.IDataField) (Item, error) {
 
 // GetItemCompound returns the corresponding Item type: Fixed, Extended, etc.
 // GetItemCompound is a factory function for compound item type
-func GetItemCompound(df uap.IDataField) (Item, error) {
+//func GetItemCompound(df uap.IDataField) (Item, error) {
+func GetItemCompound(i Item) (Item, error) {
 	var err error
 	var item Item
-	switch df.GetType() {
-	case uap.Fixed:
-		item = newFixed(df)
-	case uap.Extended:
-		item = NewExtended(df)
-	case uap.Repetitive:
-		item = NewRepetitive(df)
-	case uap.Explicit:
-		item = NewExplicit(df)
+	switch i.GetType() {
+	case FixedField:
+		item = newFixed(i)
+	case ExtendedField:
+		item = NewExtended(i)
+	case RepetitiveField:
+		item = NewRepetitive(i)
+	case ExplicitField:
+		item = NewExplicit(i)
 	default:
 		err = ErrDataFieldUnknown
 		return nil, err
@@ -67,23 +96,46 @@ func GetItemCompound(df uap.IDataField) (Item, error) {
 	return item, err
 }
 
+type SizeField struct {
+	ForFixed             uint8
+	ForExtendedPrimary   uint8
+	ForExtendedSecondary uint8
+	ForRepetitive        uint8
+}
+
+type IBase interface {
+	GetFrn() uint8
+	GetType() TypeField
+	GetDataItem() string
+	GetDescription() string
+}
+
 type Base struct {
 	FRN         uint8
 	DataItem    string
 	Description string
-	Type        uap.TypeField
+	Type        TypeField
 }
 
-func (b *Base) NewBase(field uap.IDataField) {
+func (b *Base) NewBase(field Item) {
 	b.FRN = field.GetFrn()
 	b.DataItem = field.GetDataItem()
 	b.Description = field.GetDescription()
 	b.Type = field.GetType()
 }
 
-// Frn returns FRN number of dataField from UAP
-func (b Base) Frn() uint8 {
+// GetFrn returns FRN number of dataField from UAP
+func (b Base) GetFrn() uint8 {
 	return b.FRN
+}
+func (b Base) GetType() TypeField {
+	return b.Type
+}
+func (b Base) GetDataItem() string {
+	return b.DataItem
+}
+func (b Base) GetDescription() string {
+	return b.Description
 }
 
 func FromToBitReader8(data byte, from uint8, to uint8) byte {

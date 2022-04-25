@@ -2,7 +2,6 @@ package goasterix
 
 import (
 	"bytes"
-	"github.com/mokhtarimokhtar/goasterix/uap"
 	"github.com/mokhtarimokhtar/goasterix/util"
 	"io"
 	"reflect"
@@ -12,27 +11,30 @@ import (
 func TestCompoundReader(t *testing.T) {
 	// setup
 	type testCase struct {
-		Name      string
-		input     string
-		dataField uap.DataField
-		output    Item
-		err       error
+		Name  string
+		input string
+		//item   ICompound
+		item   Item
+		output Item
+		err    error
 	}
 	// Arrange
 	dataSet := []testCase{
 		{
 			Name:  "testCase 1",
 			input: "80 01",
-			dataField: uap.DataField{
-				FRN:  16,
-				Type: uap.Compound,
-				Compound: []uap.DataField{
-					{
-						FRN:  1,
-						Type: uap.Fixed,
-						SizeItem: uap.SizeField{
-							ForFixed: 1,
+			item: &Compound{
+				Base: Base{
+					FRN:  16,
+					Type: CompoundField,
+				},
+				Secondary: []Item{
+					&Fixed{
+						Base: Base{
+							FRN:  1,
+							Type: FixedField,
 						},
+						Size: 1,
 					},
 				},
 			},
@@ -40,23 +42,14 @@ func TestCompoundReader(t *testing.T) {
 			output: &Compound{
 				Base: Base{
 					FRN:  16,
-					Type: uap.Compound,
-				},
-				Fields: []uap.DataField{
-					{
-						FRN:  1,
-						Type: uap.Fixed,
-						SizeItem: uap.SizeField{
-							ForFixed: 1,
-						},
-					},
+					Type: CompoundField,
 				},
 				Primary: []byte{0x80},
 				Secondary: []Item{
 					&Fixed{
 						Base: Base{
 							FRN:  1,
-							Type: uap.Fixed,
+							Type: FixedField,
 						},
 						Size: 1,
 						Data: []byte{0x01},
@@ -67,86 +60,64 @@ func TestCompoundReader(t *testing.T) {
 		{
 			Name:  "testCase 2",
 			input: "d4 01 01fe 0201020102 030102",
-			dataField: uap.DataField{
-				Type: uap.Compound,
-				Compound: []uap.DataField{
-					{
-						FRN:      1,
-						Type:     uap.Fixed,
-						SizeItem: uap.SizeField{ForFixed: 1},
-					},
-					{
-						FRN:  2,
-						Type: uap.Extended,
-						SizeItem: uap.SizeField{
-							ForExtendedPrimary:   1,
-							ForExtendedSecondary: 1,
+			item: &Compound{
+				Base: Base{
+					FRN:  16,
+					Type: CompoundField,
+				},
+				Secondary: []Item{
+					&Fixed{
+						Base: Base{
+							FRN:  1,
+							Type: FixedField,
 						},
+						Size: 1,
 					},
-					{
-						FRN:      3,
-						Type:     uap.Fixed,
-						SizeItem: uap.SizeField{ForFixed: 1},
+					&Extended{
+						Base: Base{
+							FRN:  2,
+							Type: ExtendedField,
+						},
+						PrimaryItemSize:   1,
+						SecondaryItemSize: 1,
 					},
-					{
-						FRN:      4,
-						Type:     uap.Repetitive,
-						SizeItem: uap.SizeField{ForRepetitive: 2},
+					&Fixed{
+						Base: Base{
+							FRN:  3,
+							Type: FixedField,
+						},
+						Size: 1,
 					},
-					{
-						FRN:  5,
-						Type: uap.Spare,
+					&Repetitive{
+						Base: Base{
+							FRN:  4,
+							Type: RepetitiveField,
+						},
+						SubItemSize: 2,
 					},
-					{
-						FRN:  6,
-						Type: uap.Explicit,
+					&Spare{Base{
+						FRN: 5,
+					}},
+					&Explicit{
+						Base: Base{
+							FRN:  6,
+							Type: ExplicitField,
+						},
 					},
 				},
 			},
 			err: nil,
 			output: &Compound{
 				Base: Base{
-					Type: uap.Compound,
-				},
-				Fields: []uap.DataField{
-					{
-						FRN:      1,
-						Type:     uap.Fixed,
-						SizeItem: uap.SizeField{ForFixed: 1},
-					},
-					{
-						FRN:  2,
-						Type: uap.Extended,
-						SizeItem: uap.SizeField{
-							ForExtendedPrimary:   1,
-							ForExtendedSecondary: 1,
-						},
-					},
-					{
-						FRN:      3,
-						Type:     uap.Fixed,
-						SizeItem: uap.SizeField{ForFixed: 1},
-					},
-					{
-						FRN:      4,
-						Type:     uap.Repetitive,
-						SizeItem: uap.SizeField{ForRepetitive: 2},
-					},
-					{
-						FRN:  5,
-						Type: uap.Spare,
-					},
-					{
-						FRN:  6,
-						Type: uap.Explicit,
-					},
+					FRN:  16,
+					Type: CompoundField,
 				},
 				Primary: []byte{0xd4},
 				Secondary: []Item{
 					&Fixed{
 						Base: Base{
 							FRN:  1,
-							Type: uap.Fixed,
+							Type: FixedField,
 						},
 						Size: 1,
 						Data: []byte{0x01},
@@ -154,7 +125,7 @@ func TestCompoundReader(t *testing.T) {
 					&Extended{
 						Base: Base{
 							FRN:  2,
-							Type: uap.Extended,
+							Type: ExtendedField,
 						},
 						PrimaryItemSize:   1,
 						SecondaryItemSize: 1,
@@ -164,7 +135,7 @@ func TestCompoundReader(t *testing.T) {
 					&Repetitive{
 						Base: Base{
 							FRN:  4,
-							Type: uap.Repetitive,
+							Type: RepetitiveField,
 						},
 						SubItemSize: 2,
 						Rep:         0x02,
@@ -173,7 +144,7 @@ func TestCompoundReader(t *testing.T) {
 					&Explicit{
 						Base: Base{
 							FRN:  6,
-							Type: uap.Explicit,
+							Type: ExplicitField,
 						},
 						Len:  0x03,
 						Data: []byte{0x01, 0x02},
@@ -184,46 +155,47 @@ func TestCompoundReader(t *testing.T) {
 		{
 			Name:  "testCase 3",
 			input: "",
-			dataField: uap.DataField{
-				Type: uap.Compound,
-				Compound: []uap.DataField{
-					{
-						FRN:      1,
-						Type:     uap.Fixed,
-						SizeItem: uap.SizeField{ForFixed: 1},
+			item: &Compound{
+				Base: Base{
+					FRN:  16,
+					Type: CompoundField,
+				},
+				Secondary: []Item{
+					&Fixed{
+						Base: Base{
+							FRN:  1,
+							Type: FixedField,
+						},
+						Size: 1,
 					},
 				},
 			},
 			err: io.EOF,
 			output: &Compound{
 				Base: Base{
-					Type: uap.Compound,
-				},
-				Fields: []uap.DataField{
-					{
-						FRN:      1,
-						Type:     uap.Fixed,
-						SizeItem: uap.SizeField{ForFixed: 1},
-					},
+					FRN:  16,
+					Type: CompoundField,
 				},
 				Primary:   nil,
 				Secondary: nil,
 			},
 		},
 		{
-			Name:  "testCase 4",
+			Name:  "testCase 5",
 			input: "80 01",
-			dataField: uap.DataField{
-				FRN:  16,
-				Type: uap.Compound,
-				Compound: []uap.DataField{
-					{
-						FRN:  1,
-						Type: uap.Extended,
-						SizeItem: uap.SizeField{
-							ForExtendedPrimary:   1,
-							ForExtendedSecondary: 1,
+			item: &Compound{
+				Base: Base{
+					FRN:  16,
+					Type: CompoundField,
+				},
+				Secondary: []Item{
+					&Extended{
+						Base: Base{
+							FRN:  1,
+							Type: ExtendedField,
 						},
+						PrimaryItemSize:   1,
+						SecondaryItemSize: 1,
 					},
 				},
 			},
@@ -231,46 +203,7 @@ func TestCompoundReader(t *testing.T) {
 			output: &Compound{
 				Base: Base{
 					FRN:  16,
-					Type: uap.Compound,
-				},
-				Fields: []uap.DataField{
-					{
-						FRN:  1,
-						Type: uap.Extended,
-						SizeItem: uap.SizeField{
-							ForExtendedPrimary:   1,
-							ForExtendedSecondary: 1,
-						},
-					},
-				},
-				Primary:   []byte{0x80},
-				Secondary: []Item{},
-			},
-		},
-		{
-			Name:  "testCase 5",
-			input: "80 01",
-			dataField: uap.DataField{
-				FRN:  16,
-				Type: uap.Compound,
-				Compound: []uap.DataField{
-					{
-						FRN:  1,
-						Type: uap.SP,
-					},
-				},
-			},
-			err: ErrDataFieldUnknown,
-			output: &Compound{
-				Base: Base{
-					FRN:  16,
-					Type: uap.Compound,
-				},
-				Fields: []uap.DataField{
-					{
-						FRN:  1,
-						Type: uap.SP,
-					},
+					Type: CompoundField,
 				},
 				Primary:   []byte{0x80},
 				Secondary: []Item{},
@@ -278,28 +211,26 @@ func TestCompoundReader(t *testing.T) {
 		},
 		{
 			Name:  "testCase 6",
-			input: "80 02",
-			dataField: uap.DataField{
-				FRN:  16,
-				Type: uap.Compound,
-				Compound: []uap.DataField{
-					{
-						FRN:  1,
-						Type: uap.Explicit,
+			input: "80 01",
+			item: &Compound{
+				Base: Base{
+					FRN:  16,
+					Type: CompoundField,
+				},
+				Secondary: []Item{
+					&SpecialPurpose{
+						Base: Base{
+							FRN:  1,
+							Type: SPField,
+						},
 					},
 				},
 			},
-			err: io.EOF,
+			err: ErrDataFieldUnknown,
 			output: &Compound{
 				Base: Base{
 					FRN:  16,
-					Type: uap.Compound,
-				},
-				Fields: []uap.DataField{
-					{
-						FRN:  1,
-						Type: uap.Explicit,
-					},
+					Type: CompoundField,
 				},
 				Primary:   []byte{0x80},
 				Secondary: []Item{},
@@ -307,30 +238,54 @@ func TestCompoundReader(t *testing.T) {
 		},
 		{
 			Name:  "testCase 7",
-			input: "80 020102",
-			dataField: uap.DataField{
-				FRN:  16,
-				Type: uap.Compound,
-				Compound: []uap.DataField{
-					{
-						FRN:      1,
-						Type:     uap.Repetitive,
-						SizeItem: uap.SizeField{ForRepetitive: 2},
+			input: "80 02",
+			item: &Compound{
+				Base: Base{
+					FRN:  16,
+					Type: CompoundField,
+				},
+				Secondary: []Item{
+					&Explicit{
+						Base: Base{
+							FRN:  1,
+							Type: ExplicitField,
+						},
 					},
 				},
 			},
-			err: io.ErrUnexpectedEOF,
+			err: io.EOF,
 			output: &Compound{
 				Base: Base{
 					FRN:  16,
-					Type: uap.Compound,
+					Type: CompoundField,
 				},
-				Fields: []uap.DataField{
-					{
-						FRN:      1,
-						Type:     uap.Repetitive,
-						SizeItem: uap.SizeField{ForRepetitive: 2},
+				Primary:   []byte{0x80},
+				Secondary: []Item{},
+			},
+		},
+		{
+			Name:  "testCase 8",
+			input: "80 02",
+			item: &Compound{
+				Base: Base{
+					FRN:  16,
+					Type: CompoundField,
+				},
+				Secondary: []Item{
+					&Repetitive{
+						Base: Base{
+							FRN:  1,
+							Type: RepetitiveField,
+						},
+						SubItemSize: 2,
 					},
+				},
+			},
+			err: io.EOF,
+			output: &Compound{
+				Base: Base{
+					FRN:  16,
+					Type: CompoundField,
 				},
 				Primary:   []byte{0x80},
 				Secondary: []Item{},
@@ -338,31 +293,31 @@ func TestCompoundReader(t *testing.T) {
 		},
 	}
 
-	for _, row := range dataSet {
+	for _, tc := range dataSet {
 		// Arrange
-		input, _ := util.HexStringToByte(row.input)
+		input, _ := util.HexStringToByte(tc.input)
 		rb := bytes.NewReader(input)
-		f := NewCompound(row.dataField)
+		f := NewCompound(tc.item)
 
 		// Act
-		//err := f.Reader(rb, row.dataField)
 		err := f.Reader(rb)
 
 		// Assert
-		if err != row.err {
-			t.Errorf(util.MsgFailInValue, row.Name, err, row.err)
+		if err != tc.err {
+			t.Errorf(util.MsgFailInValue, tc.Name, err, tc.err)
 		} else {
-			t.Logf(util.MsgSuccessInValue, row.Name, err, row.err)
+			t.Logf(util.MsgSuccessInValue, tc.Name, err, tc.err)
 		}
 
-		if reflect.DeepEqual(f, row.output) == false {
-			t.Errorf(util.MsgFailInValue, row.Name, f, row.output)
+		if reflect.DeepEqual(f, tc.output) == false {
+			t.Errorf(util.MsgFailInValue, tc.Name, f, tc.output)
 		} else {
-			t.Logf(util.MsgSuccessInValue, row.Name, f, row.output)
+			t.Logf(util.MsgSuccessInValue, tc.Name, f, tc.output)
 		}
 	}
 }
 
+/*
 func TestCompoundString(t *testing.T) {
 	// setup
 	type testCase struct {
@@ -379,7 +334,7 @@ func TestCompoundString(t *testing.T) {
 					FRN:         1,
 					DataItem:    "I000/000",
 					Description: "Test item",
-					Type:        uap.Compound,
+					Type:        _uap.Compound,
 				},
 				Primary: []byte{0xaa},
 				Secondary: []Item{
@@ -388,7 +343,7 @@ func TestCompoundString(t *testing.T) {
 							FRN:         1,
 							DataItem:    "I000/010",
 							Description: "Test item",
-							Type:        uap.Fixed,
+							Type:        _uap.Fixed,
 						},
 						Data: []byte{0xab, 0xcd},
 					},
@@ -397,7 +352,7 @@ func TestCompoundString(t *testing.T) {
 							FRN:         3,
 							DataItem:    "I000/030",
 							Description: "Test item",
-							Type:        uap.Extended,
+							Type:        _uap.Extended,
 						},
 						Primary:   []byte{0xc1},
 						Secondary: []byte{0xab, 0xcd},
@@ -407,7 +362,7 @@ func TestCompoundString(t *testing.T) {
 							FRN:         5,
 							DataItem:    "I000/050",
 							Description: "Test item",
-							Type:        uap.Explicit,
+							Type:        _uap.Explicit,
 						},
 						Len:  0x04,
 						Data: []byte{0xab, 0xcd, 0xef},
@@ -417,7 +372,7 @@ func TestCompoundString(t *testing.T) {
 							FRN:         7,
 							DataItem:    "I000/070",
 							Description: "Test item",
-							Type:        uap.Repetitive,
+							Type:        _uap.Repetitive,
 						},
 						Rep:  0x02,
 						Data: []byte{0xab, 0xcd},
@@ -466,7 +421,7 @@ func TestCompoundPayload(t *testing.T) {
 					FRN:         1,
 					DataItem:    "I000/000",
 					Description: "Test item",
-					Type:        uap.Compound,
+					Type:        _uap.Compound,
 				},
 				Primary: []byte{0xaa},
 				Secondary: []Item{
@@ -475,7 +430,7 @@ func TestCompoundPayload(t *testing.T) {
 							FRN:         1,
 							DataItem:    "I000/010",
 							Description: "Test item",
-							Type:        uap.Fixed,
+							Type:        _uap.Fixed,
 						},
 						Data: []byte{0xab, 0xcd},
 					},
@@ -484,7 +439,7 @@ func TestCompoundPayload(t *testing.T) {
 							FRN:         3,
 							DataItem:    "I000/030",
 							Description: "Test item",
-							Type:        uap.Extended,
+							Type:        _uap.Extended,
 						},
 						Primary:   []byte{0xc1},
 						Secondary: []byte{0xab, 0xcd},
@@ -494,7 +449,7 @@ func TestCompoundPayload(t *testing.T) {
 							FRN:         5,
 							DataItem:    "I000/050",
 							Description: "Test item",
-							Type:        uap.Explicit,
+							Type:        _uap.Explicit,
 						},
 						Len:  0x04,
 						Data: []byte{0xab, 0xcd, 0xef},
@@ -504,7 +459,7 @@ func TestCompoundPayload(t *testing.T) {
 							FRN:         7,
 							DataItem:    "I000/070",
 							Description: "Test item",
-							Type:        uap.Repetitive,
+							Type:        _uap.Repetitive,
 						},
 						Rep:  0x02,
 						Data: []byte{0xab, 0xcd},
@@ -536,3 +491,4 @@ func TestCompoundPayload(t *testing.T) {
 		}
 	}
 }
+*/

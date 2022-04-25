@@ -1,4 +1,4 @@
-package uap
+package _uap
 
 var Cat001V12 = StandardUAP{
 	Name:     "cat001_1.2",

@@ -1,4 +1,4 @@
-package uap
+package _uap
 
 // DefaultProfiles contains the defaults User Application Profiles version.
 var DefaultProfiles = map[uint8]StandardUAP{

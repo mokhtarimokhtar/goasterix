@@ -1,7 +1,7 @@
 package goasterix
 
 import (
-	"github.com/mokhtarimokhtar/goasterix/uap"
+	"github.com/mokhtarimokhtar/goasterix/_uap"
 )
 
 /*
@@ -53,12 +53,12 @@ type SubItem interface {
 
 type SubItemBit struct {
 	Name string
-	Type uap.TypeField
+	Type _uap.TypeField
 	Pos  uint8
 	Data []byte
 }
 
-func newSubItemBit(field uap.IDataField) SubItem {
+func newSubItemBit(field _uap.IDataField) SubItem {
 	f := &SubItemBit{}
 	f.Type = field.GetType()
 	return f
@@ -146,7 +146,7 @@ func OneBitReader(data byte, b uint8) byte {
 
 type SubItemFromTo struct {
 	Name string
-	Type uap.TypeField
+	Type _uap.TypeField
 	From uint8
 	To   uint8
 	Data []byte
@@ -160,7 +160,7 @@ func (s *SubItemFromTo) Reader(data []byte) error {
 
 type SubItem2 struct {
 	Name string
-	Type uap.TypeField
+	Type _uap.TypeField
 	Pos  BitPosition
 	Data []byte
 }
@@ -220,7 +220,7 @@ func (s *SubItem2) Reader(data []byte) error {
 		//tmp := data[index]
 		//fmt.Println(tmp)
 	}*/
-	if s.Type == uap.FromTo {
+	if s.Type == _uap.FromTo {
 		s.Data = GetBitsFromTo(data, s.Pos.From, s.Pos.To)
 	}
 

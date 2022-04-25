@@ -3,7 +3,6 @@ package goasterix
 import (
 	"bytes"
 	"encoding/hex"
-	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
 // Compound Data Fields, being of a variable length, shall comprise a primary subfield, followed by data subfields.
@@ -13,16 +12,23 @@ import (
 // Item. Data subfields shall be either fixed length, extended length, explicit length or repetitive, but not compound.
 type Compound struct {
 	Base
-	Fields    []uap.DataField
 	Primary   []byte
 	Secondary []Item
 }
 
-func NewCompound(field uap.IDataField) Item {
+//func NewCompound(field ICompound) Item {
+func NewCompound(field Item) Item {
 	f := &Compound{}
 	f.Base.NewBase(field)
-	f.Fields = field.GetCompound()
+	f.Secondary = field.GetCompound()
 	return f
+}
+func (c Compound) GetCompound() []Item {
+	return c.Secondary
+}
+
+func (c Compound) GetSize() SizeField {
+	return SizeField{} // not used, it's for implement Item interface
 }
 
 func (c *Compound) Reader(rb *bytes.Reader) error {
@@ -30,13 +36,15 @@ func (c *Compound) Reader(rb *bytes.Reader) error {
 
 	c.Primary, err = FspecReader(rb)
 	if err != nil {
+		c.Secondary = nil
 		return err
 	}
 	frnIndex := FspecIndex(c.Primary)
+	tmp := c.Secondary // save temporary meta data Item
 	c.Secondary = make([]Item, 0, len(frnIndex))
 
 	for _, frn := range frnIndex {
-		uapItem := c.Fields[frn-1]
+		uapItem := tmp[frn-1]
 		var item Item
 		item, err = GetItemCompound(uapItem)
 		if err != nil {
@@ -83,4 +91,3 @@ func (c Compound) String() string {
 
 	return buf.String()
 }
-

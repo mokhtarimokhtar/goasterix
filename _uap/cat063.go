@@ -1,4 +1,4 @@
-package uap
+package _uap
 
 // Cat063V16 User Application Profile
 // version 1.6

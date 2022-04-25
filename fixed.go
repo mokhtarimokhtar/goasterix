@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/binary"
 	"encoding/hex"
-	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
 // Fixed length Data Fields shall comprise a fixed number of octets.
@@ -15,22 +14,20 @@ type Fixed struct {
 	SubItems []SubItem
 }
 
-func newFixed(field uap.IDataField) Item {
+//func newFixed(field _uap.IDataField) Item {
+func newFixed(field Item) Item {
 	f := &Fixed{}
 	f.Base.NewBase(field)
 	f.Size = field.GetSize().ForFixed
-	/*for _, item := range field.GetSubItems() {
-		tmp := SubItem{
-			Name: item.Name,
-			Pos: BitPosition{
-				Bit:  item.Bit,
-				From: item.From,
-				To:   item.To,
-			},
-		}
-		f.SubItems = append(f.SubItems, tmp)
-	}*/
 	return f
+}
+func (f Fixed) GetSize() SizeField {
+	s := SizeField{}
+	s.ForFixed = f.Size
+	return s
+}
+func (f Fixed) GetCompound() []Item {
+	return nil // not used, it's for implement Item interface
 }
 
 // Reader extracts a number(nb) of bytes(size) and returns a slice of bytes(data of item).

@@ -1,4 +1,4 @@
-package uap
+package _uap
 
 // Cat255StrV51 User Application Profile
 // version 5.1

@@ -1,4 +1,4 @@
-package uap
+package _uap
 
 // Cat021v10 User Application Profile
 // version 2.5

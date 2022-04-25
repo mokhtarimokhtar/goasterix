@@ -2,7 +2,7 @@ package goasterix
 
 import (
 	"bytes"
-	"github.com/mokhtarimokhtar/goasterix/uap"
+	"github.com/mokhtarimokhtar/goasterix/_uap"
 	"github.com/mokhtarimokhtar/goasterix/util"
 	"testing"
 )
@@ -29,7 +29,7 @@ func BenchmarkSubItemBitReader(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		sub := new(SubItemBit)
 		sub.Name = "item1"
-		sub.Type = uap.Bit
+		sub.Type = _uap.Bit
 		sub.Pos = 29
 		_ = sub.Reader(input)
 	}
@@ -82,7 +82,30 @@ func BenchmarkFromToBitReader32(b *testing.B) {
 	}
 }
 
-func benchmarkRecordDecode(input string, items uap.StandardUAP, b *testing.B) {
+func benchmarkRecordDecode(input string, uap StandardUAP, b *testing.B) {
+	data, _ := util.HexStringToByte(input)
+	for n := 0; n < b.N; n++ {
+		rec := new(Record)
+		_, _ = rec.Decode(data, uap)
+	}
+}
+
+func BenchmarkRecordDecode_Len43(b *testing.B) {
+	benchmarkRecordDecode(
+		"f780 ffff 01 0302 0801020304050607 03aaaaaabbbbbbcccccc  b80101010202aaaabbbb0201 0201 04010203",
+		CatForTest,
+		b)
+}
+
+func BenchmarkRecordDecode_Len55(b *testing.B) {
+	benchmarkRecordDecode(
+		"fff702 0836 429b52 a0 94c70181 0913 02d0 6002b7 490d01 38a178cf4220 02e79a5d27a00c0060a3280030a4000040 063a 0743ce5b 40 20f5",
+		Cat048V127,
+		b)
+}
+
+/*
+func benchmarkRecordDecode(input string, items _uap.StandardUAP, b *testing.B) {
 	data, _ := util.HexStringToByte(input)
 	for n := 0; n < b.N; n++ {
 		rec := new(Record)
@@ -100,52 +123,53 @@ func benchmarkRecordDecode(input string, items uap.StandardUAP, b *testing.B) {
 func BenchmarkRecordDecode_Len7(b *testing.B) {
 	benchmarkRecordDecode(
 		"e008837dfd9c58",
-		uap.Cat255StrV51,
+		_uap.Cat255StrV51,
 		b)
 }
 func BenchmarkRecordDecode_Len9(b *testing.B) {
 	benchmarkRecordDecode(
 		"f4083902105fb35b02",
-		uap.Cat002V10,
+		_uap.Cat002V10,
 		b)
 }
 func BenchmarkRecordDecode_Len16(b *testing.B) {
 	benchmarkRecordDecode(
 		"f50208319801bf0a1ebb43022538e200",
-		uap.Cat001V12,
+		_uap.Cat001V12,
 		b)
 }
 func BenchmarkRecordDecode_Len17(b *testing.B) {
 	benchmarkRecordDecode(
 		"f6083602429b7110940028200094008000",
-		uap.Cat034V127,
+		_uap.Cat034V127,
 		b)
 }
 func BenchmarkRecordDecode_Len21(b *testing.B) {
 	benchmarkRecordDecode(
 		"d008843b549400130000008f002f008948006a007c",
-		uap.Cat032StrV70,
+		_uap.Cat032StrV70,
 		b)
 }
 func BenchmarkRecordDecode_Len55(b *testing.B) {
 	benchmarkRecordDecode(
 		"fff702 0836 429b52 a0 94c70181 0913 02d0 6002b7 490d01 38a178cf4220 02e79a5d27a00c0060a3280030a4000040 063a 0743ce5b 40 20f5",
-		uap.Cat048V127,
+		_uap.Cat048V127,
 		b)
 }
+*/
 
 /*func BenchmarkRecordDecode_Len68(b *testing.B) {
 	benchmarkRecordDecode(
 		"fc ffff fffffe 03ffff 02ffffffff ab80 ff fffe 02ffffffff 04ffffff ffff 0101ffff",
-		uap.CatForTest,
+		_uap.CatForTest,
 		b)
 }*/
-func BenchmarkRecordDecode_Len73(b *testing.B) {
+/*func BenchmarkRecordDecode_Len73(b *testing.B) {
 	benchmarkRecordDecode(
 		"afbbf317f1300883040070a8bcf3ff07070723f0a8800713feb7022b0389038b140704012c080811580000001e7004f04aa004b0012400544e49413531313206c84c45424c48454c58",
-		uap.Cat030ArtasV70,
+		_uap.Cat030ArtasV70,
 		b)
-}
+}*/
 
 func benchmarkDataBlockDecode(input string, b *testing.B) {
 	data, _ := util.HexStringToByte(input)
@@ -173,14 +197,7 @@ func benchmarkWrapperDataBlockDecode(input string, b *testing.B) {
 	data, _ := util.HexStringToByte(input)
 	for n := 0; n < b.N; n++ {
 		dataB, _ := NewWrapperDataBlock()
-		unRead, err := dataB.Decode(data)
-
-		if err != nil {
-			b.Errorf("MsgFailInValue: error = %v; Expected: %v", err, nil)
-		}
-		if unRead != 0 {
-			b.Errorf("MsgFailInValue: unRead = %v; Expected: %v", unRead, 0)
-		}
+		_, _ = dataB.Decode(data)
 	}
 }
 

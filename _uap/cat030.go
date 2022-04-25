@@ -1,4 +1,4 @@
-package uap
+package _uap
 
 // Cat030ArtasV70 User Application Profile
 // version 7.0

@@ -2,10 +2,13 @@
 package goasterix
 
 import (
+	//"bytes"
+	//"encoding/binary"
+	//"errors"
+	//"github.com/mokhtarimokhtar/goasterix/_uap"
 	"bytes"
 	"encoding/binary"
 	"errors"
-	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
 var (
@@ -21,7 +24,7 @@ var (
 // DataBlock = CAT + LEN + [FSPEC + items...] + [...] + ...
 // WrapperDataBlock = [CAT + LEN + RECORD + ...] + [ DATABLOCK ] + [...]
 type WrapperDataBlock struct {
-	DataBlocks []*DataBlock
+	DataBlocks []DataBlock
 }
 
 func NewWrapperDataBlock() (*WrapperDataBlock, error) {
@@ -39,7 +42,7 @@ func (w *WrapperDataBlock) Decode(data []byte) (unRead int, err error) {
 			return unRead, err
 		}
 
-		w.DataBlocks = append(w.DataBlocks, db)
+		w.DataBlocks = append(w.DataBlocks, *db)
 		if unRead == 0 {
 			break
 		}
@@ -53,7 +56,7 @@ func (w *WrapperDataBlock) Decode(data []byte) (unRead int, err error) {
 type DataBlock struct {
 	Category uint8
 	Len      uint16
-	Records  []*Record
+	Records  []Record
 }
 
 func NewDataBlock() *DataBlock {
@@ -100,7 +103,7 @@ func (db *DataBlock) Decode(data []byte) (int, error) {
 	lenData := len(tmp)
 
 	// selection of the appropriate UAP
-	uapSelected, found := uap.DefaultProfiles[db.Category]
+	uapSelected, found := DefaultProfiles[db.Category]
 	if !found {
 		err = ErrCategoryUnknown
 		return unRead, err
@@ -110,7 +113,7 @@ LoopRecords:
 	for {
 		rec := NewRecord()
 		unRead, err := rec.Decode(tmp[offset:], uapSelected)
-		db.Records = append(db.Records, rec)
+		db.Records = append(db.Records, *rec)
 		offset = lenData - unRead
 
 		if err != nil {

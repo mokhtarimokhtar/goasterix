@@ -6,8 +6,6 @@ import (
 	"io"
 	"reflect"
 	"testing"
-
-	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
 /*func TestRecordPayload(t *testing.T) {
@@ -27,13 +25,13 @@ import (
 		t.Logf("MsgSuccessInValue: len(items) = %v; Expected: %v", len(items), nbOfBytes)
 	}
 }*/
-
+/*
 func TestRecord_String(t *testing.T) {
 	// Arrange
 	data, _ := util.HexStringToByte("ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020a0")
 	nbOfItems := 15
 	rec := NewRecord()
-	_, _ = rec.Decode(data, uap.Cat048V127)
+	_, _ = rec.Decode(data, _uap.Cat048V127)
 
 	// Act
 	items := rec.String()
@@ -45,7 +43,7 @@ func TestRecord_String(t *testing.T) {
 		t.Logf("MsgSuccessInValue: len(items) = %v; Expected: %v", len(items), nbOfItems)
 	}
 }
-
+*/
 func TestFspecReader_Valid(t *testing.T) {
 	// Arrange
 	input := []byte{0xFF, 0x01, 0xF2, 0xFF}
@@ -128,6 +126,380 @@ func TestFspecIndex(t *testing.T) {
 		}
 	}
 
+}
+
+// Testing : Decode CatForTest
+func TestDecodeCatForTest(t *testing.T) {
+	type testCase struct {
+		Name   string
+		input  string // one record = fspec + items
+		uap    StandardUAP
+		output Record
+		unRead int
+		err    error
+	}
+	dataSet := []testCase{
+		{
+			Name:  "testcase 1",
+			input: "f780 ffff 01 0302 0801020304050607 03aaaaaabbbbbbcccccc  b80101010202aaaabbbb0201 0201 04010203",
+			uap:   CatForTest, // f780 1111-0111 1000-0000  // b80101010202aaaabbbb0201
+			output: Record{
+				Cat:   26,
+				Fspec: []byte{0xc0},
+				Items: []Item{
+					&Fixed{
+						Base: Base{
+							FRN:         1,
+							DataItem:    "I026/010",
+							Description: "Fixed type field for test",
+							Type:        FixedField,
+						},
+						Size: 2,
+						Data: []byte{0xff, 0xff},
+					},
+					&Extended{
+						Base: Base{
+							FRN:         2,
+							DataItem:    "I026/020",
+							Description: "Extended type field for test",
+							Type:        ExtendedField,
+						},
+						PrimaryItemSize:   1,
+						SecondaryItemSize: 2,
+						Primary:           []byte{0x01},
+						Secondary:         []byte{0x03, 0x02},
+					},
+					&Explicit{
+						Base: Base{
+							FRN:         3,
+							DataItem:    "I026/030",
+							Description: "Explicit type field for test",
+							Type:        ExplicitField,
+						},
+						Len:  0x08,
+						Data: []byte{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07},
+					},
+					&Repetitive{
+						Base: Base{
+							FRN:         4,
+							DataItem:    "I026/040",
+							Description: "Repetitive type field for test",
+							Type:        RepetitiveField,
+						},
+						SubItemSize: 3,
+						Rep:         0x03,
+						Data:        []byte{0xaa, 0xaa, 0xaa, 0xbb, 0xbb, 0xbb, 0xcc, 0xcc, 0xcc},
+					},
+					&Compound{
+						Base: Base{
+							FRN:         6,
+							DataItem:    "I026/060",
+							Description: "Compound type field for test",
+							Type:        CompoundField,
+						},
+						Primary: []byte{0xb8},
+						Secondary: []Item{
+							&Fixed{
+								Base: Base{
+									FRN:         1,
+									DataItem:    "Compound/001",
+									Description: "Compound Fixed type field for test",
+									Type:        FixedField,
+								},
+								Size: 1,
+								Data: []byte{0x01},
+							},
+							&Extended{
+								Base: Base{
+									FRN:         3,
+									DataItem:    "Compound/003",
+									Description: "Compound Extended type field for test",
+									Type:        ExtendedField,
+								},
+								PrimaryItemSize:   1,
+								SecondaryItemSize: 1,
+								Primary:           []byte{0x01},
+								Secondary:         []byte{0x01, 0x02},
+							},
+							&Repetitive{
+								Base: Base{
+									FRN:         4,
+									DataItem:    "Compound/004",
+									Description: "Compound Repetitive type field for test",
+									Type:        RepetitiveField,
+								},
+								SubItemSize: 2,
+								Rep:         0x02,
+								Data:        []byte{0xaa, 0xaa, 0xbb, 0xbb},
+							},
+							&Explicit{
+								Base: Base{
+									FRN:         5,
+									DataItem:    "Compound/005",
+									Description: "Compound Explicit type field for test",
+									Type:        ExplicitField,
+								},
+								Len:  0x02,
+								Data: []byte{0x01},
+							},
+						},
+					},
+					&ReservedExpansion{
+						Base: Base{
+							FRN:         7,
+							DataItem:    "RE",
+							Description: "Reserved Expansion type field for test",
+							Type:        REField,
+						},
+						Len:  0x02,
+						Data: []byte{0x01},
+					},
+					&SpecialPurpose{
+						Base: Base{
+							FRN:         8,
+							DataItem:    "SP",
+							Description: "Special Purpose type field for test",
+							Type:        SPField,
+						},
+						Len:  0x04,
+						Data: []byte{0x01, 0x02, 0x03},
+					},
+				},
+			},
+			unRead: 0,
+			err:    nil,
+		},
+	}
+
+	for _, tc := range dataSet {
+		// Arrange
+		data, _ := util.HexStringToByte(tc.input)
+		rec := new(Record)
+
+		// Act
+		unRead, err := rec.Decode(data, tc.uap)
+
+		// Assert
+		if err != tc.err {
+			t.Errorf(util.MsgFailInValue, tc.Name, err, tc.err)
+		} else {
+			t.Logf(util.MsgSuccessInValue, tc.Name, err, tc.err)
+		}
+
+		if unRead != tc.unRead {
+			t.Errorf(util.MsgFailInValue, tc.Name, unRead, tc.unRead)
+		} else {
+			t.Logf(util.MsgSuccessInValue, tc.Name, unRead, tc.unRead)
+		}
+
+		for i, item := range rec.Items {
+			if reflect.DeepEqual(item, tc.output.Items[i]) == false {
+				t.Errorf(util.MsgFailInValue, tc.Name, item, tc.output.Items[i])
+			} else {
+				t.Logf(util.MsgSuccessInValue, tc.Name, item, tc.output.Items[i])
+			}
+		}
+	}
+}
+
+// Testing Integration : Decode by category
+func TestRecordDecodeCAT048(t *testing.T) {
+	// Arrange
+	input := "fff702 0836 429b52 a0 94c70181 0913 02d0 6002b7 490d01 38a178cf4220 02e79a5d27a00c0060a3280030a4000040 063a 0743ce5b 40 20f5"
+	output := []Item{
+		&Fixed{
+			Base: Base{
+				FRN:         1,
+				DataItem:    "I048/010",
+				Description: "Data Source Identifier",
+				Type:        FixedField,
+			},
+			Size: 2,
+			Data: []byte{0x08, 0x36},
+		},
+		&Fixed{
+			Base: Base{
+				FRN:         2,
+				DataItem:    "I048/140",
+				Description: "Time-of-Day",
+				Type:        FixedField,
+			},
+			Size: 3,
+			Data: []byte{0x42, 0x9b, 0x52},
+		},
+		&Extended{
+			Base: Base{
+				FRN:         3,
+				DataItem:    "I048/020",
+				Description: "Target Report Descriptor",
+				Type:        ExtendedField,
+			},
+			PrimaryItemSize:   1,
+			SecondaryItemSize: 1,
+			Primary:           []byte{0xa0},
+			Secondary:         nil,
+		},
+		&Fixed{
+			Base: Base{
+				FRN:         4,
+				DataItem:    "I048/040",
+				Description: "Measured Position in Slant Polar Coordinates",
+				Type:        FixedField,
+			},
+			Size: 4,
+			Data: []byte{0x94, 0xc7, 0x01, 0x81},
+		},
+		&Fixed{
+			Base: Base{
+				FRN:         5,
+				DataItem:    "I048/070",
+				Description: "Mode-3/A Code in Octal Representation",
+				Type:        FixedField,
+			},
+			Size: 2,
+			Data: []byte{0x09, 0x13},
+		},
+		&Fixed{
+			Base: Base{
+				FRN:         6,
+				DataItem:    "I048/090",
+				Description: "Flight Level in Binary Representation",
+				Type:        FixedField,
+			},
+			Size: 2,
+			Data: []byte{0x02, 0xd0},
+		},
+		&Compound{
+			Base: Base{
+				FRN:         7,
+				DataItem:    "I048/130",
+				Description: "Radar Plot Characteristics",
+				Type:        CompoundField,
+			},
+			Primary: []byte{0x60},
+			Secondary: []Item{
+				&Fixed{
+					Base: Base{
+						FRN:         2,
+						DataItem:    "SRR",
+						Description: "Number of received replies",
+						Type:        FixedField,
+					},
+					Size: 1,
+					Data: []byte{0x02},
+				},
+				&Fixed{
+					Base: Base{
+						FRN:         3,
+						DataItem:    "SAM",
+						Description: "Amplitude of received replies for M(SSR)",
+						Type:        FixedField,
+					},
+					Size: 1,
+					Data: []byte{0xb7},
+				},
+			},
+		},
+		&Fixed{
+			Base: Base{
+				FRN:         8,
+				DataItem:    "I048/220",
+				Description: "Aircraft Address",
+				Type:        FixedField,
+			},
+			Size: 3,
+			Data: []byte{0x49, 0x0d, 0x01},
+		},
+		&Fixed{
+			Base: Base{
+				FRN:         9,
+				DataItem:    "I048/240",
+				Description: "Aircraft Identification",
+				Type:        FixedField,
+			},
+			Size: 6,
+			Data: []byte{0x38, 0xa1, 0x78, 0xcf, 0x42, 0x20},
+		},
+		&Repetitive{
+			Base: Base{
+				FRN:         10,
+				DataItem:    "I048/250",
+				Description: "Mode S MB Data",
+				Type:        RepetitiveField,
+			},
+			SubItemSize: 8,
+			Rep:         0x02,
+			Data:        []byte{0xe7, 0x9a, 0x5d, 0x27, 0xa0, 0x0c, 0x00, 0x60, 0xa3, 0x28, 0x00, 0x30, 0xa4, 0x00, 0x00, 0x40},
+		},
+		&Fixed{
+			Base: Base{
+				FRN:         11,
+				DataItem:    "I048/161",
+				Description: "Track Number",
+				Type:        FixedField,
+			},
+			Size: 2,
+			Data: []byte{0x06, 0x3a},
+		},
+		&Fixed{
+			Base: Base{
+				FRN:         13,
+				DataItem:    "I048/200",
+				Description: "Calculated Track Velocity in Polar Representation",
+				Type:        FixedField,
+			},
+			Size: 4,
+			Data: []byte{0x07, 0x43, 0xce, 0x5b},
+		},
+		&Extended{
+			Base: Base{
+				FRN:         14,
+				DataItem:    "I048/170",
+				Description: "Track Status",
+				Type:        ExtendedField,
+			},
+			PrimaryItemSize:   1,
+			SecondaryItemSize: 1,
+			Primary:           []byte{0x40},
+			Secondary:         nil,
+		},
+		&Fixed{
+			Base: Base{
+				FRN:         21,
+				DataItem:    "I048/230",
+				Description: "Communications / ACAS Capability and Flight Status",
+				Type:        FixedField,
+			},
+			Size: 2,
+			Data: []byte{0x20, 0xf5},
+		},
+	}
+
+	uap048 := Cat048V127
+	data, _ := util.HexStringToByte(input)
+	rec := new(Record)
+
+	// Act
+	unRead, err := rec.Decode(data, uap048)
+
+	// Assert
+	if err != nil {
+		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+	} else {
+		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+	}
+	if unRead != 0 {
+		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
+	} else {
+		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
+	}
+	for i, item := range rec.Items {
+		if reflect.DeepEqual(item, output[i]) == false {
+			t.Errorf("FAIL: %v; \nExpected: %v", item, output[i])
+		} else {
+			t.Logf("SUCCESS: %v; Expected: %v", item, output[i])
+		}
+	}
 }
 
 /*
@@ -240,14 +612,14 @@ func TestRFSDataFieldReader(t *testing.T) {
 	}
 }
 */
-
+/*
 // Testing integration record
 func TestRecordDecodeNbOfItems(t *testing.T) {
 	// setup
 	type testCase struct {
 		Name      string
-		input     string          // data test one record = fspec + items
-		uap       uap.StandardUAP // DataItems of category corresponding to data test input
+		input     string           // data test one record = fspec + items
+		uap       _uap.StandardUAP // DataItems of category corresponding to data test input
 		nbOfItems int
 		err       error // error expected
 	}
@@ -255,63 +627,63 @@ func TestRecordDecodeNbOfItems(t *testing.T) {
 		{
 			Name:      "testcase 1",
 			input:     "f6083602429b7110940028200094008000",
-			uap:       uap.Cat034V127,
+			uap:       _uap.Cat034V127,
 			err:       nil,
 			nbOfItems: 6,
 		},
 		{
 			Name:      "testcase 2",
 			input:     "f6083602429b71109400282000940080",
-			uap:       uap.Cat034V127,
+			uap:       _uap.Cat034V127,
 			err:       io.EOF,
 			nbOfItems: 5,
 		},
 		{
 			Name:      "testcase 3",
 			input:     "ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020a0",
-			uap:       uap.Cat048V127,
+			uap:       _uap.Cat048V127,
 			err:       nil,
 			nbOfItems: 14,
 		},
 		{
 			Name:      "testcase 4", // 0xA0 last byte is removed
 			input:     "ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020",
-			uap:       uap.Cat048V127,
+			uap:       _uap.Cat048V127,
 			err:       io.ErrUnexpectedEOF,
 			nbOfItems: 13,
 		},
 		{
 			Name:      "testcase 5",
 			input:     "f0 0831 00 0a8abb2e 3802",
-			uap:       uap.Cat001V12,
+			uap:       _uap.Cat001V12,
 			err:       nil,
 			nbOfItems: 4,
 		},
 		{
 			Name:      "testcase 6",
 			input:     "f0 0831 00 0a8abb2e 38",
-			uap:       uap.Cat001V12,
+			uap:       _uap.Cat001V12,
 			err:       io.ErrUnexpectedEOF,
 			nbOfItems: 3,
 		},
 		{
 			Name:      "testcase 7",
 			input:     "f502 0831 98 01bf 0a1ebb43 022538e2 00",
-			uap:       uap.Cat001V12,
+			uap:       _uap.Cat001V12,
 			err:       nil,
 			nbOfItems: 6,
 		},
 		{
 			Name:      "testcase 8",
 			input:     "f502 0831 98 01bf 0a1ebb43 022538e2",
-			uap:       uap.Cat001V12,
+			uap:       _uap.Cat001V12,
 			err:       io.EOF,
 			nbOfItems: 5,
 		},
 		{
 			Name:      "testcase 9",
 			input:     "",
-			uap:       uap.Cat048V127,
+			uap:       _uap.Cat048V127,
 			nbOfItems: 0,
 			err:       io.EOF,
 		},
@@ -345,13 +717,14 @@ func TestRecordDecodeNbOfItems(t *testing.T) {
 		}
 	}
 }
-
+*/
+/*
 func TestRecordPayload(t *testing.T) {
 	// setup
 	type testCase struct {
 		Name   string
-		input  string          // data test one record = fspec + items
-		uap    uap.StandardUAP // DataItems of category corresponding to data test input
+		input  string           // data test one record = fspec + items
+		uap    _uap.StandardUAP // DataItems of category corresponding to data test input
 		output []byte
 		err    error // error expected
 	}
@@ -359,7 +732,7 @@ func TestRecordPayload(t *testing.T) {
 		{
 			Name:  "testcase 1",
 			input: "f6083602429b7110940028200094008000",
-			uap:   uap.Cat034V127,
+			uap:   _uap.Cat034V127,
 			err:   nil,
 			output: []byte{0xf6, 0x08, 0x36, 0x02, 0x42, 0x9b, 0x71, 0x10, 0x94, 0x00, 0x28, 0x20, 0x00, 0x94, 0x00,
 				0x80, 0x00},
@@ -367,14 +740,14 @@ func TestRecordPayload(t *testing.T) {
 		{
 			Name:   "testcase 2", // 0x00 last byte is removed
 			input:  "f6083602429b71109400282000940080",
-			uap:    uap.Cat034V127,
+			uap:    _uap.Cat034V127,
 			err:    io.EOF,
 			output: []byte{0xf6, 0x08, 0x36, 0x02, 0x42, 0x9b, 0x71, 0x10, 0x94, 0x00, 0x28, 0x20, 0x00},
 		},
 		{
 			Name:  "testcase 3",
 			input: "ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020a0",
-			uap:   uap.Cat048V127,
+			uap:   _uap.Cat048V127,
 			err:   nil,
 			output: []byte{0xff, 0xdf, 0x02, 0x93, 0x19, 0x37, 0x8d, 0x3d, 0xa2, 0x05, 0x6f, 0x13, 0x2d, 0x0f, 0xff,
 				0x00, 0x94, 0x60, 0x02, 0xde, 0x50, 0x6f, 0x84, 0x4c, 0xc3, 0xc3, 0x51, 0x23, 0x31, 0x00, 0x17, 0x01,
@@ -383,7 +756,7 @@ func TestRecordPayload(t *testing.T) {
 		{
 			Name:  "testcase 4", // 0xa0 last byte is removed
 			input: "ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020",
-			uap:   uap.Cat048V127,
+			uap:   _uap.Cat048V127,
 			err:   io.ErrUnexpectedEOF,
 			output: []byte{0xff, 0xdf, 0x02, 0x93, 0x19, 0x37, 0x8d, 0x3d, 0xa2, 0x05, 0x6f, 0x13, 0x2d, 0x0f, 0xff,
 				0x00, 0x94, 0x60, 0x02, 0xde, 0x50, 0x6f, 0x84, 0x4c, 0xc3, 0xc3, 0x51, 0x23, 0x31, 0x00, 0x17, 0x01,
@@ -392,35 +765,35 @@ func TestRecordPayload(t *testing.T) {
 		{
 			Name:   "testcase 5",
 			input:  "f0 0831 00 0a8abb2e 3802",
-			uap:    uap.Cat001V12,
+			uap:    _uap.Cat001V12,
 			err:    nil,
 			output: []byte{0xf0, 0x08, 0x31, 0x00, 0x0a, 0x8a, 0xbb, 0x2e, 0x38, 0x02},
 		},
 		{
 			Name:   "testcase 6",
 			input:  "f0 0831 00 0a8abb2e 38",
-			uap:    uap.Cat001V12,
+			uap:    _uap.Cat001V12,
 			err:    io.ErrUnexpectedEOF,
 			output: []byte{0xf0, 0x08, 0x31, 0x00, 0x0a, 0x8a, 0xbb, 0x2e},
 		},
 		{
 			Name:   "testcase 7",
 			input:  "f502 0831 98 01bf 0a1ebb43 022538e2 00",
-			uap:    uap.Cat001V12,
+			uap:    _uap.Cat001V12,
 			err:    nil,
 			output: []byte{0xf5, 0x02, 0x08, 0x31, 0x98, 0x01, 0xbf, 0x0a, 0x1e, 0xbb, 0x43, 0x02, 0x25, 0x38, 0xe2, 0x00},
 		},
 		{
 			Name:   "testcase 8",
 			input:  "f502 0831 98 01bf 0a1ebb43 022538e2",
-			uap:    uap.Cat001V12,
+			uap:    _uap.Cat001V12,
 			err:    io.EOF,
 			output: []byte{0xf5, 0x02, 0x08, 0x31, 0x98, 0x01, 0xbf, 0x0a, 0x1e, 0xbb, 0x43, 0x02, 0x25, 0x38, 0xe2},
 		},
 		{
 			Name:   "testcase 9",
 			input:  "",
-			uap:    uap.Cat048V127,
+			uap:    _uap.Cat048V127,
 			output: []byte{},
 			err:    io.EOF,
 		},
@@ -449,7 +822,7 @@ func TestRecordPayload(t *testing.T) {
 		}
 	}
 }
-
+*/
 /*
 // Testing : Decode CatForTest
 func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
@@ -830,7 +1203,7 @@ func TestRecordDecode_Cat4TestError(t *testing.T) {
 	}
 }
 */
-
+/*
 // Testing : Decode by category
 func TestRecordDecodeCAT048(t *testing.T) {
 	// Arrange
@@ -841,7 +1214,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 				FRN:         1,
 				DataItem:    "I048/010",
 				Description: "Data Source Identifier",
-				Type:        uap.Fixed,
+				Type:        _uap.Fixed,
 			},
 			Size: 2,
 			Data: []byte{0x08, 0x36},
@@ -851,7 +1224,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 				FRN:         2,
 				DataItem:    "I048/140",
 				Description: "Time-of-Day",
-				Type:        uap.Fixed,
+				Type:        _uap.Fixed,
 			},
 			Size: 3,
 			Data: []byte{0x42, 0x9b, 0x52},
@@ -861,7 +1234,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 				FRN:         3,
 				DataItem:    "I048/020",
 				Description: "Target Report Descriptor",
-				Type:        uap.Extended,
+				Type:        _uap.Extended,
 			},
 			PrimaryItemSize:   1,
 			SecondaryItemSize: 1,
@@ -873,7 +1246,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 				FRN:         4,
 				DataItem:    "I048/040",
 				Description: "Measured Position in Slant Polar Coordinates",
-				Type:        uap.Fixed,
+				Type:        _uap.Fixed,
 			},
 			Size: 4,
 			Data: []byte{0x94, 0xc7, 0x01, 0x81},
@@ -883,7 +1256,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 				FRN:         5,
 				DataItem:    "I048/070",
 				Description: "Mode-3/A Code in Octal Representation",
-				Type:        uap.Fixed,
+				Type:        _uap.Fixed,
 			},
 			Size: 2,
 			Data: []byte{0x09, 0x13},
@@ -893,7 +1266,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 				FRN:         6,
 				DataItem:    "I048/090",
 				Description: "Flight Level in Binary Representation",
-				Type:        uap.Fixed,
+				Type:        _uap.Fixed,
 			},
 			Size: 2,
 			Data: []byte{0x02, 0xd0},
@@ -903,9 +1276,9 @@ func TestRecordDecodeCAT048(t *testing.T) {
 				FRN:         7,
 				DataItem:    "I048/130",
 				Description: "Radar Plot Characteristics",
-				Type:        uap.Compound,
+				Type:        _uap.Compound,
 			},
-			Fields: uap.Cat048V127.DataItems[6].Compound,
+			Fields:  _uap.Cat048V127.DataItems[6].Compound,
 			Primary: []byte{0x60},
 			Secondary: []Item{
 				&Fixed{
@@ -913,7 +1286,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 						FRN:         2,
 						DataItem:    "SRR",
 						Description: "Number of received replies",
-						Type:        uap.Fixed,
+						Type:        _uap.Fixed,
 					},
 					Size: 1,
 					Data: []byte{0x02},
@@ -923,7 +1296,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 						FRN:         3,
 						DataItem:    "SAM",
 						Description: "Amplitude of received replies for M(SSR)",
-						Type:        uap.Fixed,
+						Type:        _uap.Fixed,
 					},
 					Size: 1,
 					Data: []byte{0xb7},
@@ -935,7 +1308,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 				FRN:         8,
 				DataItem:    "I048/220",
 				Description: "Aircraft Address",
-				Type:        uap.Fixed,
+				Type:        _uap.Fixed,
 			},
 			Size: 3,
 			Data: []byte{0x49, 0x0d, 0x01},
@@ -945,7 +1318,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 				FRN:         9,
 				DataItem:    "I048/240",
 				Description: "Aircraft Identification",
-				Type:        uap.Fixed,
+				Type:        _uap.Fixed,
 			},
 			Size: 6,
 			Data: []byte{0x38, 0xa1, 0x78, 0xcf, 0x42, 0x20},
@@ -955,18 +1328,18 @@ func TestRecordDecodeCAT048(t *testing.T) {
 				FRN:         10,
 				DataItem:    "I048/250",
 				Description: "Mode S MB Data",
-				Type:        uap.Repetitive,
+				Type:        _uap.Repetitive,
 			},
 			SubItemSize: 8,
-			Rep:  0x02,
-			Data: []byte{0xe7, 0x9a, 0x5d, 0x27, 0xa0, 0x0c, 0x00, 0x60, 0xa3, 0x28, 0x00, 0x30, 0xa4, 0x00, 0x00, 0x40},
+			Rep:         0x02,
+			Data:        []byte{0xe7, 0x9a, 0x5d, 0x27, 0xa0, 0x0c, 0x00, 0x60, 0xa3, 0x28, 0x00, 0x30, 0xa4, 0x00, 0x00, 0x40},
 		},
 		&Fixed{
 			Base: Base{
 				FRN:         11,
 				DataItem:    "I048/161",
 				Description: "Track Number",
-				Type:        uap.Fixed,
+				Type:        _uap.Fixed,
 			},
 			Size: 2,
 			Data: []byte{0x06, 0x3a},
@@ -976,7 +1349,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 				FRN:         13,
 				DataItem:    "I048/200",
 				Description: "Calculated Track Velocity in Polar Representation",
-				Type:        uap.Fixed,
+				Type:        _uap.Fixed,
 			},
 			Size: 4,
 			Data: []byte{0x07, 0x43, 0xce, 0x5b},
@@ -986,7 +1359,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 				FRN:         14,
 				DataItem:    "I048/170",
 				Description: "Track Status",
-				Type:        uap.Extended,
+				Type:        _uap.Extended,
 			},
 			PrimaryItemSize:   1,
 			SecondaryItemSize: 1,
@@ -998,14 +1371,14 @@ func TestRecordDecodeCAT048(t *testing.T) {
 				FRN:         21,
 				DataItem:    "I048/230",
 				Description: "Communications / ACAS Capability and Flight Status",
-				Type:        uap.Fixed,
+				Type:        _uap.Fixed,
 			},
 			Size: 2,
 			Data: []byte{0x20, 0xf5},
 		},
 	}
 
-	uap048 := uap.Cat048V127
+	uap048 := _uap.Cat048V127
 	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 
@@ -1031,7 +1404,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 		}
 	}
 }
-
+*/
 /*
 func TestRecordDecode_CAT034(t *testing.T) {
 	// Arrange

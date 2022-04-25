@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"encoding/hex"
-	"github.com/mokhtarimokhtar/goasterix/uap"
+	"github.com/mokhtarimokhtar/goasterix/_uap"
 )
 
 type RandomField struct {
@@ -41,18 +41,18 @@ func (rf RandomField) String() string {
 // Data Item associated with the preceding FRN.
 type RandomFieldSequencing struct {
 	Base
-	Fields   []uap.DataField
+	Fields   []_uap.DataField
 	N        uint8
 	Sequence []RandomField
 }
 
-func NewRandomFieldSequencing(field uap.IDataField) Item {
+/*func NewRandomFieldSequencing(field _uap.IDataField) Item {
 	f := &RandomFieldSequencing{}
 	f.Base.NewBase(field)
 	//f.Fields = field.RFS
 	f.Fields = field.GetRFS()
 	return f
-}
+}*/
 
 func (rfs *RandomFieldSequencing) Reader(rb *bytes.Reader) error {
 	var err error
@@ -76,7 +76,7 @@ func (rfs *RandomFieldSequencing) Reader(rb *bytes.Reader) error {
 				rf.FRN = frn
 				// todo: add other datafield use case (work just for Fixed)
 				switch uapItem.Type {
-				case uap.Fixed:
+				case _uap.Fixed:
 					tmp := new(Fixed)
 					err = tmp.Reader(rb)
 					if err != nil {

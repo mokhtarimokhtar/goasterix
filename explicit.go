@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/binary"
 	"encoding/hex"
-	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
 // Explicit length Data Fields shall start with a one-octet length indicator giving
@@ -15,10 +14,17 @@ type Explicit struct {
 	Data []byte
 }
 
-func NewExplicit(field uap.IDataField) Item {
+func NewExplicit(field Item) Item {
 	f := &Explicit{}
 	f.Base.NewBase(field)
 	return f
+}
+
+func (e Explicit) GetSize() SizeField {
+	return SizeField{} // not used, it's for implement Item interface
+}
+func (e Explicit) GetCompound() []Item {
+	return nil // not used, it's for implement Item interface
 }
 
 // Reader extracts a number of bytes define by the first byte.
@@ -60,4 +66,3 @@ func (e Explicit) String() string {
 	buf.WriteString(hex.EncodeToString(tmp))
 	return buf.String()
 }
-

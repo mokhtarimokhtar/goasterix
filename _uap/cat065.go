@@ -1,4 +1,4 @@
-package uap
+package _uap
 
 // Cat065V15 User Application Profile
 // version 1.19

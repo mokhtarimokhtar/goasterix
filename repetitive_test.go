@@ -2,7 +2,6 @@ package goasterix
 
 import (
 	"bytes"
-	"github.com/mokhtarimokhtar/goasterix/uap"
 	"github.com/mokhtarimokhtar/goasterix/util"
 	"io"
 	"reflect"
@@ -13,87 +12,87 @@ func TestRepetitiveReader(t *testing.T) {
 	// setup
 	type testCase struct {
 		Name   string
-		input     string
-		dataField uap.DataField
-		output    Item
+		input  string
+		item   Item
+		output Item
 		err    error
 	}
 	// Arrange
 	dataSet := []testCase{
 		{
 			Name:  "testCase 1",
-			input: "03 01 02 03 01 02 03 01 02 03",
-			dataField: uap.DataField{
-				Type:     uap.Repetitive,
-				SizeItem: uap.SizeField{ForRepetitive: 3},
+			input: "03 aaaaaa bbbbbb cccccc",
+			item: &Repetitive{
+				SubItemSize: 3,
 			},
 			err: nil,
 			output: &Repetitive{
-				Base: Base{
-					Type: uap.Repetitive,
-				},
 				SubItemSize: 3,
-				Rep:  0x03,
-				Data: []byte{0x01, 0x02, 0x03, 0x01, 0x02, 0x03, 0x01, 0x02, 0x03},
+				Rep:         0x03,
+				Data:        []byte{0xaa, 0xaa, 0xaa, 0xbb, 0xbb, 0xbb, 0xcc, 0xcc, 0xcc},
 			},
 		},
 		{
 			Name:  "testCase 2",
-			input: "04 01 02 03 01 02 03 01 02 03",
-			dataField: uap.DataField{
-				Type:     uap.Repetitive,
-				SizeItem: uap.SizeField{ForRepetitive: 3},
+			input: "04 aaaaaa bbbbbb cccccc",
+			item: &Repetitive{
+				SubItemSize: 3,
 			},
 			err: io.ErrUnexpectedEOF,
 			output: &Repetitive{
-				Base: Base{
-					Type: uap.Repetitive,
-				},
 				SubItemSize: 3,
-				Rep:  0x04,
-				Data: nil,
+				Rep:         0x04,
+				Data:        nil,
 			},
 		},
 		{
 			Name:  "testCase 3",
 			input: "",
-			dataField: uap.DataField{
-				Type:     uap.Repetitive,
-				SizeItem: uap.SizeField{ForRepetitive: 3},
+			item: &Repetitive{
+				SubItemSize: 3,
 			},
 			err: io.EOF,
 			output: &Repetitive{
-				Base: Base{
-					Type: uap.Repetitive,
-				},
 				SubItemSize: 3,
-				Rep:  0x00,
-				Data: nil,
+				Rep:         0x00,
+				Data:        nil,
+			},
+		},
+		{
+			Name:  "testCase 4",
+			input: "02",
+			item: &Repetitive{
+				SubItemSize: 3,
+			},
+			err: io.EOF,
+			output: &Repetitive{
+				SubItemSize: 3,
+				Rep:         0x02,
+				Data:        nil,
 			},
 		},
 	}
 
-	for _, row := range dataSet {
+	for _, tc := range dataSet {
 		// Arrange
-		input, _ := util.HexStringToByte(row.input)
+		input, _ := util.HexStringToByte(tc.input)
 		rb := bytes.NewReader(input)
-		f := NewRepetitive(row.dataField)
+		f := NewRepetitive(tc.item)
 
 		// Act
-		//err := f.Reader(rb, row.dataField)
 		err := f.Reader(rb)
 
 		// Assert
-		if err != row.err {
-			t.Errorf(util.MsgFailInValue, row.Name, err, row.err)
+		if err != tc.err {
+			t.Errorf(util.MsgFailInValue, tc.Name, err, tc.err)
 		} else {
-			t.Logf(util.MsgSuccessInValue, row.Name, err, row.err)
+			t.Logf(util.MsgSuccessInValue, tc.Name, err, tc.err)
 		}
 
-		if reflect.DeepEqual(f, row.output) == false {
-			t.Errorf(util.MsgFailInValue, row.Name, f, row.output)
+		if reflect.DeepEqual(f, tc.output) == false {
+			t.Errorf(util.MsgFailInValue, tc.Name, f, tc.output)
 		} else {
-			t.Logf(util.MsgSuccessInValue, row.Name, f, row.output)
+			t.Logf(util.MsgSuccessInValue, tc.Name, f, tc.output)
 		}
 	}
 }
@@ -114,7 +113,6 @@ func TestRepetitiveString(t *testing.T) {
 					FRN:         1,
 					DataItem:    "I000/010",
 					Description: "Test item",
-					Type:        uap.Repetitive,
 				},
 				Rep:  0x02,
 				Data: []byte{0xab, 0xcd},
@@ -132,15 +130,15 @@ func TestRepetitiveString(t *testing.T) {
 		},
 	}
 
-	for _, row := range dataSet {
+	for _, tc := range dataSet {
 		// Act
-		s := row.input.String()
+		s := tc.input.String()
 
 		// Assert
-		if s != row.output {
-			t.Errorf(util.MsgFailInValue, row.Name, s, row.output)
+		if s != tc.output {
+			t.Errorf(util.MsgFailInValue, tc.Name, s, tc.output)
 		} else {
-			t.Logf(util.MsgSuccessInValue, row.Name, s, row.output)
+			t.Logf(util.MsgSuccessInValue, tc.Name, s, tc.output)
 		}
 	}
 }
@@ -157,12 +155,6 @@ func TestRepetitivePayload(t *testing.T) {
 		{
 			Name: "testCase 1",
 			input: Repetitive{
-				Base: Base{
-					FRN:         1,
-					DataItem:    "I000/010",
-					Description: "Test item",
-					Type:        uap.Repetitive,
-				},
 				Rep:  0x02,
 				Data: []byte{0xab, 0xcd},
 			},
@@ -171,7 +163,6 @@ func TestRepetitivePayload(t *testing.T) {
 		{
 			Name: "testCase 2",
 			input: Repetitive{
-				Base: Base{},
 				Rep:  0,
 				Data: nil,
 			},
@@ -179,16 +170,15 @@ func TestRepetitivePayload(t *testing.T) {
 		},
 	}
 
-	for _, row := range dataSet {
+	for _, tc := range dataSet {
 		// Act
-		res := row.input.Payload()
+		res := tc.input.Payload()
 
 		// Assert
-		if bytes.Equal(res, row.output) == false {
-			t.Errorf(util.MsgFailInHex, row.Name, res, row.output)
+		if bytes.Equal(res, tc.output) == false {
+			t.Errorf(util.MsgFailInHex, tc.Name, res, tc.output)
 		} else {
-			t.Logf(util.MsgSuccessInHex, row.Name, res, row.output)
+			t.Logf(util.MsgSuccessInHex, tc.Name, res, tc.output)
 		}
 	}
 }
-

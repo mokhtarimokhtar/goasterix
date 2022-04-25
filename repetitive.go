@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/binary"
 	"encoding/hex"
-	"github.com/mokhtarimokhtar/goasterix/uap"
 )
 
 type Repetitive struct {
@@ -14,12 +13,20 @@ type Repetitive struct {
 	Data        []byte
 }
 
-func NewRepetitive(field uap.IDataField) Item {
+func NewRepetitive(field Item) Item {
 	f := &Repetitive{}
 	f.Base.NewBase(field)
-	//f.SubItemSize = field.Repetitive.SubItemSize
 	f.SubItemSize = field.GetSize().ForRepetitive
 	return f
+}
+
+func (r Repetitive) GetSize() SizeField {
+	s := SizeField{}
+	s.ForRepetitive = r.SubItemSize
+	return s
+}
+func (r Repetitive) GetCompound() []Item {
+	return nil // not used, it's for implement Item interface
 }
 
 // Reader extracts data item type Repetitive(1+rep*N byte).

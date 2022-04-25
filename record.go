@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/hex"
 	"errors"
-	"github.com/mokhtarimokhtar/goasterix/uap"
+	"github.com/mokhtarimokhtar/goasterix/_uap"
 )
 
 var (
@@ -12,9 +12,17 @@ var (
 	ErrDataFieldUnknown = errors.New("type of datafield not found")
 )
 
+type StandardUAP struct {
+	Name      string
+	Category  uint8
+	Version   float64
+	DataItems []Item
+}
+
 type IRecord interface {
 	GetItems() []Item
 }
+
 type Record struct {
 	Cat   uint8
 	Fspec []byte
@@ -32,7 +40,8 @@ func NewRecord() *Record {
 // Decode extracts a Record of asterix data block (only one record).
 // An asterix data block can contain a or more records.
 // It returns the number of bytes unread and fills the Record Struct(Fspec, Items array) in byte.
-func (rec *Record) Decode(data []byte, stdUAP uap.StandardUAP) (unRead int, err error) {
+//func (rec *Record) Decode(data []byte, stdUAP _uap.StandardUAP) (unRead int, err error) {
+func (rec *Record) Decode(data []byte, stdUAP StandardUAP) (unRead int, err error) {
 	rec.Cat = stdUAP.Category
 
 	rb := bytes.NewReader(data)
@@ -69,18 +78,18 @@ func (rec *Record) Decode(data []byte, stdUAP uap.StandardUAP) (unRead int, err 
 		unRead = rb.Len()
 		//rec.DataItems = append(rec.DataItems, contextType.Item)
 		rec.Items = append(rec.Items, item)
-
-		if uapItem.Conditional {
-			switch uapItem.Type {
-			case uap.Fixed:
-				stdUAP.DataItems = selectUAPConditional(stdUAP.Category, item.Payload())
-				//stdUAP.DataItems = selectUAPConditional(stdUAP.Category, contextType.Item.Payload())
-			case uap.Extended:
-				stdUAP.DataItems = selectUAPConditional(stdUAP.Category, item.Payload())
-				//stdUAP.DataItems = selectUAPConditional(stdUAP.Category, contextType.Item.Payload())
-			}
-			offset = frn
-		}
+		/*
+			if uapItem.Conditional {
+				switch uapItem.Type {
+				case _uap.Fixed:
+					stdUAP.DataItems = selectUAPConditional(stdUAP.Category, item.Payload())
+					//stdUAP.DataItems = selectUAPConditional(stdUAP.Category, contextType.Item.Payload())
+				case _uap.Extended:
+					stdUAP.DataItems = selectUAPConditional(stdUAP.Category, item.Payload())
+					//stdUAP.DataItems = selectUAPConditional(stdUAP.Category, contextType.Item.Payload())
+				}
+				offset = frn
+			}*/
 	}
 	return unRead, nil
 }
@@ -108,22 +117,22 @@ func (rec Record) Payload() []byte {
 	return pd
 }
 
-func selectUAPConditional(category uint8, field []byte) []uap.DataField {
-	var selectedUAP []uap.DataField
+func selectUAPConditional(category uint8, field []byte) []_uap.DataField {
+	var selectedUAP []_uap.DataField
 	switch category {
 	case 1:
 		tmp := field[0] & 0x80 >> 7
 		if tmp == 1 {
-			selectedUAP = uap.Cat001TrackV12
+			selectedUAP = _uap.Cat001TrackV12
 		} else {
-			selectedUAP = uap.Cat001PlotV12
+			selectedUAP = _uap.Cat001PlotV12
 		}
 	case 26:
 		tmp := field[0] & 0x80 >> 7
 		if tmp == 1 {
-			selectedUAP = uap.Cat4TestTrack
+			selectedUAP = _uap.Cat4TestTrack
 		} else {
-			selectedUAP = uap.Cat4TestPlot
+			selectedUAP = _uap.Cat4TestPlot
 		}
 	}
 	return selectedUAP
@@ -157,7 +166,7 @@ func FspecIndex(fspec []byte) []uint8 {
 	for j := uint8(0); j < l; j++ {
 		for i := uint8(0); i < 7; i++ {
 			tmp = fspec[j] << i
-			if tmp&0x80 != 0  {
+			if tmp&0x80 != 0 {
 				frnIndex = append(frnIndex, 7*j+i+1)
 			}
 		}

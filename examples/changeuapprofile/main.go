@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/mokhtarimokhtar/goasterix"
-	"github.com/mokhtarimokhtar/goasterix/uap"
+	"github.com/mokhtarimokhtar/goasterix/_uap"
 	"github.com/mokhtarimokhtar/goasterix/util"
 )
 
@@ -22,7 +22,7 @@ func main() {
 	}
 
 	// change User Application Profile STR by UAP ARTAS V7.0
-	uap.DefaultProfiles[30] = uap.Cat030ArtasV62
+	_uap.DefaultProfiles[30] = _uap.Cat030ArtasV62
 
 	for _, data := range dataSet {
 		w, _ := goasterix.NewWrapperDataBlock()

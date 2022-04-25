@@ -6,40 +6,41 @@ import (
 	"encoding/hex"
 )
 
-// SpecialPurpose or Reserved extracts returns a slice
+// ReservedExpansion extracts returns a slice
 // ref. EUROCONTROL-SPEC-0149 2.4
 // 4.3.5 Non-Standard Data Fields:
 // Reserved Expansion Data
 // Field Special Purpose dataField
-type SpecialPurpose struct {
+type ReservedExpansion struct {
 	Base
 	Len  uint8
 	Data []byte
 }
 
-func NewSpecialPurpose(field Item) Item {
-	f := &SpecialPurpose{}
+func NewReservedExpansion(field Item) Item {
+	f := &ReservedExpansion{}
 	f.Base.NewBase(field)
 	return f
 }
-func (sp SpecialPurpose) GetSize() SizeField {
+func (re ReservedExpansion) GetSize() SizeField {
 	return SizeField{} // not used, it's for implement Item interface
 }
-func (sp SpecialPurpose) GetCompound() []Item {
+func (re ReservedExpansion) GetCompound() []Item {
 	return nil // not used, it's for implement Item interface
 }
-func (sp *SpecialPurpose) Reader(rb *bytes.Reader) error {
+
+func (re *ReservedExpansion) Reader(rb *bytes.Reader) error {
 	var err error
 
-	sp.Len, err = rb.ReadByte()
+	re.Len, err = rb.ReadByte()
 	if err != nil {
 		return err
 	}
 
-	sp.Data = make([]byte, sp.Len-1)
-	err = binary.Read(rb, binary.BigEndian, &sp.Data)
+	re.Data = make([]byte, re.Len-1)
+	err = binary.Read(rb, binary.BigEndian, &re.Data)
 	if err != nil {
-		sp.Data = nil
+		re.Data = nil
 		return err
 	}
 
@@ -47,22 +48,22 @@ func (sp *SpecialPurpose) Reader(rb *bytes.Reader) error {
 }
 
 // Payload returns this dataField as bytes.
-func (sp SpecialPurpose) Payload() []byte {
+func (re ReservedExpansion) Payload() []byte {
 	var p []byte
-	p = append(p, sp.Len)
-	p = append(p, sp.Data...)
+	p = append(p, re.Len)
+	p = append(p, re.Data...)
 	return p
 }
 
 // String implements fmt.Stringer in hexadecimal
-func (sp SpecialPurpose) String() string {
+func (re ReservedExpansion) String() string {
 	var buf bytes.Buffer
 	buf.Reset()
 
-	tmp := []byte{sp.Len}
-	tmp = append(tmp, sp.Data...)
+	tmp := []byte{re.Len}
+	tmp = append(tmp, re.Data...)
 
-	buf.WriteString(sp.Base.DataItem)
+	buf.WriteString(re.Base.DataItem)
 	buf.WriteByte(':')
 	buf.WriteString(hex.EncodeToString(tmp))
 	return buf.String()

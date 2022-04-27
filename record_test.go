@@ -2,8 +2,8 @@ package goasterix
 
 import (
 	"bytes"
+	. "github.com/mokhtarimokhtar/goasterix/item"
 	"github.com/mokhtarimokhtar/goasterix/util"
-	"io"
 	"reflect"
 	"testing"
 )
@@ -44,89 +44,6 @@ func TestRecord_String(t *testing.T) {
 	}
 }
 */
-func TestFspecReader_Valid(t *testing.T) {
-	// Arrange
-	input := []byte{0xFF, 0x01, 0xF2, 0xFF}
-	output := []byte{0xFF, 0x01, 0xF2}
-	rb := bytes.NewReader(input)
-
-	// Act
-	fspec, err := FspecReader(rb)
-
-	// Assert
-	if err != nil {
-		t.Errorf("MsgFailInValue: error: %s; Expected: %v", err, nil)
-	} else {
-		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, nil)
-	}
-
-	if bytes.Equal(fspec, output) == false {
-		t.Errorf("MsgFailInValue: sp = % X; Expected: % X", fspec, output)
-	} else {
-		t.Logf("MsgSuccessInValue: sp = % X; Expected: % X", fspec, output)
-	}
-}
-
-func TestFspecReader_Invalid(t *testing.T) {
-	// Arrange
-	input := []byte{0xFF, 0x01}
-	var output []byte
-	rb := bytes.NewReader(input)
-
-	// Act
-	fspec, err := FspecReader(rb)
-
-	// Assert
-	if err != io.EOF {
-		t.Errorf("MsgFailInValue: error: %s; Expected: %v", err, io.EOF)
-	} else {
-		t.Logf("MsgSuccessInValue: error: %v; Expected: %v", err, io.EOF)
-	}
-
-	if bytes.Equal(fspec, output) == false {
-		t.Errorf("MsgFailInValue: sp = % X; Expected: % X", fspec, output)
-	} else {
-		t.Logf("MsgSuccessInValue: sp = % X; Expected: % X", fspec, output)
-	}
-}
-
-func TestFspecIndex(t *testing.T) {
-	type testCase struct {
-		input  []byte
-		output []uint8
-	}
-	// Arrange
-	dataSet := []testCase{
-		{input: []byte{0x80}, output: []uint8{1}},
-		{input: []byte{0x40}, output: []uint8{2}},
-		{input: []byte{0x20}, output: []uint8{3}},
-		{input: []byte{0x10}, output: []uint8{4}},
-		{input: []byte{0x08}, output: []uint8{5}},
-		{input: []byte{0x04}, output: []uint8{6}},
-		{input: []byte{0x02}, output: []uint8{7}},
-		{input: []byte{0x01}, output: []uint8{}},
-		{input: []byte{0x01, 0x80}, output: []uint8{8}},
-		{input: []byte{0xfe}, output: []uint8{1, 2, 3, 4, 5, 6, 7}},
-		{input: []byte{0xff}, output: []uint8{1, 2, 3, 4, 5, 6, 7}},
-		{input: []byte{0xaa}, output: []uint8{1, 3, 5, 7}},
-		{input: []byte{0x55}, output: []uint8{2, 4, 6}},
-		{input: []byte{}, output: []uint8{}},
-		{input: []byte{0xef, 0x98}, output: []uint8{1, 2, 3, 5, 6, 7, 8, 11, 12}},
-	}
-
-	for _, row := range dataSet {
-		// Act
-		frnIndex := FspecIndex(row.input)
-
-		// Assert
-		if bytes.Equal(frnIndex, row.output) == false {
-			t.Errorf(util.MsgFailInHex, "", frnIndex, row.output)
-		} else {
-			t.Logf(util.MsgSuccessInHex, "", frnIndex, row.output)
-		}
-	}
-
-}
 
 // Testing : Decode CatForTest
 func TestDecodeCatForTest(t *testing.T) {
@@ -145,76 +62,172 @@ func TestDecodeCatForTest(t *testing.T) {
 			uap:   CatForTest, // f780 1111-0111 1000-0000  // b80101010202aaaabbbb0201
 			output: Record{
 				Cat:   26,
-				Fspec: []byte{0xc0},
-				Items: []Item{
+				Fspec: []byte{0xf7, 0x80},
+				DataItems: []DataItem{
 					&Fixed{
 						Base: Base{
-							FRN:         1,
-							DataItem:    "I026/010",
-							Description: "Fixed type field for test",
-							Type:        FixedField,
+							FRN:          1,
+							DataItemName: "I026/010",
+							Description:  "Fixed type field for test",
+							Type:         FixedField,
 						},
 						Size: 2,
-						Data: []byte{0xff, 0xff},
+						//Data: []byte{0xff, 0xff},
+						SubItems: []SubItem{
+							&SubItemFromTo{
+								Name: "SAC",
+								Type: FromToField,
+								Pos:  BitPosition{From: 16, To: 9},
+								Data: []byte{0xff},
+							},
+							&SubItemFromTo{
+								Name: "SIC",
+								Type: FromToField,
+								Pos:  BitPosition{From: 8, To: 1},
+								Data: []byte{0xff},
+							},
+						},
 					},
 					&Extended{
 						Base: Base{
-							FRN:         2,
-							DataItem:    "I026/020",
-							Description: "Extended type field for test",
-							Type:        ExtendedField,
+							FRN:          2,
+							DataItemName: "I026/020",
+							Description:  "Extended type field for test",
+							Type:         ExtendedField,
 						},
 						PrimaryItemSize:   1,
 						SecondaryItemSize: 2,
 						Primary:           []byte{0x01},
 						Secondary:         []byte{0x03, 0x02},
+						/*
+							SubItems: []SubItem{
+								&SubItemFromTo{
+									Name: "TYP",
+									Type: FromToField,
+									From: 8,
+									To:   6,
+								},
+								&SubItemBit{Name: "SIM", Type: BitField, Pos: 5},
+								&SubItemBit{Name: "RDP", Type: BitField, Pos: 4},
+								&SubItemBit{Name: "SPI", Type: BitField, Pos: 3},
+								&SubItemBit{Name: "RAB", Type: BitField, Pos: 2},
+								&SubItemBit{Name: "TST", Type: BitField, Pos: 8},
+								&SubItemBit{Name: "ERR", Type: BitField, Pos: 7},
+								&SubItemBit{Name: "XPP", Type: BitField, Pos: 6},
+								&SubItemBit{Name: "ME", Type: BitField, Pos: 5},
+								&SubItemBit{Name: "MI", Type: BitField, Pos: 4},
+								&SubItemFromTo{
+									Name: "FOE/FRI",
+									Type: FromToField,
+									From: 3,
+									To:   2,
+								},
+							},
+						*/
 					},
 					&Explicit{
 						Base: Base{
-							FRN:         3,
-							DataItem:    "I026/030",
-							Description: "Explicit type field for test",
-							Type:        ExplicitField,
+							FRN:          3,
+							DataItemName: "I026/030",
+							Description:  "Explicit type field for test",
+							Type:         ExplicitField,
 						},
 						Len:  0x08,
 						Data: []byte{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07},
 					},
 					&Repetitive{
 						Base: Base{
-							FRN:         4,
-							DataItem:    "I026/040",
-							Description: "Repetitive type field for test",
-							Type:        RepetitiveField,
+							FRN:          4,
+							DataItemName: "I026/040",
+							Description:  "Repetitive type field for test",
+							Type:         RepetitiveField,
 						},
 						SubItemSize: 3,
 						Rep:         0x03,
-						Data:        []byte{0xaa, 0xaa, 0xaa, 0xbb, 0xbb, 0xbb, 0xcc, 0xcc, 0xcc},
+						//Data:        []byte{0xaa, 0xaa, 0xaa, 0xbb, 0xbb, 0xbb, 0xcc, 0xcc, 0xcc},
+						Data: nil,
+						SubItems: []SubItem{
+							&SubItemFromTo{
+								Name: "DOP",
+								Type: FromToField,
+								Pos:  BitPosition{From: 24, To: 17},
+								Data: []byte{0xaa},
+							},
+							&SubItemFromTo{
+								Pos:  BitPosition{From: 16, To: 9},
+								Name: "AMB",
+								Type: FromToField,
+								Data: []byte{0xaa},
+							},
+							&SubItemFromTo{
+								Name: "FRQ",
+								Type: FromToField,
+								Pos:  BitPosition{From: 8, To: 1},
+								Data: []byte{0xaa},
+							},
+							&SubItemFromTo{
+								Name: "DOP",
+								Type: FromToField,
+								Pos:  BitPosition{From: 24, To: 17},
+								Data: []byte{0xbb},
+							},
+							&SubItemFromTo{
+								Name: "AMB",
+								Type: FromToField,
+								Pos:  BitPosition{From: 16, To: 9},
+								Data: []byte{0xbb},
+							},
+							&SubItemFromTo{
+								Name: "FRQ",
+								Type: FromToField,
+								Pos:  BitPosition{From: 8, To: 1},
+								Data: []byte{0xbb},
+							},
+							&SubItemFromTo{
+								Name: "DOP",
+								Type: FromToField,
+								Pos:  BitPosition{From: 24, To: 17},
+								Data: []byte{0xcc},
+							},
+							&SubItemFromTo{
+								Name: "AMB",
+								Type: FromToField,
+								Pos:  BitPosition{From: 16, To: 9},
+								Data: []byte{0xcc},
+							},
+							&SubItemFromTo{
+								Name: "FRQ",
+								Type: FromToField,
+								Pos:  BitPosition{From: 8, To: 1},
+								Data: []byte{0xcc},
+							},
+						},
 					},
 					&Compound{
 						Base: Base{
-							FRN:         6,
-							DataItem:    "I026/060",
-							Description: "Compound type field for test",
-							Type:        CompoundField,
+							FRN:          6,
+							DataItemName: "I026/060",
+							Description:  "Compound type field for test",
+							Type:         CompoundField,
 						},
 						Primary: []byte{0xb8},
-						Secondary: []Item{
+						Secondary: []DataItem{
 							&Fixed{
 								Base: Base{
-									FRN:         1,
-									DataItem:    "Compound/001",
-									Description: "Compound Fixed type field for test",
-									Type:        FixedField,
+									FRN:          1,
+									DataItemName: "Compound/001",
+									Description:  "Compound Fixed type field for test",
+									Type:         FixedField,
 								},
 								Size: 1,
 								Data: []byte{0x01},
 							},
 							&Extended{
 								Base: Base{
-									FRN:         3,
-									DataItem:    "Compound/003",
-									Description: "Compound Extended type field for test",
-									Type:        ExtendedField,
+									FRN:          3,
+									DataItemName: "Compound/003",
+									Description:  "Compound Extended type field for test",
+									Type:         ExtendedField,
 								},
 								PrimaryItemSize:   1,
 								SecondaryItemSize: 1,
@@ -223,10 +236,10 @@ func TestDecodeCatForTest(t *testing.T) {
 							},
 							&Repetitive{
 								Base: Base{
-									FRN:         4,
-									DataItem:    "Compound/004",
-									Description: "Compound Repetitive type field for test",
-									Type:        RepetitiveField,
+									FRN:          4,
+									DataItemName: "Compound/004",
+									Description:  "Compound Repetitive type field for test",
+									Type:         RepetitiveField,
 								},
 								SubItemSize: 2,
 								Rep:         0x02,
@@ -234,10 +247,10 @@ func TestDecodeCatForTest(t *testing.T) {
 							},
 							&Explicit{
 								Base: Base{
-									FRN:         5,
-									DataItem:    "Compound/005",
-									Description: "Compound Explicit type field for test",
-									Type:        ExplicitField,
+									FRN:          5,
+									DataItemName: "Compound/005",
+									Description:  "Compound Explicit type field for test",
+									Type:         ExplicitField,
 								},
 								Len:  0x02,
 								Data: []byte{0x01},
@@ -246,20 +259,20 @@ func TestDecodeCatForTest(t *testing.T) {
 					},
 					&ReservedExpansion{
 						Base: Base{
-							FRN:         7,
-							DataItem:    "RE",
-							Description: "Reserved Expansion type field for test",
-							Type:        REField,
+							FRN:          7,
+							DataItemName: "RE",
+							Description:  "Reserved Expansion type field for test",
+							Type:         REField,
 						},
 						Len:  0x02,
 						Data: []byte{0x01},
 					},
 					&SpecialPurpose{
 						Base: Base{
-							FRN:         8,
-							DataItem:    "SP",
-							Description: "Special Purpose type field for test",
-							Type:        SPField,
+							FRN:          8,
+							DataItemName: "SP",
+							Description:  "Special Purpose type field for test",
+							Type:         SPField,
 						},
 						Len:  0x04,
 						Data: []byte{0x01, 0x02, 0x03},
@@ -292,11 +305,21 @@ func TestDecodeCatForTest(t *testing.T) {
 			t.Logf(util.MsgSuccessInValue, tc.Name, unRead, tc.unRead)
 		}
 
-		for i, item := range rec.Items {
-			if reflect.DeepEqual(item, tc.output.Items[i]) == false {
-				t.Errorf(util.MsgFailInValue, tc.Name, item, tc.output.Items[i])
+		if rec.Cat != tc.output.Cat {
+			t.Errorf(util.MsgFailInValue, tc.Name, rec.Cat, tc.output.Cat)
+		} else {
+			t.Logf(util.MsgSuccessInValue, tc.Name, rec.Cat, tc.output.Cat)
+		}
+		if bytes.Equal(rec.Fspec, tc.output.Fspec) == false {
+			t.Errorf(util.MsgFailInHex, tc.Name, rec.Fspec, tc.output.Fspec)
+		} else {
+			t.Logf(util.MsgSuccessInHex, tc.Name, rec.Fspec, tc.output.Fspec)
+		}
+		for i, item := range rec.DataItems {
+			if reflect.DeepEqual(item, tc.output.DataItems[i]) == false {
+				t.Errorf(util.MsgFailInValue, tc.Name, item, tc.output.DataItems[i])
 			} else {
-				t.Logf(util.MsgSuccessInValue, tc.Name, item, tc.output.Items[i])
+				t.Logf(util.MsgSuccessInValue, tc.Name, item, tc.output.DataItems[i])
 			}
 		}
 	}
@@ -306,33 +329,46 @@ func TestDecodeCatForTest(t *testing.T) {
 func TestRecordDecodeCAT048(t *testing.T) {
 	// Arrange
 	input := "fff702 0836 429b52 a0 94c70181 0913 02d0 6002b7 490d01 38a178cf4220 02e79a5d27a00c0060a3280030a4000040 063a 0743ce5b 40 20f5"
-	output := []Item{
+	output := []DataItem{
 		&Fixed{
 			Base: Base{
-				FRN:         1,
-				DataItem:    "I048/010",
-				Description: "Data Source Identifier",
-				Type:        FixedField,
+				FRN:          1,
+				DataItemName: "I048/010",
+				Description:  "Data Source Identifier",
+				Type:         FixedField,
 			},
 			Size: 2,
-			Data: []byte{0x08, 0x36},
+			SubItems: []SubItem{
+				&SubItemFromTo{
+					Name: "SAC",
+					Type: FromToField,
+					Pos:  BitPosition{From: 16, To: 9},
+					Data: []byte{0x08},
+				},
+				&SubItemFromTo{
+					Name: "SIC",
+					Type: FromToField,
+					Pos:  BitPosition{From: 8, To: 1},
+					Data: []byte{0x36},
+				},
+			},
 		},
 		&Fixed{
 			Base: Base{
-				FRN:         2,
-				DataItem:    "I048/140",
-				Description: "Time-of-Day",
-				Type:        FixedField,
+				FRN:          2,
+				DataItemName: "I048/140",
+				Description:  "Time-of-Day",
+				Type:         FixedField,
 			},
 			Size: 3,
 			Data: []byte{0x42, 0x9b, 0x52},
 		},
 		&Extended{
 			Base: Base{
-				FRN:         3,
-				DataItem:    "I048/020",
-				Description: "Target Report Descriptor",
-				Type:        ExtendedField,
+				FRN:          3,
+				DataItemName: "I048/020",
+				Description:  "Target Report Descriptor",
+				Type:         ExtendedField,
 			},
 			PrimaryItemSize:   1,
 			SecondaryItemSize: 1,
@@ -341,59 +377,59 @@ func TestRecordDecodeCAT048(t *testing.T) {
 		},
 		&Fixed{
 			Base: Base{
-				FRN:         4,
-				DataItem:    "I048/040",
-				Description: "Measured Position in Slant Polar Coordinates",
-				Type:        FixedField,
+				FRN:          4,
+				DataItemName: "I048/040",
+				Description:  "Measured Position in Slant Polar Coordinates",
+				Type:         FixedField,
 			},
 			Size: 4,
 			Data: []byte{0x94, 0xc7, 0x01, 0x81},
 		},
 		&Fixed{
 			Base: Base{
-				FRN:         5,
-				DataItem:    "I048/070",
-				Description: "Mode-3/A Code in Octal Representation",
-				Type:        FixedField,
+				FRN:          5,
+				DataItemName: "I048/070",
+				Description:  "Mode-3/A Code in Octal Representation",
+				Type:         FixedField,
 			},
 			Size: 2,
 			Data: []byte{0x09, 0x13},
 		},
 		&Fixed{
 			Base: Base{
-				FRN:         6,
-				DataItem:    "I048/090",
-				Description: "Flight Level in Binary Representation",
-				Type:        FixedField,
+				FRN:          6,
+				DataItemName: "I048/090",
+				Description:  "Flight Level in Binary Representation",
+				Type:         FixedField,
 			},
 			Size: 2,
 			Data: []byte{0x02, 0xd0},
 		},
 		&Compound{
 			Base: Base{
-				FRN:         7,
-				DataItem:    "I048/130",
-				Description: "Radar Plot Characteristics",
-				Type:        CompoundField,
+				FRN:          7,
+				DataItemName: "I048/130",
+				Description:  "Radar Plot Characteristics",
+				Type:         CompoundField,
 			},
 			Primary: []byte{0x60},
-			Secondary: []Item{
+			Secondary: []DataItem{
 				&Fixed{
 					Base: Base{
-						FRN:         2,
-						DataItem:    "SRR",
-						Description: "Number of received replies",
-						Type:        FixedField,
+						FRN:          2,
+						DataItemName: "SRR",
+						Description:  "Number of received replies",
+						Type:         FixedField,
 					},
 					Size: 1,
 					Data: []byte{0x02},
 				},
 				&Fixed{
 					Base: Base{
-						FRN:         3,
-						DataItem:    "SAM",
-						Description: "Amplitude of received replies for M(SSR)",
-						Type:        FixedField,
+						FRN:          3,
+						DataItemName: "SAM",
+						Description:  "Amplitude of received replies for M(SSR)",
+						Type:         FixedField,
 					},
 					Size: 1,
 					Data: []byte{0xb7},
@@ -402,30 +438,30 @@ func TestRecordDecodeCAT048(t *testing.T) {
 		},
 		&Fixed{
 			Base: Base{
-				FRN:         8,
-				DataItem:    "I048/220",
-				Description: "Aircraft Address",
-				Type:        FixedField,
+				FRN:          8,
+				DataItemName: "I048/220",
+				Description:  "Aircraft Address",
+				Type:         FixedField,
 			},
 			Size: 3,
 			Data: []byte{0x49, 0x0d, 0x01},
 		},
 		&Fixed{
 			Base: Base{
-				FRN:         9,
-				DataItem:    "I048/240",
-				Description: "Aircraft Identification",
-				Type:        FixedField,
+				FRN:          9,
+				DataItemName: "I048/240",
+				Description:  "Aircraft Identification",
+				Type:         FixedField,
 			},
 			Size: 6,
 			Data: []byte{0x38, 0xa1, 0x78, 0xcf, 0x42, 0x20},
 		},
 		&Repetitive{
 			Base: Base{
-				FRN:         10,
-				DataItem:    "I048/250",
-				Description: "Mode S MB Data",
-				Type:        RepetitiveField,
+				FRN:          10,
+				DataItemName: "I048/250",
+				Description:  "Mode S MB Data",
+				Type:         RepetitiveField,
 			},
 			SubItemSize: 8,
 			Rep:         0x02,
@@ -433,30 +469,30 @@ func TestRecordDecodeCAT048(t *testing.T) {
 		},
 		&Fixed{
 			Base: Base{
-				FRN:         11,
-				DataItem:    "I048/161",
-				Description: "Track Number",
-				Type:        FixedField,
+				FRN:          11,
+				DataItemName: "I048/161",
+				Description:  "Track Number",
+				Type:         FixedField,
 			},
 			Size: 2,
 			Data: []byte{0x06, 0x3a},
 		},
 		&Fixed{
 			Base: Base{
-				FRN:         13,
-				DataItem:    "I048/200",
-				Description: "Calculated Track Velocity in Polar Representation",
-				Type:        FixedField,
+				FRN:          13,
+				DataItemName: "I048/200",
+				Description:  "Calculated Track Velocity in Polar Representation",
+				Type:         FixedField,
 			},
 			Size: 4,
 			Data: []byte{0x07, 0x43, 0xce, 0x5b},
 		},
 		&Extended{
 			Base: Base{
-				FRN:         14,
-				DataItem:    "I048/170",
-				Description: "Track Status",
-				Type:        ExtendedField,
+				FRN:          14,
+				DataItemName: "I048/170",
+				Description:  "Track Status",
+				Type:         ExtendedField,
 			},
 			PrimaryItemSize:   1,
 			SecondaryItemSize: 1,
@@ -465,10 +501,10 @@ func TestRecordDecodeCAT048(t *testing.T) {
 		},
 		&Fixed{
 			Base: Base{
-				FRN:         21,
-				DataItem:    "I048/230",
-				Description: "Communications / ACAS Capability and Flight Status",
-				Type:        FixedField,
+				FRN:          21,
+				DataItemName: "I048/230",
+				Description:  "Communications / ACAS Capability and Flight Status",
+				Type:         FixedField,
 			},
 			Size: 2,
 			Data: []byte{0x20, 0xf5},
@@ -493,7 +529,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 	} else {
 		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
 	}
-	for i, item := range rec.Items {
+	for i, item := range rec.DataItems {
 		if reflect.DeepEqual(item, output[i]) == false {
 			t.Errorf("FAIL: %v; \nExpected: %v", item, output[i])
 		} else {
@@ -526,7 +562,7 @@ func TestRFSDataFieldReader(t *testing.T) {
 						Field: Item{
 							Meta: Base{
 								FRN:         3,
-								DataItem:    "I001/040",
+								DataItemName:    "I001/040",
 								Description: "Measured Position in Polar Coordinates",
 								Type:        dataField.Fixed,
 							},
@@ -538,7 +574,7 @@ func TestRFSDataFieldReader(t *testing.T) {
 						Field: Item{
 							Meta: Base{
 								FRN:         10,
-								DataItem:    "I001/131",
+								DataItemName:    "I001/131",
 								Description: "Received Power",
 								Type:        dataField.Fixed,
 							},
@@ -570,7 +606,7 @@ func TestRFSDataFieldReader(t *testing.T) {
 						Field: Item{
 							Meta: Base{
 								FRN:         3,
-								DataItem:    "I001/040",
+								DataItemName:    "I001/040",
 								Description: "Measured Position in Polar Coordinates",
 								Type:        dataField.Fixed,
 							},
@@ -710,10 +746,10 @@ func TestRecordDecodeNbOfItems(t *testing.T) {
 			t.Logf(util.MsgSuccessInValue, row.Name, unRead, 0)
 		}
 
-		if row.nbOfItems != len(rec.Items) {
-			t.Errorf(util.MsgFailInValue, row.Name, row.nbOfItems, len(rec.Items))
+		if row.nbOfItems != len(rec.DataItems) {
+			t.Errorf(util.MsgFailInValue, row.Name, row.nbOfItems, len(rec.DataItems))
 		} else {
-			t.Logf(util.MsgSuccessInValue, row.Name, row.nbOfItems, len(rec.Items))
+			t.Logf(util.MsgSuccessInValue, row.Name, row.nbOfItems, len(rec.DataItems))
 		}
 	}
 }
@@ -832,7 +868,7 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         1,
-				DataItem:    "I026/001",
+				DataItemName:    "I026/001",
 				Description: "Fixed type dataField for test",
 				Type:        dataField.Fixed,
 			},
@@ -841,7 +877,7 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         2,
-				DataItem:    "I026/002",
+				DataItemName:    "I026/002",
 				Description: "Extended type dataField for test",
 				Type:        dataField.Extended,
 			},
@@ -853,7 +889,7 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         3,
-				DataItem:    "I026/003",
+				DataItemName:    "I026/003",
 				Description: "Explicit type dataField for test",
 				Type:        dataField.Explicit,
 			},
@@ -865,7 +901,7 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         4,
-				DataItem:    "I026/004",
+				DataItemName:    "I026/004",
 				Description: "Repetitive type dataField for test",
 				Type:        dataField.Repetitive,
 			},
@@ -877,7 +913,7 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         5,
-				DataItem:    "I026/005",
+				DataItemName:    "I026/005",
 				Description: "Compound type dataField for test",
 				Type:        dataField.Compound,
 			},
@@ -887,7 +923,7 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 					{
 						Meta: Base{
 							FRN:         1,
-							DataItem:    "Compound/001",
+							DataItemName:    "Compound/001",
 							Description: "Compound Fixed type dataField for test",
 							Type:        dataField.Fixed,
 						},
@@ -896,7 +932,7 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 					{
 						Meta: Base{
 							FRN:         3,
-							DataItem:    "Compound/003",
+							DataItemName:    "Compound/003",
 							Description: "Compound Extended type dataField for test",
 							Type:        dataField.Extended,
 						},
@@ -908,7 +944,7 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 					{
 						Meta: Base{
 							FRN:         5,
-							DataItem:    "Compound/005",
+							DataItemName:    "Compound/005",
 							Description: "Compound Repetitive type dataField for test",
 							Type:        dataField.Repetitive,
 						},
@@ -920,7 +956,7 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 					{
 						Meta: Base{
 							FRN:         7,
-							DataItem:    "Compound/007",
+							DataItemName:    "Compound/007",
 							Description: "Compound Explicit type dataField for test",
 							Type:        dataField.Explicit,
 						},
@@ -932,7 +968,7 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 					{
 						Meta: Base{
 							FRN:         8,
-							DataItem:    "Compound/008",
+							DataItemName:    "Compound/008",
 							Description: "Compound Fixed type dataField for test",
 							Type:        dataField.Fixed,
 						},
@@ -944,7 +980,7 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         6,
-				DataItem:    "I026/006",
+				DataItemName:    "I026/006",
 				Description: "RFS(Random Field Sequencing) type dataField for test",
 				Type:        dataField.RFS,
 			},
@@ -956,7 +992,7 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 						Field: Item{
 							Meta: Base{
 								FRN:         1,
-								DataItem:    "I026/001",
+								DataItemName:    "I026/001",
 								Description: "Fixed type dataField for test",
 								Type:        dataField.Fixed,
 							},
@@ -969,7 +1005,7 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         9,
-				DataItem:    "SP",
+				DataItemName:    "SP",
 				Description: "SP (Special Purpose dataField) type dataField for test",
 				Type:        dataField.SP,
 			},
@@ -1013,7 +1049,7 @@ func TestRecordDecode_Cat4TestTrackFullRecord(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         10,
-				DataItem:    "I026/010",
+				DataItemName:    "I026/010",
 				Description: "Fixed type dataField for test",
 				Type:        dataField.Fixed,
 			},
@@ -1022,7 +1058,7 @@ func TestRecordDecode_Cat4TestTrackFullRecord(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         11,
-				DataItem:    "I026/011",
+				DataItemName:    "I026/011",
 				Description: "Fixed type dataField for test",
 				Type:        dataField.Fixed,
 			},
@@ -1031,7 +1067,7 @@ func TestRecordDecode_Cat4TestTrackFullRecord(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         12,
-				DataItem:    "I026/012",
+				DataItemName:    "I026/012",
 				Description: "Fixed type dataField for test",
 				Type:        dataField.Fixed,
 			},
@@ -1072,7 +1108,7 @@ func TestRecordDecode_Cat4TestPlotFullRecord(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         10,
-				DataItem:    "I026/010",
+				DataItemName:    "I026/010",
 				Description: "Fixed type dataField for test",
 				Type:        dataField.Fixed,
 			},
@@ -1081,7 +1117,7 @@ func TestRecordDecode_Cat4TestPlotFullRecord(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         11,
-				DataItem:    "I026/011",
+				DataItemName:    "I026/011",
 				Description: "Fixed type dataField for test",
 				Type:        dataField.Fixed,
 			},
@@ -1090,7 +1126,7 @@ func TestRecordDecode_Cat4TestPlotFullRecord(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         12,
-				DataItem:    "I026/012",
+				DataItemName:    "I026/012",
 				Description: "Fixed type dataField for test",
 				Type:        dataField.Fixed,
 			},
@@ -1212,7 +1248,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 		&Fixed{
 			Base: Base{
 				FRN:         1,
-				DataItem:    "I048/010",
+				DataItemName:    "I048/010",
 				Description: "Data Source Identifier",
 				Type:        _uap.Fixed,
 			},
@@ -1222,7 +1258,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 		&Fixed{
 			Base: Base{
 				FRN:         2,
-				DataItem:    "I048/140",
+				DataItemName:    "I048/140",
 				Description: "Time-of-Day",
 				Type:        _uap.Fixed,
 			},
@@ -1232,7 +1268,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 		&Extended{
 			Base: Base{
 				FRN:         3,
-				DataItem:    "I048/020",
+				DataItemName:    "I048/020",
 				Description: "Target Report Descriptor",
 				Type:        _uap.Extended,
 			},
@@ -1244,7 +1280,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 		&Fixed{
 			Base: Base{
 				FRN:         4,
-				DataItem:    "I048/040",
+				DataItemName:    "I048/040",
 				Description: "Measured Position in Slant Polar Coordinates",
 				Type:        _uap.Fixed,
 			},
@@ -1254,7 +1290,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 		&Fixed{
 			Base: Base{
 				FRN:         5,
-				DataItem:    "I048/070",
+				DataItemName:    "I048/070",
 				Description: "Mode-3/A Code in Octal Representation",
 				Type:        _uap.Fixed,
 			},
@@ -1264,7 +1300,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 		&Fixed{
 			Base: Base{
 				FRN:         6,
-				DataItem:    "I048/090",
+				DataItemName:    "I048/090",
 				Description: "Flight Level in Binary Representation",
 				Type:        _uap.Fixed,
 			},
@@ -1274,7 +1310,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 		&Compound{
 			Base: Base{
 				FRN:         7,
-				DataItem:    "I048/130",
+				DataItemName:    "I048/130",
 				Description: "Radar Plot Characteristics",
 				Type:        _uap.Compound,
 			},
@@ -1284,7 +1320,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 				&Fixed{
 					Base: Base{
 						FRN:         2,
-						DataItem:    "SRR",
+						DataItemName:    "SRR",
 						Description: "Number of received replies",
 						Type:        _uap.Fixed,
 					},
@@ -1294,7 +1330,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 				&Fixed{
 					Base: Base{
 						FRN:         3,
-						DataItem:    "SAM",
+						DataItemName:    "SAM",
 						Description: "Amplitude of received replies for M(SSR)",
 						Type:        _uap.Fixed,
 					},
@@ -1306,7 +1342,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 		&Fixed{
 			Base: Base{
 				FRN:         8,
-				DataItem:    "I048/220",
+				DataItemName:    "I048/220",
 				Description: "Aircraft Address",
 				Type:        _uap.Fixed,
 			},
@@ -1316,7 +1352,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 		&Fixed{
 			Base: Base{
 				FRN:         9,
-				DataItem:    "I048/240",
+				DataItemName:    "I048/240",
 				Description: "Aircraft Identification",
 				Type:        _uap.Fixed,
 			},
@@ -1326,7 +1362,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 		&Repetitive{
 			Base: Base{
 				FRN:         10,
-				DataItem:    "I048/250",
+				DataItemName:    "I048/250",
 				Description: "Mode S MB Data",
 				Type:        _uap.Repetitive,
 			},
@@ -1337,7 +1373,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 		&Fixed{
 			Base: Base{
 				FRN:         11,
-				DataItem:    "I048/161",
+				DataItemName:    "I048/161",
 				Description: "Track Number",
 				Type:        _uap.Fixed,
 			},
@@ -1347,7 +1383,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 		&Fixed{
 			Base: Base{
 				FRN:         13,
-				DataItem:    "I048/200",
+				DataItemName:    "I048/200",
 				Description: "Calculated Track Velocity in Polar Representation",
 				Type:        _uap.Fixed,
 			},
@@ -1357,7 +1393,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 		&Extended{
 			Base: Base{
 				FRN:         14,
-				DataItem:    "I048/170",
+				DataItemName:    "I048/170",
 				Description: "Track Status",
 				Type:        _uap.Extended,
 			},
@@ -1369,7 +1405,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 		&Fixed{
 			Base: Base{
 				FRN:         21,
-				DataItem:    "I048/230",
+				DataItemName:    "I048/230",
 				Description: "Communications / ACAS Capability and Flight Status",
 				Type:        _uap.Fixed,
 			},
@@ -1396,7 +1432,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 	} else {
 		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
 	}
-	for i, item := range rec.Items {
+	for i, item := range rec.DataItems {
 		if reflect.DeepEqual(item, output[i]) == false {
 			t.Errorf("FAIL: %v; \nExpected: %v", item, output[i])
 		} else {
@@ -1413,7 +1449,7 @@ func TestRecordDecode_CAT034(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         1,
-				DataItem:    "I034/010",
+				DataItemName:    "I034/010",
 				Description: "Data Source Identifier",
 				Type:        dataField.Fixed,
 			},
@@ -1422,7 +1458,7 @@ func TestRecordDecode_CAT034(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         2,
-				DataItem:    "I034/000",
+				DataItemName:    "I034/000",
 				Description: "Message Type",
 				Type:        dataField.Fixed,
 			},
@@ -1431,7 +1467,7 @@ func TestRecordDecode_CAT034(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         3,
-				DataItem:    "I034/030",
+				DataItemName:    "I034/030",
 				Description: "Time-of-Day",
 				Type:        dataField.Fixed,
 			},
@@ -1440,7 +1476,7 @@ func TestRecordDecode_CAT034(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         4,
-				DataItem:    "I034/020",
+				DataItemName:    "I034/020",
 				Description: "Sector Number",
 				Type:        dataField.Fixed,
 			},
@@ -1449,7 +1485,7 @@ func TestRecordDecode_CAT034(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         6,
-				DataItem:    "I034/050",
+				DataItemName:    "I034/050",
 				Description: "System Configuration and Status",
 				Type:        dataField.Compound,
 			},
@@ -1459,7 +1495,7 @@ func TestRecordDecode_CAT034(t *testing.T) {
 					{
 						Meta: Base{
 							FRN:         1,
-							DataItem:    "COM",
+							DataItemName:    "COM",
 							Description: "Common Part",
 							Type:        dataField.Fixed,
 						},
@@ -1468,7 +1504,7 @@ func TestRecordDecode_CAT034(t *testing.T) {
 					{
 						Meta: Base{
 							FRN:         4,
-							DataItem:    "PSR",
+							DataItemName:    "PSR",
 							Description: "Specific Status for PSR Sensor",
 							Type:        dataField.Fixed,
 						},
@@ -1477,7 +1513,7 @@ func TestRecordDecode_CAT034(t *testing.T) {
 					{
 						Meta: Base{
 							FRN:         6,
-							DataItem:    "MDS",
+							DataItemName:    "MDS",
 							Description: "Specific Status for Mode S Sensor",
 							Type:        dataField.Fixed,
 						},
@@ -1489,7 +1525,7 @@ func TestRecordDecode_CAT034(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         7,
-				DataItem:    "I034/060",
+				DataItemName:    "I034/060",
 				Description: "System Processing Mode",
 				Type:        dataField.Compound,
 			},
@@ -1499,7 +1535,7 @@ func TestRecordDecode_CAT034(t *testing.T) {
 					{
 						Meta: Base{
 							FRN:         1,
-							DataItem:    "COM",
+							DataItemName:    "COM",
 							Description: "Common Part",
 							Type:        dataField.Fixed,
 						},
@@ -1508,7 +1544,7 @@ func TestRecordDecode_CAT034(t *testing.T) {
 					{
 						Meta: Base{
 							FRN:         4,
-							DataItem:    "PSR",
+							DataItemName:    "PSR",
 							Description: "Specific Processing Mode information for PSR Sensor",
 							Type:        dataField.Fixed,
 						},
@@ -1517,7 +1553,7 @@ func TestRecordDecode_CAT034(t *testing.T) {
 					{
 						Meta: Base{
 							FRN:         6,
-							DataItem:    "MDS",
+							DataItemName:    "MDS",
 							Description: "Specific Processing Mode information for Mode S Sensor",
 							Type:        dataField.Fixed,
 						},
@@ -1562,7 +1598,7 @@ func TestRecordDecode_CAT063(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         1,
-				DataItem:    "I063/010",
+				DataItemName:    "I063/010",
 				Description: "Data Source Identifier",
 				Type:        dataField.Fixed,
 			},
@@ -1571,7 +1607,7 @@ func TestRecordDecode_CAT063(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         3,
-				DataItem:    "I063/030",
+				DataItemName:    "I063/030",
 				Description: "Time of Message",
 				Type:        dataField.Fixed,
 			},
@@ -1580,7 +1616,7 @@ func TestRecordDecode_CAT063(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         4,
-				DataItem:    "I063/050",
+				DataItemName:    "I063/050",
 				Description: "Sensor Identifier",
 				Type:        dataField.Fixed,
 			},
@@ -1589,7 +1625,7 @@ func TestRecordDecode_CAT063(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         5,
-				DataItem:    "I063/060",
+				DataItemName:    "I063/060",
 				Description: "Sensor Configuration and Status",
 				Type:        dataField.Extended,
 			},
@@ -1601,7 +1637,7 @@ func TestRecordDecode_CAT063(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         6,
-				DataItem:    "I063/070",
+				DataItemName:    "I063/070",
 				Description: "Time Stamping Bias",
 				Type:        dataField.Fixed,
 			},
@@ -1610,7 +1646,7 @@ func TestRecordDecode_CAT063(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         7,
-				DataItem:    "I063/080",
+				DataItemName:    "I063/080",
 				Description: "SSR/Mode S Range Gain and Bias",
 				Type:        dataField.Fixed,
 			},
@@ -1619,7 +1655,7 @@ func TestRecordDecode_CAT063(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         8,
-				DataItem:    "I063/081",
+				DataItemName:    "I063/081",
 				Description: "SSR/Mode S Azimuth Bias",
 				Type:        dataField.Fixed,
 			},
@@ -1628,7 +1664,7 @@ func TestRecordDecode_CAT063(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         9,
-				DataItem:    "I063/090",
+				DataItemName:    "I063/090",
 				Description: "PSR Range Gain and Bias",
 				Type:        dataField.Fixed,
 			},
@@ -1637,7 +1673,7 @@ func TestRecordDecode_CAT063(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         10,
-				DataItem:    "I063/091",
+				DataItemName:    "I063/091",
 				Description: "PSR Azimuth Bias",
 				Type:        dataField.Fixed,
 			},
@@ -1646,7 +1682,7 @@ func TestRecordDecode_CAT063(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         11,
-				DataItem:    "I063/092",
+				DataItemName:    "I063/092",
 				Description: "PSR Elevation Bias",
 				Type:        dataField.Fixed,
 			},
@@ -1688,7 +1724,7 @@ func TestRecordDecode_CAT065(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         1,
-				DataItem:    "I065/010",
+				DataItemName:    "I065/010",
 				Description: "Data Source Identifier",
 				Type:        dataField.Fixed,
 			},
@@ -1697,7 +1733,7 @@ func TestRecordDecode_CAT065(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         2,
-				DataItem:    "I065/000",
+				DataItemName:    "I065/000",
 				Description: "Message Type",
 				Type:        dataField.Fixed,
 			},
@@ -1706,7 +1742,7 @@ func TestRecordDecode_CAT065(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         3,
-				DataItem:    "I065/015",
+				DataItemName:    "I065/015",
 				Description: "Service Identification",
 				Type:        dataField.Fixed,
 			},
@@ -1715,7 +1751,7 @@ func TestRecordDecode_CAT065(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         4,
-				DataItem:    "I065/030",
+				DataItemName:    "I065/030",
 				Description: "Time Of Message",
 				Type:        dataField.Fixed,
 			},
@@ -1724,7 +1760,7 @@ func TestRecordDecode_CAT065(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         5,
-				DataItem:    "I065/020",
+				DataItemName:    "I065/020",
 				Description: "Batch Number",
 				Type:        dataField.Fixed,
 			},
@@ -1765,7 +1801,7 @@ func TestRecordDecode_CAT004(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         1,
-				DataItem:    "I004/010",
+				DataItemName:    "I004/010",
 				Description: "Data Source Identifier",
 				Type:        dataField.Fixed,
 			},
@@ -1774,7 +1810,7 @@ func TestRecordDecode_CAT004(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         2,
-				DataItem:    "I004/000",
+				DataItemName:    "I004/000",
 				Description: "Message Type",
 				Type:        dataField.Fixed,
 			},
@@ -1783,7 +1819,7 @@ func TestRecordDecode_CAT004(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         3,
-				DataItem:    "I004/015",
+				DataItemName:    "I004/015",
 				Description: "SDPS Identifier",
 				Type:        dataField.Repetitive,
 			},
@@ -1795,7 +1831,7 @@ func TestRecordDecode_CAT004(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         4,
-				DataItem:    "I004/020",
+				DataItemName:    "I004/020",
 				Description: "Time Of Message",
 				Type:        dataField.Fixed,
 			},
@@ -1804,7 +1840,7 @@ func TestRecordDecode_CAT004(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         5,
-				DataItem:    "I004/040",
+				DataItemName:    "I004/040",
 				Description: "Alert Identifier",
 				Type:        dataField.Fixed,
 			},
@@ -1813,7 +1849,7 @@ func TestRecordDecode_CAT004(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         6,
-				DataItem:    "I004/045",
+				DataItemName:    "I004/045",
 				Description: "Alert Status",
 				Type:        dataField.Fixed,
 			},
@@ -1822,7 +1858,7 @@ func TestRecordDecode_CAT004(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         8,
-				DataItem:    "I004/030",
+				DataItemName:    "I004/030",
 				Description: "Track Number 1",
 				Type:        dataField.Fixed,
 			},
@@ -1831,7 +1867,7 @@ func TestRecordDecode_CAT004(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         9,
-				DataItem:    "I004/170",
+				DataItemName:    "I004/170",
 				Description: "Aircraft Identification & Characteristics 1",
 				Type:        dataField.Compound,
 			},
@@ -1841,7 +1877,7 @@ func TestRecordDecode_CAT004(t *testing.T) {
 					{
 						Meta: Base{
 							FRN:         1,
-							DataItem:    "AI1",
+							DataItemName:    "AI1",
 							Description: "Aircraft Identifier 1",
 							Type:        dataField.Fixed,
 						},
@@ -1850,7 +1886,7 @@ func TestRecordDecode_CAT004(t *testing.T) {
 					{
 						Meta: Base{
 							FRN:         2,
-							DataItem:    "M31",
+							DataItemName:    "M31",
 							Description: "Mode 3/A Code Aircraft 1",
 							Type:        dataField.Fixed,
 						},
@@ -1859,7 +1895,7 @@ func TestRecordDecode_CAT004(t *testing.T) {
 					{
 						Meta: Base{
 							FRN:         4,
-							DataItem:    "CPC",
+							DataItemName:    "CPC",
 							Description: "Predicted Conflict Position 1 (Cartesian Coordinates)",
 							Type:        dataField.Fixed,
 						},
@@ -1868,7 +1904,7 @@ func TestRecordDecode_CAT004(t *testing.T) {
 					{
 						Meta: Base{
 							FRN:         8,
-							DataItem:    "MS1",
+							DataItemName:    "MS1",
 							Description: "Mode S Identifier Aircraft 1",
 							Type:        dataField.Fixed,
 						},
@@ -1877,7 +1913,7 @@ func TestRecordDecode_CAT004(t *testing.T) {
 					{
 						Meta: Base{
 							FRN:         9,
-							DataItem:    "FP1",
+							DataItemName:    "FP1",
 							Description: "Flight Plan Number Aircraft 1",
 							Type:        dataField.Fixed,
 						},
@@ -1889,7 +1925,7 @@ func TestRecordDecode_CAT004(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         12,
-				DataItem:    "I004/076",
+				DataItemName:    "I004/076",
 				Description: "Vertical Deviation",
 				Type:        dataField.Fixed,
 			},
@@ -1898,7 +1934,7 @@ func TestRecordDecode_CAT004(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         14,
-				DataItem:    "I004/075",
+				DataItemName:    "I004/075",
 				Description: "Transversal Distance Deviation",
 				Type:        dataField.Fixed,
 			},
@@ -1907,7 +1943,7 @@ func TestRecordDecode_CAT004(t *testing.T) {
 		{
 			Meta: Base{
 				FRN:         15,
-				DataItem:    "I004/100",
+				DataItemName:    "I004/100",
 				Description: "Area Definitions",
 				Type:        dataField.Compound,
 			},
@@ -1917,7 +1953,7 @@ func TestRecordDecode_CAT004(t *testing.T) {
 					{
 						Meta: Base{
 							FRN:         1,
-							DataItem:    "AN",
+							DataItemName:    "AN",
 							Description: "Area Name",
 							Type:        dataField.Fixed,
 						},
@@ -1989,9 +2025,9 @@ func TestRecordDecode_CAT001Track(t *testing.T) {
 	}
 	for i, item := range rec.DataItems {
 		if bytes.Equal(item.Data, output[i]) == false {
-			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItemName, item.Data, output[i])
 		} else {
-			t.Logf("MsgSuccessInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Logf("MsgSuccessInValue: %s = % X; Expected: % X", item.DataItemName, item.Data, output[i])
 		}
 	}
 }
@@ -2027,9 +2063,9 @@ func TestRecordDecode_CAT001Plot(t *testing.T) {
 	}
 	for i, item := range rec.DataItems {
 		if bytes.Equal(item.Data, output[i]) == false {
-			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItemName, item.Data, output[i])
 		} else {
-			t.Logf("MsgSuccessInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Logf("MsgSuccessInValue: %s = % X; Expected: % X", item.DataItemName, item.Data, output[i])
 		}
 	}
 }
@@ -2065,9 +2101,9 @@ func TestRecordDecode_CAT002(t *testing.T) {
 	}
 	for i, item := range rec.DataItems {
 		if bytes.Equal(item.Data, output[i]) == false {
-			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItemName, item.Data, output[i])
 		} else {
-			t.Logf("MsgSuccessInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Logf("MsgSuccessInValue: %s = % X; Expected: % X", item.DataItemName, item.Data, output[i])
 		}
 	}
 }
@@ -2113,9 +2149,9 @@ func TestRecordDecode_CAT030STR(t *testing.T) {
 	}
 	for i, item := range rec.DataItems {
 		if bytes.Equal(item.Data, output[i]) == false {
-			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItemName, item.Data, output[i])
 		} else {
-			t.Logf("MsgSuccessInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Logf("MsgSuccessInValue: %s = % X; Expected: % X", item.DataItemName, item.Data, output[i])
 		}
 	}
 }
@@ -2149,9 +2185,9 @@ func TestRecordDecode_CAT032STR(t *testing.T) {
 	}
 	for i, item := range rec.DataItems {
 		if bytes.Equal(item.Data, output[i]) == false {
-			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItemName, item.Data, output[i])
 		} else {
-			t.Logf("MsgSuccessInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Logf("MsgSuccessInValue: %s = % X; Expected: % X", item.DataItemName, item.Data, output[i])
 		}
 	}
 }
@@ -2203,9 +2239,9 @@ func TestRecordDecode_CAT062(t *testing.T) {
 	}
 	for i, item := range rec.DataItems {
 		if bytes.Equal(item.Data, output[i]) == false {
-			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItemName, item.Data, output[i])
 		} else {
-			t.Logf("MsgSuccessInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Logf("MsgSuccessInValue: %s = % X; Expected: % X", item.DataItemName, item.Data, output[i])
 		}
 	}
 }
@@ -2239,9 +2275,9 @@ func TestRecordDecode_CAT255STR(t *testing.T) {
 	}
 	for i, item := range rec.DataItems {
 		if bytes.Equal(item.Data, output[i]) == false {
-			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItemName, item.Data, output[i])
 		} else {
-			t.Logf("MsgSuccessInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Logf("MsgSuccessInValue: %s = % X; Expected: % X", item.DataItemName, item.Data, output[i])
 		}
 	}
 }
@@ -2298,9 +2334,9 @@ func TestRecordDecode_CAT030ARTAS(t *testing.T) {
 	}
 	for i, item := range rec.DataItems {
 		if bytes.Equal(item.Data, output[i]) == false {
-			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Errorf("MsgFailInValue: %s = % X; Expected: % X", item.DataItemName, item.Data, output[i])
 		} else {
-			t.Logf("MsgSuccessInValue: %s = % X; Expected: % X", item.DataItem, item.Data, output[i])
+			t.Logf("MsgSuccessInValue: %s = % X; Expected: % X", item.DataItemName, item.Data, output[i])
 		}
 	}
 }

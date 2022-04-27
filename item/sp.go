@@ -1,4 +1,4 @@
-package goasterix
+package item
 
 import (
 	"bytes"
@@ -13,20 +13,24 @@ import (
 // Field Special Purpose dataField
 type SpecialPurpose struct {
 	Base
-	Len  uint8
-	Data []byte
+	Len      uint8
+	Data     []byte
+	SubItems []SubItem
 }
 
-func NewSpecialPurpose(field Item) Item {
+func NewSpecialPurpose(field DataItem) DataItem {
 	f := &SpecialPurpose{}
 	f.Base.NewBase(field)
 	return f
 }
 func (sp SpecialPurpose) GetSize() SizeField {
-	return SizeField{} // not used, it's for implement Item interface
+	return SizeField{} // not used, it's for implement DataItemName interface
 }
-func (sp SpecialPurpose) GetCompound() []Item {
-	return nil // not used, it's for implement Item interface
+func (sp SpecialPurpose) GetSubItem() []SubItem {
+	return sp.SubItems
+}
+func (sp SpecialPurpose) GetCompound() []DataItem {
+	return nil // not used, it's for implement DataItemName interface
 }
 func (sp *SpecialPurpose) Reader(rb *bytes.Reader) error {
 	var err error
@@ -62,7 +66,7 @@ func (sp SpecialPurpose) String() string {
 	tmp := []byte{sp.Len}
 	tmp = append(tmp, sp.Data...)
 
-	buf.WriteString(sp.Base.DataItem)
+	buf.WriteString(sp.Base.DataItemName)
 	buf.WriteByte(':')
 	buf.WriteString(hex.EncodeToString(tmp))
 	return buf.String()

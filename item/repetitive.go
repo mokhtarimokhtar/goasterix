@@ -1,4 +1,4 @@
-package goasterix
+package item
 
 import (
 	"bytes"
@@ -11,12 +11,14 @@ type Repetitive struct {
 	SubItemSize uint8
 	Rep         uint8
 	Data        []byte
+	SubItems    []SubItem
 }
 
-func NewRepetitive(field Item) Item {
+func NewRepetitive(field DataItem) DataItem {
 	f := &Repetitive{}
 	f.Base.NewBase(field)
 	f.SubItemSize = field.GetSize().ForRepetitive
+	f.SubItems = field.GetSubItem()
 	return f
 }
 
@@ -25,8 +27,11 @@ func (r Repetitive) GetSize() SizeField {
 	s.ForRepetitive = r.SubItemSize
 	return s
 }
-func (r Repetitive) GetCompound() []Item {
-	return nil // not used, it's for implement Item interface
+func (r Repetitive) GetSubItem() []SubItem {
+	return r.SubItems
+}
+func (r Repetitive) GetCompound() []DataItem {
+	return nil // not used, it's for implement DataItemName interface
 }
 
 // Reader extracts data item type Repetitive(1+rep*N byte).
@@ -41,12 +46,34 @@ func (r *Repetitive) Reader(rb *bytes.Reader) error {
 		return err
 	}
 
-	r.Data = make([]byte, r.Rep*r.SubItemSize)
-	err = binary.Read(rb, binary.BigEndian, &r.Data)
-	if err != nil {
-		r.Data = nil
-		return err
+	// check if they are defined
+	if r.SubItems != nil {
+		tmpSubItems := r.SubItems
+		r.SubItems = nil
+		for i := uint8(0); i < r.Rep; i++ {
+			tmp := make([]byte, r.SubItemSize)
+			err = binary.Read(rb, binary.BigEndian, &tmp)
+			if err != nil {
+				return err
+			}
+			for _, subItem := range tmpSubItems {
+				subI, _ := GetSubItem(subItem)
+				err = subI.Reader(tmp)
+				if err != nil {
+					return err
+				}
+				r.SubItems = append(r.SubItems, subI)
+			}
+		}
+	} else {
+		r.Data = make([]byte, r.Rep*r.SubItemSize)
+		err = binary.Read(rb, binary.BigEndian, &r.Data)
+		if err != nil {
+			r.Data = nil
+			return err
+		}
 	}
+
 	return err
 }
 
@@ -66,7 +93,7 @@ func (r Repetitive) String() string {
 	tmp := []byte{r.Rep}
 	tmp = append(tmp, r.Data...)
 
-	buf.WriteString(r.Base.DataItem)
+	buf.WriteString(r.Base.DataItemName)
 	buf.WriteByte(':')
 	buf.WriteString(hex.EncodeToString(tmp))
 	return buf.String()

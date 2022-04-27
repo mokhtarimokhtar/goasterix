@@ -307,7 +307,7 @@ func TestDataBlockDecode_ARTAS(t *testing.T) {
 			unRead:       0,
 		},
 	}
-	_uap.DefaultProfiles[30] = _uap.Cat030ArtasV62
+	_uap.ProfileRegistry[30] = _uap.Cat030ArtasV62
 
 	for _, row := range dataSet {
 		// Arrange

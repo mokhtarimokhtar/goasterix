@@ -74,7 +74,7 @@ var CatForTest = StandardUAP{
 		/*
 			{
 				FRN:         1,
-				DataItem:    "I026/001",
+				DataItemName:    "I026/001",
 				Description: "Fixed type field for test",
 				Type:        Fixed,
 				SizeItem: SizeField{
@@ -83,7 +83,7 @@ var CatForTest = StandardUAP{
 			},
 			{
 				FRN:         2,
-				DataItem:    "I026/002",
+				DataItemName:    "I026/002",
 				Description: "Extended type field for test",
 				Type:        Extended,
 				SizeItem: SizeField{
@@ -93,13 +93,13 @@ var CatForTest = StandardUAP{
 			},
 			{
 				FRN:         3,
-				DataItem:    "I026/003",
+				DataItemName:    "I026/003",
 				Description: "Explicit type field for test",
 				Type:        Explicit,
 			},
 			{
 				FRN:         4,
-				DataItem:    "I026/004",
+				DataItemName:    "I026/004",
 				Description: "Repetitive type field for test",
 				Type:        Repetitive,
 				SizeItem: SizeField{
@@ -108,13 +108,13 @@ var CatForTest = StandardUAP{
 			},
 			{
 				FRN:         5,
-				DataItem:    "I026/005",
+				DataItemName:    "I026/005",
 				Description: "Compound type field for test",
 				Type:        Compound,
 				Compound: []DataField{
 					{
 						FRN:         1,
-						DataItem:    "Compound/001",
+						DataItemName:    "Compound/001",
 						Description: "Compound Fixed type field for test",
 						Type:        Fixed,
 						SizeItem: SizeField{
@@ -127,7 +127,7 @@ var CatForTest = StandardUAP{
 					},
 					{
 						FRN:         3,
-						DataItem:    "Compound/003",
+						DataItemName:    "Compound/003",
 						Description: "Compound Extended type field for test",
 						Type:        Extended,
 						SizeItem: SizeField{
@@ -141,7 +141,7 @@ var CatForTest = StandardUAP{
 					},
 					{
 						FRN:         5,
-						DataItem:    "Compound/005",
+						DataItemName:    "Compound/005",
 						Description: "Compound Repetitive type field for test",
 						Type:        Repetitive,
 						SizeItem: SizeField{
@@ -154,13 +154,13 @@ var CatForTest = StandardUAP{
 					},
 					{
 						FRN:         7,
-						DataItem:    "Compound/007",
+						DataItemName:    "Compound/007",
 						Description: "Compound Explicit type field for test",
 						Type:        Explicit,
 					},
 					{
 						FRN:         8,
-						DataItem:    "Compound/008",
+						DataItemName:    "Compound/008",
 						Description: "Compound Fixed type field for test",
 						Type:        Fixed,
 						SizeItem: SizeField{
@@ -171,31 +171,31 @@ var CatForTest = StandardUAP{
 			},
 			{
 				FRN:         6,
-				DataItem:    "I026/006",
+				DataItemName:    "I026/006",
 				Description: "RFS(Random Field Sequencing) type field for test",
 				Type:        RFS,
 				RFS: []DataField{},
 			},
 			{
 				FRN:      7,
-				DataItem: "NA",
+				DataItemName: "NA",
 				Type:     Spare,
 			},
 			{
 				FRN:         8,
-				DataItem:    "RE",
+				DataItemName:    "RE",
 				Description: "RE (Reserved Expansion Field) type field for test",
 				Type:        RE,
 			},
 			{
 				FRN:         9,
-				DataItem:    "SP",
+				DataItemName:    "SP",
 				Description: "SP (Special Purpose field) type field for test",
 				Type:        SP,
 			},
 			{
 				FRN:         10,
-				DataItem:    "I026/010",
+				DataItemName:    "I026/010",
 				Description: "Fixed type field for test",
 				Conditional: true,
 				Type:        Fixed,

@@ -1,4 +1,4 @@
-package goasterix
+package item
 
 import (
 	"bytes"
@@ -10,21 +10,25 @@ import (
 // the total dataField length in octets including the length indicator itself.
 type Explicit struct {
 	Base
-	Len  uint8
-	Data []byte
+	Len      uint8
+	Data     []byte
+	SubItems []SubItem
 }
 
-func NewExplicit(field Item) Item {
+func NewExplicit(field DataItem) DataItem {
 	f := &Explicit{}
 	f.Base.NewBase(field)
 	return f
 }
 
 func (e Explicit) GetSize() SizeField {
-	return SizeField{} // not used, it's for implement Item interface
+	return SizeField{} // not used, it's for implement DataItemName interface
 }
-func (e Explicit) GetCompound() []Item {
-	return nil // not used, it's for implement Item interface
+func (e Explicit) GetCompound() []DataItem {
+	return nil // not used, it's for implement DataItemName interface
+}
+func (e Explicit) GetSubItem() []SubItem {
+	return e.SubItems
 }
 
 // Reader extracts a number of bytes define by the first byte.
@@ -61,7 +65,7 @@ func (e Explicit) String() string {
 	tmp := []byte{e.Len}
 	tmp = append(tmp, e.Data...)
 
-	buf.WriteString(e.Base.DataItem)
+	buf.WriteString(e.Base.DataItemName)
 	buf.WriteByte(':')
 	buf.WriteString(hex.EncodeToString(tmp))
 	return buf.String()

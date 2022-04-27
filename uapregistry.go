@@ -1,7 +1,11 @@
 package goasterix
 
-// DefaultProfiles contains the defaults User Application Profiles version.
-var DefaultProfiles = map[uint8]StandardUAP{
+import (
+	"github.com/mokhtarimokhtar/goasterix/item"
+)
+
+// ProfileRegistry contains the defaults User Application Profiles version.
+var ProfileRegistry = map[uint8]item.StandardUAP{
 	//1: Cat001V12,
 	//2: Cat002V10,
 	//4: Cat004V112,

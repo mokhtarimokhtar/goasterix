@@ -265,7 +265,7 @@ var Cat048V127 = StandardUAP{
 					Description: "Raw Doppler Speed",
 					Type:        Repetitive,
 					SizeItem: SizeField{
-						ForRepetitive: 2,
+						ForRepetitive: 6,
 					},
 				},
 				{

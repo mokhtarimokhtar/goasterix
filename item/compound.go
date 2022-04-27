@@ -1,4 +1,4 @@
-package goasterix
+package item
 
 import (
 	"bytes"
@@ -9,26 +9,28 @@ import (
 // The primary subfield determines the presence or absence of the subsequent data subfields. It comprises a first part
 // of one octet extendable using the Field Extension (FX) mechanism.
 // The definition, structure and format of the data subfields are part of the description of the relevant Compound Data
-// Item. Data subfields shall be either fixed length, extended length, explicit length or repetitive, but not compound.
+// DataItem. Data subfields shall be either fixed length, extended length, explicit length or repetitive, but not compound.
 type Compound struct {
 	Base
 	Primary   []byte
-	Secondary []Item
+	Secondary []DataItem
 }
 
-//func NewCompound(field ICompound) Item {
-func NewCompound(field Item) Item {
+func NewCompound(field DataItem) DataItem {
 	f := &Compound{}
 	f.Base.NewBase(field)
 	f.Secondary = field.GetCompound()
 	return f
 }
-func (c Compound) GetCompound() []Item {
+func (c Compound) GetCompound() []DataItem {
 	return c.Secondary
 }
 
 func (c Compound) GetSize() SizeField {
-	return SizeField{} // not used, it's for implement Item interface
+	return SizeField{} // not used, it's for implement DataItemName interface
+}
+func (c Compound) GetSubItem() []SubItem {
+	return nil // not used, it's for implement DataItemName interface
 }
 
 func (c *Compound) Reader(rb *bytes.Reader) error {
@@ -40,12 +42,12 @@ func (c *Compound) Reader(rb *bytes.Reader) error {
 		return err
 	}
 	frnIndex := FspecIndex(c.Primary)
-	tmp := c.Secondary // save temporary meta data Item
-	c.Secondary = make([]Item, 0, len(frnIndex))
+	tmp := c.Secondary // save temporary meta data DataItemName
+	c.Secondary = make([]DataItem, 0, len(frnIndex))
 
 	for _, frn := range frnIndex {
 		uapItem := tmp[frn-1]
-		var item Item
+		var item DataItem
 		item, err = GetItemCompound(uapItem)
 		if err != nil {
 			return err
@@ -76,7 +78,7 @@ func (c Compound) Payload() []byte {
 func (c Compound) String() string {
 	var buf bytes.Buffer
 	buf.Reset()
-	buf.WriteString(c.Base.DataItem)
+	buf.WriteString(c.Base.DataItemName)
 	buf.WriteByte(':')
 	buf.WriteByte('[')
 	buf.WriteString("primary:")

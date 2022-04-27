@@ -1,4 +1,4 @@
-package goasterix
+package item
 
 import (
 	"bytes"
@@ -13,8 +13,8 @@ func TestExtendedReader(t *testing.T) {
 	type testCase struct {
 		Name   string
 		input  string
-		item   Item
-		output Item
+		item   DataItem
+		output DataItem
 		err    error
 	}
 	// Arrange
@@ -163,9 +163,9 @@ func TestExtendedString(t *testing.T) {
 			Name: "testCase 1",
 			input: Extended{
 				Base: Base{
-					FRN:         1,
-					DataItem:    "I000/010",
-					Description: "Test item",
+					FRN:          1,
+					DataItemName: "I000/010",
+					Description:  "Test item",
 				},
 				Primary:   []byte{0xc1},
 				Secondary: []byte{0xab, 0xcd},

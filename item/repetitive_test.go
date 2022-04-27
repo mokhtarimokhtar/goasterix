@@ -1,4 +1,4 @@
-package goasterix
+package item
 
 import (
 	"bytes"
@@ -8,40 +8,68 @@ import (
 	"testing"
 )
 
-func TestFixedReader(t *testing.T) {
+func TestRepetitiveReader(t *testing.T) {
 	// setup
 	type testCase struct {
 		Name   string
 		input  string
-		item   Item
-		output Item
+		item   DataItem
+		output DataItem
 		err    error
 	}
 	// Arrange
 	dataSet := []testCase{
 		{
 			Name:  "testCase 1",
-			input: "01 02 03 04 05 06 07 08",
-			item: &Fixed{
-				Size: 8,
-			},
-			output: &Fixed{
-				Size: 8,
-				Data: []byte{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08},
+			input: "03 aaaaaa bbbbbb cccccc",
+			item: &Repetitive{
+				SubItemSize: 3,
 			},
 			err: nil,
+			output: &Repetitive{
+				SubItemSize: 3,
+				Rep:         0x03,
+				Data:        []byte{0xaa, 0xaa, 0xaa, 0xbb, 0xbb, 0xbb, 0xcc, 0xcc, 0xcc},
+			},
 		},
 		{
 			Name:  "testCase 2",
-			input: "01 02 03 04 05 06 07",
-			item: &Fixed{
-				Size: 8,
-			},
-			output: &Fixed{
-				Size: 8,
-				Data: nil,
+			input: "04 aaaaaa bbbbbb cccccc",
+			item: &Repetitive{
+				SubItemSize: 3,
 			},
 			err: io.ErrUnexpectedEOF,
+			output: &Repetitive{
+				SubItemSize: 3,
+				Rep:         0x04,
+				Data:        nil,
+			},
+		},
+		{
+			Name:  "testCase 3",
+			input: "",
+			item: &Repetitive{
+				SubItemSize: 3,
+			},
+			err: io.EOF,
+			output: &Repetitive{
+				SubItemSize: 3,
+				Rep:         0x00,
+				Data:        nil,
+			},
+		},
+		{
+			Name:  "testCase 4",
+			input: "02",
+			item: &Repetitive{
+				SubItemSize: 3,
+			},
+			err: io.EOF,
+			output: &Repetitive{
+				SubItemSize: 3,
+				Rep:         0x02,
+				Data:        nil,
+			},
 		},
 	}
 
@@ -49,7 +77,7 @@ func TestFixedReader(t *testing.T) {
 		// Arrange
 		input, _ := util.HexStringToByte(tc.input)
 		rb := bytes.NewReader(input)
-		f := newFixed(tc.item)
+		f := NewRepetitive(tc.item)
 
 		// Act
 		err := f.Reader(rb)
@@ -69,34 +97,36 @@ func TestFixedReader(t *testing.T) {
 	}
 }
 
-func TestFixedString(t *testing.T) {
+func TestRepetitiveString(t *testing.T) {
 	// setup
 	type testCase struct {
 		Name   string
-		input  Fixed
+		input  Repetitive
 		output string
 	}
 	// Arrange
 	dataSet := []testCase{
 		{
 			Name: "testCase 1",
-			input: Fixed{
+			input: Repetitive{
 				Base: Base{
-					FRN:         1,
-					DataItem:    "I000/010",
-					Description: "Test item",
+					FRN:          1,
+					DataItemName: "I000/010",
+					Description:  "Test item",
 				},
+				Rep:  0x02,
 				Data: []byte{0xab, 0xcd},
 			},
-			output: "I000/010:abcd",
+			output: "I000/010:02abcd",
 		},
 		{
 			Name: "testCase 2",
-			input: Fixed{
+			input: Repetitive{
 				Base: Base{},
-				Data: []byte{},
+				Rep:  0,
+				Data: nil,
 			},
-			output: ":",
+			output: ":00",
 		},
 	}
 
@@ -113,29 +143,30 @@ func TestFixedString(t *testing.T) {
 	}
 }
 
-func TestFixedPayload(t *testing.T) {
+func TestRepetitivePayload(t *testing.T) {
 	// setup
 	type testCase struct {
 		Name   string
-		input  Fixed
+		input  Repetitive
 		output []byte
 	}
 	// Arrange
 	dataSet := []testCase{
 		{
 			Name: "testCase 1",
-			input: Fixed{
+			input: Repetitive{
+				Rep:  0x02,
 				Data: []byte{0xab, 0xcd},
 			},
-			output: []byte{0xab, 0xcd},
+			output: []byte{0x02, 0xab, 0xcd},
 		},
 		{
 			Name: "testCase 2",
-			input: Fixed{
-				Base: Base{},
+			input: Repetitive{
+				Rep:  0,
 				Data: nil,
 			},
-			output: nil,
+			output: []byte{0x00},
 		},
 	}
 

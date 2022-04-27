@@ -1,4 +1,4 @@
-package goasterix
+package item
 
 import (
 	"bytes"
@@ -17,9 +17,10 @@ type Extended struct {
 	SecondaryItemSize uint8
 	Primary           []byte
 	Secondary         []byte
+	SubItems          []SubItem
 }
 
-func NewExtended(field Item) Item {
+func NewExtended(field DataItem) DataItem {
 	f := &Extended{}
 	f.Base.NewBase(field)
 	f.PrimaryItemSize = field.GetSize().ForExtendedPrimary
@@ -32,8 +33,11 @@ func (e Extended) GetSize() SizeField {
 	s.ForExtendedSecondary = e.SecondaryItemSize
 	return s
 }
-func (e Extended) GetCompound() []Item {
-	return nil // not used, it's for implement Item interface
+func (e Extended) GetSubItem() []SubItem {
+	return e.SubItems
+}
+func (e Extended) GetCompound() []DataItem {
+	return nil // not used, it's for implement DataItemName interface
 }
 
 // Reader extracts data item type Extended (FX: last bit = 1).
@@ -77,7 +81,7 @@ func (e Extended) Payload() []byte {
 func (e Extended) String() string {
 	var buf bytes.Buffer
 	buf.Reset()
-	buf.WriteString(e.Base.DataItem)
+	buf.WriteString(e.Base.DataItemName)
 	buf.WriteByte(':')
 	buf.WriteString(hex.EncodeToString(e.Primary))
 	buf.WriteString(hex.EncodeToString(e.Secondary))

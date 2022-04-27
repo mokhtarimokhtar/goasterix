@@ -1,4 +1,4 @@
-package goasterix
+package item
 
 import (
 	"bytes"
@@ -13,22 +13,25 @@ import (
 // Field Special Purpose dataField
 type ReservedExpansion struct {
 	Base
-	Len  uint8
-	Data []byte
+	Len      uint8
+	Data     []byte
+	SubItems []SubItem
 }
 
-func NewReservedExpansion(field Item) Item {
+func NewReservedExpansion(field DataItem) DataItem {
 	f := &ReservedExpansion{}
 	f.Base.NewBase(field)
 	return f
 }
 func (re ReservedExpansion) GetSize() SizeField {
-	return SizeField{} // not used, it's for implement Item interface
+	return SizeField{} // not used, it's for implement DataItemName interface
 }
-func (re ReservedExpansion) GetCompound() []Item {
-	return nil // not used, it's for implement Item interface
+func (re ReservedExpansion) GetCompound() []DataItem {
+	return nil // not used, it's for implement DataItemName interface
 }
-
+func (re ReservedExpansion) GetSubItem() []SubItem {
+	return re.SubItems
+}
 func (re *ReservedExpansion) Reader(rb *bytes.Reader) error {
 	var err error
 
@@ -63,7 +66,7 @@ func (re ReservedExpansion) String() string {
 	tmp := []byte{re.Len}
 	tmp = append(tmp, re.Data...)
 
-	buf.WriteString(re.Base.DataItem)
+	buf.WriteString(re.Base.DataItemName)
 	buf.WriteByte(':')
 	buf.WriteString(hex.EncodeToString(tmp))
 	return buf.String()

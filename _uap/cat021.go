@@ -10,7 +10,7 @@ var Cat021v10 = StandardUAP{
 	DataItems: []DataField{
 		{
 			FRN:      1,
-			DataItem: "I021/010",
+			DataItemName: "I021/010",
 			Type: TypeField{
 				NameType: Fixed,
 				SizeField:     2,
@@ -18,7 +18,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         2,
-			DataItem:    "I021/040",
+			DataItemName:    "I021/040",
 			Description: "Target Report Descriptor",
 			Type: TypeField{
 				NameType:      Extended,
@@ -28,7 +28,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         3,
-			DataItem:    "I021/161",
+			DataItemName:    "I021/161",
 			Description: "Track Number",
 			Type: TypeField{
 				NameType: Fixed,
@@ -37,7 +37,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         4,
-			DataItem:    "I021/015",
+			DataItemName:    "I021/015",
 			Description: "Service Identification",
 			Type: TypeField{
 				NameType: Fixed,
@@ -46,7 +46,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         5,
-			DataItem:    "I021/071",
+			DataItemName:    "I021/071",
 			Description: "Time of Applicability for Position",
 			Type: TypeField{
 				NameType: Fixed,
@@ -55,7 +55,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         6,
-			DataItem:    "I021/130",
+			DataItemName:    "I021/130",
 			Description: "Position in WGS-84 co-ordinates",
 			Type: TypeField{
 				NameType: Fixed,
@@ -64,7 +64,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         7,
-			DataItem:    "I021/131",
+			DataItemName:    "I021/131",
 			Description: "Position in WGS-84 co-ordinates, high res",
 			Type: TypeField{
 				NameType: Fixed,
@@ -73,7 +73,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         8,
-			DataItem:    "I021/072",
+			DataItemName:    "I021/072",
 			Description: "Time of Applicability for Velocity",
 			Type: TypeField{
 				NameType: Fixed,
@@ -82,7 +82,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         9,
-			DataItem:    "I021/150",
+			DataItemName:    "I021/150",
 			Description: "Air Speed",
 			Type: TypeField{
 				NameType: Fixed,
@@ -91,7 +91,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         10,
-			DataItem:    "I021/151",
+			DataItemName:    "I021/151",
 			Description: "True Air Speed",
 			Type: TypeField{
 				NameType: Fixed,
@@ -100,7 +100,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         11,
-			DataItem:    "I021/080",
+			DataItemName:    "I021/080",
 			Description: "Target Address",
 			Type: TypeField{
 				NameType: Fixed,
@@ -109,7 +109,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         12,
-			DataItem:    "I021/073",
+			DataItemName:    "I021/073",
 			Description: "Time of Message Reception of Position",
 			Type: TypeField{
 				NameType: Fixed,
@@ -118,7 +118,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         13,
-			DataItem:    "I021/074",
+			DataItemName:    "I021/074",
 			Description: "Time of Message Reception of Position-High Precision",
 			Type: TypeField{
 				NameType: Fixed,
@@ -127,7 +127,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         14,
-			DataItem:    "I021/075",
+			DataItemName:    "I021/075",
 			Description: "Time of Message Reception of Velocity",
 			Type: TypeField{
 				NameType: Fixed,
@@ -136,7 +136,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         15,
-			DataItem:    "I021/076",
+			DataItemName:    "I021/076",
 			Description: "Time of Message Reception of Velocity-High Precision",
 			Type: TypeField{
 				NameType: Fixed,
@@ -145,7 +145,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         16,
-			DataItem:    "I021/140",
+			DataItemName:    "I021/140",
 			Description: "Geometric Height",
 			Type: TypeField{
 				NameType: Fixed,
@@ -154,7 +154,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         17,
-			DataItem:    "I021/090",
+			DataItemName:    "I021/090",
 			Description: "Quality Indicators",
 			Type: TypeField{
 				NameType:      Extended,
@@ -164,7 +164,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         18,
-			DataItem:    "I021/210",
+			DataItemName:    "I021/210",
 			Description: "MOPS Version",
 			Type: TypeField{
 				NameType: Fixed,
@@ -173,7 +173,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         19,
-			DataItem:    "I021/070",
+			DataItemName:    "I021/070",
 			Description: "Mode 3/A Code",
 			Type: TypeField{
 				NameType: Fixed,
@@ -182,7 +182,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         20,
-			DataItem:    "I021/230",
+			DataItemName:    "I021/230",
 			Description: "Roll Angle",
 			Type: TypeField{
 				NameType: Fixed,
@@ -191,7 +191,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         21,
-			DataItem:    "I021/145",
+			DataItemName:    "I021/145",
 			Description: "Flight Level",
 			Type: TypeField{
 				NameType: Fixed,
@@ -200,7 +200,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         22,
-			DataItem:    "I021/152",
+			DataItemName:    "I021/152",
 			Description: "Magnetic Heading",
 			Type: TypeField{
 				NameType: Fixed,
@@ -209,7 +209,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         23,
-			DataItem:    "I021/200",
+			DataItemName:    "I021/200",
 			Description: "Target Status",
 			Type: TypeField{
 				NameType: Fixed,
@@ -218,7 +218,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         24,
-			DataItem:    "I021/155",
+			DataItemName:    "I021/155",
 			Description: "Barometric Vertical Rate",
 			Type: TypeField{
 				NameType: Fixed,
@@ -227,7 +227,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         25,
-			DataItem:    "I021/157",
+			DataItemName:    "I021/157",
 			Description: "Geometric Vertical Rate",
 			Type: TypeField{
 				NameType: Fixed,
@@ -236,7 +236,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         26,
-			DataItem:    "I021/160",
+			DataItemName:    "I021/160",
 			Description: "Airborne Ground Vector",
 			Type: TypeField{
 				NameType: Fixed,
@@ -245,7 +245,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         27,
-			DataItem:    "I021/165",
+			DataItemName:    "I021/165",
 			Description: "Track Angle Rate",
 			Type: TypeField{
 				NameType: Fixed,
@@ -254,7 +254,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         28,
-			DataItem:    "I021/177",
+			DataItemName:    "I021/177",
 			Description: "Time of Report Transmission",
 			Type: TypeField{
 				NameType: Fixed,
@@ -263,7 +263,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         29,
-			DataItem:    "I021/170",
+			DataItemName:    "I021/170",
 			Description: "Target Identification",
 			Type: TypeField{
 				NameType: Fixed,
@@ -272,7 +272,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         30,
-			DataItem:    "I021/020",
+			DataItemName:    "I021/020",
 			Description: "Emitter Category",
 			Type: TypeField{
 				NameType: Fixed,
@@ -281,7 +281,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         31,
-			DataItem:    "I021/220",
+			DataItemName:    "I021/220",
 			Description: "Met Information",
 			Type: TypeField{
 				NameType: Compound,
@@ -300,7 +300,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         32,
-			DataItem:    "I021/146",
+			DataItemName:    "I021/146",
 			Description: "Selected Altitude",
 			Type: TypeField{
 				NameType: Fixed,
@@ -309,7 +309,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         33,
-			DataItem:    "I021/148",
+			DataItemName:    "I021/148",
 			Description: "Final State Selected Altitude",
 			Type: TypeField{
 				NameType: Fixed,
@@ -318,7 +318,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         34,
-			DataItem:    "I021/110",
+			DataItemName:    "I021/110",
 			Description: "Trajectory Intent",
 			Type: TypeField{
 				NameType: Compound,
@@ -337,7 +337,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         35,
-			DataItem:    "I021/016",
+			DataItemName:    "I021/016",
 			Description: "Service Management",
 			Type: TypeField{
 				NameType: Fixed,
@@ -346,7 +346,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         36,
-			DataItem:    "I021/008",
+			DataItemName:    "I021/008",
 			Description: "Aircraft Operational Status",
 			Type: TypeField{
 				NameType: Fixed,
@@ -355,7 +355,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         37,
-			DataItem:    "I021/271",
+			DataItemName:    "I021/271",
 			Description: "Surface Capabilities and Characteristics",
 			Type: TypeField{
 				NameType:      Extended,
@@ -365,7 +365,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         38,
-			DataItem:    "I021/132",
+			DataItemName:    "I021/132",
 			Description: "Message Amplitude",
 			Type: TypeField{
 				NameType: Fixed,
@@ -374,7 +374,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         38,
-			DataItem:    "I021/250",
+			DataItemName:    "I021/250",
 			Description: "Mode S MB Data",
 			Type: TypeField{
 				NameType: Repetitive,
@@ -383,7 +383,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         40,
-			DataItem:    "I021/260",
+			DataItemName:    "I021/260",
 			Description: "ACAS Resolution Advisory Report",
 			Type: TypeField{
 				NameType: Fixed,
@@ -392,7 +392,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         41,
-			DataItem:    "I021/400",
+			DataItemName:    "I021/400",
 			Description: "Receiver ID",
 			Type: TypeField{
 				NameType: Fixed,
@@ -401,7 +401,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         42,
-			DataItem:    "I021/295",
+			DataItemName:    "I021/295",
 			Description: "Data Ages",
 			Type: TypeField{
 				NameType: Compound,
@@ -419,23 +419,23 @@ var Cat021v10 = StandardUAP{
 			},
 		},
 		{
-			FRN: 43, DataItem: "NA", Type: TypeField{NameType: Spare},
+			FRN: 43, DataItemName: "NA", Type: TypeField{NameType: Spare},
 		},
 		{
-			FRN: 44, DataItem: "NA", Type: TypeField{NameType: Spare},
+			FRN: 44, DataItemName: "NA", Type: TypeField{NameType: Spare},
 		},
 		{
-			FRN: 45, DataItem: "NA", Type: TypeField{NameType: Spare},
+			FRN: 45, DataItemName: "NA", Type: TypeField{NameType: Spare},
 		},
 		{
-			FRN: 46, DataItem: "NA", Type: TypeField{NameType: Spare},
+			FRN: 46, DataItemName: "NA", Type: TypeField{NameType: Spare},
 		},
 		{
-			FRN: 47, DataItem: "NA", Type: TypeField{NameType: Spare},
+			FRN: 47, DataItemName: "NA", Type: TypeField{NameType: Spare},
 		},
 		{
 			FRN:         48,
-			DataItem:    "RE-Data Item",
+			DataItemName:    "RE-Data Item",
 			Description: "Reserved Expansion Field",
 			Type: TypeField{
 				NameType: RE,
@@ -443,7 +443,7 @@ var Cat021v10 = StandardUAP{
 		},
 		{
 			FRN:         49,
-			DataItem:    "SP-Data Item",
+			DataItemName:    "SP-Data Item",
 			Description: "Special Purpose Field",
 			Type: TypeField{
 				NameType: SP,

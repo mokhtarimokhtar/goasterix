@@ -1,7 +1,5 @@
 package goasterix
 
-import "math"
-
 /*
  Package util complement implements the functions to calculate the two's complement value for specific bit size.
 */
@@ -9,9 +7,10 @@ import "math"
 // TwoComplement16 returns an int16 (signed).
 // sizeBits is the number of bit complement.
 func TwoComplement16(sizeBits uint8, data uint16) (v int16) {
-	n := float64(sizeBits - 1)
-	p := math.Pow(2, n) // 2^(N-1)
-	mask := uint16(p)
+	//n := float64(sizeBits - 1)
+	//p := math.Pow(2, n) // 2^(N-1)
+	//mask := uint16(p)
+	mask := uint16(1 << (sizeBits - 1))
 
 	tmp1 := -int16(data & mask)
 	tmp2 := int16(data & ^mask)
@@ -23,10 +22,10 @@ func TwoComplement16(sizeBits uint8, data uint16) (v int16) {
 // TwoComplement32 returns an int32 (signed).
 // sizeBits is the number of bit complement.
 func TwoComplement32(sizeBits uint8, data uint32) (v int32) {
-	n := float64(sizeBits - 1)
-	p := math.Pow(2, n) // 2^(N-1)
-	mask := uint32(p)
-
+	//n := float64(sizeBits - 1)
+	//p := math.Pow(2, n) // 2^(N-1)
+	//mask := uint32(p)
+	mask := uint32(1 << (sizeBits - 1))
 	tmp1 := -int32(data & mask)
 	tmp2 := int32(data & ^mask)
 

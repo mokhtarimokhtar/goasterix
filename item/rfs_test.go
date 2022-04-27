@@ -1,4 +1,4 @@
-package goasterix
+package item
 
 /*
 func TestRandomFieldString(t *testing.T) {
@@ -17,7 +17,7 @@ func TestRandomFieldString(t *testing.T) {
 				Field: &Fixed{
 					Base: Base{
 						FRN:         1,
-						DataItem:    "I000/010",
+						DataItemName:    "I000/010",
 						Description: "Test item",
 						Type:        _uap.Fixed,
 					},
@@ -44,7 +44,7 @@ func TestRandomFieldString(t *testing.T) {
 				Field: &Extended{
 					Base: Base{
 						FRN:         3,
-						DataItem:    "I000/030",
+						DataItemName:    "I000/030",
 						Description: "Test item",
 						Type:        _uap.Extended,
 					},
@@ -85,7 +85,7 @@ func TestRandomFieldPayload(t *testing.T) {
 				Field: &Fixed{
 					Base: Base{
 						FRN:         2,
-						DataItem:    "I000/020",
+						DataItemName:    "I000/020",
 						Description: "Test item",
 						Type:        _uap.Fixed,
 					},
@@ -112,7 +112,7 @@ func TestRandomFieldPayload(t *testing.T) {
 				Field: &Extended{
 					Base: Base{
 						FRN:         3,
-						DataItem:    "I000/030",
+						DataItemName:    "I000/030",
 						Description: "Test item",
 						Type:        _uap.Extended,
 					},
@@ -151,7 +151,7 @@ func TestRandomFieldSequencingString(t *testing.T) {
 			input: RandomFieldSequencing{
 				Base: Base{
 					FRN:         0,
-					DataItem:    "I000/000",
+					DataItemName:    "I000/000",
 					Description: "Test item",
 					Type:        _uap.RFS,
 				},
@@ -162,7 +162,7 @@ func TestRandomFieldSequencingString(t *testing.T) {
 						Field: &Fixed{
 							Base: Base{
 								FRN:         1,
-								DataItem:    "I000/010",
+								DataItemName:    "I000/010",
 								Description: "Test item",
 								Type:        _uap.Fixed,
 							},
@@ -174,7 +174,7 @@ func TestRandomFieldSequencingString(t *testing.T) {
 						Field: &Extended{
 							Base: Base{
 								FRN:         3,
-								DataItem:    "I000/030",
+								DataItemName:    "I000/030",
 								Description: "Test item",
 								Type:        _uap.Extended,
 							},
@@ -224,7 +224,7 @@ func TestRandomFieldSequencingPayload(t *testing.T) {
 			input: RandomFieldSequencing{
 				Base: Base{
 					FRN:         0,
-					DataItem:    "I000/000",
+					DataItemName:    "I000/000",
 					Description: "Test item",
 					Type:        _uap.RFS,
 				},
@@ -235,7 +235,7 @@ func TestRandomFieldSequencingPayload(t *testing.T) {
 						Field: &Fixed{
 							Base: Base{
 								FRN:         1,
-								DataItem:    "I000/010",
+								DataItemName:    "I000/010",
 								Description: "Test item",
 								Type:        _uap.Fixed,
 							},
@@ -247,7 +247,7 @@ func TestRandomFieldSequencingPayload(t *testing.T) {
 						Field: &Extended{
 							Base: Base{
 								FRN:         3,
-								DataItem:    "I000/030",
+								DataItemName:    "I000/030",
 								Description: "Test item",
 								Type:        _uap.Extended,
 							},

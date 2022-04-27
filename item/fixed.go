@@ -1,4 +1,4 @@
-package goasterix
+package item
 
 import (
 	"bytes"
@@ -14,11 +14,12 @@ type Fixed struct {
 	SubItems []SubItem
 }
 
-//func newFixed(field _uap.IDataField) Item {
-func newFixed(field Item) Item {
+//func newFixed(field _uap.IDataField) DataItem {
+func newFixed(field DataItem) DataItem {
 	f := &Fixed{}
 	f.Base.NewBase(field)
 	f.Size = field.GetSize().ForFixed
+	f.SubItems = field.GetSubItem()
 	return f
 }
 func (f Fixed) GetSize() SizeField {
@@ -26,24 +27,34 @@ func (f Fixed) GetSize() SizeField {
 	s.ForFixed = f.Size
 	return s
 }
-func (f Fixed) GetCompound() []Item {
-	return nil // not used, it's for implement Item interface
+
+func (f Fixed) GetSubItem() []SubItem {
+	return f.SubItems
+}
+func (f Fixed) GetCompound() []DataItem {
+	return nil // not used, it's for implement DataItem interface
 }
 
 // Reader extracts a number(nb) of bytes(size) and returns a slice of bytes(data of item).
 func (f *Fixed) Reader(rb *bytes.Reader) error {
 	var err error
-	f.Data = make([]byte, f.Size)
-	err = binary.Read(rb, binary.BigEndian, &f.Data)
+	tmp := make([]byte, f.Size)
+	err = binary.Read(rb, binary.BigEndian, &tmp)
 	if err != nil {
-		f.Data = nil
 		return err
 	}
-	//tmp := f.Data
-	//for _, subItem := range f.SubItems {
-	//	//tmp := make([]byte, subItem.SizeBit)
-	//	//subItem.Pos.From
-	//}
+	// check if they are defined
+	if f.SubItems != nil {
+		for _, subItem := range f.SubItems {
+			err = subItem.Reader(tmp)
+		}
+	} else {
+		f.Data = tmp
+		if err != nil {
+			f.Data = nil
+			return err
+		}
+	}
 
 	return err
 }
@@ -59,7 +70,7 @@ func (f Fixed) Payload() []byte {
 func (f Fixed) String() string {
 	var buf bytes.Buffer
 	buf.Reset()
-	buf.WriteString(f.Base.DataItem)
+	buf.WriteString(f.Base.DataItemName)
 	buf.WriteByte(':')
 	buf.WriteString(hex.EncodeToString(f.Data))
 	return buf.String()

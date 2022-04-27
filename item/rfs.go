@@ -1,4 +1,4 @@
-package goasterix
+package item
 
 import (
 	"bytes"
@@ -9,7 +9,7 @@ import (
 
 type RandomField struct {
 	FRN   uint8
-	Field Item
+	Field DataItem
 }
 
 // Payload returns this dataField as bytes.
@@ -107,7 +107,7 @@ func (rfs RandomFieldSequencing) String() string {
 	var buf bytes.Buffer
 	buf.Reset()
 	tmp := []byte{rfs.N}
-	buf.WriteString(rfs.Base.DataItem)
+	buf.WriteString(rfs.Base.DataItemName)
 	buf.WriteByte(':')
 	buf.WriteByte('[')
 	buf.WriteString("N:")

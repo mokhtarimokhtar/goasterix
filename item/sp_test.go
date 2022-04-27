@@ -1,4 +1,4 @@
-package goasterix
+package item
 
 import (
 	"bytes"
@@ -13,8 +13,8 @@ func TestSpecialPurposeReader(t *testing.T) {
 	type testCase struct {
 		Name   string
 		input  string
-		item   Item
-		output Item
+		item   DataItem
+		output DataItem
 		err    error
 	}
 	// Arrange
@@ -88,9 +88,9 @@ func TestSpecialPurposeString(t *testing.T) {
 			Name: "testCase 1",
 			input: SpecialPurpose{
 				Base: Base{
-					FRN:         1,
-					DataItem:    "I000/010",
-					Description: "Test item",
+					FRN:          1,
+					DataItemName: "I000/010",
+					Description:  "Test item",
 				},
 				Len:  0x04,
 				Data: []byte{0xab, 0xcd, 0xef},

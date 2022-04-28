@@ -14,7 +14,6 @@ type Fixed struct {
 	SubItems []SubItem
 }
 
-//func newFixed(field _uap.IDataField) DataItem {
 func newFixed(field DataItem) DataItem {
 	f := &Fixed{}
 	f.Base.NewBase(field)
@@ -22,6 +21,7 @@ func newFixed(field DataItem) DataItem {
 	f.SubItems = field.GetSubItem()
 	return f
 }
+
 func (f Fixed) GetSize() SizeField {
 	s := SizeField{}
 	s.ForFixed = f.Size
@@ -50,10 +50,6 @@ func (f *Fixed) Reader(rb *bytes.Reader) error {
 		}
 	} else {
 		f.Data = tmp
-		if err != nil {
-			f.Data = nil
-			return err
-		}
 	}
 
 	return err
@@ -72,6 +68,16 @@ func (f Fixed) String() string {
 	buf.Reset()
 	buf.WriteString(f.Base.DataItemName)
 	buf.WriteByte(':')
-	buf.WriteString(hex.EncodeToString(f.Data))
+	if f.SubItems != nil {
+		for _, subItem := range f.SubItems {
+			buf.WriteByte('[')
+			buf.WriteString(subItem.String())
+			buf.WriteByte(']')
+		}
+	} else {
+		buf.WriteByte('[')
+		buf.WriteString(hex.EncodeToString(f.Data))
+		buf.WriteByte(']')
+	}
 	return buf.String()
 }

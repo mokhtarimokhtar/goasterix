@@ -1,7 +1,9 @@
 package item
 
 import (
+	"bytes"
 	"encoding/binary"
+	"encoding/hex"
 )
 
 type SubItem interface {
@@ -9,6 +11,7 @@ type SubItem interface {
 	GetName() string
 	GetType() TypeField
 	GetPosition() BitPosition
+	String() string
 }
 
 // GetSubItem returns the corresponding DataItem type: BitField, FromToField.
@@ -51,12 +54,12 @@ func newSubItemBit(field SubItem) SubItem {
 
 func (s *SubItemBit) Reader(data []byte) error {
 	var err error
-	nbBits := uint8(len(data)) * 8
-	index := (nbBits - s.Pos.Bit) / 8
-	relativePos := s.Pos.Bit % 8
+	totalBits := uint8(len(data)) * 8
+	indexData := (totalBits - s.Pos.Bit) / 8
+	relativePos := s.Pos.Bit - (uint8((s.Pos.Bit-1)/8) * 8)
 
 	s.Data = make([]byte, 1)
-	s.Data[0] = OneBitReader(data[index], relativePos)
+	s.Data[0] = OneBitReader(data[indexData], relativePos)
 
 	return err
 }
@@ -70,12 +73,20 @@ func (s SubItemBit) GetPosition() BitPosition {
 	return s.Pos
 }
 
+// String implements fmt.Stringer in hexadecimal
+func (s SubItemBit) String() string {
+	var buf bytes.Buffer
+	buf.Reset()
+	buf.WriteString(s.Name)
+	buf.WriteByte(':')
+	buf.WriteString(hex.EncodeToString(s.Data))
+	return buf.String()
+}
+
 type SubItemFromTo struct {
 	Name string
 	Type TypeField
 	Pos  BitPosition
-	//From uint8
-	//To   uint8
 	Data []byte
 }
 
@@ -100,6 +111,16 @@ func (s SubItemFromTo) GetType() TypeField {
 }
 func (s SubItemFromTo) GetPosition() BitPosition {
 	return s.Pos
+}
+
+// String implements fmt.Stringer in hexadecimal
+func (s SubItemFromTo) String() string {
+	var buf bytes.Buffer
+	buf.Reset()
+	buf.WriteString(s.Name)
+	buf.WriteByte(':')
+	buf.WriteString(hex.EncodeToString(s.Data))
+	return buf.String()
 }
 
 // OneBitReader returns a byte equal to the value of bit position

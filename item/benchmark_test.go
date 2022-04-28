@@ -28,7 +28,7 @@ func BenchmarkSubItemBitReader(b *testing.B) {
 		sub := new(SubItemBit)
 		sub.Name = "item1"
 		sub.Type = BitField
-		sub.Pos = 29
+		sub.Pos.Bit = 29
 		_ = sub.Reader(input)
 	}
 }
@@ -39,8 +39,8 @@ func BenchmarkSubItemFromToReader(b *testing.B) {
 		sub := new(SubItemFromTo)
 		sub.Name = "item1"
 		sub.Type = FromToField
-		sub.From = 27
-		sub.To = 8
+		sub.Pos.From = 27
+		sub.Pos.To = 8
 		_ = sub.Reader(input)
 	}
 

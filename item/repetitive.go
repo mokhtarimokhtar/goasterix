@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"encoding/hex"
+	"fmt"
 )
 
 type Repetitive struct {
@@ -62,6 +63,7 @@ func (r *Repetitive) Reader(rb *bytes.Reader) error {
 				if err != nil {
 					return err
 				}
+				fmt.Println(subI.String(), subI.GetType())
 				r.SubItems = append(r.SubItems, subI)
 			}
 		}
@@ -73,7 +75,6 @@ func (r *Repetitive) Reader(rb *bytes.Reader) error {
 			return err
 		}
 	}
-
 	return err
 }
 
@@ -88,13 +89,27 @@ func (r Repetitive) Payload() []byte {
 // String implements fmt.Stringer in hexadecimal
 func (r Repetitive) String() string {
 	var buf bytes.Buffer
-	buf.Reset()
-
 	tmp := []byte{r.Rep}
-	tmp = append(tmp, r.Data...)
 
+	buf.Reset()
 	buf.WriteString(r.Base.DataItemName)
 	buf.WriteByte(':')
-	buf.WriteString(hex.EncodeToString(tmp))
+
+	if r.SubItems != nil {
+		buf.WriteByte('[')
+		buf.WriteString("rep:")
+		buf.WriteString(hex.EncodeToString(tmp))
+		buf.WriteByte(']')
+		for _, subItem := range r.SubItems {
+			buf.WriteByte('[')
+			buf.WriteString(subItem.String())
+			buf.WriteByte(']')
+		}
+	} else {
+		tmp = append(tmp, r.Data...)
+		buf.WriteByte('[')
+		buf.WriteString(hex.EncodeToString(tmp))
+		buf.WriteByte(']')
+	}
 	return buf.String()
 }

@@ -33,6 +33,42 @@ func TestFixedReader(t *testing.T) {
 		},
 		{
 			Name:  "testCase 2",
+			input: "01 02 03 04 05 06 07 08",
+			item: &Fixed{
+				Size: 8,
+				SubItems: []SubItem{
+					&SubItemBit{
+						Pos: BitPosition{Bit: 57},
+					},
+					&SubItemFromTo{
+						Pos: BitPosition{From: 56, To: 25},
+					},
+					&SubItemFromTo{
+						Pos: BitPosition{From: 24, To: 1},
+					},
+				},
+			},
+			output: &Fixed{
+				Size: 8,
+				SubItems: []SubItem{
+					&SubItemBit{
+						Pos:  BitPosition{Bit: 57},
+						Data: []byte{0x01},
+					},
+					&SubItemFromTo{
+						Pos:  BitPosition{From: 56, To: 25},
+						Data: []byte{0x02, 0x03, 0x04, 0x05},
+					},
+					&SubItemFromTo{
+						Pos:  BitPosition{From: 24, To: 1},
+						Data: []byte{0x06, 0x07, 0x08},
+					},
+				},
+			},
+			err: nil,
+		},
+		{
+			Name:  "testCase 3",
 			input: "01 02 03 04 05 06 07",
 			item: &Fixed{
 				Size: 8,
@@ -88,15 +124,43 @@ func TestFixedString(t *testing.T) {
 				},
 				Data: []byte{0xab, 0xcd},
 			},
-			output: "I000/010:abcd",
+			output: "I000/010:[abcd]",
 		},
 		{
 			Name: "testCase 2",
 			input: Fixed{
-				Base: Base{},
-				Data: []byte{},
+				Base: Base{
+					FRN:          1,
+					DataItemName: "I000/010",
+					Description:  "Test item",
+				},
+				SubItems: []SubItem{
+					&SubItemFromTo{
+						Name: "010-1",
+						Pos:  BitPosition{From: 16, To: 9},
+						Data: []byte{0xab},
+					},
+					&SubItemFromTo{
+						Name: "010-2",
+						Pos:  BitPosition{From: 8, To: 1},
+						Data: []byte{0xcd},
+					},
+					&SubItemBit{
+						Name: "010-3",
+						Pos:  BitPosition{Bit: 8},
+						Data: []byte{0x01},
+					},
+				},
 			},
-			output: ":",
+			output: "I000/010:[010-1:ab][010-2:cd][010-3:01]",
+		},
+		{
+			Name: "testCase 3",
+			input: Fixed{
+				Base: Base{},
+				Data: nil,
+			},
+			output: ":[]",
 		},
 	}
 
@@ -149,5 +213,18 @@ func TestFixedPayload(t *testing.T) {
 		} else {
 			t.Logf(util.MsgSuccessInHex, tc.Name, res, tc.output)
 		}
+	}
+}
+
+func TestFixedGetCompound(t *testing.T) {
+	// Arrange
+	input := new(Fixed)
+	// Act
+	res := input.GetCompound()
+	// Assert
+	if res != nil {
+		t.Errorf(util.MsgFailInValue, "", res, nil)
+	} else {
+		t.Logf(util.MsgSuccessInValue, "", res, nil)
 	}
 }

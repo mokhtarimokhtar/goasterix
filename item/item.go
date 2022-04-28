@@ -31,6 +31,12 @@ const (
 	FromToField
 )
 
+// String displays the name of iota value in string
+func (t TypeField) String() string {
+	return [...]string{"", "Fixed", "Extended", "Compound", "Repetitive", "Explicit", "SP", "RE", "RFS", "Spare",
+		"Bit", "FromToBit"}[t]
+}
+
 /*type ICompound interface {
 	GetCompound() []DataItemName
 	DataItemName

@@ -34,6 +34,60 @@ func TestRepetitiveReader(t *testing.T) {
 		},
 		{
 			Name:  "testCase 2",
+			input: "03 8aaaaa 0bbbbb 8ccccc", // 8a 1000-1010 1010-1010 1010-1010
+			item: &Repetitive{
+				SubItemSize: 3,
+				SubItems: []SubItem{
+					&SubItemBit{
+						Type: BitField,
+						Pos:  BitPosition{Bit: 24},
+					},
+					&SubItemFromTo{
+						Type: FromToField,
+						Pos:  BitPosition{From: 20, To: 1},
+					},
+				},
+			},
+			err: nil,
+			output: &Repetitive{
+				SubItemSize: 3,
+				Rep:         0x03,
+				SubItems: []SubItem{
+					&SubItemBit{
+						Type: BitField,
+						Pos:  BitPosition{Bit: 24},
+						Data: []byte{0x01},
+					},
+					&SubItemFromTo{
+						Type: FromToField,
+						Pos:  BitPosition{From: 20, To: 1},
+						Data: []byte{0x0a, 0xaa, 0xaa},
+					},
+					&SubItemBit{
+						Type: BitField,
+						Pos:  BitPosition{Bit: 24},
+						Data: []byte{0x00},
+					},
+					&SubItemFromTo{
+						Type: FromToField,
+						Pos:  BitPosition{From: 20, To: 1},
+						Data: []byte{0x0b, 0xbb, 0xbb},
+					},
+					&SubItemBit{
+						Type: BitField,
+						Pos:  BitPosition{Bit: 24},
+						Data: []byte{0x01},
+					},
+					&SubItemFromTo{
+						Type: FromToField,
+						Pos:  BitPosition{From: 20, To: 1},
+						Data: []byte{0x0c, 0xcc, 0xcc},
+					},
+				},
+			},
+		},
+		{
+			Name:  "testCase 3",
 			input: "04 aaaaaa bbbbbb cccccc",
 			item: &Repetitive{
 				SubItemSize: 3,
@@ -46,7 +100,7 @@ func TestRepetitiveReader(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testCase 3",
+			Name:  "testCase 4",
 			input: "",
 			item: &Repetitive{
 				SubItemSize: 3,
@@ -59,7 +113,7 @@ func TestRepetitiveReader(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testCase 4",
+			Name:  "testCase 5",
 			input: "02",
 			item: &Repetitive{
 				SubItemSize: 3,
@@ -117,16 +171,61 @@ func TestRepetitiveString(t *testing.T) {
 				Rep:  0x02,
 				Data: []byte{0xab, 0xcd},
 			},
-			output: "I000/010:02abcd",
+			output: "I000/010:[02abcd]",
 		},
 		{
 			Name: "testCase 2",
+			input: Repetitive{
+				Base: Base{
+					FRN:          1,
+					DataItemName: "I000/010",
+					Description:  "Test item",
+				},
+				Rep: 0x02,
+				SubItems: []SubItem{
+					&SubItemFromTo{
+						Name: "010-1",
+						Pos:  BitPosition{From: 16, To: 9},
+						Data: []byte{0xab},
+					},
+					&SubItemFromTo{
+						Name: "010-2",
+						Pos:  BitPosition{From: 8, To: 1},
+						Data: []byte{0xcd},
+					},
+					&SubItemBit{
+						Name: "010-3",
+						Pos:  BitPosition{Bit: 8},
+						Data: []byte{0x01},
+					},
+
+					&SubItemFromTo{
+						Name: "010-1",
+						Pos:  BitPosition{From: 16, To: 9},
+						Data: []byte{0x12},
+					},
+					&SubItemFromTo{
+						Name: "010-2",
+						Pos:  BitPosition{From: 8, To: 1},
+						Data: []byte{0x34},
+					},
+					&SubItemBit{
+						Name: "010-3",
+						Pos:  BitPosition{Bit: 8},
+						Data: []byte{0x00},
+					},
+				},
+			},
+			output: "I000/010:[rep:02][010-1:ab][010-2:cd][010-3:01][010-1:12][010-2:34][010-3:00]",
+		},
+		{
+			Name: "testCase 3",
 			input: Repetitive{
 				Base: Base{},
 				Rep:  0,
 				Data: nil,
 			},
-			output: ":00",
+			output: ":[00]",
 		},
 	}
 

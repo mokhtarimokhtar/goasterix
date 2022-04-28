@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/binary"
 	"encoding/hex"
-	"fmt"
 )
 
 type Repetitive struct {
@@ -15,24 +14,13 @@ type Repetitive struct {
 	SubItems    []SubItem
 }
 
-func NewRepetitive(field DataItem) DataItem {
-	f := &Repetitive{}
-	f.Base.NewBase(field)
-	f.SubItemSize = field.GetSize().ForRepetitive
-	f.SubItems = field.GetSubItem()
-	return f
-}
-
-func (r Repetitive) GetSize() SizeField {
-	s := SizeField{}
-	s.ForRepetitive = r.SubItemSize
-	return s
-}
-func (r Repetitive) GetSubItem() []SubItem {
-	return r.SubItems
-}
-func (r Repetitive) GetCompound() []DataItem {
-	return nil // not used, it's for implement DataItemName interface
+func (r *Repetitive) Clone() DataItem {
+	return &Repetitive{
+		Base:        r.Base,
+		SubItemSize: r.SubItemSize,
+		Rep:         r.Rep,
+		SubItems:    r.SubItems,
+	}
 }
 
 // Reader extracts data item type Repetitive(1+rep*N byte).
@@ -63,7 +51,7 @@ func (r *Repetitive) Reader(rb *bytes.Reader) error {
 				if err != nil {
 					return err
 				}
-				fmt.Println(subI.String(), subI.GetType())
+				//fmt.Println(subI.String(), subI.GetType())
 				r.SubItems = append(r.SubItems, subI)
 			}
 		}

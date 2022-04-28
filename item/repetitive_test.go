@@ -8,6 +8,38 @@ import (
 	"testing"
 )
 
+func TestRepetitiveClone(t *testing.T) {
+	// Arrange
+	input := Repetitive{
+		Base: Base{
+			FRN:          1,
+			DataItemName: "I000/010",
+			Description:  "Test item",
+			Type:         RepetitiveField,
+		},
+		SubItemSize: 3,
+	}
+	output := &Repetitive{
+		Base: Base{
+			FRN:          1,
+			DataItemName: "I000/010",
+			Description:  "Test item",
+			Type:         RepetitiveField,
+		},
+		SubItemSize: 3,
+	}
+	// Act
+	res := input.Clone()
+
+	// Assert
+	if reflect.DeepEqual(res, output) == false {
+		t.Errorf(util.MsgFailInValue, "", res, output)
+	} else {
+		t.Logf(util.MsgSuccessInValue, "", res, output)
+	}
+
+}
+
 func TestRepetitiveReader(t *testing.T) {
 	// setup
 	type testCase struct {
@@ -131,7 +163,7 @@ func TestRepetitiveReader(t *testing.T) {
 		// Arrange
 		input, _ := util.HexStringToByte(tc.input)
 		rb := bytes.NewReader(input)
-		f := NewRepetitive(tc.item)
+		f := tc.item.Clone()
 
 		// Act
 		err := f.Reader(rb)

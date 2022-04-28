@@ -18,20 +18,14 @@ type ReservedExpansion struct {
 	SubItems []SubItem
 }
 
-func NewReservedExpansion(field DataItem) DataItem {
-	f := &ReservedExpansion{}
-	f.Base.NewBase(field)
-	return f
+func (re *ReservedExpansion) Clone() DataItem {
+	return &ReservedExpansion{
+		Base:     re.Base,
+		Len:      re.Len,
+		SubItems: re.SubItems,
+	}
 }
-func (re ReservedExpansion) GetSize() SizeField {
-	return SizeField{} // not used, it's for implement DataItemName interface
-}
-func (re ReservedExpansion) GetCompound() []DataItem {
-	return nil // not used, it's for implement DataItemName interface
-}
-func (re ReservedExpansion) GetSubItem() []SubItem {
-	return re.SubItems
-}
+
 func (re *ReservedExpansion) Reader(rb *bytes.Reader) error {
 	var err error
 

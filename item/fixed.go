@@ -14,25 +14,12 @@ type Fixed struct {
 	SubItems []SubItem
 }
 
-func newFixed(field DataItem) DataItem {
-	f := &Fixed{}
-	f.Base.NewBase(field)
-	f.Size = field.GetSize().ForFixed
-	f.SubItems = field.GetSubItem()
-	return f
-}
-
-func (f Fixed) GetSize() SizeField {
-	s := SizeField{}
-	s.ForFixed = f.Size
-	return s
-}
-
-func (f Fixed) GetSubItem() []SubItem {
-	return f.SubItems
-}
-func (f Fixed) GetCompound() []DataItem {
-	return nil // not used, it's for implement DataItem interface
+func (f *Fixed) Clone() DataItem {
+	return &Fixed{
+		Base:     f.Base,
+		Size:     f.Size,
+		SubItems: f.SubItems,
+	}
 }
 
 // Reader extracts a number(nb) of bytes(size) and returns a slice of bytes(data of item).

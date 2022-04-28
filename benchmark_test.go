@@ -13,6 +13,7 @@ func BenchmarkTwoComplement16(b *testing.B) {
 		_ = TwoComplement16(size, input)
 	}
 }
+
 func BenchmarkTwoComplement32(b *testing.B) {
 	input := uint32(0x000FEE0F)
 	size := uint8(20)

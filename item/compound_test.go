@@ -11,9 +11,8 @@ import (
 func TestCompoundReader(t *testing.T) {
 	// setup
 	type testCase struct {
-		Name  string
-		input string
-		//item   ICompound
+		Name   string
+		input  string
 		item   DataItem
 		output DataItem
 		err    error
@@ -297,7 +296,7 @@ func TestCompoundReader(t *testing.T) {
 		// Arrange
 		input, _ := util.HexStringToByte(tc.input)
 		rb := bytes.NewReader(input)
-		f := NewCompound(tc.item)
+		f := tc.item.Clone()
 
 		// Act
 		err := f.Reader(rb)

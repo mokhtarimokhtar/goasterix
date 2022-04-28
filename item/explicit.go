@@ -15,20 +15,12 @@ type Explicit struct {
 	SubItems []SubItem
 }
 
-func NewExplicit(field DataItem) DataItem {
-	f := &Explicit{}
-	f.Base.NewBase(field)
-	return f
-}
-
-func (e Explicit) GetSize() SizeField {
-	return SizeField{} // not used, it's for implement DataItemName interface
-}
-func (e Explicit) GetCompound() []DataItem {
-	return nil // not used, it's for implement DataItemName interface
-}
-func (e Explicit) GetSubItem() []SubItem {
-	return e.SubItems
+func (e *Explicit) Clone() DataItem {
+	return &Explicit{
+		Base:     e.Base,
+		Len:      e.Len,
+		SubItems: e.SubItems,
+	}
 }
 
 // Reader extracts a number of bytes define by the first byte.

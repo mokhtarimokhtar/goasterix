@@ -16,21 +16,12 @@ type Compound struct {
 	Secondary []DataItem
 }
 
-func NewCompound(field DataItem) DataItem {
-	f := &Compound{}
-	f.Base.NewBase(field)
-	f.Secondary = field.GetCompound()
-	return f
-}
-func (c Compound) GetCompound() []DataItem {
-	return c.Secondary
-}
-
-func (c Compound) GetSize() SizeField {
-	return SizeField{} // not used, it's for implement DataItemName interface
-}
-func (c Compound) GetSubItem() []SubItem {
-	return nil // not used, it's for implement DataItemName interface
+func (c *Compound) Clone() DataItem {
+	return &Compound{
+		Base:      c.Base,
+		Primary:   c.Primary,
+		Secondary: c.Secondary,
+	}
 }
 
 func (c *Compound) Reader(rb *bytes.Reader) error {
@@ -47,17 +38,19 @@ func (c *Compound) Reader(rb *bytes.Reader) error {
 
 	for _, frn := range frnIndex {
 		uapItem := tmp[frn-1]
-		var item DataItem
-		item, err = GetItemCompound(uapItem)
-		if err != nil {
-			return err
+		dataItem := uapItem.Clone()
+
+		typeItem := dataItem.GetType()
+		if (typeItem != FixedField) && (typeItem != ExtendedField) && (typeItem != RepetitiveField) && (typeItem != ExplicitField) {
+			return ErrDataFieldUnknown
 		}
-		err = Readers(item, rb)
+
+		err = dataItem.Reader(rb)
 		if err != nil {
 			return err
 		}
 
-		c.Secondary = append(c.Secondary, item)
+		c.Secondary = append(c.Secondary, dataItem)
 	}
 
 	return err

@@ -17,27 +17,18 @@ type Extended struct {
 	SecondaryItemSize uint8
 	Primary           []byte
 	Secondary         []byte
-	SubItems          []SubItem
+	PrimarySubItems   []SubItem
+	SecondarySubItems []SubItem
 }
 
-func NewExtended(field DataItem) DataItem {
-	f := &Extended{}
-	f.Base.NewBase(field)
-	f.PrimaryItemSize = field.GetSize().ForExtendedPrimary
-	f.SecondaryItemSize = field.GetSize().ForExtendedSecondary
-	return f
-}
-func (e Extended) GetSize() SizeField {
-	s := SizeField{}
-	s.ForExtendedPrimary = e.PrimaryItemSize
-	s.ForExtendedSecondary = e.SecondaryItemSize
-	return s
-}
-func (e Extended) GetSubItem() []SubItem {
-	return e.SubItems
-}
-func (e Extended) GetCompound() []DataItem {
-	return nil // not used, it's for implement DataItemName interface
+func (e *Extended) Clone() DataItem {
+	return &Extended{
+		Base:              e.Base,
+		PrimaryItemSize:   e.PrimaryItemSize,
+		SecondaryItemSize: e.SecondaryItemSize,
+		PrimarySubItems:   e.PrimarySubItems,
+		SecondarySubItems: e.SecondarySubItems,
+	}
 }
 
 // Reader extracts data item type Extended (FX: last bit = 1).

@@ -8,6 +8,40 @@ import (
 	"testing"
 )
 
+func TestExtendedClone(t *testing.T) {
+	// Arrange
+	input := Extended{
+		Base: Base{
+			FRN:          1,
+			DataItemName: "I000/010",
+			Description:  "Test item",
+			Type:         ExtendedField,
+		},
+		PrimaryItemSize:   1,
+		SecondaryItemSize: 1,
+	}
+	output := &Extended{
+		Base: Base{
+			FRN:          1,
+			DataItemName: "I000/010",
+			Description:  "Test item",
+			Type:         ExtendedField,
+		},
+		PrimaryItemSize:   1,
+		SecondaryItemSize: 1,
+	}
+	// Act
+	res := input.Clone()
+
+	// Assert
+	if reflect.DeepEqual(res, output) == false {
+		t.Errorf(util.MsgFailInValue, "", res, output)
+	} else {
+		t.Logf(util.MsgSuccessInValue, "", res, output)
+	}
+
+}
+
 func TestExtendedReader(t *testing.T) {
 	// setup
 	type testCase struct {
@@ -130,7 +164,7 @@ func TestExtendedReader(t *testing.T) {
 		// Arrange
 		input, _ := util.HexStringToByte(tc.input)
 		rb := bytes.NewReader(input)
-		f := NewExtended(tc.item)
+		f := tc.item.Clone()
 
 		// Act
 		err := f.Reader(rb)

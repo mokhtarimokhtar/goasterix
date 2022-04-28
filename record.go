@@ -6,15 +6,6 @@ import (
 	"github.com/mokhtarimokhtar/goasterix/item"
 )
 
-/*var (
-	// ErrDataFieldUnknown reports which ErrDatafield Unknown.
-	ErrDataFieldUnknown = errors.New("type of datafield not found")
-)*/
-
-/*type IRecord interface {
-	GetItems() []DataItemName
-}*/
-
 type Record struct {
 	Cat       uint8
 	Fspec     []byte
@@ -49,23 +40,29 @@ func (rec *Record) Decode(data []byte, uap item.StandardUAP) (unRead int, err er
 
 	for _, frn := range frnIndex {
 		uapItem := uap.DataItems[frn-1-offset] // here the index corresponds to the FRN
-		var dataItem item.DataItem
-		dataItem, err = item.GetItem(uapItem)
+		//var dataItem item.DataItem
+		/*dataItem, err = item.GetItem(uapItem)
 		if err != nil {
 			unRead = rb.Len()
 			return unRead, err
 		}
-		//err = Readers(dataItem, rb, uapItem)
 		err = item.Readers(dataItem, rb)
 		if err != nil {
 			unRead = rb.Len()
 			return unRead, err
 		}
-		/*
-			contextType := new(ContextType)
-			err = contextType.setReader(uapItem.Type)
-			err = contextType.Reader(rb, uapItem)
 		*/
+
+		//var field item.Field
+		//var dataItem item.DataItem
+		//dataItem, err = item.GetItem2(uapItem)
+		dataItem := uapItem.Clone()
+		//err = item.Readers(dataItem, rb)
+		err = dataItem.Reader(rb)
+		if err != nil {
+			unRead = rb.Len()
+			return unRead, err
+		}
 
 		unRead = rb.Len()
 		//rec.DataItems = append(rec.DataItems, contextType.DataItemName)

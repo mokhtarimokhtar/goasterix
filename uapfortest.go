@@ -37,31 +37,28 @@ var CatForTest = item.StandardUAP{
 			},
 			PrimaryItemSize:   1,
 			SecondaryItemSize: 2,
-			/*
-				SubItems: []item.SubItem{
-					&item.SubItemFromTo{
-						Name: "TYP",
-						Type: item.FromToField,
-						From: 8,
-						To:   6,
-					},
-					&item.SubItemBit{Name: "SIM", Type: item.BitField, Pos: 5},
-					&item.SubItemBit{Name: "RDP", Type: item.BitField, Pos: 4},
-					&item.SubItemBit{Name: "SPI", Type: item.BitField, Pos: 3},
-					&item.SubItemBit{Name: "RAB", Type: item.BitField, Pos: 2},
-					&item.SubItemBit{Name: "TST", Type: item.BitField, Pos: 8},
-					&item.SubItemBit{Name: "ERR", Type: item.BitField, Pos: 7},
-					&item.SubItemBit{Name: "XPP", Type: item.BitField, Pos: 6},
-					&item.SubItemBit{Name: "ME", Type: item.BitField, Pos: 5},
-					&item.SubItemBit{Name: "MI", Type: item.BitField, Pos: 4},
-					&item.SubItemFromTo{
-						Name: "FOE/FRI",
-						Type: item.FromToField,
-						From: 3,
-						To:   2,
-					},
-				},
-			*/
+
+			//SubItems: []item.SubItem{
+			//	&item.SubItemFromTo{
+			//		Name: "TYP",
+			//		Type: item.FromToField,
+			//		From: 8, To: 6},
+			//	&item.SubItemBit{Name: "SIM", Type: item.BitField, Pos: 5},
+			//	&item.SubItemBit{Name: "RDP", Type: item.BitField, Pos: 4},
+			//	&item.SubItemBit{Name: "SPI", Type: item.BitField, Pos: 3},
+			//	&item.SubItemBit{Name: "RAB", Type: item.BitField, Pos: 2},
+			//	&item.SubItemBit{Name: "TST", Type: item.BitField, Pos: 8},
+			//	&item.SubItemBit{Name: "ERR", Type: item.BitField, Pos: 7},
+			//	&item.SubItemBit{Name: "XPP", Type: item.BitField, Pos: 6},
+			//	&item.SubItemBit{Name: "ME", Type: item.BitField, Pos: 5},
+			//	&item.SubItemBit{Name: "MI", Type: item.BitField, Pos: 4},
+			//	&item.SubItemFromTo{
+			//		Name: "FOE/FRI",
+			//		Type: item.FromToField,
+			//		From: 3,
+			//		To:   2,
+			//	},
+			//},
 		},
 		&item.Explicit{
 			Base: item.Base{

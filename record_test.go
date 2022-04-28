@@ -59,7 +59,9 @@ func TestDecodeCatForTest(t *testing.T) {
 		{
 			Name:  "testcase 1",
 			input: "f780 ffff 01 0302 0801020304050607 03aaaaaabbbbbbcccccc  b80101010202aaaabbbb0201 0201 04010203",
-			uap:   CatForTest, // f780 1111-0111 1000-0000  // b80101010202aaaabbbb0201
+			//input: "f380 ffff 01 0302 0801020304050607 03aaaaaabbbbbbcccccc 0201 04010203",
+			//input: "80 ffff", // 1111-0011 f380
+			uap: CatForTest, // f780 1111-0111 1000-0000  // b80101010202aaaabbbb0201
 			output: Record{
 				Cat:   26,
 				Fspec: []byte{0xf7, 0x80},
@@ -99,31 +101,30 @@ func TestDecodeCatForTest(t *testing.T) {
 						SecondaryItemSize: 2,
 						Primary:           []byte{0x01},
 						Secondary:         []byte{0x03, 0x02},
-						/*
-							SubItems: []SubItem{
-								&SubItemFromTo{
-									Name: "TYP",
-									Type: FromToField,
-									From: 8,
-									To:   6,
-								},
-								&SubItemBit{Name: "SIM", Type: BitField, Pos: 5},
-								&SubItemBit{Name: "RDP", Type: BitField, Pos: 4},
-								&SubItemBit{Name: "SPI", Type: BitField, Pos: 3},
-								&SubItemBit{Name: "RAB", Type: BitField, Pos: 2},
-								&SubItemBit{Name: "TST", Type: BitField, Pos: 8},
-								&SubItemBit{Name: "ERR", Type: BitField, Pos: 7},
-								&SubItemBit{Name: "XPP", Type: BitField, Pos: 6},
-								&SubItemBit{Name: "ME", Type: BitField, Pos: 5},
-								&SubItemBit{Name: "MI", Type: BitField, Pos: 4},
-								&SubItemFromTo{
-									Name: "FOE/FRI",
-									Type: FromToField,
-									From: 3,
-									To:   2,
-								},
-							},
-						*/
+
+						//SubItems: []SubItem{
+						//	&SubItemFromTo{
+						//		Name: "TYP",
+						//		Type: FromToField,
+						//		From: 8,
+						//		To:   6,
+						//	},
+						//	&SubItemBit{Name: "SIM", Type: BitField, Pos: 5},
+						//	&SubItemBit{Name: "RDP", Type: BitField, Pos: 4},
+						//	&SubItemBit{Name: "SPI", Type: BitField, Pos: 3},
+						//	&SubItemBit{Name: "RAB", Type: BitField, Pos: 2},
+						//	&SubItemBit{Name: "TST", Type: BitField, Pos: 8},
+						//	&SubItemBit{Name: "ERR", Type: BitField, Pos: 7},
+						//	&SubItemBit{Name: "XPP", Type: BitField, Pos: 6},
+						//	&SubItemBit{Name: "ME", Type: BitField, Pos: 5},
+						//	&SubItemBit{Name: "MI", Type: BitField, Pos: 4},
+						//	&SubItemFromTo{
+						//		Name: "FOE/FRI",
+						//		Type: FromToField,
+						//		From: 3,
+						//		To:   2,
+						//	},
+						//},
 					},
 					&Explicit{
 						Base: Base{

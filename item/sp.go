@@ -18,20 +18,14 @@ type SpecialPurpose struct {
 	SubItems []SubItem
 }
 
-func NewSpecialPurpose(field DataItem) DataItem {
-	f := &SpecialPurpose{}
-	f.Base.NewBase(field)
-	return f
+func (sp *SpecialPurpose) Clone() DataItem {
+	return &SpecialPurpose{
+		Base:     sp.Base,
+		Len:      sp.Len,
+		SubItems: sp.SubItems,
+	}
 }
-func (sp SpecialPurpose) GetSize() SizeField {
-	return SizeField{} // not used, it's for implement DataItemName interface
-}
-func (sp SpecialPurpose) GetSubItem() []SubItem {
-	return sp.SubItems
-}
-func (sp SpecialPurpose) GetCompound() []DataItem {
-	return nil // not used, it's for implement DataItemName interface
-}
+
 func (sp *SpecialPurpose) Reader(rb *bytes.Reader) error {
 	var err error
 

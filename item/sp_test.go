@@ -8,6 +8,36 @@ import (
 	"testing"
 )
 
+func TestSpecialPurposeClone(t *testing.T) {
+	// Arrange
+	input := SpecialPurpose{
+		Base: Base{
+			FRN:          1,
+			DataItemName: "I000/010",
+			Description:  "Test item",
+			Type:         SPField,
+		},
+	}
+	output := &SpecialPurpose{
+		Base: Base{
+			FRN:          1,
+			DataItemName: "I000/010",
+			Description:  "Test item",
+			Type:         SPField,
+		},
+	}
+	// Act
+	res := input.Clone()
+
+	// Assert
+	if reflect.DeepEqual(res, output) == false {
+		t.Errorf(util.MsgFailInValue, "", res, output)
+	} else {
+		t.Logf(util.MsgSuccessInValue, "", res, output)
+	}
+
+}
+
 func TestSpecialPurposeReader(t *testing.T) {
 	// setup
 	type testCase struct {
@@ -55,7 +85,7 @@ func TestSpecialPurposeReader(t *testing.T) {
 		// Arrange
 		input, _ := util.HexStringToByte(tc.input)
 		rb := bytes.NewReader(input)
-		f := NewSpecialPurpose(tc.item)
+		f := tc.item.Clone()
 
 		// Act
 		err := f.Reader(rb)

@@ -8,22 +8,22 @@ import (
 	"testing"
 )
 
-func TestExplicitClone(t *testing.T) {
+func TestReservedExpansionClone(t *testing.T) {
 	// Arrange
-	input := Explicit{
+	input := ReservedExpansion{
 		Base: Base{
 			FRN:          1,
 			DataItemName: "I000/010",
 			Description:  "Test item",
-			Type:         ExplicitField,
+			Type:         REField,
 		},
 	}
-	output := &Explicit{
+	output := &ReservedExpansion{
 		Base: Base{
 			FRN:          1,
 			DataItemName: "I000/010",
 			Description:  "Test item",
-			Type:         ExplicitField,
+			Type:         REField,
 		},
 	}
 	// Act
@@ -38,7 +38,7 @@ func TestExplicitClone(t *testing.T) {
 
 }
 
-func TestExplicitReader(t *testing.T) {
+func TestReservedExpansionReader(t *testing.T) {
 	// setup
 	type testCase struct {
 		Name   string
@@ -52,9 +52,9 @@ func TestExplicitReader(t *testing.T) {
 		{
 			Name:  "testCase 1",
 			input: "08 01 02 03 04 05 06 07",
-			item:  &Explicit{},
+			item:  &ReservedExpansion{},
 			err:   nil,
-			output: &Explicit{
+			output: &ReservedExpansion{
 				Len:  0x08,
 				Data: []byte{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07},
 			},
@@ -62,9 +62,9 @@ func TestExplicitReader(t *testing.T) {
 		{
 			Name:  "testCase 2",
 			input: "08 01 02 03 04 05 06",
-			item:  &Explicit{},
+			item:  &ReservedExpansion{},
 			err:   io.ErrUnexpectedEOF,
-			output: &Explicit{
+			output: &ReservedExpansion{
 				Len:  0x08,
 				Data: nil,
 			},
@@ -72,9 +72,9 @@ func TestExplicitReader(t *testing.T) {
 		{
 			Name:  "testCase 3",
 			input: "",
-			item:  &Explicit{},
+			item:  &ReservedExpansion{},
 			err:   io.EOF,
-			output: &Explicit{
+			output: &ReservedExpansion{
 				Len:  0x00,
 				Data: nil,
 			},
@@ -105,18 +105,18 @@ func TestExplicitReader(t *testing.T) {
 	}
 }
 
-func TestExplicitString(t *testing.T) {
+func TestReservedExpansionString(t *testing.T) {
 	// setup
 	type testCase struct {
 		Name   string
-		input  Explicit
+		input  ReservedExpansion
 		output string
 	}
 	// Arrange
 	dataSet := []testCase{
 		{
 			Name: "testCase 1",
-			input: Explicit{
+			input: ReservedExpansion{
 				Base: Base{
 					FRN:          1,
 					DataItemName: "I000/010",
@@ -129,7 +129,7 @@ func TestExplicitString(t *testing.T) {
 		},
 		{
 			Name: "testCase 2",
-			input: Explicit{
+			input: ReservedExpansion{
 				Base: Base{},
 				Len:  0,
 				Data: nil,
@@ -151,18 +151,18 @@ func TestExplicitString(t *testing.T) {
 	}
 }
 
-func TestExplicitPayload(t *testing.T) {
+func TestReservedExpansionPayload(t *testing.T) {
 	// setup
 	type testCase struct {
 		Name   string
-		input  Explicit
+		input  ReservedExpansion
 		output []byte
 	}
 	// Arrange
 	dataSet := []testCase{
 		{
 			Name: "testCase 1",
-			input: Explicit{
+			input: ReservedExpansion{
 				Len:  0x04,
 				Data: []byte{0xab, 0xcd, 0xef},
 			},
@@ -170,7 +170,7 @@ func TestExplicitPayload(t *testing.T) {
 		},
 		{
 			Name: "testCase 2",
-			input: Explicit{
+			input: ReservedExpansion{
 				Len:  0,
 				Data: nil,
 			},

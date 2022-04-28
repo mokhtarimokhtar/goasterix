@@ -85,7 +85,7 @@ func TestFixedReader(t *testing.T) {
 		// Arrange
 		input, _ := util.HexStringToByte(tc.input)
 		rb := bytes.NewReader(input)
-		f := newFixed(tc.item)
+		f := tc.item.Clone()
 
 		// Act
 		err := f.Reader(rb)
@@ -103,6 +103,40 @@ func TestFixedReader(t *testing.T) {
 			t.Logf(util.MsgSuccessInValue, tc.Name, f, tc.output)
 		}
 	}
+}
+
+func TestFixedClone(t *testing.T) {
+	// Arrange
+	input := Fixed{
+		Base: Base{
+			FRN:          1,
+			DataItemName: "I000/010",
+			Description:  "Test item",
+			Type:         FixedField,
+		},
+		Size:     2,
+		SubItems: nil,
+	}
+	output := &Fixed{
+		Base: Base{
+			FRN:          1,
+			DataItemName: "I000/010",
+			Description:  "Test item",
+			Type:         FixedField,
+		},
+		Size:     2,
+		SubItems: nil,
+	}
+	// Act
+	res := input.Clone()
+
+	// Assert
+	if reflect.DeepEqual(res, output) == false {
+		t.Errorf(util.MsgFailInValue, "", res, output)
+	} else {
+		t.Logf(util.MsgSuccessInValue, "", res, output)
+	}
+
 }
 
 func TestFixedString(t *testing.T) {
@@ -213,18 +247,5 @@ func TestFixedPayload(t *testing.T) {
 		} else {
 			t.Logf(util.MsgSuccessInHex, tc.Name, res, tc.output)
 		}
-	}
-}
-
-func TestFixedGetCompound(t *testing.T) {
-	// Arrange
-	input := new(Fixed)
-	// Act
-	res := input.GetCompound()
-	// Assert
-	if res != nil {
-		t.Errorf(util.MsgFailInValue, "", res, nil)
-	} else {
-		t.Logf(util.MsgSuccessInValue, "", res, nil)
 	}
 }

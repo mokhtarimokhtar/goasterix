@@ -14,13 +14,6 @@ type Base struct {
 	Type         TypeField
 }
 
-func (b *Base) NewBase(field DataItem) {
-	b.FRN = field.GetFrn()
-	b.DataItemName = field.GetDataItemName()
-	b.Description = field.GetDescription()
-	b.Type = field.GetType()
-}
-
 // GetFrn returns FRN number of dataField from UAP
 func (b Base) GetFrn() uint8 {
 	return b.FRN

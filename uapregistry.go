@@ -5,7 +5,7 @@ import (
 )
 
 // ProfileRegistry contains the defaults User Application Profiles version.
-var ProfileRegistry = map[uint8]item.StandardUAP{
+var ProfileRegistry = map[uint8]item.UAP{
 	//1: Cat001V12,
 	//2: Cat002V10,
 	//4: Cat004V112,

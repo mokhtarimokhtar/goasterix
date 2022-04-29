@@ -37,14 +37,14 @@ func (t TypeField) String() string {
 		"Bit", "FromToBit"}[t]
 }
 
-type IBase interface {
-	GetFrn() uint8
+/*type IBase interface {
+	GetFrn() FieldReferenceNumber
 	GetType() TypeField
 	GetDataItemName() string
 	GetDescription() string
-}
+}*/
 type DataItem interface {
-	IBase
+	//IBase
 	Clone() DataItem
 	GetType() TypeField
 	Reader(*bytes.Reader) error

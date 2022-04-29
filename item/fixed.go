@@ -11,7 +11,7 @@ type Fixed struct {
 	Base
 	Data     []byte
 	Size     uint8
-	SubItems []SubItem
+	SubItems []SubItemBits
 }
 
 func (f *Fixed) Clone() DataItem {
@@ -30,11 +30,20 @@ func (f *Fixed) Reader(rb *bytes.Reader) error {
 	if err != nil {
 		return err
 	}
+
 	// check if they are defined
 	if f.SubItems != nil {
-		for _, subItem := range f.SubItems {
-			err = subItem.Reader(tmp)
+		tmpSubItems := f.SubItems
+		f.SubItems = make([]SubItemBits, 0, len(f.SubItems))
+		for _, subItem := range tmpSubItems {
+			sub := subItem.Clone()
+			err = sub.Reader(tmp)
+			if err != nil {
+				return err
+			}
+			f.SubItems = append(f.SubItems, *sub)
 		}
+
 	} else {
 		f.Data = tmp
 	}

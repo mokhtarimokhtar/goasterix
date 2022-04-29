@@ -12,7 +12,7 @@ type Explicit struct {
 	Base
 	Len      uint8
 	Data     []byte
-	SubItems []SubItem
+	SubItems []SubItemBits
 }
 
 func (e *Explicit) Clone() DataItem {

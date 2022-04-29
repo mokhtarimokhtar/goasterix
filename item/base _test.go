@@ -10,7 +10,7 @@ func TestBaseGetFrn(t *testing.T) {
 	type testCase struct {
 		Name   string
 		input  Base
-		output uint8
+		output FieldReferenceNumber
 	}
 	// Arrange
 	dataSet := []testCase{

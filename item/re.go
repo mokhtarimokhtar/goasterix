@@ -15,7 +15,7 @@ type ReservedExpansion struct {
 	Base
 	Len      uint8
 	Data     []byte
-	SubItems []SubItem
+	SubItems []SubItemBits
 }
 
 func (re *ReservedExpansion) Clone() DataItem {

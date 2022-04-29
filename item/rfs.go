@@ -25,7 +25,7 @@ func (rf RandomField) String() string {
 	var buf bytes.Buffer
 	tmp := []byte{rf.FRN}
 	buf.Reset()
-	buf.WriteString("FRN:")
+	buf.WriteString("FieldReferenceNumber:")
 	buf.WriteString(hex.EncodeToString(tmp))
 	buf.WriteString(" ")
 	buf.WriteString(rf.Field.String())
@@ -37,8 +37,8 @@ func (rf RandomField) String() string {
 // contrast to the OFS organisation, can occur in any order.
 // The RFS organised dataField shall be structured as follows:
 // - the first octet provides the number, N, of Data Fields following;
-// - N fields in any arbitrary order each consisting of a one-octet FRN immediately followed by the contents of the
-// Data Item associated with the preceding FRN.
+// - N fields in any arbitrary order each consisting of a one-octet FieldReferenceNumber immediately followed by the contents of the
+// Data Item associated with the preceding FieldReferenceNumber.
 type RandomFieldSequencing struct {
 	Base
 	Fields   []_uap.DataField
@@ -63,7 +63,7 @@ func (rfs *RandomFieldSequencing) Reader(rb *bytes.Reader) error {
 	}
 
 	for i := uint8(0); i < rfs.N; i++ {
-		// retrieve random FRN
+		// retrieve random FieldReferenceNumber
 		var frn uint8
 		err = binary.Read(rb, binary.BigEndian, &frn)
 		if err != nil {

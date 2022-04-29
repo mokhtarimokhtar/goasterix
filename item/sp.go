@@ -15,7 +15,7 @@ type SpecialPurpose struct {
 	Base
 	Len      uint8
 	Data     []byte
-	SubItems []SubItem
+	SubItems []SubItemBits
 }
 
 func (sp *SpecialPurpose) Clone() DataItem {

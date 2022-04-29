@@ -22,7 +22,7 @@ func BenchmarkTwoComplement32(b *testing.B) {
 	}
 }
 
-func benchmarkRecordDecode(input string, uap item.StandardUAP, b *testing.B) {
+func benchmarkRecordDecode(input string, uap item.UAP, b *testing.B) {
 	data, _ := util.HexStringToByte(input)
 	for n := 0; n < b.N; n++ {
 		rec := new(Record)
@@ -45,7 +45,7 @@ func BenchmarkRecordDecode_Len55(b *testing.B) {
 }
 
 /*
-func benchmarkRecordDecode(input string, items _uap.StandardUAP, b *testing.B) {
+func benchmarkRecordDecode(input string, items _uap.UAP, b *testing.B) {
 	data, _ := util.HexStringToByte(input)
 	for n := 0; n < b.N; n++ {
 		rec := new(Record)

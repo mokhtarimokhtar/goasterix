@@ -23,8 +23,8 @@ func NewRecord() *Record {
 // Decode extracts a Record of asterix data block (only one record).
 // An asterix data block can contain a or more records.
 // It returns the number of bytes unread and fills the Record Struct(Fspec, DataItems array) in byte.
-//func (rec *Record) Decode(data []byte, stdUAP _uap.StandardUAP) (unRead int, err error) {
-func (rec *Record) Decode(data []byte, uap item.StandardUAP) (unRead int, err error) {
+//func (rec *Record) Decode(data []byte, stdUAP _uap.UAP) (unRead int, err error) {
+func (rec *Record) Decode(data []byte, uap item.UAP) (unRead int, err error) {
 	rec.Cat = uap.Category
 
 	rb := bytes.NewReader(data)
@@ -39,7 +39,7 @@ func (rec *Record) Decode(data []byte, uap item.StandardUAP) (unRead int, err er
 	rec.DataItems = make([]item.DataItem, 0, len(frnIndex))
 
 	for _, frn := range frnIndex {
-		uapItem := uap.DataItems[frn-1-offset] // here the index corresponds to the FRN
+		uapItem := uap.DataItems[frn-1-offset] // here the index corresponds to the FieldReferenceNumber
 		//var dataItem item.DataItem
 		/*dataItem, err = item.GetItem(uapItem)
 		if err != nil {

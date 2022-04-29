@@ -3,30 +3,10 @@ package item
 import (
 	"bytes"
 	"github.com/mokhtarimokhtar/goasterix/util"
-	"reflect"
 	"testing"
 )
 
-//func BitShiftGenerator(max int, size int) [][]byte {
-//	var table = make([][]byte, 16)
-//
-//	for pos := 1; pos <= max; pos++ {
-//		//var value = make([]byte, size)
-//		table[pos-1] = make([]byte, size)
-//		val := math.Pow(2, float64(pos-1))
-//		//tmp := data[j] | 0x01<<pos
-//		fmt.Printf("pos=%v %v\n", pos, uint16(val))
-//		binary.BigEndian.PutUint16(table[pos-1], uint16(val))
-//		//fmt.Printf("pos=%v %08b-%08b\n", pos, value[0], value[1])
-//
-//		//table[pos-1] = append(table[pos-1], value[0], value[1])
-//		//data[j-1] = uint8(val)
-//		//fmt.Printf("pos=%v %08b\n", pos, data)
-//	}
-//	return table
-//}
-
-func TestSubItemBitReader(t *testing.T) {
+func TestSubItemBitsReaderOneBitType(t *testing.T) {
 	// setup
 	type testCase struct {
 		Name   string
@@ -112,8 +92,9 @@ func TestSubItemBitReader(t *testing.T) {
 
 	for _, tc := range dataSet {
 		// Arrange
-		sub := new(SubItemBit)
-		sub.Pos.Bit = tc.Pos
+		sub := new(SubItemBits)
+		sub.Type = BitField
+		sub.Bit = tc.Pos
 
 		// Act
 		err := sub.Reader(tc.input)
@@ -133,51 +114,7 @@ func TestSubItemBitReader(t *testing.T) {
 
 }
 
-func TestOneBitReader(t *testing.T) {
-	// setup
-	type testCase struct {
-		Name  string
-		input byte
-		//input  []byte
-		pos uint8 // position of bit
-		//output []byte
-		output byte
-	}
-	// Arrange
-	dataSet := []testCase{
-		{input: 0x80, pos: 8, output: 0x01},
-		{input: 0x40, pos: 7, output: 0x01},
-		{input: 0x20, pos: 6, output: 0x01},
-		{input: 0x10, pos: 5, output: 0x01},
-		{input: 0x08, pos: 4, output: 0x01},
-		{input: 0x04, pos: 3, output: 0x01},
-		{input: 0x02, pos: 2, output: 0x01},
-		{input: 0x01, pos: 1, output: 0x01},
-		{input: 0x7f, pos: 8, output: 0x00},
-		{input: 0xbf, pos: 7, output: 0x00},
-		{input: 0xdf, pos: 6, output: 0x00},
-		{input: 0xef, pos: 5, output: 0x00},
-		{input: 0xf7, pos: 4, output: 0x00},
-		{input: 0xfb, pos: 3, output: 0x00},
-		{input: 0xfd, pos: 2, output: 0x00},
-		{input: 0xfe, pos: 1, output: 0x00},
-	}
-
-	for _, tc := range dataSet {
-		// Act
-		res := OneBitReader(tc.input, tc.pos)
-
-		// Assert
-		if res != tc.output {
-			//if bytes.Equal(res != tc.output {
-			t.Errorf(util.MsgFailInHex, tc.Name, res, tc.output)
-		} else {
-			t.Logf(util.MsgSuccessInHex, tc.Name, res, tc.output)
-		}
-	}
-}
-
-func TestSubItemFromToReader(t *testing.T) {
+func TestSubItemBitsReaderFromToBitType(t *testing.T) {
 	type testCase struct {
 		Name   string
 		input  []byte
@@ -289,9 +226,10 @@ func TestSubItemFromToReader(t *testing.T) {
 	}
 	for _, tc := range dataSet {
 		// Arrange
-		sub := new(SubItemFromTo)
-		sub.Pos.From = tc.From
-		sub.Pos.To = tc.To
+		sub := new(SubItemBits)
+		sub.Type = FromToField
+		sub.From = tc.From
+		sub.To = tc.To
 
 		// Act
 		err := sub.Reader(tc.input)
@@ -313,6 +251,50 @@ func TestSubItemFromToReader(t *testing.T) {
 			t.Errorf(util.MsgFailInHex, tc.Name, sub.Data, tc.output)
 		} else {
 			t.Logf(util.MsgSuccessInHex, tc.Name, sub.Data, tc.output)
+		}
+	}
+}
+
+func TestOneBitReader(t *testing.T) {
+	// setup
+	type testCase struct {
+		Name  string
+		input byte
+		//input  []byte
+		pos uint8 // position of bit
+		//output []byte
+		output byte
+	}
+	// Arrange
+	dataSet := []testCase{
+		{input: 0x80, pos: 8, output: 0x01},
+		{input: 0x40, pos: 7, output: 0x01},
+		{input: 0x20, pos: 6, output: 0x01},
+		{input: 0x10, pos: 5, output: 0x01},
+		{input: 0x08, pos: 4, output: 0x01},
+		{input: 0x04, pos: 3, output: 0x01},
+		{input: 0x02, pos: 2, output: 0x01},
+		{input: 0x01, pos: 1, output: 0x01},
+		{input: 0x7f, pos: 8, output: 0x00},
+		{input: 0xbf, pos: 7, output: 0x00},
+		{input: 0xdf, pos: 6, output: 0x00},
+		{input: 0xef, pos: 5, output: 0x00},
+		{input: 0xf7, pos: 4, output: 0x00},
+		{input: 0xfb, pos: 3, output: 0x00},
+		{input: 0xfd, pos: 2, output: 0x00},
+		{input: 0xfe, pos: 1, output: 0x00},
+	}
+
+	for _, tc := range dataSet {
+		// Act
+		res := OneBitReader(tc.input, tc.pos)
+
+		// Assert
+		if res != tc.output {
+			//if bytes.Equal(res != tc.output {
+			t.Errorf(util.MsgFailInHex, tc.Name, res, tc.output)
+		} else {
+			t.Logf(util.MsgSuccessInHex, tc.Name, res, tc.output)
 		}
 	}
 }
@@ -559,97 +541,3 @@ func TestUint64ToByteLess(t *testing.T) {
 		}
 	}
 }
-
-func TestGetSubItem(t *testing.T) {
-	type testCase struct {
-		Name   string
-		input  SubItem
-		err    error
-		output SubItem
-	}
-	dataSet := []testCase{
-		{
-			Name: "testcase 1",
-			input: &SubItemBit{
-				Type: BitField,
-			},
-			err: nil,
-			output: &SubItemBit{
-				Type: BitField,
-			},
-		},
-		{
-			Name: "testcase 2",
-			input: &SubItemFromTo{
-				Type: FromToField,
-			},
-			err: nil,
-			output: &SubItemFromTo{
-				Type: FromToField,
-			},
-		},
-		{
-			Name: "testcase 3",
-			input: &SubItemFromTo{
-				Type: ExtendedField,
-			},
-			err:    ErrSubDataFieldUnknown,
-			output: nil,
-		},
-	}
-	for _, tc := range dataSet {
-		// Act
-		sub, err := GetSubItem(tc.input)
-
-		// Assert
-		if err != tc.err {
-			t.Errorf(util.MsgFailInValue, tc.Name, err, tc.err)
-		} else {
-			t.Logf(util.MsgSuccessInValue, tc.Name, err, tc.err)
-		}
-		if reflect.DeepEqual(sub, tc.output) == false {
-			t.Errorf(util.MsgFailInValue, tc.Name, sub, tc.output)
-		} else {
-			t.Logf(util.MsgSuccessInValue, tc.Name, sub, tc.output)
-		}
-	}
-
-}
-
-/*
-func TestFromToBitReader32(t *testing.T) {
-	// setup
-	type testCase struct {
-		Name   string
-		input  uint32
-		from   uint8
-		to     uint8
-		output uint32
-	}
-	var dataSet []testCase
-
-	for i := 1; i <= 32; i++ {
-		for j := i; j <= 32; j++ {
-			tmp := testCase{
-				input:  0xffffffff,
-				from:   uint8(j),
-				to:     uint8(i),
-				output: uint32(math.Pow(2, float64(j-i+1))) - 1,
-			}
-			dataSet = append(dataSet, tmp)
-		}
-	}
-	// Arrange
-	for _, tc := range dataSet {
-		// Act
-		res := FromToBitReader32(tc.input, tc.from, tc.to)
-
-		// Assert
-		if res != tc.output {
-			t.Errorf(util.MsgFailInHex, tc.Name, res, tc.output)
-		} else {
-			t.Logf(util.MsgSuccessInHex, tc.Name, res, tc.output)
-		}
-	}
-}
-*/

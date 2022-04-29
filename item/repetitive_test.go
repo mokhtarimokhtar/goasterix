@@ -69,14 +69,14 @@ func TestRepetitiveReader(t *testing.T) {
 			input: "03 8aaaaa 0bbbbb 8ccccc", // 8a 1000-1010 1010-1010 1010-1010
 			item: &Repetitive{
 				SubItemSize: 3,
-				SubItems: []SubItem{
-					&SubItemBit{
+				SubItems: []SubItemBits{
+					{
 						Type: BitField,
-						Pos:  BitPosition{Bit: 24},
+						Bit:  24,
 					},
-					&SubItemFromTo{
+					{
 						Type: FromToField,
-						Pos:  BitPosition{From: 20, To: 1},
+						From: 20, To: 1,
 					},
 				},
 			},
@@ -84,35 +84,35 @@ func TestRepetitiveReader(t *testing.T) {
 			output: &Repetitive{
 				SubItemSize: 3,
 				Rep:         0x03,
-				SubItems: []SubItem{
-					&SubItemBit{
+				SubItems: []SubItemBits{
+					{
 						Type: BitField,
-						Pos:  BitPosition{Bit: 24},
+						Bit:  24,
 						Data: []byte{0x01},
 					},
-					&SubItemFromTo{
+					{
 						Type: FromToField,
-						Pos:  BitPosition{From: 20, To: 1},
+						From: 20, To: 1,
 						Data: []byte{0x0a, 0xaa, 0xaa},
 					},
-					&SubItemBit{
+					{
 						Type: BitField,
-						Pos:  BitPosition{Bit: 24},
+						Bit:  24,
 						Data: []byte{0x00},
 					},
-					&SubItemFromTo{
+					{
 						Type: FromToField,
-						Pos:  BitPosition{From: 20, To: 1},
+						From: 20, To: 1,
 						Data: []byte{0x0b, 0xbb, 0xbb},
 					},
-					&SubItemBit{
+					{
 						Type: BitField,
-						Pos:  BitPosition{Bit: 24},
+						Bit:  24,
 						Data: []byte{0x01},
 					},
-					&SubItemFromTo{
+					{
 						Type: FromToField,
-						Pos:  BitPosition{From: 20, To: 1},
+						From: 20, To: 1,
 						Data: []byte{0x0c, 0xcc, 0xcc},
 					},
 				},
@@ -214,36 +214,36 @@ func TestRepetitiveString(t *testing.T) {
 					Description:  "Test item",
 				},
 				Rep: 0x02,
-				SubItems: []SubItem{
-					&SubItemFromTo{
+				SubItems: []SubItemBits{
+					{
 						Name: "010-1",
-						Pos:  BitPosition{From: 16, To: 9},
+						From: 16, To: 9,
 						Data: []byte{0xab},
 					},
-					&SubItemFromTo{
+					{
 						Name: "010-2",
-						Pos:  BitPosition{From: 8, To: 1},
+						From: 8, To: 1,
 						Data: []byte{0xcd},
 					},
-					&SubItemBit{
+					{
 						Name: "010-3",
-						Pos:  BitPosition{Bit: 8},
+						Bit:  8,
 						Data: []byte{0x01},
 					},
 
-					&SubItemFromTo{
+					{
 						Name: "010-1",
-						Pos:  BitPosition{From: 16, To: 9},
+						From: 16, To: 9,
 						Data: []byte{0x12},
 					},
-					&SubItemFromTo{
+					{
 						Name: "010-2",
-						Pos:  BitPosition{From: 8, To: 1},
+						From: 8, To: 1,
 						Data: []byte{0x34},
 					},
-					&SubItemBit{
+					{
 						Name: "010-3",
-						Pos:  BitPosition{Bit: 8},
+						Bit:  8,
 						Data: []byte{0x00},
 					},
 				},

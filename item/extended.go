@@ -17,8 +17,8 @@ type Extended struct {
 	SecondaryItemSize uint8
 	Primary           []byte
 	Secondary         []byte
-	PrimarySubItems   []SubItem
-	SecondarySubItems []SubItem
+	PrimarySubItems   []SubItemBits
+	SecondarySubItems []SubItemBits
 }
 
 func (e *Extended) Clone() DataItem {

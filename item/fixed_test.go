@@ -36,31 +36,42 @@ func TestFixedReader(t *testing.T) {
 			input: "01 02 03 04 05 06 07 08",
 			item: &Fixed{
 				Size: 8,
-				SubItems: []SubItem{
-					&SubItemBit{
-						Pos: BitPosition{Bit: 57},
+				SubItems: []SubItemBits{
+					{
+						Type: BitField,
+						Bit:  57,
 					},
-					&SubItemFromTo{
-						Pos: BitPosition{From: 56, To: 25},
+					{
+						Type: FromToField,
+						From: 56,
+						To:   25,
 					},
-					&SubItemFromTo{
-						Pos: BitPosition{From: 24, To: 1},
+					{
+						Type: FromToField,
+						From: 24,
+						To:   1,
 					},
 				},
 			},
 			output: &Fixed{
 				Size: 8,
-				SubItems: []SubItem{
-					&SubItemBit{
-						Pos:  BitPosition{Bit: 57},
+
+				SubItems: []SubItemBits{
+					{
+						Type: BitField,
+						Bit:  57,
 						Data: []byte{0x01},
 					},
-					&SubItemFromTo{
-						Pos:  BitPosition{From: 56, To: 25},
+					{
+						Type: FromToField,
+						From: 56,
+						To:   25,
 						Data: []byte{0x02, 0x03, 0x04, 0x05},
 					},
-					&SubItemFromTo{
-						Pos:  BitPosition{From: 24, To: 1},
+					{
+						Type: FromToField,
+						From: 24,
+						To:   1,
 						Data: []byte{0x06, 0x07, 0x08},
 					},
 				},
@@ -168,20 +179,20 @@ func TestFixedString(t *testing.T) {
 					DataItemName: "I000/010",
 					Description:  "Test item",
 				},
-				SubItems: []SubItem{
-					&SubItemFromTo{
+				SubItems: []SubItemBits{
+					{
 						Name: "010-1",
-						Pos:  BitPosition{From: 16, To: 9},
+						From: 16, To: 9,
 						Data: []byte{0xab},
 					},
-					&SubItemFromTo{
+					{
 						Name: "010-2",
-						Pos:  BitPosition{From: 8, To: 1},
+						From: 8, To: 1,
 						Data: []byte{0xcd},
 					},
-					&SubItemBit{
+					{
 						Name: "010-3",
-						Pos:  BitPosition{Bit: 8},
+						Bit:  8,
 						Data: []byte{0x01},
 					},
 				},

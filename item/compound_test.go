@@ -330,7 +330,7 @@ func TestCompoundString(t *testing.T) {
 			Name: "testCase 1",
 			input: Compound{
 				Base: Base{
-					FRN:         1,
+					FieldReferenceNumber:         1,
 					DataItemName:    "I000/000",
 					Description: "Test item",
 					Type:        _uap.Compound,
@@ -339,7 +339,7 @@ func TestCompoundString(t *testing.T) {
 				Secondary: []DataItemName{
 					&Fixed{
 						Base: Base{
-							FRN:         1,
+							FieldReferenceNumber:         1,
 							DataItemName:    "I000/010",
 							Description: "Test item",
 							Type:        _uap.Fixed,
@@ -348,7 +348,7 @@ func TestCompoundString(t *testing.T) {
 					},
 					&Extended{
 						Base: Base{
-							FRN:         3,
+							FieldReferenceNumber:         3,
 							DataItemName:    "I000/030",
 							Description: "Test item",
 							Type:        _uap.Extended,
@@ -358,7 +358,7 @@ func TestCompoundString(t *testing.T) {
 					},
 					&Explicit{
 						Base: Base{
-							FRN:         5,
+							FieldReferenceNumber:         5,
 							DataItemName:    "I000/050",
 							Description: "Test item",
 							Type:        _uap.Explicit,
@@ -368,7 +368,7 @@ func TestCompoundString(t *testing.T) {
 					},
 					&Repetitive{
 						Base: Base{
-							FRN:         7,
+							FieldReferenceNumber:         7,
 							DataItemName:    "I000/070",
 							Description: "Test item",
 							Type:        _uap.Repetitive,
@@ -417,7 +417,7 @@ func TestCompoundPayload(t *testing.T) {
 			Name: "testCase 1",
 			input: Compound{
 				Base: Base{
-					FRN:         1,
+					FieldReferenceNumber:         1,
 					DataItemName:    "I000/000",
 					Description: "Test item",
 					Type:        _uap.Compound,
@@ -426,7 +426,7 @@ func TestCompoundPayload(t *testing.T) {
 				Secondary: []DataItemName{
 					&Fixed{
 						Base: Base{
-							FRN:         1,
+							FieldReferenceNumber:         1,
 							DataItemName:    "I000/010",
 							Description: "Test item",
 							Type:        _uap.Fixed,
@@ -435,7 +435,7 @@ func TestCompoundPayload(t *testing.T) {
 					},
 					&Extended{
 						Base: Base{
-							FRN:         3,
+							FieldReferenceNumber:         3,
 							DataItemName:    "I000/030",
 							Description: "Test item",
 							Type:        _uap.Extended,
@@ -445,7 +445,7 @@ func TestCompoundPayload(t *testing.T) {
 					},
 					&Explicit{
 						Base: Base{
-							FRN:         5,
+							FieldReferenceNumber:         5,
 							DataItemName:    "I000/050",
 							Description: "Test item",
 							Type:        _uap.Explicit,
@@ -455,7 +455,7 @@ func TestCompoundPayload(t *testing.T) {
 					},
 					&Repetitive{
 						Base: Base{
-							FRN:         7,
+							FieldReferenceNumber:         7,
 							DataItemName:    "I000/070",
 							Description: "Test item",
 							Type:        _uap.Repetitive,

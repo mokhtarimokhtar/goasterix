@@ -13,10 +13,10 @@ func TestRandomFieldString(t *testing.T) {
 		{
 			Name: "testCase 1",
 			input: RandomField{
-				FRN: 1,
+				FieldReferenceNumber: 1,
 				Field: &Fixed{
 					Base: Base{
-						FRN:         1,
+						FieldReferenceNumber:         1,
 						DataItemName:    "I000/010",
 						Description: "Test item",
 						Type:        _uap.Fixed,
@@ -24,26 +24,26 @@ func TestRandomFieldString(t *testing.T) {
 					Data: []byte{0xab, 0xcd},
 				},
 			},
-			output: "FRN:01 I000/010:abcd",
+			output: "FieldReferenceNumber:01 I000/010:abcd",
 		},
 		{
 			Name: "testCase 2",
 			input: RandomField{
-				FRN: 0,
+				FieldReferenceNumber: 0,
 				Field: &Fixed{
 					Base: Base{},
 					Data: nil,
 				},
 			},
-			output: "FRN:00 :",
+			output: "FieldReferenceNumber:00 :",
 		},
 		{
 			Name: "testCase 3",
 			input: RandomField{
-				FRN: 3,
+				FieldReferenceNumber: 3,
 				Field: &Extended{
 					Base: Base{
-						FRN:         3,
+						FieldReferenceNumber:         3,
 						DataItemName:    "I000/030",
 						Description: "Test item",
 						Type:        _uap.Extended,
@@ -52,7 +52,7 @@ func TestRandomFieldString(t *testing.T) {
 					Secondary: []byte{0xab, 0xcd},
 				},
 			},
-			output: "FRN:03 I000/030:c1abcd",
+			output: "FieldReferenceNumber:03 I000/030:c1abcd",
 		},
 	}
 
@@ -81,10 +81,10 @@ func TestRandomFieldPayload(t *testing.T) {
 		{
 			Name: "testCase 1",
 			input: RandomField{
-				FRN: 1,
+				FieldReferenceNumber: 1,
 				Field: &Fixed{
 					Base: Base{
-						FRN:         2,
+						FieldReferenceNumber:         2,
 						DataItemName:    "I000/020",
 						Description: "Test item",
 						Type:        _uap.Fixed,
@@ -97,7 +97,7 @@ func TestRandomFieldPayload(t *testing.T) {
 		{
 			Name: "testCase 2",
 			input: RandomField{
-				FRN: 0,
+				FieldReferenceNumber: 0,
 				Field: &Fixed{
 					Base: Base{},
 					Data: nil,
@@ -108,10 +108,10 @@ func TestRandomFieldPayload(t *testing.T) {
 		{
 			Name: "testCase 3",
 			input: RandomField{
-				FRN: 16,
+				FieldReferenceNumber: 16,
 				Field: &Extended{
 					Base: Base{
-						FRN:         3,
+						FieldReferenceNumber:         3,
 						DataItemName:    "I000/030",
 						Description: "Test item",
 						Type:        _uap.Extended,
@@ -150,7 +150,7 @@ func TestRandomFieldSequencingString(t *testing.T) {
 			Name: "testCase 1",
 			input: RandomFieldSequencing{
 				Base: Base{
-					FRN:         0,
+					FieldReferenceNumber:         0,
 					DataItemName:    "I000/000",
 					Description: "Test item",
 					Type:        _uap.RFS,
@@ -158,10 +158,10 @@ func TestRandomFieldSequencingString(t *testing.T) {
 				N: 2,
 				Sequence: []RandomField{
 					{
-						FRN: 1,
+						FieldReferenceNumber: 1,
 						Field: &Fixed{
 							Base: Base{
-								FRN:         1,
+								FieldReferenceNumber:         1,
 								DataItemName:    "I000/010",
 								Description: "Test item",
 								Type:        _uap.Fixed,
@@ -170,10 +170,10 @@ func TestRandomFieldSequencingString(t *testing.T) {
 						},
 					},
 					{
-						FRN: 3,
+						FieldReferenceNumber: 3,
 						Field: &Extended{
 							Base: Base{
-								FRN:         3,
+								FieldReferenceNumber:         3,
 								DataItemName:    "I000/030",
 								Description: "Test item",
 								Type:        _uap.Extended,
@@ -184,7 +184,7 @@ func TestRandomFieldSequencingString(t *testing.T) {
 					},
 				},
 			},
-			output: "I000/000:[N:02][FRN:01 I000/010:abcd][FRN:03 I000/030:c1abcd]",
+			output: "I000/000:[N:02][FieldReferenceNumber:01 I000/010:abcd][FieldReferenceNumber:03 I000/030:c1abcd]",
 		},
 		{
 			Name: "testCase 2",
@@ -223,7 +223,7 @@ func TestRandomFieldSequencingPayload(t *testing.T) {
 			Name: "testCase 1",
 			input: RandomFieldSequencing{
 				Base: Base{
-					FRN:         0,
+					FieldReferenceNumber:         0,
 					DataItemName:    "I000/000",
 					Description: "Test item",
 					Type:        _uap.RFS,
@@ -231,10 +231,10 @@ func TestRandomFieldSequencingPayload(t *testing.T) {
 				N: 2,
 				Sequence: []RandomField{
 					{
-						FRN: 16,
+						FieldReferenceNumber: 16,
 						Field: &Fixed{
 							Base: Base{
-								FRN:         1,
+								FieldReferenceNumber:         1,
 								DataItemName:    "I000/010",
 								Description: "Test item",
 								Type:        _uap.Fixed,
@@ -243,10 +243,10 @@ func TestRandomFieldSequencingPayload(t *testing.T) {
 						},
 					},
 					{
-						FRN: 3,
+						FieldReferenceNumber: 3,
 						Field: &Extended{
 							Base: Base{
-								FRN:         3,
+								FieldReferenceNumber:         3,
 								DataItemName:    "I000/030",
 								Description: "Test item",
 								Type:        _uap.Extended,

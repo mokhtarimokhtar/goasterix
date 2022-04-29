@@ -11,7 +11,7 @@ type Repetitive struct {
 	SubItemSize uint8
 	Rep         uint8
 	Data        []byte
-	SubItems    []SubItem
+	SubItems    []SubItemBits
 }
 
 func (r *Repetitive) Clone() DataItem {
@@ -46,13 +46,13 @@ func (r *Repetitive) Reader(rb *bytes.Reader) error {
 				return err
 			}
 			for _, subItem := range tmpSubItems {
-				subI, _ := GetSubItem(subItem)
-				err = subI.Reader(tmp)
+				sub := subItem.Clone()
+				err = sub.Reader(tmp)
 				if err != nil {
 					return err
 				}
-				//fmt.Println(subI.String(), subI.GetType())
-				r.SubItems = append(r.SubItems, subI)
+
+				r.SubItems = append(r.SubItems, *sub)
 			}
 		}
 	} else {

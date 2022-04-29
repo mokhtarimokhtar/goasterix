@@ -6,115 +6,51 @@ import (
 	"encoding/hex"
 )
 
-type SubItem interface {
-	Reader(data []byte) error
-	GetName() string
-	GetType() TypeField
-	GetPosition() BitPosition
-	String() string
-}
-
-// GetSubItem returns the corresponding DataItem type: BitField, FromToField.
-// GetSubItem is a factory function
-func GetSubItem(s SubItem) (SubItem, error) {
-	var err error
-	var item SubItem
-	switch s.GetType() {
-	case BitField:
-		item = newSubItemBit(s)
-	case FromToField:
-		item = newSubItemFromTo(s)
-	default:
-		err = ErrSubDataFieldUnknown
-		return nil, err
-	}
-	return item, err
-}
-
-type BitPosition struct {
+// SubItemBits has two types: One bit or From To bits
+// Bit field is for one bit position
+// From and To is for the range of bits position
+type SubItemBits struct {
+	Name string
+	Type TypeField
 	Bit  uint8
 	From uint8
 	To   uint8
-}
-
-type SubItemBit struct {
-	Name string
-	Type TypeField
-	Pos  BitPosition
 	Data []byte
 }
 
-func newSubItemBit(field SubItem) SubItem {
-	f := &SubItemBit{}
-	f.Name = field.GetName()
-	f.Type = field.GetType()
-	f.Pos = field.GetPosition()
-	return f
+func (s *SubItemBits) Clone() *SubItemBits {
+	return &SubItemBits{
+		Name: s.Name,
+		Type: s.Type,
+		Bit:  s.Bit,
+		From: s.From,
+		To:   s.To,
+	}
 }
 
-func (s *SubItemBit) Reader(data []byte) error {
+func (s *SubItemBits) Reader(data []byte) error {
 	var err error
-	totalBits := uint8(len(data)) * 8
-	indexData := (totalBits - s.Pos.Bit) / 8
-	relativePos := s.Pos.Bit - (uint8((s.Pos.Bit-1)/8) * 8)
+	switch s.Type {
+	case BitField:
+		totalBits := uint8(len(data)) * 8
+		indexData := (totalBits - s.Bit) / 8
+		relativePos := s.Bit - (uint8((s.Bit-1)/8) * 8)
 
-	s.Data = make([]byte, 1)
-	s.Data[0] = OneBitReader(data[indexData], relativePos)
+		s.Data = make([]byte, 1)
+		s.Data[0] = OneBitReader(data[indexData], relativePos)
 
+	case FromToField:
+		s.Data, err = FromToBitReader(data, s.From, s.To)
+
+	default:
+		err = ErrSubDataFieldUnknown
+		return err
+	}
 	return err
-}
-func (s SubItemBit) GetName() string {
-	return s.Name
-}
-func (s SubItemBit) GetType() TypeField {
-	return s.Type
-}
-func (s SubItemBit) GetPosition() BitPosition {
-	return s.Pos
 }
 
 // String implements fmt.Stringer in hexadecimal
-func (s SubItemBit) String() string {
-	var buf bytes.Buffer
-	buf.Reset()
-	buf.WriteString(s.Name)
-	buf.WriteByte(':')
-	buf.WriteString(hex.EncodeToString(s.Data))
-	return buf.String()
-}
-
-type SubItemFromTo struct {
-	Name string
-	Type TypeField
-	Pos  BitPosition
-	Data []byte
-}
-
-func newSubItemFromTo(field SubItem) SubItem {
-	f := &SubItemFromTo{}
-	f.Name = field.GetName()
-	f.Type = field.GetType()
-	f.Pos = field.GetPosition()
-	return f
-}
-
-func (s *SubItemFromTo) Reader(data []byte) error {
-	var err error
-	s.Data, err = FromToBitReader(data, s.Pos.From, s.Pos.To)
-	return err
-}
-func (s SubItemFromTo) GetName() string {
-	return s.Name
-}
-func (s SubItemFromTo) GetType() TypeField {
-	return s.Type
-}
-func (s SubItemFromTo) GetPosition() BitPosition {
-	return s.Pos
-}
-
-// String implements fmt.Stringer in hexadecimal
-func (s SubItemFromTo) String() string {
+func (s SubItemBits) String() string {
 	var buf bytes.Buffer
 	buf.Reset()
 	buf.WriteString(s.Name)

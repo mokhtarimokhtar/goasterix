@@ -38,7 +38,8 @@ func (r *Repetitive) Reader(rb *bytes.Reader) error {
 	// check if they are defined
 	if r.SubItems != nil {
 		tmpSubItems := r.SubItems
-		r.SubItems = nil
+		r.SubItems = make([]SubItemBits, 0, r.Rep*r.SubItemSize)
+
 		for i := uint8(0); i < r.Rep; i++ {
 			tmp := make([]byte, r.SubItemSize)
 			err = binary.Read(rb, binary.BigEndian, &tmp)

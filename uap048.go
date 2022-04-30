@@ -4,6 +4,7 @@ import "github.com/mokhtarimokhtar/goasterix/item"
 
 // Cat048V127 User Application Profile
 // version 1.27
+
 var Cat048V127 = item.UAP{
 	Name:     "cat048_1.27",
 	Category: 48,
@@ -369,7 +370,7 @@ var Cat048V127 = item.UAP{
 		&item.SpecialPurpose{
 			Base: item.Base{
 				FRN:          item.FRN27,
-				DataItemName: "SP-Data DataItemName",
+				DataItemName: "I060SPName-Data DataItemName",
 				Description:  "Special Purpose Field",
 				Type:         item.SPField,
 			},
@@ -377,7 +378,7 @@ var Cat048V127 = item.UAP{
 		&item.ReservedExpansion{
 			Base: item.Base{
 				FRN:          item.FRN28,
-				DataItemName: "RE-Data DataItemName",
+				DataItemName: "I060REName-Data DataItemName",
 				Description:  "Reserved Expansion Field",
 				Type:         item.REField,
 			},

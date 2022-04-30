@@ -40,24 +40,7 @@ func (rec *Record) Decode(data []byte, uap item.UAP) (unRead int, err error) {
 
 	for _, frn := range frnIndex {
 		uapItem := uap.DataItems[frn-1-offset] // here the index corresponds to the FieldReferenceNumber
-		//var dataItem item.DataItem
-		/*dataItem, err = item.GetItem(uapItem)
-		if err != nil {
-			unRead = rb.Len()
-			return unRead, err
-		}
-		err = item.Readers(dataItem, rb)
-		if err != nil {
-			unRead = rb.Len()
-			return unRead, err
-		}
-		*/
-
-		//var field item.Field
-		//var dataItem item.DataItem
-		//dataItem, err = item.GetItem2(uapItem)
 		dataItem := uapItem.Clone()
-		//err = item.Readers(dataItem, rb)
 		err = dataItem.Reader(rb)
 		if err != nil {
 			unRead = rb.Len()
@@ -65,7 +48,7 @@ func (rec *Record) Decode(data []byte, uap item.UAP) (unRead int, err error) {
 		}
 
 		unRead = rb.Len()
-		//rec.DataItems = append(rec.DataItems, contextType.DataItemName)
+
 		rec.DataItems = append(rec.DataItems, dataItem)
 		/*
 			if uapItem.Conditional {

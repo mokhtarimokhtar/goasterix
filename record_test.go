@@ -213,7 +213,7 @@ func TestDecodeCatForTest(t *testing.T) {
 							&Fixed{
 								Base: Base{
 									FRN:          1,
-									DataItemName: "Compound/001",
+									DataItemName: "I026/060/A",
 									Description:  "Compound Fixed type field for test",
 									Type:         FixedField,
 								},
@@ -223,7 +223,7 @@ func TestDecodeCatForTest(t *testing.T) {
 							&Extended{
 								Base: Base{
 									FRN:          3,
-									DataItemName: "Compound/003",
+									DataItemName: "I026/060/B",
 									Description:  "Compound Extended type field for test",
 									Type:         ExtendedField,
 								},
@@ -235,7 +235,7 @@ func TestDecodeCatForTest(t *testing.T) {
 							&Repetitive{
 								Base: Base{
 									FRN:          4,
-									DataItemName: "Compound/004",
+									DataItemName: "I026/060/C",
 									Description:  "Compound Repetitive type field for test",
 									Type:         RepetitiveField,
 								},
@@ -246,7 +246,7 @@ func TestDecodeCatForTest(t *testing.T) {
 							&Explicit{
 								Base: Base{
 									FRN:          5,
-									DataItemName: "Compound/005",
+									DataItemName: "I026/060/D",
 									Description:  "Compound Explicit type field for test",
 									Type:         ExplicitField,
 								},
@@ -258,7 +258,7 @@ func TestDecodeCatForTest(t *testing.T) {
 					&ReservedExpansion{
 						Base: Base{
 							FRN:          7,
-							DataItemName: "RE",
+							DataItemName: "I060REName",
 							Description:  "Reserved Expansion type field for test",
 							Type:         REField,
 						},
@@ -268,7 +268,7 @@ func TestDecodeCatForTest(t *testing.T) {
 					&SpecialPurpose{
 						Base: Base{
 							FRN:          8,
-							DataItemName: "SP",
+							DataItemName: "I060SPName",
 							Description:  "Special Purpose type field for test",
 							Type:         SPField,
 						},
@@ -1003,11 +1003,11 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 		{
 			Meta: Base{
 				FieldReferenceNumber:         9,
-				DataItemName:    "SP",
-				Description: "SP (Special Purpose dataField) type dataField for test",
-				Type:        dataField.SP,
+				DataItemName:    "I060SPName",
+				Description: "I060SPName (Special Purpose dataField) type dataField for test",
+				Type:        dataField.I060SPName,
 			},
-			SP: &SpecialPurpose{
+			I060SPName: &SpecialPurpose{
 				Len:  03,
 				Data: []byte{0xff, 0xff},
 			},
@@ -1201,7 +1201,7 @@ func TestRecordDecode_Cat4TestError(t *testing.T) {
 		},
 		{
 			TestCase: "testCase 5",
-			// RE FieldReferenceNumber 8
+			// I060REName FieldReferenceNumber 8
 			input:  "0180 04FFFF",
 			output: nil,
 			unRead: 0,

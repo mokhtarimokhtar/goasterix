@@ -2,16 +2,41 @@ package goasterix
 
 import "github.com/mokhtarimokhtar/goasterix/item"
 
+const (
+	I010Name   = "I026/010"
+	I010Desc   = "Fixed type field for test"
+	I020Name   = "I026/020"
+	I020Desc   = "Extended type field for test"
+	I030Name   = "I026/030"
+	I030Desc   = "Explicit type field for test"
+	I040Name   = "I026/040"
+	I040Desc   = "Repetitive type field for test"
+	I060Name   = "I026/060"
+	I060Desc   = "Compound type field for test"
+	I060AName  = "I026/060/A"
+	I060ADesc  = "Compound Fixed type field for test"
+	I060BName  = "I026/060/B"
+	I060BDesc  = "Compound Extended type field for test"
+	I060CName  = "I026/060/C"
+	I060CDesc  = "Compound Repetitive type field for test"
+	I060DName  = "I026/060/D"
+	I060DDesc  = "Compound Explicit type field for test"
+	I060REName = "I060REName"
+	I060REDesc = "Reserved Expansion type field for test"
+	I060SPName = "I060SPName"
+	I060SPDesc = "Special Purpose type field for test"
+)
+
 var CatForTest = item.UAP{
 	Name:     "catfortest_0.1",
-	Category: 26, // not exist
+	Category: 26, // not used
 	Version:  0.1,
 	DataItems: []item.DataItem{
 		&item.Fixed{
 			Base: item.Base{
 				FRN:          item.FRN1,
-				DataItemName: "I026/010",
-				Description:  "Fixed type field for test",
+				DataItemName: I010Name,
+				Description:  I010Desc,
 				Type:         item.FixedField,
 			},
 			Size: 2,
@@ -31,8 +56,8 @@ var CatForTest = item.UAP{
 		&item.Extended{
 			Base: item.Base{
 				FRN:          item.FRN2,
-				DataItemName: "I026/020",
-				Description:  "Extended type field for test",
+				DataItemName: I020Name,
+				Description:  I020Desc,
 				Type:         item.ExtendedField,
 			},
 			PrimaryItemSize:   1,
@@ -66,16 +91,16 @@ var CatForTest = item.UAP{
 		&item.Explicit{
 			Base: item.Base{
 				FRN:          item.FRN3,
-				DataItemName: "I026/030",
-				Description:  "Explicit type field for test",
+				DataItemName: I030Name,
+				Description:  I030Desc,
 				Type:         item.ExplicitField,
 			},
 		},
 		&item.Repetitive{
 			Base: item.Base{
 				FRN:          item.FRN4,
-				DataItemName: "I026/040",
-				Description:  "Repetitive type field for test",
+				DataItemName: I040Name,
+				Description:  I040Desc,
 				Type:         item.RepetitiveField,
 			},
 			SubItemSize: 3,
@@ -101,16 +126,16 @@ var CatForTest = item.UAP{
 		&item.Compound{
 			Base: item.Base{
 				FRN:          item.FRN6,
-				DataItemName: "I026/060",
-				Description:  "Compound type field for test",
+				DataItemName: I060Name,
+				Description:  I060Desc,
 				Type:         item.CompoundField,
 			},
 			Secondary: []item.DataItem{
 				&item.Fixed{
 					Base: item.Base{
 						FRN:          item.FRN1,
-						DataItemName: "Compound/001",
-						Description:  "Compound Fixed type field for test",
+						DataItemName: I060AName,
+						Description:  I060ADesc,
 						Type:         item.FixedField,
 					},
 					Size: 1,
@@ -119,8 +144,8 @@ var CatForTest = item.UAP{
 				&item.Extended{
 					Base: item.Base{
 						FRN:          item.FRN3,
-						DataItemName: "Compound/003",
-						Description:  "Compound Extended type field for test",
+						DataItemName: I060BName,
+						Description:  I060BDesc,
 						Type:         item.ExtendedField,
 					},
 					PrimaryItemSize:   1,
@@ -129,8 +154,8 @@ var CatForTest = item.UAP{
 				&item.Repetitive{
 					Base: item.Base{
 						FRN:          item.FRN4,
-						DataItemName: "Compound/004",
-						Description:  "Compound Repetitive type field for test",
+						DataItemName: I060CName,
+						Description:  I060CDesc,
 						Type:         item.RepetitiveField,
 					},
 					SubItemSize: 2,
@@ -138,8 +163,8 @@ var CatForTest = item.UAP{
 				&item.Explicit{
 					Base: item.Base{
 						FRN:          item.FRN5,
-						DataItemName: "Compound/005",
-						Description:  "Compound Explicit type field for test",
+						DataItemName: I060DName,
+						Description:  I060DDesc,
 						Type:         item.ExplicitField,
 					},
 				},
@@ -148,16 +173,16 @@ var CatForTest = item.UAP{
 		&item.ReservedExpansion{
 			Base: item.Base{
 				FRN:          item.FRN7,
-				DataItemName: "RE",
-				Description:  "Reserved Expansion type field for test",
+				DataItemName: I060REName,
+				Description:  I060REDesc,
 				Type:         item.REField,
 			},
 		},
 		&item.SpecialPurpose{
 			Base: item.Base{
 				FRN:          item.FRN8,
-				DataItemName: "SP",
-				Description:  "Special Purpose type field for test",
+				DataItemName: I060SPName,
+				Description:  I060SPDesc,
 				Type:         item.SPField,
 			},
 		},

@@ -62,6 +62,7 @@ func (f Fixed) Payload() []byte {
 func (f Fixed) String() string {
 	var buf bytes.Buffer
 	buf.Reset()
+	//buf.WriteString(f.Base.DataItemName)
 	buf.WriteString(f.Base.DataItemName)
 	buf.WriteByte(':')
 	if f.SubItems != nil {

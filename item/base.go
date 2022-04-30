@@ -44,7 +44,7 @@ const (
 type UAP struct {
 	Name      string
 	Category  uint8
-	Version   float64
+	Version   float32
 	DataItems []DataItem
 }
 

@@ -6,6 +6,11 @@ import (
 	"github.com/mokhtarimokhtar/goasterix/item"
 )
 
+type IRecord interface {
+	GetItems() []item.DataItem
+	GetCategory() uint8
+}
+
 type Record struct {
 	Cat       uint8
 	Fspec     []byte
@@ -15,6 +20,9 @@ type Record struct {
 func (rec Record) GetItems() []item.DataItem {
 	return rec.DataItems
 }
+func (rec Record) GetCategory() uint8 {
+	return rec.Cat
+}
 
 func NewRecord() *Record {
 	return &Record{}
@@ -23,11 +31,12 @@ func NewRecord() *Record {
 // Decode extracts a Record of asterix data block (only one record).
 // An asterix data block can contain a or more records.
 // It returns the number of bytes unread and fills the Record Struct(Fspec, DataItems array) in byte.
-//func (rec *Record) Decode(data []byte, stdUAP _uap.UAP) (unRead int, err error) {
-func (rec *Record) Decode(data []byte, uap item.UAP) (unRead int, err error) {
+func (rec *Record) Decode(rb *bytes.Reader, uap item.UAP) (int, error) {
+	var err error
+	var unRead int
+
 	rec.Cat = uap.Category
 
-	rb := bytes.NewReader(data)
 	rec.Fspec, err = item.FspecReader(rb)
 	unRead = rb.Len()
 	if err != nil {

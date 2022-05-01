@@ -8,6 +8,10 @@ import (
 	"testing"
 )
 
+//import (
+//. "github.com/mokhtarimokhtar/goasterix/item"
+//)
+
 /*func TestRecordPayload(t *testing.T) {
 	// Arrange
 	data, _ := util.HexStringToByte("ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020a0")
@@ -46,7 +50,7 @@ func TestRecord_String(t *testing.T) {
 */
 
 // Testing : Decode CatForTest
-func TestDecodeCatForTest(t *testing.T) {
+func TestRecordDecodeCatForTest(t *testing.T) {
 	type testCase struct {
 		Name   string
 		input  string // one record = fspec + items
@@ -284,11 +288,12 @@ func TestDecodeCatForTest(t *testing.T) {
 
 	for _, tc := range dataSet {
 		// Arrange
-		data, _ := util.HexStringToByte(tc.input)
+		input, _ := util.HexStringToByte(tc.input)
+		rb := bytes.NewReader(input)
 		rec := new(Record)
 
 		// Act
-		unRead, err := rec.Decode(data, tc.uap)
+		unRead, err := rec.Decode(rb, tc.uap)
 
 		// Assert
 		if err != tc.err {
@@ -511,10 +516,11 @@ func TestRecordDecodeCAT048(t *testing.T) {
 
 	uap048 := Cat048V127
 	data, _ := util.HexStringToByte(input)
+	rb := bytes.NewReader(data)
 	rec := new(Record)
 
 	// Act
-	unRead, err := rec.Decode(data, uap048)
+	unRead, err := rec.Decode(rb, uap048)
 
 	// Assert
 	if err != nil {

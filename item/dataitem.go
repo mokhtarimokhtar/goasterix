@@ -52,6 +52,13 @@ type DataItem interface {
 	Payload() []byte
 }
 
+//type Export interface {
+//	String() string
+//	Payload() []byte
+//}
+
+//type Payloader struct{}
+
 /*type DataItem interface {
 	IBase
 	Payload() []byte

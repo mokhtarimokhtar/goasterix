@@ -24,8 +24,9 @@ func sacSic(data [2]byte) (src SourceIdentifier, err error) {
 	return src, nil
 }
 
-func (data *CatForTestModel) write(rec goasterix.Record) {
-	for _, dataItem := range rec.DataItems {
+func (data *CatForTestModel) write(rec goasterix.IRecord) {
+	dataItems := rec.GetItems()
+	for _, dataItem := range dataItems {
 		switch dataItem.GetFrn() {
 		case 1:
 			fmt.Println("dataItem", dataItem.(*item.Fixed).String())

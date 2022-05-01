@@ -1,6 +1,7 @@
 package goasterix
 
 import (
+	"bytes"
 	"github.com/mokhtarimokhtar/goasterix/item"
 	"github.com/mokhtarimokhtar/goasterix/util"
 	"testing"
@@ -26,7 +27,9 @@ func benchmarkRecordDecode(input string, uap item.UAP, b *testing.B) {
 	data, _ := util.HexStringToByte(input)
 	for n := 0; n < b.N; n++ {
 		rec := new(Record)
-		_, _ = rec.Decode(data, uap)
+		//_, _ = rec.Decode(data, uap)
+		rb := bytes.NewReader(data)
+		_, _ = rec.Decode(rb, uap)
 	}
 }
 

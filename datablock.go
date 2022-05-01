@@ -142,35 +142,28 @@ func (db *DataBlock) Decode(data []byte) (int, error) {
 		return unRead, err
 	}
 
-	// retrieve records
-	tmp := make([]byte, db.Len-3)
-	_ = binary.Read(rb, binary.BigEndian, tmp) // ignore explicit error because it's detect before
-	unRead = rb.Len()
-
-	// decode N * records
-	offset := 0
-	lenData := len(tmp)
-
-	// selection of the appropriate UAP
-	uapSelected, found := ProfileRegistry[db.Category]
+	//selection of the appropriate UAP
+	uap, found := ProfileRegistry[db.Category]
 	if !found {
 		err = ErrCategoryUnknown
 		return unRead, err
 	}
 
+	padding := int(rbSize) - int(db.Len)
+
 LoopRecords:
 	for {
 		rec := NewRecord()
-		unRead, err := rec.Decode(tmp[offset:], uapSelected)
+		unRead, err = rec.Decode(rb, uap)
 		db.Records = append(db.Records, *rec)
-		offset = lenData - unRead
 
 		if err != nil {
+			unRead = rb.Len()
 			return unRead, err
 		}
-		// offset == lenData is for the case payload is oversize of LEN dataField asterix
-		// if unRead == 0 || offset == lenData {
-		if unRead == 0 {
+
+		// padding is for the case payload is oversize of LEN dataField asterix
+		if unRead == 0 || unRead == padding {
 			break LoopRecords
 		}
 	}

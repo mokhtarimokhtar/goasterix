@@ -34,22 +34,31 @@ func NewWrapperDataBlock() (*WrapperDataBlock, error) {
 
 /*
 func (w *WrapperDataBlock) Decode(data []byte) (unRead int, err error) {
+
 	offset := uint16(0)
 	// retrieve sizing of datablock
 	totalBytes := uint16(len(data))
-	var listOffset []uint16
+	var listOffset = []uint16{0}
 	for {
 		DataBlockLen := data[offset+1 : offset+3]
 		tmp := binary.BigEndian.Uint16(DataBlockLen)
 		offset = offset + tmp
-		listOffset = append(listOffset, offset)
 		if offset == totalBytes {
 			break
 		}
+		listOffset = append(listOffset, offset)
 	}
 
-	//offset = 0
 	w.DataBlocks = make([]DataBlock, 0, len(listOffset))
+
+	//var wg sync.WaitGroup
+	//
+	//for _, index := range listOffset {
+	//	wg.Add(1)
+	//	//db := make(chan DataBlock, 1)
+	//	go DataBlockWorker(&wg, data[index:], w)
+	//}
+	//wg.Wait()
 
 	for _, index := range listOffset {
 		db := NewDataBlock()
@@ -59,7 +68,16 @@ func (w *WrapperDataBlock) Decode(data []byte) (unRead int, err error) {
 		}
 		w.DataBlocks = append(w.DataBlocks, *db)
 	}
+
 	return unRead, err
+}
+func DataBlockWorker(wg *sync.WaitGroup, data []byte, w *WrapperDataBlock) {
+	//var err error
+	//var unRead int
+	defer wg.Done()
+	db := NewDataBlock()
+	_, _ = db.Decode(data)
+	w.DataBlocks = append(w.DataBlocks, *db)
 }
 */
 

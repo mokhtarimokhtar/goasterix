@@ -88,6 +88,7 @@ func (rec Record) String() []string {
 	return items
 }
 
+/*
 // Payload returns a slice of byte for one asterix record.
 func (rec Record) Payload() []byte {
 	var pd []byte
@@ -97,6 +98,7 @@ func (rec Record) Payload() []byte {
 	}
 	return pd
 }
+*/
 
 /*
 func selectUAPConditional(category uint8, field []byte) []_uap.DataField {

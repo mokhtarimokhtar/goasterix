@@ -86,5 +86,67 @@ func TestTypeFieldString(t *testing.T) {
 			t.Logf(util.MsgSuccessInString, tc.Name, res, tc.output)
 		}
 	}
-
 }
+
+/*
+func TestPayloadDataItemPayload(t *testing.T) {
+	// setup
+	type testCase struct {
+		Name     string
+		dataItem DataItem
+		output   []byte
+	}
+	// Arrange
+	dataSet := []testCase{
+		{
+			Name: "testcase 1",
+			dataItem: &Fixed{
+				Base: Base{
+					Type: FixedField,
+				},
+				Data: []byte{0x01, 0x02, 0x03},
+				Size: 3,
+			},
+			output: []byte{0x01, 0x02, 0x03},
+		},
+		{
+			Name: "testcase 2",
+			dataItem: &Extended{
+				Base: Base{
+					Type: ExtendedField,
+				},
+				PrimaryItemSize:   1,
+				SecondaryItemSize: 1,
+				Primary:           []byte{0x01},
+				Secondary:         []byte{0x01, 0x03, 0x04},
+			},
+			output: []byte{0x01, 0x01, 0x03, 0x04},
+		},
+		{
+			Name: "testcase 3",
+			dataItem: &Repetitive{
+				Base: Base{
+					Type: RepetitiveField,
+				},
+				SubItemSize: 2,
+				Rep:         3,
+				Data:        []byte{0x01, 0x03, 0x02, 0x01, 0x03, 0x02},
+			},
+			output: []byte{0x03, 0x01, 0x03, 0x02, 0x01, 0x03, 0x02},
+		},
+	}
+	for _, tc := range dataSet {
+		p := new(PayloadDataItem)
+
+		// Act
+		p.Payload(tc.dataItem)
+
+		// Assert
+		if bytes.Equal(p.Data, tc.output) == false {
+			t.Errorf(util.MsgFailInHex, tc.Name, p.Data, tc.output)
+		} else {
+			t.Logf(util.MsgSuccessInHex, tc.Name, p.Data, tc.output)
+		}
+	}
+}
+*/

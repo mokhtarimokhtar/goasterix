@@ -21,9 +21,9 @@ const (
 	I060CDesc  = "Compound Repetitive type field for test"
 	I060DName  = "I026/060/D"
 	I060DDesc  = "Compound Explicit type field for test"
-	I060REName = "I060REName"
+	I060REName = "I060RE"
 	I060REDesc = "Reserved Expansion type field for test"
-	I060SPName = "I060SPName"
+	I060SPName = "I060SP"
 	I060SPDesc = "Special Purpose type field for test"
 )
 
@@ -40,14 +40,14 @@ var CatForTest = item.UAP{
 				Type:         item.FixedField,
 			},
 			Size: 2,
-			SubItems: []item.SubItemBits{
+			SubItems: []item.SubItem{
 				{
-					Name: "SAC",
+					Name: "SUB-A",
 					Type: item.FromToField,
 					From: 16, To: 9,
 				},
 				{
-					Name: "SIC",
+					Name: "SUB-B",
 					Type: item.FromToField,
 					From: 8, To: 1,
 				},
@@ -61,32 +61,23 @@ var CatForTest = item.UAP{
 				Type:         item.ExtendedField,
 			},
 			PrimaryItemSize:   1,
-			SecondaryItemSize: 2,
-			/*
-				PrimarySubItems: []item.SubItem{
-					&item.SubItemFromTo{
-						Name: "TYP",
-						Type: item.FromToField,
-						Pos:  item.BitPosition{From: 8, To: 6},
-					},
-					&item.SubItemBit{Name: "SIM", Type: item.BitField, Pos: item.BitPosition{Bit: 5}},
-					&item.SubItemBit{Name: "RDP", Type: item.BitField, Pos: item.BitPosition{Bit: 4}},
-					&item.SubItemBit{Name: "SPI", Type: item.BitField, Pos: item.BitPosition{Bit: 3}},
-					&item.SubItemBit{Name: "RAB", Type: item.BitField, Pos: item.BitPosition{Bit: 2}},
-				},
-				SecondarySubItems: []item.SubItem{
-					&item.SubItemBit{Name: "TST", Type: item.BitField, Pos: item.BitPosition{Bit: 8}},
-					&item.SubItemBit{Name: "ERR", Type: item.BitField, Pos: item.BitPosition{Bit: 7}},
-					&item.SubItemBit{Name: "XPP", Type: item.BitField, Pos: item.BitPosition{Bit: 6}},
-					&item.SubItemBit{Name: "ME", Type: item.BitField, Pos: item.BitPosition{Bit: 5}},
-					&item.SubItemBit{Name: "MI", Type: item.BitField, Pos: item.BitPosition{Bit: 4}},
-					&item.SubItemFromTo{
-						Name: "FOE/FRI",
-						Type: item.FromToField,
-						Pos:  item.BitPosition{From: 3, To: 2},
-					},
-				},
-			*/
+			SecondaryItemSize: 1,
+			SubItems: []item.SubItem{
+				{Name: "SUB-A", Type: item.FromToField, From: 8, To: 6},
+				{Name: "SUB-B", Type: item.BitField, Bit: 5},
+				{Name: "SUB-C", Type: item.BitField, Bit: 4},
+				{Name: "SUB-D", Type: item.BitField, Bit: 3},
+				{Name: "SUB-E", Type: item.BitField, Bit: 2},
+				{Name: "FX", Type: item.BitField, Bit: 1},
+
+				{Name: "SUB-F", Type: item.BitField, Bit: 8},
+				{Name: "SUB-G", Type: item.BitField, Bit: 7},
+				{Name: "SUB-H", Type: item.BitField, Bit: 6},
+				{Name: "SUB-I", Type: item.BitField, Bit: 5},
+				{Name: "SUB-J", Type: item.BitField, Bit: 4},
+				{Name: "SUB-K", Type: item.FromToField, From: 3, To: 2},
+				{Name: "FX", Type: item.BitField, Bit: 1},
+			},
 		},
 		&item.Explicit{
 			Base: item.Base{
@@ -104,19 +95,19 @@ var CatForTest = item.UAP{
 				Type:         item.RepetitiveField,
 			},
 			SubItemSize: 3,
-			SubItems: []item.SubItemBits{
+			SubItems: []item.SubItem{
 				{
-					Name: "DOP",
+					Name: "SUB-A",
 					Type: item.FromToField,
 					From: 24, To: 17,
 				},
 				{
-					Name: "AMB",
+					Name: "SUB-B",
 					Type: item.FromToField,
 					From: 16, To: 9,
 				},
 				{
-					Name: "FRQ",
+					Name: "SUB-C",
 					Type: item.FromToField,
 					From: 8, To: 1,
 				},
@@ -139,6 +130,13 @@ var CatForTest = item.UAP{
 						Type:         item.FixedField,
 					},
 					Size: 1,
+					SubItems: []item.SubItem{
+						{
+							Name: "SUB-A",
+							Type: item.FromToField,
+							From: 8, To: 1,
+						},
+					},
 				},
 				&item.Spare{Base: item.Base{FRN: item.FRN2}},
 				&item.Extended{
@@ -150,6 +148,14 @@ var CatForTest = item.UAP{
 					},
 					PrimaryItemSize:   1,
 					SecondaryItemSize: 1,
+					SubItems: []item.SubItem{
+						{Name: "SUB-A", Type: item.FromToField, From: 8, To: 2},
+						{Name: "FX", Type: item.BitField, Bit: 1},
+
+						{Name: "SUB-B", Type: item.BitField, Bit: 8},
+						{Name: "SUB-C", Type: item.FromToField, From: 7, To: 2},
+						{Name: "FX", Type: item.BitField, Bit: 1},
+					},
 				},
 				&item.Repetitive{
 					Base: item.Base{
@@ -159,6 +165,13 @@ var CatForTest = item.UAP{
 						Type:         item.RepetitiveField,
 					},
 					SubItemSize: 2,
+					SubItems: []item.SubItem{
+						{
+							Name: "SUB-A",
+							Type: item.FromToField,
+							From: 16, To: 1,
+						},
+					},
 				},
 				&item.Explicit{
 					Base: item.Base{

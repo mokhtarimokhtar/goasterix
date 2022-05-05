@@ -73,6 +73,28 @@ func TestSpareString(t *testing.T) {
 	}
 }
 
+func TestSpareGetSubItems(t *testing.T) {
+	// Arrange
+	input := &Spare{
+		Base{
+			FRN:  1,
+			Type: SpareField,
+		},
+	}
+	var output []SubItem
+
+	// Act
+	res := input.GetSubItems()
+
+	// Assert
+	if reflect.DeepEqual(res, output) == false {
+		t.Errorf(util.MsgFailInValue, "", res, output)
+	} else {
+		t.Logf(util.MsgSuccessInValue, "", res, output)
+	}
+}
+
+/*
 func TestSparePayload(t *testing.T) {
 	// Arrange
 	input := &Spare{
@@ -92,3 +114,4 @@ func TestSparePayload(t *testing.T) {
 		t.Logf(util.MsgSuccessInValue, "", res, output)
 	}
 }
+*/

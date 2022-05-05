@@ -14,7 +14,8 @@ func (s *Spare) Clone() DataItem {
 		Base: s.Base,
 	}
 }
-func (s Spare) Payload() []byte {
+
+func (s Spare) GetSubItems() []SubItem {
 	return nil
 }
 func (s Spare) String() string {
@@ -23,3 +24,8 @@ func (s Spare) String() string {
 func (s Spare) Reader(rb *bytes.Reader) error {
 	return nil
 }
+
+/*
+func (s Spare) Payload() []byte {
+	return nil
+}*/

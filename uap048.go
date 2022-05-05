@@ -2,9 +2,38 @@ package goasterix
 
 import "github.com/mokhtarimokhtar/goasterix/item"
 
+const (
+	I048130Name    = "I048/130"
+	I048130Desc    = "Radar Plot Characteristics"
+	I048130SRL     = "SRL"
+	I048130SRLDesc = "SSR plot runlength"
+	I048130SRR     = "SRR"
+	I048130SRRDesc = "Number of received replies"
+	I048130SAM     = "SAM"
+	I048130SAMDesc = "Amplitude of received replies for M(SSR)"
+	I048130PRL     = "PRL"
+	I048130PRLDesc = "PSR plot runlength"
+	I048130PAM     = "PAM"
+	I048130PAMDesc = "PSR amplitude"
+	I048130RPD     = "RPD"
+	I048130RPDDesc = "Difference in Range between PSR and SSR plot"
+	I048130APD     = "APD"
+	I048130APDDesc = "Difference in Azimuth between PSR and SSR plot"
+
+	I048240Name  = "I048/240"
+	I048240Desc  = "Aircraft Identification"
+	I048240Char1 = "char1"
+	I048240Char2 = "char2"
+	I048240Char3 = "char3"
+	I048240Char4 = "char4"
+	I048240Char5 = "char5"
+	I048240Char6 = "char6"
+	I048240Char7 = "char7"
+	I048240Char8 = "char8"
+)
+
 // Cat048V127 User Application Profile
 // version 1.27
-
 var Cat048V127 = item.UAP{
 	Name:     "cat048_1.27",
 	Category: 48,
@@ -18,7 +47,7 @@ var Cat048V127 = item.UAP{
 				Type:         item.FixedField,
 			},
 			Size: 2,
-			SubItems: []item.SubItemBits{
+			SubItems: []item.SubItem{
 				{
 					Name: "SAC",
 					Type: item.FromToField,
@@ -39,6 +68,12 @@ var Cat048V127 = item.UAP{
 				Type:         item.FixedField,
 			},
 			Size: 3,
+			SubItems: []item.SubItem{
+				{
+					Type: item.FromToField,
+					From: 24, To: 1,
+				},
+			},
 		},
 		&item.Extended{
 			Base: item.Base{
@@ -49,6 +84,21 @@ var Cat048V127 = item.UAP{
 			},
 			PrimaryItemSize:   1,
 			SecondaryItemSize: 1,
+			SubItems: []item.SubItem{
+				{Name: "TYP", Type: item.FromToField, From: 8, To: 6},
+				{Name: "SIM", Type: item.BitField, Bit: 5},
+				{Name: "RDP", Type: item.BitField, Bit: 4},
+				{Name: "SPI", Type: item.BitField, Bit: 3},
+				{Name: "RAB", Type: item.BitField, Bit: 2},
+				{Name: "FX", Type: item.BitField, Bit: 1},
+				{Name: "TST", Type: item.BitField, Bit: 8},
+				{Name: "ERR", Type: item.BitField, Bit: 7},
+				{Name: "XPP", Type: item.BitField, Bit: 6},
+				{Name: "ME", Type: item.BitField, Bit: 5},
+				{Name: "MI", Type: item.BitField, Bit: 4},
+				{Name: "FOE/FRI", Type: item.FromToField, From: 3, To: 2},
+				{Name: "FX", Type: item.BitField, Bit: 1},
+			},
 		},
 		&item.Fixed{
 			Base: item.Base{
@@ -58,6 +108,10 @@ var Cat048V127 = item.UAP{
 				Type:         item.FixedField,
 			},
 			Size: 4,
+			SubItems: []item.SubItem{
+				{Name: "RHO", Type: item.FromToField, From: 32, To: 17},
+				{Name: "THETA", Type: item.FromToField, From: 16, To: 1},
+			},
 		},
 		&item.Fixed{
 			Base: item.Base{
@@ -67,6 +121,12 @@ var Cat048V127 = item.UAP{
 				Type:         item.FixedField,
 			},
 			Size: 2,
+			SubItems: []item.SubItem{
+				{Name: "V", Type: item.BitField, Bit: 16},
+				{Name: "G", Type: item.BitField, Bit: 15},
+				{Name: "L", Type: item.BitField, Bit: 14},
+				{Name: "Mode-3/A", Type: item.FromToField, From: 12, To: 1},
+			},
 		},
 		&item.Fixed{
 			Base: item.Base{
@@ -76,77 +136,103 @@ var Cat048V127 = item.UAP{
 				Type:         item.FixedField,
 			},
 			Size: 2,
+			SubItems: []item.SubItem{
+				{Name: "V", Type: item.BitField, Bit: 16},
+				{Name: "G", Type: item.BitField, Bit: 15},
+				{Name: "LEVEL", Type: item.FromToField, From: 14, To: 1},
+			},
 		},
 		&item.Compound{
 			Base: item.Base{
 				FRN:          item.FRN7,
-				DataItemName: "I048/130",
-				Description:  "Radar Plot Characteristics",
+				DataItemName: I048130Name,
+				Description:  I048130Desc,
 				Type:         item.CompoundField,
 			},
 			Secondary: []item.DataItem{
 				&item.Fixed{
 					Base: item.Base{
 						FRN:          item.FRN1,
-						DataItemName: "SRL",
-						Description:  "SSR plot runlength",
+						DataItemName: I048130SRL,
+						Description:  I048130SRLDesc,
 						Type:         item.FixedField,
 					},
 					Size: 1,
+					SubItems: []item.SubItem{
+						{Name: I048130SRL, Type: item.FromToField, From: 8, To: 1},
+					},
 				},
 				&item.Fixed{
 					Base: item.Base{
 						FRN:          item.FRN2,
-						DataItemName: "SRR",
-						Description:  "Number of received replies",
+						DataItemName: I048130SRR,
+						Description:  I048130SRRDesc,
 						Type:         item.FixedField,
 					},
 					Size: 1,
+					SubItems: []item.SubItem{
+						{Name: I048130SRR, Type: item.FromToField, From: 8, To: 1},
+					},
 				},
 				&item.Fixed{
 					Base: item.Base{
 						FRN:          item.FRN3,
-						DataItemName: "SAM",
-						Description:  "Amplitude of received replies for M(SSR)",
+						DataItemName: I048130SAM,
+						Description:  I048130SAMDesc,
 						Type:         item.FixedField,
 					},
 					Size: 1,
+					SubItems: []item.SubItem{
+						{Name: I048130SAM, Type: item.FromToField, From: 8, To: 1},
+					},
 				},
 				&item.Fixed{
 					Base: item.Base{
 						FRN:          item.FRN4,
-						DataItemName: "PRL",
-						Description:  "PSR plot runlength",
+						DataItemName: I048130PRL,
+						Description:  I048130PRLDesc,
 						Type:         item.FixedField,
 					},
 					Size: 1,
+					SubItems: []item.SubItem{
+						{Name: I048130PRL, Type: item.FromToField, From: 8, To: 1},
+					},
 				},
 				&item.Fixed{
 					Base: item.Base{
 						FRN:          item.FRN5,
-						DataItemName: "PAM",
-						Description:  "PSR amplitude",
+						DataItemName: I048130PAM,
+						Description:  I048130PAMDesc,
 						Type:         item.FixedField,
 					},
 					Size: 1,
+					SubItems: []item.SubItem{
+						{Name: I048130PAM, Type: item.FromToField, From: 8, To: 1},
+					},
 				},
 				&item.Fixed{
 					Base: item.Base{
 						FRN:          item.FRN6,
-						DataItemName: "RPD",
-						Description:  "Difference in Range between PSR and SSR plot",
+						DataItemName: I048130RPD,
+						Description:  I048130RPDDesc,
 						Type:         item.FixedField,
 					},
 					Size: 1,
+					SubItems: []item.SubItem{
+						{Name: I048130RPD, Type: item.FromToField, From: 8, To: 1},
+					},
 				},
 				&item.Fixed{
 					Base: item.Base{
 						FRN:          item.FRN7,
-						DataItemName: "APD",
-						Description:  "Difference in Azimuth between PSR and SSR plot",
+						DataItemName: I048130APD,
+						Description:  I048130APDDesc,
 						Type:         item.FixedField,
 					},
 					Size: 1,
+					SubItems: []item.SubItem{
+						{Name: I048130APD, Type: item.FromToField, From: 8, To: 1},
+					},
 				},
 			},
 		},
@@ -159,15 +245,28 @@ var Cat048V127 = item.UAP{
 				Type:         item.FixedField,
 			},
 			Size: 3,
+			SubItems: []item.SubItem{
+				{Name: "AIRCRAFT ADDRESS", Type: item.FromToField, From: 24, To: 1},
+			},
 		},
 		&item.Fixed{
 			Base: item.Base{
 				FRN:          item.FRN9,
-				DataItemName: "I048/240",
-				Description:  "Aircraft Identification",
+				DataItemName: I048240Name,
+				Description:  I048240Desc,
 				Type:         item.FixedField,
 			},
 			Size: 6,
+			SubItems: []item.SubItem{
+				{Name: I048240Char1, Type: item.FromToField, From: 48, To: 43},
+				{Name: I048240Char2, Type: item.FromToField, From: 42, To: 37},
+				{Name: I048240Char3, Type: item.FromToField, From: 36, To: 31},
+				{Name: I048240Char4, Type: item.FromToField, From: 30, To: 25},
+				{Name: I048240Char5, Type: item.FromToField, From: 24, To: 19},
+				{Name: I048240Char6, Type: item.FromToField, From: 18, To: 13},
+				{Name: I048240Char7, Type: item.FromToField, From: 12, To: 7},
+				{Name: I048240Char8, Type: item.FromToField, From: 6, To: 1},
+			},
 		},
 		&item.Repetitive{
 			Base: item.Base{
@@ -177,6 +276,12 @@ var Cat048V127 = item.UAP{
 				Type:         item.RepetitiveField,
 			},
 			SubItemSize: 8,
+			SubItems: []item.SubItem{
+				{Name: "MBData", Type: item.FromToField, From: 64, To: 1},
+				//{Name: "MBData", Type: item.FromToField, From: 64, To: 9},
+				//{Name: "BDS1", Type: item.FromToField, From: 8, To: 5},
+				//{Name: "BDS2", Type: item.FromToField, From: 4, To: 1},
+			},
 		},
 		&item.Fixed{
 			Base: item.Base{
@@ -186,6 +291,9 @@ var Cat048V127 = item.UAP{
 				Type:         item.FixedField,
 			},
 			Size: 2,
+			SubItems: []item.SubItem{
+				{Name: "TRACK NUMBER", Type: item.FromToField, From: 12, To: 1},
+			},
 		},
 		&item.Fixed{
 			Base: item.Base{
@@ -195,6 +303,10 @@ var Cat048V127 = item.UAP{
 				Type:         item.FixedField,
 			},
 			Size: 4,
+			SubItems: []item.SubItem{
+				{Name: "X-Component", Type: item.FromToField, From: 32, To: 17},
+				{Name: "Y-Component", Type: item.FromToField, From: 16, To: 1},
+			},
 		},
 		&item.Fixed{
 			Base: item.Base{
@@ -204,6 +316,10 @@ var Cat048V127 = item.UAP{
 				Type:         item.FixedField,
 			},
 			Size: 4,
+			SubItems: []item.SubItem{
+				{Name: "GROUNDSPEED", Type: item.FromToField, From: 32, To: 17},
+				{Name: "HEADING", Type: item.FromToField, From: 16, To: 1},
+			},
 		},
 		&item.Extended{
 			Base: item.Base{
@@ -214,6 +330,20 @@ var Cat048V127 = item.UAP{
 			},
 			PrimaryItemSize:   1,
 			SecondaryItemSize: 1,
+			SubItems: []item.SubItem{
+				{Name: "CNF", Type: item.BitField, Bit: 8},
+				{Name: "RAD", Type: item.FromToField, From: 7, To: 6},
+				{Name: "DOU", Type: item.BitField, Bit: 5},
+				{Name: "MAH", Type: item.BitField, Bit: 4},
+				{Name: "CDM", Type: item.FromToField, From: 3, To: 2},
+				{Name: "FX", Type: item.BitField, Bit: 1},
+
+				{Name: "TRE", Type: item.BitField, Bit: 8},
+				{Name: "GHO", Type: item.BitField, Bit: 7},
+				{Name: "SUP", Type: item.BitField, Bit: 6},
+				{Name: "TCC", Type: item.BitField, Bit: 5},
+				{Name: "FX", Type: item.BitField, Bit: 1},
+			},
 		},
 		// FX
 		&item.Fixed{
@@ -224,6 +354,12 @@ var Cat048V127 = item.UAP{
 				Type:         item.FixedField,
 			},
 			Size: 4,
+			SubItems: []item.SubItem{
+				{Name: "SigmaX", Type: item.FromToField, From: 32, To: 25},
+				{Name: "SigmaY", Type: item.FromToField, From: 24, To: 17},
+				{Name: "SigmaV", Type: item.FromToField, From: 16, To: 9},
+				{Name: "SigmaH", Type: item.FromToField, From: 8, To: 1},
+			},
 		},
 		&item.Extended{
 			Base: item.Base{
@@ -234,6 +370,9 @@ var Cat048V127 = item.UAP{
 			},
 			PrimaryItemSize:   1,
 			SecondaryItemSize: 1,
+			SubItems: []item.SubItem{
+				{Name: "Code", Type: item.FromToField, From: 8, To: 2},
+			},
 		},
 		&item.Fixed{
 			Base: item.Base{
@@ -243,6 +382,9 @@ var Cat048V127 = item.UAP{
 				Type:         item.FixedField,
 			},
 			Size: 2,
+			SubItems: []item.SubItem{
+				{Name: "QXi", Type: item.FromToField, From: 12, To: 1},
+			},
 		},
 		&item.Fixed{
 			Base: item.Base{
@@ -252,6 +394,12 @@ var Cat048V127 = item.UAP{
 				Type:         item.FixedField,
 			},
 			Size: 4,
+			SubItems: []item.SubItem{
+				{Name: "V", Type: item.BitField, Bit: 32},
+				{Name: "G", Type: item.BitField, Bit: 31},
+				{Name: "Mode-C", Type: item.FromToField, From: 28, To: 17},
+				{Name: "QXi", Type: item.FromToField, From: 12, To: 1},
+			},
 		},
 		&item.Fixed{
 			Base: item.Base{
@@ -261,6 +409,9 @@ var Cat048V127 = item.UAP{
 				Type:         item.FixedField,
 			},
 			Size: 2,
+			SubItems: []item.SubItem{
+				{Name: "3D-Height", Type: item.FromToField, From: 14, To: 1},
+			},
 		},
 		&item.Compound{
 			Base: item.Base{
@@ -278,6 +429,10 @@ var Cat048V127 = item.UAP{
 						Type:         item.FixedField,
 					},
 					Size: 2,
+					SubItems: []item.SubItem{
+						{Name: "D", Type: item.BitField, Bit: 16},
+						{Name: "CAL", Type: item.FromToField, From: 10, To: 1},
+					},
 				},
 				&item.Repetitive{
 					Base: item.Base{
@@ -287,22 +442,10 @@ var Cat048V127 = item.UAP{
 						Type:         item.RepetitiveField,
 					},
 					SubItemSize: 6,
-					SubItems: []item.SubItemBits{
-						{
-							Name: "DOP",
-							Type: item.FromToField,
-							From: 48, To: 33,
-						},
-						{
-							Name: "AMB",
-							Type: item.FromToField,
-							From: 32, To: 17,
-						},
-						{
-							Name: "FRQ",
-							Type: item.FromToField,
-							From: 16, To: 1,
-						},
+					SubItems: []item.SubItem{
+						{Name: "DOP", Type: item.FromToField, From: 48, To: 33},
+						{Name: "AMB", Type: item.FromToField, From: 32, To: 17},
+						{Name: "FRQ", Type: item.FromToField, From: 16, To: 1},
 					},
 				},
 				&item.Spare{Base: item.Base{FRN: item.FRN3}},
@@ -320,6 +463,16 @@ var Cat048V127 = item.UAP{
 				Type:         item.FixedField,
 			},
 			Size: 2,
+			SubItems: []item.SubItem{
+				{Name: "COM", Type: item.FromToField, From: 16, To: 14},
+				{Name: "STAT", Type: item.FromToField, From: 13, To: 11},
+				{Name: "SI", Type: item.BitField, Bit: 10},
+				{Name: "MSSC", Type: item.BitField, Bit: 8},
+				{Name: "ARC", Type: item.BitField, Bit: 7},
+				{Name: "AIC", Type: item.BitField, Bit: 6},
+				{Name: "B1A", Type: item.BitField, Bit: 5},
+				{Name: "B1B", Type: item.FromToField, From: 4, To: 1},
+			},
 		},
 		// FX
 		&item.Fixed{
@@ -330,6 +483,9 @@ var Cat048V127 = item.UAP{
 				Type:         item.FixedField,
 			},
 			Size: 7,
+			SubItems: []item.SubItem{
+				{Name: "ACAS-RA", Type: item.FromToField, From: 56, To: 1},
+			},
 		},
 		&item.Fixed{
 			Base: item.Base{
@@ -339,6 +495,12 @@ var Cat048V127 = item.UAP{
 				Type:         item.FixedField,
 			},
 			Size: 1,
+			SubItems: []item.SubItem{
+				{Name: "V", Type: item.BitField, Bit: 8},
+				{Name: "G", Type: item.BitField, Bit: 7},
+				{Name: "L", Type: item.BitField, Bit: 6},
+				{Name: "Mode-1", Type: item.FromToField, From: 5, To: 1},
+			},
 		},
 		&item.Fixed{
 			Base: item.Base{
@@ -348,6 +510,12 @@ var Cat048V127 = item.UAP{
 				Type:         item.FixedField,
 			},
 			Size: 2,
+			SubItems: []item.SubItem{
+				{Name: "V", Type: item.BitField, Bit: 16},
+				{Name: "G", Type: item.BitField, Bit: 15},
+				{Name: "L", Type: item.BitField, Bit: 14},
+				{Name: "Mode-2", Type: item.FromToField, From: 12, To: 1},
+			},
 		},
 		&item.Fixed{
 			Base: item.Base{
@@ -357,6 +525,9 @@ var Cat048V127 = item.UAP{
 				Type:         item.FixedField,
 			},
 			Size: 1,
+			SubItems: []item.SubItem{
+				{Name: "QXi", Type: item.FromToField, From: 5, To: 1},
+			},
 		},
 		&item.Fixed{
 			Base: item.Base{
@@ -366,6 +537,9 @@ var Cat048V127 = item.UAP{
 				Type:         item.FixedField,
 			},
 			Size: 2,
+			SubItems: []item.SubItem{
+				{Name: "QXi", Type: item.FromToField, From: 12, To: 1},
+			},
 		},
 		&item.SpecialPurpose{
 			Base: item.Base{

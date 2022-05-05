@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestSubItemBitsReaderOneBitType(t *testing.T) {
+func TestSubItemReaderOneBitType(t *testing.T) {
 	// setup
 	type testCase struct {
 		Name   string
@@ -92,7 +92,7 @@ func TestSubItemBitsReaderOneBitType(t *testing.T) {
 
 	for _, tc := range dataSet {
 		// Arrange
-		sub := new(SubItemBits)
+		sub := new(SubItem)
 		sub.Type = BitField
 		sub.Bit = tc.Pos
 
@@ -114,7 +114,7 @@ func TestSubItemBitsReaderOneBitType(t *testing.T) {
 
 }
 
-func TestSubItemBitsReaderFromToBitType(t *testing.T) {
+func TestSubItemReaderFromToBitType(t *testing.T) {
 	type testCase struct {
 		Name   string
 		input  []byte
@@ -226,7 +226,7 @@ func TestSubItemBitsReaderFromToBitType(t *testing.T) {
 	}
 	for _, tc := range dataSet {
 		// Arrange
-		sub := new(SubItemBits)
+		sub := new(SubItem)
 		sub.Type = FromToField
 		sub.From = tc.From
 		sub.To = tc.To

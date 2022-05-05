@@ -11,16 +11,18 @@ import (
 type Explicit struct {
 	Base
 	Len      uint8
-	Data     []byte
-	SubItems []SubItemBits
+	SubItems []SubItem
 }
 
 func (e *Explicit) Clone() DataItem {
 	return &Explicit{
 		Base:     e.Base,
-		Len:      e.Len,
 		SubItems: e.SubItems,
 	}
+}
+
+func (e Explicit) GetSubItems() []SubItem {
+	return e.SubItems
 }
 
 // Reader extracts a number of bytes define by the first byte.
@@ -31,16 +33,45 @@ func (e *Explicit) Reader(rb *bytes.Reader) error {
 		return err
 	}
 
-	e.Data = make([]byte, e.Len-1) // tmp is for if err case then e.Data = nil
-	err = binary.Read(rb, binary.BigEndian, &e.Data)
+	e.SubItems = make([]SubItem, 0, 1)
+	tmp := new(SubItem)
+	tmp.Type = FromToField
+	tmp.From = (e.Len - 1) * 8
+	tmp.To = 1
+	tmp.Data = make([]byte, e.Len-1)
+
+	err = binary.Read(rb, binary.BigEndian, &tmp.Data)
 	if err != nil {
-		e.Data = nil
+		e.SubItems = nil
 		return err
 	}
-
+	e.SubItems = append(e.SubItems, *tmp)
 	return err
 }
 
+// String implements fmt.Stringer in hexadecimal
+func (e Explicit) String() string {
+	var buf bytes.Buffer
+	tmp := []byte{e.Len}
+
+	buf.Reset()
+	buf.WriteString(e.Base.DataItemName)
+	buf.WriteByte(':')
+
+	buf.WriteByte('[')
+	buf.WriteString("len:")
+	buf.WriteString(hex.EncodeToString(tmp))
+	buf.WriteByte(']')
+
+	if e.SubItems != nil {
+		buf.WriteByte('[')
+		buf.WriteString(e.SubItems[0].String())
+		buf.WriteByte(']')
+	}
+	return buf.String()
+}
+
+/*
 // Payload returns this dataField as bytes.
 func (e Explicit) Payload() []byte {
 	var p []byte
@@ -48,17 +79,4 @@ func (e Explicit) Payload() []byte {
 	p = append(p, e.Data...)
 	return p
 }
-
-// String implements fmt.Stringer in hexadecimal
-func (e Explicit) String() string {
-	var buf bytes.Buffer
-	buf.Reset()
-
-	tmp := []byte{e.Len}
-	tmp = append(tmp, e.Data...)
-
-	buf.WriteString(e.Base.DataItemName)
-	buf.WriteByte(':')
-	buf.WriteString(hex.EncodeToString(tmp))
-	return buf.String()
-}
+*/

@@ -10,16 +10,16 @@ classDiagram
     Base "1" ..> "1" TypeField: depends
     
     Fixed "1" o-- "1..*" DataItem: contains
-    Fixed "1" o-- "1..*" SubItemBits: contains
+    Fixed "1" o-- "1..*" SubItem: contains
     
     Extended --|> DataItem: implements
-    Extended "1" o-- "1..*" SubItemBits: contains
+    Extended "1" o-- "1..*" SubItem: contains
     
     Explicit --|> DataItem: implements
-    Explicit "1" o-- "1..*" SubItemBits: contains
+    Explicit "1" o-- "1..*" SubItem: contains
     
     Repetitive --|> DataItem: implements
-    Repetitive "1" o-- "1..*" SubItemBits: contains
+    Repetitive "1" o-- "1..*" SubItem: contains
     
     Compound --|> DataItem: implements
     Compound "1" o-- "1..*" DataItem: contains
@@ -83,7 +83,7 @@ classDiagram
         +~Base~ Base
         +int Size
         +List~byte~ Data
-        +List~SubItemBits~ SubItems
+        +List~SubItem~ SubItems
         +Reader(~bytes.Reader~) ~error~
         +Payload() List~byte~
         +String() String
@@ -96,8 +96,7 @@ classDiagram
 	    +int SecondaryItemSize
         +List~byte~ Primary
         +List~byte~ Secondary
-        +List~SubItemBits~ PrimarySubItems
-        +List~SubItemBits~ SecondarySubItems
+        +List~SubItem~ SubItems
         +Reader(~bytes.Reader~) ~error~
         +Payload() List~byte~
         +String() String
@@ -108,7 +107,7 @@ classDiagram
         +~Base~ Base
         +int Len
         +List~byte~ Data
-        +List~SubItemBits~ SubItems
+        +List~SubItem~ SubItems
         +Reader(~bytes.Reader~) ~error~
         +Payload() List~byte~
         +String() String
@@ -120,7 +119,7 @@ classDiagram
         +int Rep
         +int SubItemSize
         +List~byte~ Data
-        +List~SubItemBits~ SubItems
+        +List~SubItem~ SubItems
         +Reader(~bytes.Reader~) ~error~
         +Payload() List~byte~
         +String() String
@@ -137,7 +136,7 @@ classDiagram
         +Clone() ~DataItem~
     }
     
-    class SubItemBits{
+    class SubItem{
         +string Name
         +~TypeField~ Type
         +int Bit
@@ -145,7 +144,7 @@ classDiagram
         +int To  
         +List~byte~ Data
         +Reader(~byte~) ~error~
-        +Clone() ~SubItemBits~
+        +Clone() ~SubItem~
         +String() string
     }
 ```

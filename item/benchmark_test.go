@@ -25,7 +25,7 @@ func BenchmarkFspecIndex(b *testing.B) {
 func BenchmarkSubItemBitReader(b *testing.B) {
 	input := []byte{0x10, 0x00, 0x00, 0x00}
 	for n := 0; n < b.N; n++ {
-		sub := new(SubItemBits)
+		sub := new(SubItem)
 		sub.Name = "item1"
 		sub.Type = BitField
 		sub.Bit = 29
@@ -36,7 +36,7 @@ func BenchmarkSubItemBitReader(b *testing.B) {
 func BenchmarkSubItemFromToReader(b *testing.B) {
 	input := []byte{0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff}
 	for n := 0; n < b.N; n++ {
-		sub := new(SubItemBits)
+		sub := new(SubItem)
 		sub.Name = "item1"
 		sub.Type = FromToField
 		sub.From = 27

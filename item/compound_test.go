@@ -17,6 +17,7 @@ func TestCompoundReader(t *testing.T) {
 		output DataItem
 		err    error
 	}
+
 	// Arrange
 	dataSet := []testCase{
 		{
@@ -34,6 +35,14 @@ func TestCompoundReader(t *testing.T) {
 							Type: FixedField,
 						},
 						Size: 1,
+						SubItems: []SubItem{
+							{
+								Name: "SUB-A",
+								Type: FromToField,
+								From: 8,
+								To:   1,
+							},
+						},
 					},
 				},
 			},
@@ -51,108 +60,145 @@ func TestCompoundReader(t *testing.T) {
 							Type: FixedField,
 						},
 						Size: 1,
-						Data: []byte{0x01},
+						SubItems: []SubItem{
+							{
+								Name: "SUB-A",
+								Type: FromToField,
+								From: 8,
+								To:   1,
+								Data: []byte{0x01},
+							},
+						},
 					},
 				},
 			},
 		},
 		{
 			Name:  "testCase 2",
-			input: "d4 01 01fe 0201020102 030102",
+			input: "40 01fe",
 			item: &Compound{
 				Base: Base{
 					FRN:  16,
 					Type: CompoundField,
 				},
 				Secondary: []DataItem{
-					&Fixed{
-						Base: Base{
-							FRN:  1,
-							Type: FixedField,
-						},
-						Size: 1,
-					},
+					&Spare{Base: Base{FRN: 1, Type: SpareField}},
 					&Extended{
-						Base: Base{
-							FRN:  2,
-							Type: ExtendedField,
-						},
+						Base:              Base{FRN: 2, Type: ExtendedField},
 						PrimaryItemSize:   1,
 						SecondaryItemSize: 1,
-					},
-					&Fixed{
-						Base: Base{
-							FRN:  3,
-							Type: FixedField,
-						},
-						Size: 1,
-					},
-					&Repetitive{
-						Base: Base{
-							FRN:  4,
-							Type: RepetitiveField,
-						},
-						SubItemSize: 2,
-					},
-					&Spare{Base{
-						FRN: 5,
-					}},
-					&Explicit{
-						Base: Base{
-							FRN:  6,
-							Type: ExplicitField,
+						SubItems: []SubItem{
+							{Name: "SUB-A", Type: FromToField, From: 8, To: 2},
+							{Name: "FX", Type: BitField, Bit: 1},
+							{Name: "SUB-B", Type: BitField, Bit: 8},
+							{Name: "SUB-C", Type: FromToField, From: 7, To: 2},
+							{Name: "FX", Type: BitField, Bit: 1},
 						},
 					},
 				},
 			},
-			err: nil,
 			output: &Compound{
 				Base: Base{
 					FRN:  16,
 					Type: CompoundField,
 				},
-				Primary: []byte{0xd4},
+				Primary: []byte{0x40},
 				Secondary: []DataItem{
-					&Fixed{
-						Base: Base{
-							FRN:  1,
-							Type: FixedField,
-						},
-						Size: 1,
-						Data: []byte{0x01},
-					},
 					&Extended{
-						Base: Base{
-							FRN:  2,
-							Type: ExtendedField,
-						},
+						Base:              Base{FRN: 2, Type: ExtendedField},
 						PrimaryItemSize:   1,
 						SecondaryItemSize: 1,
-						Primary:           []byte{0x01},
-						Secondary:         []byte{0xfe},
-					},
-					&Repetitive{
-						Base: Base{
-							FRN:  4,
-							Type: RepetitiveField,
+						SubItems: []SubItem{
+							{Name: "SUB-A", Type: FromToField, From: 8, To: 2, Data: []byte{0x00}},
+							{Name: "SUB-B", Type: BitField, Bit: 8, Data: []byte{0x01}},
+							{Name: "SUB-C", Type: FromToField, From: 7, To: 2, Data: []byte{0x3f}},
 						},
-						SubItemSize: 2,
-						Rep:         0x02,
-						Data:        []byte{0x01, 0x02, 0x01, 0x02},
-					},
-					&Explicit{
-						Base: Base{
-							FRN:  6,
-							Type: ExplicitField,
-						},
-						Len:  0x03,
-						Data: []byte{0x01, 0x02},
 					},
 				},
 			},
+			err: nil,
 		},
 		{
 			Name:  "testCase 3",
+			input: "20 02 8000 0007",
+			item: &Compound{
+				Base: Base{
+					FRN:  16,
+					Type: CompoundField,
+				},
+				Secondary: []DataItem{
+					&Spare{Base: Base{FRN: 1, Type: SpareField}},
+					&Spare{Base: Base{FRN: 2, Type: SpareField}},
+					&Repetitive{
+						Base:        Base{FRN: 3, Type: RepetitiveField},
+						SubItemSize: 2,
+						SubItems: []SubItem{
+							{Type: BitField, Bit: 16},
+							{Type: FromToField, From: 12, To: 1},
+						},
+					},
+				},
+			},
+			output: &Compound{
+				Base: Base{
+					FRN:  16,
+					Type: CompoundField,
+				},
+				Primary: []byte{0x20},
+				Secondary: []DataItem{
+					&Repetitive{
+						Base:        Base{FRN: 3, Type: RepetitiveField},
+						SubItemSize: 2,
+						Rep:         0x02,
+						SubItems: []SubItem{
+							{Type: BitField, Bit: 16, Data: []byte{0x01}},
+							{Type: FromToField, From: 12, To: 1, Data: []byte{0x00, 0x00}},
+
+							{Type: BitField, Bit: 16, Data: []byte{0x00}},
+							{Type: FromToField, From: 12, To: 1, Data: []byte{0x00, 0x07}},
+						},
+					},
+				},
+			},
+			err: nil,
+		},
+		{
+			Name:  "testCase 4",
+			input: "10 03ffff",
+			item: &Compound{
+				Base: Base{
+					FRN:  16,
+					Type: CompoundField,
+				},
+				Secondary: []DataItem{
+					&Spare{Base: Base{FRN: 1, Type: SpareField}},
+					&Spare{Base: Base{FRN: 2, Type: SpareField}},
+					&Spare{Base: Base{FRN: 3, Type: SpareField}},
+					&Explicit{
+						Base: Base{FRN: 4, Type: ExplicitField},
+					},
+				},
+			},
+			output: &Compound{
+				Base: Base{
+					FRN:  16,
+					Type: CompoundField,
+				},
+				Primary: []byte{0x10},
+				Secondary: []DataItem{
+					&Explicit{
+						Base: Base{FRN: 4, Type: ExplicitField},
+						Len:  0x03,
+						SubItems: []SubItem{
+							{Type: FromToField, From: 16, To: 1, Data: []byte{0xff, 0xff}},
+						},
+					},
+				},
+			},
+			err: nil,
+		},
+		{
+			Name:  "testCase 5",
 			input: "",
 			item: &Compound{
 				Base: Base{
@@ -180,7 +226,7 @@ func TestCompoundReader(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testCase 5",
+			Name:  "testCase 6",
 			input: "80 01",
 			item: &Compound{
 				Base: Base{
@@ -209,7 +255,7 @@ func TestCompoundReader(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testCase 6",
+			Name:  "testCase 7",
 			input: "80 01",
 			item: &Compound{
 				Base: Base{
@@ -236,7 +282,7 @@ func TestCompoundReader(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testCase 7",
+			Name:  "testCase 8",
 			input: "80 02",
 			item: &Compound{
 				Base: Base{
@@ -263,7 +309,7 @@ func TestCompoundReader(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testCase 8",
+			Name:  "testCase 9",
 			input: "80 02",
 			item: &Compound{
 				Base: Base{
@@ -312,6 +358,130 @@ func TestCompoundReader(t *testing.T) {
 			t.Errorf(util.MsgFailInValue, tc.Name, f, tc.output)
 		} else {
 			t.Logf(util.MsgSuccessInValue, tc.Name, f, tc.output)
+		}
+	}
+}
+
+func TestCompoundGetSubItems(t *testing.T) {
+	// setup
+	type testCase struct {
+		Name   string
+		input  Compound
+		output []SubItem
+	}
+	// Arrange
+	dataSet := []testCase{
+		{
+			Name: "testCase 1",
+			input: Compound{
+				Base: Base{
+					FRN:  16,
+					Type: CompoundField,
+				},
+				Secondary: []DataItem{
+					&Fixed{
+						Base: Base{
+							FRN:  1,
+							Type: FixedField,
+						},
+						Size: 1,
+						SubItems: []SubItem{
+							{
+								Name: "SUB-A",
+								Type: FromToField,
+								From: 8,
+								To:   1,
+								Data: []byte{0xab},
+							},
+						},
+					},
+				},
+			},
+			output: []SubItem{
+				{
+					Name: "SUB-A",
+					Type: FromToField,
+					From: 8, To: 1,
+					Data: []byte{0xab},
+				},
+			},
+		},
+		{
+			Name: "testCase 2",
+			input: Compound{
+				Base: Base{
+					FRN:  16,
+					Type: CompoundField,
+				},
+				Secondary: []DataItem{
+					&Fixed{
+						Base: Base{
+							FRN:  1,
+							Type: FixedField,
+						},
+						Size: 1,
+						SubItems: []SubItem{
+							{
+								Name: "SUB-A",
+								Type: FromToField,
+								From: 8,
+								To:   1,
+								Data: []byte{0xab},
+							},
+						},
+					},
+					&Extended{
+						Base:              Base{FRN: 2, Type: ExtendedField},
+						PrimaryItemSize:   1,
+						SecondaryItemSize: 1,
+						SubItems: []SubItem{
+							{Name: "SUB-B", Type: FromToField, From: 8, To: 2, Data: []byte{0x00}},
+							{Name: "SUB-C", Type: BitField, Bit: 8, Data: []byte{0x01}},
+							{Name: "SUB-D", Type: FromToField, From: 7, To: 2, Data: []byte{0x3f}},
+						},
+					},
+					&Repetitive{
+						Base:        Base{FRN: 3, Type: RepetitiveField},
+						SubItemSize: 2,
+						Rep:         0x02,
+						SubItems: []SubItem{
+							{Name: "SUB-E", Type: BitField, Bit: 16, Data: []byte{0x01}},
+							{Name: "SUB-F", Type: FromToField, From: 12, To: 1, Data: []byte{0x00, 0x00}},
+							{Name: "SUB-G", Type: BitField, Bit: 16, Data: []byte{0x00}},
+							{Name: "SUB-H", Type: FromToField, From: 12, To: 1, Data: []byte{0x00, 0x07}},
+						},
+					},
+				},
+			},
+			output: []SubItem{
+				{Name: "SUB-A", Type: FromToField, From: 8, To: 1, Data: []byte{0xab}},
+				{Name: "SUB-B", Type: FromToField, From: 8, To: 2, Data: []byte{0x00}},
+				{Name: "SUB-C", Type: BitField, Bit: 8, Data: []byte{0x01}},
+				{Name: "SUB-D", Type: FromToField, From: 7, To: 2, Data: []byte{0x3f}},
+				{Name: "SUB-E", Type: BitField, Bit: 16, Data: []byte{0x01}},
+				{Name: "SUB-F", Type: FromToField, From: 12, To: 1, Data: []byte{0x00, 0x00}},
+				{Name: "SUB-G", Type: BitField, Bit: 16, Data: []byte{0x00}},
+				{Name: "SUB-H", Type: FromToField, From: 12, To: 1, Data: []byte{0x00, 0x07}},
+			},
+		},
+		{
+			Name: "testCase 3",
+			input: Compound{
+				Base: Base{},
+			},
+			output: nil,
+		},
+	}
+
+	for _, tc := range dataSet {
+		// Act
+		s := tc.input.GetSubItems()
+
+		// Assert
+		if reflect.DeepEqual(s, tc.output) == false {
+			t.Errorf(util.MsgFailInValue, tc.Name, s, tc.output)
+		} else {
+			t.Logf(util.MsgSuccessInValue, tc.Name, s, tc.output)
 		}
 	}
 }

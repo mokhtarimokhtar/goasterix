@@ -10,11 +10,6 @@ type CatForTestModel struct {
 	SacSic *SourceIdentifier `json:"sourceIdentifier,omitempty"`
 }
 
-type SourceIdentifier struct {
-	Sac uint8 `json:"sac" xml:"sac"`
-	Sic uint8 `json:"sic" xml:"sic"`
-}
-
 // sacSic returns a SourceIdentifier with:
 // Sac: an integer of System Area TransponderRegisterNumber.
 // Sic: an integer of System Identification TransponderRegisterNumber.
@@ -34,8 +29,12 @@ func (data *CatForTestModel) write(rec goasterix.IRecord) {
 			//var payload [2]byte
 			//copy(payload[:], item.Fixed.Data)
 			tmp := new(SourceIdentifier)
-			tmp.Sac = dataItem.(*item.Fixed).SubItems[0].Data[0]
-			tmp.Sic = dataItem.(*item.Fixed).SubItems[1].Data[0]
+			//tmp.Sac = dataItem.(*item.Fixed).SubItems[0].Data[0]
+			//tmp.Sic = dataItem.(*item.Fixed).SubItems[1].Data[0]
+
+			sub := dataItem.GetSubItems()
+			tmp.Sac = sub[0].Data[0]
+			tmp.Sic = sub[1].Data[0]
 
 			data.SacSic = tmp
 		}
@@ -51,18 +50,6 @@ func (data *CatForTestModel) write(rec goasterix.IRecord) {
 			data.SacSic = &tmp
 		}
 	}*/
-}
-
-type Status struct {
-	CNF string `json:"cnf,omitempty"`
-	RAD string `json:"rad,omitempty"`
-	DOU string `json:"dou,omitempty"`
-	MAH string `json:"mah,omitempty"`
-	CDM string `json:"cdm,omitempty"`
-	TRE string `json:"tre,omitempty"`
-	GHO string `json:"gho,omitempty"`
-	SUP string `json:"sup,omitempty"`
-	TCC string `json:"tcc,omitempty"`
 }
 
 // trackStatus returns a map of uint8, CNF, RAD, DOU, MAH, CDM id exist: TRE, GHO, SUP, TCC.

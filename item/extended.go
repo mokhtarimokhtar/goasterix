@@ -3,7 +3,6 @@ package item
 import (
 	"bytes"
 	"encoding/binary"
-	"encoding/hex"
 )
 
 // Extended length Data Fields, being of a variable length, shall contain a primary part of predetermined length,
@@ -15,10 +14,7 @@ type Extended struct {
 	Base
 	PrimaryItemSize   uint8
 	SecondaryItemSize uint8
-	Primary           []byte
-	Secondary         []byte
-	PrimarySubItems   []SubItemBits
-	SecondarySubItems []SubItemBits
+	SubItems          []SubItem
 }
 
 func (e *Extended) Clone() DataItem {
@@ -26,9 +22,12 @@ func (e *Extended) Clone() DataItem {
 		Base:              e.Base,
 		PrimaryItemSize:   e.PrimaryItemSize,
 		SecondaryItemSize: e.SecondaryItemSize,
-		PrimarySubItems:   e.PrimarySubItems,
-		SecondarySubItems: e.SecondarySubItems,
+		SubItems:          e.SubItems,
 	}
+}
+
+func (e Extended) GetSubItems() []SubItem {
+	return e.SubItems
 }
 
 // Reader extracts data item type Extended (FX: last bit = 1).
@@ -36,30 +35,82 @@ func (e *Extended) Clone() DataItem {
 // secondarySize parameter defines the Secondary Subitem of extended dataField.
 func (e *Extended) Reader(rb *bytes.Reader) error {
 	var err error
+	/*
+		tmp := make([]byte, e.PrimaryItemSize)
+		err = binary.Read(rb, binary.BigEndian, &tmp)
+		if err != nil {
+			return err
+		}
+		e.Primary = tmp
+
+		if tmp[e.PrimaryItemSize-1]&0x01 != 0 {
+			for {
+				tmp := make([]byte, e.SecondaryItemSize)
+				err = binary.Read(rb, binary.BigEndian, &tmp)
+				if err != nil {
+					return err
+				}
+				e.Secondary = append(e.Secondary, tmp...)
+				if tmp[e.SecondaryItemSize-1]&0x01 == 0 {
+					break
+				}
+			}
+		}
+	*/
+
 	tmp := make([]byte, e.PrimaryItemSize)
 	err = binary.Read(rb, binary.BigEndian, &tmp)
 	if err != nil {
+		e.SubItems = nil
 		return err
 	}
-	e.Primary = tmp
+	offset := 0
+	tmpSubItems := e.SubItems
+
+	e.SubItems = make([]SubItem, 0, len(e.SubItems))
+	for i, subItem := range tmpSubItems {
+		if subItem.Bit == 1 {
+			offset = i + 1
+			break
+		}
+		sub := subItem.Clone()
+		err = sub.Reader(tmp)
+		if err != nil {
+			return err
+		}
+		e.SubItems = append(e.SubItems, *sub)
+	}
 
 	if tmp[e.PrimaryItemSize-1]&0x01 != 0 {
 		for {
-			tmp := make([]byte, e.SecondaryItemSize)
-			err = binary.Read(rb, binary.BigEndian, &tmp)
+			tmpSec := make([]byte, e.SecondaryItemSize)
+			err = binary.Read(rb, binary.BigEndian, &tmpSec)
 			if err != nil {
 				return err
 			}
-			e.Secondary = append(e.Secondary, tmp...)
-			if tmp[e.SecondaryItemSize-1]&0x01 == 0 {
+
+			for i, subItem := range tmpSubItems[offset:] {
+				if subItem.Bit == 1 {
+					offset = offset + i + 1
+					break
+				}
+				sub := subItem.Clone()
+				err = sub.Reader(tmpSec)
+				if err != nil {
+					return err
+				}
+				e.SubItems = append(e.SubItems, *sub)
+			}
+
+			if tmpSec[e.SecondaryItemSize-1]&0x01 == 0 {
 				break
 			}
 		}
 	}
-
 	return err
 }
 
+/*
 // Payload returns this dataField as bytes.
 func (e Extended) Payload() []byte {
 	var p []byte
@@ -67,6 +118,7 @@ func (e Extended) Payload() []byte {
 	p = append(p, e.Secondary...)
 	return p
 }
+*/
 
 // String implements fmt.Stringer in hexadecimal
 func (e Extended) String() string {
@@ -74,7 +126,12 @@ func (e Extended) String() string {
 	buf.Reset()
 	buf.WriteString(e.Base.DataItemName)
 	buf.WriteByte(':')
-	buf.WriteString(hex.EncodeToString(e.Primary))
-	buf.WriteString(hex.EncodeToString(e.Secondary))
+
+	for _, subItem := range e.SubItems {
+		buf.WriteByte('[')
+		buf.WriteString(subItem.String())
+		buf.WriteByte(']')
+	}
+
 	return buf.String()
 }

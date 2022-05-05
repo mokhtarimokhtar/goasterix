@@ -12,6 +12,7 @@ type RandomField struct {
 	Field DataItem
 }
 
+/*
 // Payload returns this dataField as bytes.
 func (rf RandomField) Payload() []byte {
 	var p []byte
@@ -19,6 +20,7 @@ func (rf RandomField) Payload() []byte {
 	p = append(p, rf.Field.Payload()...)
 	return p
 }
+*/
 
 // String implements fmt.Stringer in hexadecimal
 func (rf RandomField) String() string {
@@ -92,6 +94,7 @@ func (rfs *RandomFieldSequencing) Reader(rb *bytes.Reader) error {
 	return err
 }
 
+/*
 // Payload returns this dataField as bytes.
 func (rfs RandomFieldSequencing) Payload() []byte {
 	var p []byte
@@ -101,6 +104,7 @@ func (rfs RandomFieldSequencing) Payload() []byte {
 	}
 	return p
 }
+*/
 
 // String implements fmt.Stringer in hexadecimal
 func (rfs RandomFieldSequencing) String() string {

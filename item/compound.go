@@ -24,6 +24,14 @@ func (c *Compound) Clone() DataItem {
 	}
 }
 
+func (c Compound) GetSubItems() []SubItem {
+	var subItems []SubItem
+	for _, dataItem := range c.Secondary {
+		subItems = append(subItems, dataItem.GetSubItems()...)
+	}
+	return subItems
+}
+
 func (c *Compound) Reader(rb *bytes.Reader) error {
 	var err error
 
@@ -56,17 +64,6 @@ func (c *Compound) Reader(rb *bytes.Reader) error {
 	return err
 }
 
-// Payload returns this dataField as bytes.
-func (c Compound) Payload() []byte {
-	var p []byte
-	p = append(p, c.Primary...)
-	for _, item := range c.Secondary {
-		tmp := item.Payload()
-		p = append(p, tmp...)
-	}
-	return p
-}
-
 // String implements fmt.Stringer in hexadecimal
 func (c Compound) String() string {
 	var buf bytes.Buffer
@@ -86,3 +83,16 @@ func (c Compound) String() string {
 
 	return buf.String()
 }
+
+/*
+// Payload returns this dataField as bytes.
+func (c Compound) Payload() []byte {
+	var p []byte
+	p = append(p, c.Primary...)
+	for _, item := range c.Secondary {
+		tmp := item.Payload()
+		p = append(p, tmp...)
+	}
+	return p
+}
+*/

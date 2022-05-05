@@ -6,10 +6,23 @@ import (
 	"encoding/hex"
 )
 
-// SubItemBits has two types: One bit or From To bits
+/*
+type SubItems []SubItem
+func (subs SubItems) GetSubItemByName(name string) (SubItem, error) {
+	var sub SubItem
+	for _, s := range subs {
+		if s.Name == name {
+			return s, nil
+		}
+	}
+	return sub, ErrSubItemNotFound
+}
+*/
+
+// SubItem has two types: One bit or From To bits
 // Bit field is for one bit position
 // From and To is for the range of bits position
-type SubItemBits struct {
+type SubItem struct {
 	Name string
 	Type TypeField
 	Bit  uint8
@@ -18,8 +31,8 @@ type SubItemBits struct {
 	Data []byte
 }
 
-func (s *SubItemBits) Clone() *SubItemBits {
-	return &SubItemBits{
+func (s *SubItem) Clone() *SubItem {
+	return &SubItem{
 		Name: s.Name,
 		Type: s.Type,
 		Bit:  s.Bit,
@@ -28,7 +41,7 @@ func (s *SubItemBits) Clone() *SubItemBits {
 	}
 }
 
-func (s *SubItemBits) Reader(data []byte) error {
+func (s *SubItem) Reader(data []byte) error {
 	var err error
 	switch s.Type {
 	case BitField:
@@ -50,7 +63,7 @@ func (s *SubItemBits) Reader(data []byte) error {
 }
 
 // String implements fmt.Stringer in hexadecimal
-func (s SubItemBits) String() string {
+func (s SubItem) String() string {
 	var buf bytes.Buffer
 	buf.Reset()
 	buf.WriteString(s.Name)

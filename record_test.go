@@ -8,10 +8,6 @@ import (
 	"testing"
 )
 
-//import (
-//. "github.com/mokhtarimokhtar/goasterix/item"
-//)
-
 /*func TestRecordPayload(t *testing.T) {
 	// Arrange
 	data, _ := util.HexStringToByte("ffdf029319378d3da2056f132d0fff00946002de506f844cc3c35123310017013b026c000c74a74020a0")
@@ -59,10 +55,11 @@ func TestRecordDecodeCatForTest(t *testing.T) {
 		unRead int
 		err    error
 	}
+
 	dataSet := []testCase{
 		{
 			Name:  "testcase 1",
-			input: "f780 ffff 01 0302 0801020304050607 03aaaaaabbbbbbcccccc  b80101010202aaaabbbb0201 0201 04010203",
+			input: "f780 ffff 8302 0801020304050607 03aaaaaabbbbbbcccccc  b801058e02aaaabbbb0201 0201 04010203",
 			uap:   CatForTest,
 			output: Record{
 				Cat:   26,
@@ -76,15 +73,15 @@ func TestRecordDecodeCatForTest(t *testing.T) {
 							Type:         FixedField,
 						},
 						Size: 2,
-						SubItems: []SubItemBits{
+						SubItems: []SubItem{
 							{
-								Name: "SAC",
+								Name: "SUB-A",
 								Type: FromToField,
 								From: 16, To: 9,
 								Data: []byte{0xff},
 							},
 							{
-								Name: "SIC",
+								Name: "SUB-B",
 								Type: FromToField,
 								From: 8, To: 1,
 								Data: []byte{0xff},
@@ -99,33 +96,21 @@ func TestRecordDecodeCatForTest(t *testing.T) {
 							Type:         ExtendedField,
 						},
 						PrimaryItemSize:   1,
-						SecondaryItemSize: 2,
-						Primary:           []byte{0x01},
-						Secondary:         []byte{0x03, 0x02},
+						SecondaryItemSize: 1,
+						SubItems: []SubItem{
+							{Name: "SUB-A", Type: FromToField, From: 8, To: 6, Data: []byte{0x04}},
+							{Name: "SUB-B", Type: BitField, Bit: 5, Data: []byte{0x00}},
+							{Name: "SUB-C", Type: BitField, Bit: 4, Data: []byte{0x00}},
+							{Name: "SUB-D", Type: BitField, Bit: 3, Data: []byte{0x00}},
+							{Name: "SUB-E", Type: BitField, Bit: 2, Data: []byte{0x01}},
 
-						//SubItems: []SubItem{
-						//	&SubItemFromTo{
-						//		Name: "TYP",
-						//		Type: FromToField,
-						//		From: 8,
-						//		To:   6,
-						//	},
-						//	&SubItemBit{Name: "SIM", Type: BitField, Pos: 5},
-						//	&SubItemBit{Name: "RDP", Type: BitField, Pos: 4},
-						//	&SubItemBit{Name: "SPI", Type: BitField, Pos: 3},
-						//	&SubItemBit{Name: "RAB", Type: BitField, Pos: 2},
-						//	&SubItemBit{Name: "TST", Type: BitField, Pos: 8},
-						//	&SubItemBit{Name: "ERR", Type: BitField, Pos: 7},
-						//	&SubItemBit{Name: "XPP", Type: BitField, Pos: 6},
-						//	&SubItemBit{Name: "ME", Type: BitField, Pos: 5},
-						//	&SubItemBit{Name: "MI", Type: BitField, Pos: 4},
-						//	&SubItemFromTo{
-						//		Name: "FOE/FRI",
-						//		Type: FromToField,
-						//		From: 3,
-						//		To:   2,
-						//	},
-						//},
+							{Name: "SUB-F", Type: BitField, Bit: 8, Data: []byte{0x00}},
+							{Name: "SUB-G", Type: BitField, Bit: 7, Data: []byte{0x00}},
+							{Name: "SUB-H", Type: BitField, Bit: 6, Data: []byte{0x00}},
+							{Name: "SUB-I", Type: BitField, Bit: 5, Data: []byte{0x00}},
+							{Name: "SUB-J", Type: BitField, Bit: 4, Data: []byte{0x00}},
+							{Name: "SUB-K", Type: FromToField, From: 3, To: 2, Data: []byte{0x01}},
+						},
 					},
 					&Explicit{
 						Base: Base{
@@ -134,8 +119,15 @@ func TestRecordDecodeCatForTest(t *testing.T) {
 							Description:  "Explicit type field for test",
 							Type:         ExplicitField,
 						},
-						Len:  0x08,
-						Data: []byte{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07},
+						Len: 0x08,
+						SubItems: []SubItem{
+							{
+								Type: FromToField,
+								From: 56,
+								To:   1,
+								Data: []byte{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07},
+							},
+						},
 					},
 					&Repetitive{
 						Base: Base{
@@ -147,58 +139,58 @@ func TestRecordDecodeCatForTest(t *testing.T) {
 						SubItemSize: 3,
 						Rep:         0x03,
 						//Data:        []byte{0xaa, 0xaa, 0xaa, 0xbb, 0xbb, 0xbb, 0xcc, 0xcc, 0xcc},
-						Data: nil,
-						SubItems: []SubItemBits{
+						//Data: nil,
+						SubItems: []SubItem{
 							{
-								Name: "DOP",
+								Name: "SUB-A",
 								Type: FromToField,
 								From: 24, To: 17,
 								Data: []byte{0xaa},
 							},
 							{
 								From: 16, To: 9,
-								Name: "AMB",
+								Name: "SUB-B",
 								Type: FromToField,
 								Data: []byte{0xaa},
 							},
 							{
-								Name: "FRQ",
+								Name: "SUB-C",
 								Type: FromToField,
 								From: 8, To: 1,
 								Data: []byte{0xaa},
 							},
 							{
-								Name: "DOP",
+								Name: "SUB-A",
 								Type: FromToField,
 								From: 24, To: 17,
 								Data: []byte{0xbb},
 							},
 							{
-								Name: "AMB",
+								Name: "SUB-B",
 								Type: FromToField,
 								From: 16, To: 9,
 								Data: []byte{0xbb},
 							},
 							{
-								Name: "FRQ",
+								Name: "SUB-C",
 								Type: FromToField,
 								From: 8, To: 1,
 								Data: []byte{0xbb},
 							},
 							{
-								Name: "DOP",
+								Name: "SUB-A",
 								Type: FromToField,
 								From: 24, To: 17,
 								Data: []byte{0xcc},
 							},
 							{
-								Name: "AMB",
+								Name: "SUB-B",
 								Type: FromToField,
 								From: 16, To: 9,
 								Data: []byte{0xcc},
 							},
 							{
-								Name: "FRQ",
+								Name: "SUB-C",
 								Type: FromToField,
 								From: 8, To: 1,
 								Data: []byte{0xcc},
@@ -222,7 +214,14 @@ func TestRecordDecodeCatForTest(t *testing.T) {
 									Type:         FixedField,
 								},
 								Size: 1,
-								Data: []byte{0x01},
+								SubItems: []SubItem{
+									{
+										Name: "SUB-A",
+										Type: FromToField,
+										From: 8, To: 1,
+										Data: []byte{0x01},
+									},
+								},
 							},
 							&Extended{
 								Base: Base{
@@ -233,8 +232,12 @@ func TestRecordDecodeCatForTest(t *testing.T) {
 								},
 								PrimaryItemSize:   1,
 								SecondaryItemSize: 1,
-								Primary:           []byte{0x01},
-								Secondary:         []byte{0x01, 0x02},
+								SubItems: []SubItem{
+									{Name: "SUB-A", Type: FromToField, From: 8, To: 2, Data: []byte{0x02}},
+
+									{Name: "SUB-B", Type: BitField, Bit: 8, Data: []byte{0x01}},
+									{Name: "SUB-C", Type: FromToField, From: 7, To: 2, Data: []byte{0x07}},
+								},
 							},
 							&Repetitive{
 								Base: Base{
@@ -245,7 +248,11 @@ func TestRecordDecodeCatForTest(t *testing.T) {
 								},
 								SubItemSize: 2,
 								Rep:         0x02,
-								Data:        []byte{0xaa, 0xaa, 0xbb, 0xbb},
+								//Data:        []byte{0xaa, 0xaa, 0xbb, 0xbb},
+								SubItems: []SubItem{
+									{Name: "SUB-A", Type: FromToField, From: 16, To: 1, Data: []byte{0xaa, 0xaa}},
+									{Name: "SUB-A", Type: FromToField, From: 16, To: 1, Data: []byte{0xbb, 0xbb}},
+								},
 							},
 							&Explicit{
 								Base: Base{
@@ -254,30 +261,53 @@ func TestRecordDecodeCatForTest(t *testing.T) {
 									Description:  "Compound Explicit type field for test",
 									Type:         ExplicitField,
 								},
-								Len:  0x02,
-								Data: []byte{0x01},
+								Len: 0x02,
+								SubItems: []SubItem{
+									{
+										Type: FromToField,
+										From: 8,
+										To:   1,
+										Data: []byte{0x01},
+									},
+								},
 							},
 						},
 					},
 					&ReservedExpansion{
 						Base: Base{
 							FRN:          7,
-							DataItemName: "I060REName",
+							DataItemName: "I060RE",
 							Description:  "Reserved Expansion type field for test",
 							Type:         REField,
 						},
-						Len:  0x02,
-						Data: []byte{0x01},
+						Len: 0x02,
+						SubItems: []SubItem{
+							{
+								Name: "RE",
+								Type: FromToField,
+								From: 8,
+								To:   1,
+								Data: []byte{0x01},
+							},
+						},
 					},
 					&SpecialPurpose{
 						Base: Base{
 							FRN:          8,
-							DataItemName: "I060SPName",
+							DataItemName: "I060SP",
 							Description:  "Special Purpose type field for test",
 							Type:         SPField,
 						},
-						Len:  0x04,
-						Data: []byte{0x01, 0x02, 0x03},
+						Len: 0x04,
+						SubItems: []SubItem{
+							{
+								Name: "SP",
+								Type: FromToField,
+								From: 24,
+								To:   1,
+								Data: []byte{0x01, 0x02, 0x03},
+							},
+						},
 					},
 				},
 			},
@@ -341,7 +371,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 				Type:         FixedField,
 			},
 			Size: 2,
-			SubItems: []SubItemBits{
+			SubItems: []SubItem{
 				{
 					Name: "SAC",
 					Type: FromToField,
@@ -364,7 +394,14 @@ func TestRecordDecodeCAT048(t *testing.T) {
 				Type:         FixedField,
 			},
 			Size: 3,
-			Data: []byte{0x42, 0x9b, 0x52},
+			//Data: []byte{0x42, 0x9b, 0x52},
+			SubItems: []SubItem{
+				{
+					Type: FromToField,
+					From: 24, To: 1,
+					Data: []byte{0x42, 0x9b, 0x52},
+				},
+			},
 		},
 		&Extended{
 			Base: Base{
@@ -375,8 +412,14 @@ func TestRecordDecodeCAT048(t *testing.T) {
 			},
 			PrimaryItemSize:   1,
 			SecondaryItemSize: 1,
-			Primary:           []byte{0xa0},
-			Secondary:         nil,
+			//Primary:           []byte{0xa0},
+			SubItems: []SubItem{
+				{Name: "TYP", Type: FromToField, From: 8, To: 6, Data: []byte{0x05}},
+				{Name: "SIM", Type: BitField, Bit: 5, Data: []byte{0x00}},
+				{Name: "RDP", Type: BitField, Bit: 4, Data: []byte{0x00}},
+				{Name: "SPI", Type: BitField, Bit: 3, Data: []byte{0x00}},
+				{Name: "RAB", Type: BitField, Bit: 2, Data: []byte{0x00}},
+			},
 		},
 		&Fixed{
 			Base: Base{
@@ -386,7 +429,11 @@ func TestRecordDecodeCAT048(t *testing.T) {
 				Type:         FixedField,
 			},
 			Size: 4,
-			Data: []byte{0x94, 0xc7, 0x01, 0x81},
+			//Data: []byte{0x94, 0xc7, 0x01, 0x81},
+			SubItems: []SubItem{
+				{Name: "RHO", Type: FromToField, From: 32, To: 17, Data: []byte{0x94, 0xc7}},
+				{Name: "THETA", Type: FromToField, From: 16, To: 1, Data: []byte{0x01, 0x81}},
+			},
 		},
 		&Fixed{
 			Base: Base{
@@ -396,7 +443,13 @@ func TestRecordDecodeCAT048(t *testing.T) {
 				Type:         FixedField,
 			},
 			Size: 2,
-			Data: []byte{0x09, 0x13},
+			//Data: []byte{0x09, 0x13},
+			SubItems: []SubItem{
+				{Name: "V", Type: BitField, Bit: 16, Data: []byte{0x00}},
+				{Name: "G", Type: BitField, Bit: 15, Data: []byte{0x00}},
+				{Name: "L", Type: BitField, Bit: 14, Data: []byte{0x00}},
+				{Name: "Mode-3/A", Type: FromToField, From: 12, To: 1, Data: []byte{0x09, 0x13}},
+			},
 		},
 		&Fixed{
 			Base: Base{
@@ -406,7 +459,12 @@ func TestRecordDecodeCAT048(t *testing.T) {
 				Type:         FixedField,
 			},
 			Size: 2,
-			Data: []byte{0x02, 0xd0},
+			//Data: []byte{0x02, 0xd0},
+			SubItems: []SubItem{
+				{Name: "V", Type: BitField, Bit: 16, Data: []byte{0x00}},
+				{Name: "G", Type: BitField, Bit: 15, Data: []byte{0x00}},
+				{Name: "Flight Level", Type: FromToField, From: 14, To: 1, Data: []byte{0x02, 0xd0}},
+			},
 		},
 		&Compound{
 			Base: Base{
@@ -425,7 +483,10 @@ func TestRecordDecodeCAT048(t *testing.T) {
 						Type:         FixedField,
 					},
 					Size: 1,
-					Data: []byte{0x02},
+					//Data: []byte{0x02},
+					SubItems: []SubItem{
+						{Name: "SRR", Type: FromToField, From: 8, To: 1, Data: []byte{0x02}},
+					},
 				},
 				&Fixed{
 					Base: Base{
@@ -435,7 +496,10 @@ func TestRecordDecodeCAT048(t *testing.T) {
 						Type:         FixedField,
 					},
 					Size: 1,
-					Data: []byte{0xb7},
+					//Data: []byte{0xb7},
+					SubItems: []SubItem{
+						{Name: "SAM", Type: FromToField, From: 8, To: 1, Data: []byte{0xb7}},
+					},
 				},
 			},
 		},
@@ -447,7 +511,10 @@ func TestRecordDecodeCAT048(t *testing.T) {
 				Type:         FixedField,
 			},
 			Size: 3,
-			Data: []byte{0x49, 0x0d, 0x01},
+			//Data: []byte{0x49, 0x0d, 0x01},
+			SubItems: []SubItem{
+				{Name: "AIRCRAFT ADDRESS", Type: FromToField, From: 24, To: 1, Data: []byte{0x49, 0x0d, 0x01}},
+			},
 		},
 		&Fixed{
 			Base: Base{
@@ -457,7 +524,18 @@ func TestRecordDecodeCAT048(t *testing.T) {
 				Type:         FixedField,
 			},
 			Size: 6,
-			Data: []byte{0x38, 0xa1, 0x78, 0xcf, 0x42, 0x20},
+			//Data: []byte{0x38, 0xa1, 0x78, 0xcf, 0x42, 0x20},
+			// [00 1110][00 1010]-[00 0101][11-1000] [11 00-11][11 0100]-[00-10 00][10-0000]
+			SubItems: []SubItem{
+				{Name: "Char1", Type: FromToField, From: 48, To: 43, Data: []byte{0x0e}},
+				{Name: "Char2", Type: FromToField, From: 42, To: 37, Data: []byte{0x0a}},
+				{Name: "Char3", Type: FromToField, From: 36, To: 31, Data: []byte{0x05}},
+				{Name: "Char4", Type: FromToField, From: 30, To: 25, Data: []byte{0x38}},
+				{Name: "Char5", Type: FromToField, From: 24, To: 19, Data: []byte{0x33}},
+				{Name: "Char6", Type: FromToField, From: 18, To: 13, Data: []byte{0x34}},
+				{Name: "Char7", Type: FromToField, From: 12, To: 7, Data: []byte{0x08}},
+				{Name: "Char8", Type: FromToField, From: 6, To: 1, Data: []byte{0x20}},
+			},
 		},
 		&Repetitive{
 			Base: Base{
@@ -468,7 +546,16 @@ func TestRecordDecodeCAT048(t *testing.T) {
 			},
 			SubItemSize: 8,
 			Rep:         0x02,
-			Data:        []byte{0xe7, 0x9a, 0x5d, 0x27, 0xa0, 0x0c, 0x00, 0x60, 0xa3, 0x28, 0x00, 0x30, 0xa4, 0x00, 0x00, 0x40},
+			//Data:        []byte{0xe7, 0x9a, 0x5d, 0x27, 0xa0, 0x0c, 0x00, 0x60, 0xa3, 0x28, 0x00, 0x30, 0xa4, 0x00, 0x00, 0x40},
+			SubItems: []SubItem{
+				{Name: "MBData", Type: FromToField, From: 64, To: 9, Data: []byte{0xe7, 0x9a, 0x5d, 0x27, 0xa0, 0x0c, 0x00}},
+				{Name: "BDS1", Type: FromToField, From: 8, To: 5, Data: []byte{0x06}},
+				{Name: "BDS2", Type: FromToField, From: 4, To: 1, Data: []byte{0x00}},
+
+				{Name: "MBData", Type: FromToField, From: 64, To: 9, Data: []byte{0xa3, 0x28, 0x00, 0x30, 0xa4, 0x00, 0x00}},
+				{Name: "BDS1", Type: FromToField, From: 8, To: 5, Data: []byte{0x04}},
+				{Name: "BDS2", Type: FromToField, From: 4, To: 1, Data: []byte{0x00}},
+			},
 		},
 		&Fixed{
 			Base: Base{
@@ -478,7 +565,10 @@ func TestRecordDecodeCAT048(t *testing.T) {
 				Type:         FixedField,
 			},
 			Size: 2,
-			Data: []byte{0x06, 0x3a},
+			//Data: []byte{0x06, 0x3a},
+			SubItems: []SubItem{
+				{Name: "TRACK NUMBER", Type: FromToField, From: 12, To: 1, Data: []byte{0x06, 0x3a}},
+			},
 		},
 		&Fixed{
 			Base: Base{
@@ -488,7 +578,11 @@ func TestRecordDecodeCAT048(t *testing.T) {
 				Type:         FixedField,
 			},
 			Size: 4,
-			Data: []byte{0x07, 0x43, 0xce, 0x5b},
+			//Data: []byte{0x07, 0x43, 0xce, 0x5b},
+			SubItems: []SubItem{
+				{Name: "GROUNDSPEED", Type: FromToField, From: 32, To: 17, Data: []byte{0x07, 0x43}},
+				{Name: "HEADING", Type: FromToField, From: 16, To: 1, Data: []byte{0xce, 0x5b}},
+			},
 		},
 		&Extended{
 			Base: Base{
@@ -499,8 +593,14 @@ func TestRecordDecodeCAT048(t *testing.T) {
 			},
 			PrimaryItemSize:   1,
 			SecondaryItemSize: 1,
-			Primary:           []byte{0x40},
-			Secondary:         nil,
+			//Primary:           []byte{0x40}, 0100-0000
+			SubItems: []SubItem{
+				{Name: "CNF", Type: BitField, Bit: 8, Data: []byte{0x00}},
+				{Name: "RAD", Type: FromToField, From: 7, To: 6, Data: []byte{0x02}},
+				{Name: "DOU", Type: BitField, Bit: 5, Data: []byte{0x00}},
+				{Name: "MAH", Type: BitField, Bit: 4, Data: []byte{0x00}},
+				{Name: "CDM", Type: FromToField, From: 3, To: 2, Data: []byte{0x00}},
+			},
 		},
 		&Fixed{
 			Base: Base{
@@ -510,7 +610,17 @@ func TestRecordDecodeCAT048(t *testing.T) {
 				Type:         FixedField,
 			},
 			Size: 2,
-			Data: []byte{0x20, 0xf5},
+			//Data: []byte{0x20, 0xf5}, 0010-0000 1111-0000
+			SubItems: []SubItem{
+				{Name: "COM", Type: FromToField, From: 16, To: 14, Data: []byte{0x01}},
+				{Name: "STAT", Type: FromToField, From: 13, To: 11, Data: []byte{0x00}},
+				{Name: "SI", Type: BitField, Bit: 10, Data: []byte{0x00}},
+				{Name: "MSSC", Type: BitField, Bit: 8, Data: []byte{0x01}},
+				{Name: "ARC", Type: BitField, Bit: 7, Data: []byte{0x01}},
+				{Name: "AIC", Type: BitField, Bit: 6, Data: []byte{0x01}},
+				{Name: "B1A", Type: BitField, Bit: 5, Data: []byte{0x01}},
+				{Name: "B1B", Type: FromToField, From: 4, To: 1, Data: []byte{0x05}},
+			},
 		},
 	}
 

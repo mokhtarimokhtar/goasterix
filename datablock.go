@@ -151,7 +151,6 @@ func (db *DataBlock) Decode(data []byte) (int, error) {
 
 	padding := int(rbSize) - int(db.Len)
 
-LoopRecords:
 	for {
 		rec := NewRecord()
 		unRead, err = rec.Decode(rb, uap)
@@ -164,7 +163,7 @@ LoopRecords:
 
 		// padding is for the case payload is oversize of LEN dataField asterix
 		if unRead == 0 || unRead == padding {
-			break LoopRecords
+			break
 		}
 	}
 	return unRead, nil
@@ -178,6 +177,7 @@ func (db DataBlock) String() [][]string {
 	return records
 }
 
+/*
 func (db DataBlock) Payload() [][]byte {
 	var pd [][]byte
 	var catPd []byte
@@ -195,3 +195,4 @@ func (db DataBlock) Payload() [][]byte {
 	}
 	return pd
 }
+*/

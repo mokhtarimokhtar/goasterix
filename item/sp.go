@@ -14,8 +14,7 @@ import (
 type SpecialPurpose struct {
 	Base
 	Len      uint8
-	Data     []byte
-	SubItems []SubItemBits
+	SubItems []SubItem
 }
 
 func (sp *SpecialPurpose) Clone() DataItem {
@@ -26,6 +25,10 @@ func (sp *SpecialPurpose) Clone() DataItem {
 	}
 }
 
+func (sp SpecialPurpose) GetSubItems() []SubItem {
+	return sp.SubItems
+}
+
 func (sp *SpecialPurpose) Reader(rb *bytes.Reader) error {
 	var err error
 
@@ -34,16 +37,48 @@ func (sp *SpecialPurpose) Reader(rb *bytes.Reader) error {
 		return err
 	}
 
-	sp.Data = make([]byte, sp.Len-1)
-	err = binary.Read(rb, binary.BigEndian, &sp.Data)
+	sp.SubItems = make([]SubItem, 0, 1)
+	tmp := new(SubItem)
+	tmp.Name = "SP"
+	tmp.Type = FromToField
+	tmp.From = (sp.Len - 1) * 8
+	tmp.To = 1
+	tmp.Data = make([]byte, sp.Len-1)
+
+	err = binary.Read(rb, binary.BigEndian, &tmp.Data)
 	if err != nil {
-		sp.Data = nil
+		sp.SubItems = nil
 		return err
 	}
+	sp.SubItems = append(sp.SubItems, *tmp)
 
 	return err
 }
 
+// String implements fmt.Stringer in hexadecimal
+func (sp SpecialPurpose) String() string {
+	var buf bytes.Buffer
+	buf.Reset()
+	tmp := []byte{sp.Len}
+
+	buf.Reset()
+	buf.WriteString(sp.Base.DataItemName)
+	buf.WriteByte(':')
+
+	buf.WriteByte('[')
+	buf.WriteString("len:")
+	buf.WriteString(hex.EncodeToString(tmp))
+	buf.WriteByte(']')
+
+	if sp.SubItems != nil {
+		buf.WriteByte('[')
+		buf.WriteString(sp.SubItems[0].String())
+		buf.WriteByte(']')
+	}
+	return buf.String()
+}
+
+/*
 // Payload returns this dataField as bytes.
 func (sp SpecialPurpose) Payload() []byte {
 	var p []byte
@@ -51,17 +86,4 @@ func (sp SpecialPurpose) Payload() []byte {
 	p = append(p, sp.Data...)
 	return p
 }
-
-// String implements fmt.Stringer in hexadecimal
-func (sp SpecialPurpose) String() string {
-	var buf bytes.Buffer
-	buf.Reset()
-
-	tmp := []byte{sp.Len}
-	tmp = append(tmp, sp.Data...)
-
-	buf.WriteString(sp.Base.DataItemName)
-	buf.WriteByte(':')
-	buf.WriteString(hex.EncodeToString(tmp))
-	return buf.String()
-}
+*/

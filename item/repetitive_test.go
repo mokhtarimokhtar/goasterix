@@ -53,23 +53,10 @@ func TestRepetitiveReader(t *testing.T) {
 	dataSet := []testCase{
 		{
 			Name:  "testCase 1",
-			input: "03 aaaaaa bbbbbb cccccc",
-			item: &Repetitive{
-				SubItemSize: 3,
-			},
-			err: nil,
-			output: &Repetitive{
-				SubItemSize: 3,
-				Rep:         0x03,
-				Data:        []byte{0xaa, 0xaa, 0xaa, 0xbb, 0xbb, 0xbb, 0xcc, 0xcc, 0xcc},
-			},
-		},
-		{
-			Name:  "testCase 2",
 			input: "03 8aaaaa 0bbbbb 8ccccc", // 8a 1000-1010 1010-1010 1010-1010
 			item: &Repetitive{
 				SubItemSize: 3,
-				SubItems: []SubItemBits{
+				SubItems: []SubItem{
 					{
 						Type: BitField,
 						Bit:  24,
@@ -84,7 +71,7 @@ func TestRepetitiveReader(t *testing.T) {
 			output: &Repetitive{
 				SubItemSize: 3,
 				Rep:         0x03,
-				SubItems: []SubItemBits{
+				SubItems: []SubItem{
 					{
 						Type: BitField,
 						Bit:  24,
@@ -119,20 +106,19 @@ func TestRepetitiveReader(t *testing.T) {
 			},
 		},
 		{
-			Name:  "testCase 3",
+			Name:  "testCase 2",
 			input: "04 aaaaaa bbbbbb cccccc",
 			item: &Repetitive{
 				SubItemSize: 3,
 			},
-			err: io.ErrUnexpectedEOF,
+			err: io.EOF,
 			output: &Repetitive{
 				SubItemSize: 3,
 				Rep:         0x04,
-				Data:        nil,
 			},
 		},
 		{
-			Name:  "testCase 4",
+			Name:  "testCase 3",
 			input: "",
 			item: &Repetitive{
 				SubItemSize: 3,
@@ -141,11 +127,10 @@ func TestRepetitiveReader(t *testing.T) {
 			output: &Repetitive{
 				SubItemSize: 3,
 				Rep:         0x00,
-				Data:        nil,
 			},
 		},
 		{
-			Name:  "testCase 5",
+			Name:  "testCase 4",
 			input: "02",
 			item: &Repetitive{
 				SubItemSize: 3,
@@ -154,7 +139,6 @@ func TestRepetitiveReader(t *testing.T) {
 			output: &Repetitive{
 				SubItemSize: 3,
 				Rep:         0x02,
-				Data:        nil,
 			},
 		},
 	}
@@ -200,21 +184,8 @@ func TestRepetitiveString(t *testing.T) {
 					DataItemName: "I000/010",
 					Description:  "Test item",
 				},
-				Rep:  0x02,
-				Data: []byte{0xab, 0xcd},
-			},
-			output: "I000/010:[02abcd]",
-		},
-		{
-			Name: "testCase 2",
-			input: Repetitive{
-				Base: Base{
-					FRN:          1,
-					DataItemName: "I000/010",
-					Description:  "Test item",
-				},
 				Rep: 0x02,
-				SubItems: []SubItemBits{
+				SubItems: []SubItem{
 					{
 						Name: "010-1",
 						From: 16, To: 9,
@@ -251,13 +222,12 @@ func TestRepetitiveString(t *testing.T) {
 			output: "I000/010:[rep:02][010-1:ab][010-2:cd][010-3:01][010-1:12][010-2:34][010-3:00]",
 		},
 		{
-			Name: "testCase 3",
+			Name: "testCase 2",
 			input: Repetitive{
 				Base: Base{},
 				Rep:  0,
-				Data: nil,
 			},
-			output: ":[00]",
+			output: ":[rep:00]",
 		},
 	}
 
@@ -274,6 +244,7 @@ func TestRepetitiveString(t *testing.T) {
 	}
 }
 
+/*
 func TestRepetitivePayload(t *testing.T) {
 	// setup
 	type testCase struct {
@@ -313,3 +284,4 @@ func TestRepetitivePayload(t *testing.T) {
 		}
 	}
 }
+*/

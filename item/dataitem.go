@@ -13,6 +13,8 @@ var (
 	ErrSubDataFieldUnknown = errors.New("type of sub datafield not found")
 	// ErrSubDataFieldFormat reports which ErrDatafield Format.
 	ErrSubDataFieldFormat = errors.New("sub datafield incorrect")
+	// ErrSubItemNotFound reports which sub-item not found in list of SubItems.
+	ErrSubItemNotFound = errors.New("sub-item not found")
 )
 
 type TypeField uint8
@@ -48,16 +50,35 @@ type DataItem interface {
 	Clone() DataItem
 	GetType() TypeField
 	Reader(*bytes.Reader) error
+	GetSubItems() []SubItem
 	String() string
-	Payload() []byte
+	//Payload() []byte
 }
 
-//type Export interface {
-//	String() string
-//	Payload() []byte
-//}
+/*
+type PayloadDataItem struct {
+	Data []byte
+}
 
-//type Payloader struct{}
+func (p *PayloadDataItem) Payload(dataItem DataItem) {
+	switch dataItem.GetType() {
+	case FixedField:
+		d := dataItem.(*Fixed)
+		p.Data = make([]byte, 0, d.Size)
+		p.Data = d.Data
+	case ExtendedField:
+		d := dataItem.(*Extended)
+		p.Data = make([]byte, 0, len(d.Primary)+len(d.Secondary))
+		p.Data = append(p.Data, d.Primary...)
+		p.Data = append(p.Data, d.Secondary...)
+	case RepetitiveField:
+		d := dataItem.(*Repetitive)
+		p.Data = make([]byte, 0, d.Rep*d.SubItemSize)
+		p.Data = append(p.Data, d.Rep)
+		p.Data = append(p.Data, d.Data...)
+	}
+}
+*/
 
 /*type DataItem interface {
 	IBase

@@ -2,6 +2,7 @@ package transform
 
 import (
 	"encoding/hex"
+	"fmt"
 	"math"
 	"strings"
 
@@ -13,8 +14,8 @@ const (
 )
 
 type WGS84Coordinates struct {
-	Latitude  float32 `json:"latitude,omitempty"`
-	Longitude float32 `json:"longitude,omitempty"`
+	Latitude  float64 `json:"latitude,omitempty"`
+	Longitude float64 `json:"longitude,omitempty"`
 }
 
 type GeometricHeight struct {
@@ -129,8 +130,8 @@ type VerticalRate struct {
 
 type AirborneGroundVector struct {
 	RE          string  `json:"re,omitempty"`
-	GroundSpeed float32 `json:"groundspeed,omitempty"`
-	TrackAngle  float32 `json:"trackangle,omitempty"`
+	GroundSpeed float64 `json:"groundspeed,omitempty"`
+	TrackAngle  float64 `json:"trackangle,omitempty"`
 }
 
 type TrajectoryIntentData struct {
@@ -236,7 +237,7 @@ type Cat021Model struct {
 	TrackAngleRate                                 float32                                `json:"TrackAngleRate,omitempty"`
 	TargetIdentification                           string                                 `json:"TargetIdentification,omitempty"`
 	TargetStatus                                   *TargetStatus                          `json:"TargetStatus,omitempty"`
-	MOPSVersion                                    *MOPSVersion                           `json:"MPOSVersion,omitempty"`
+	MOPSVersion                                    *MOPSVersion                           `json:"MOPSVersion,omitempty"`
 	MetInformation                                 string                                 `json:"MetInformation,omitempty"`
 	RollAngle                                      float64                                `json:"RollAngle,omitempty"`
 	ModeSMBData                                    *ModeSMBData                           `json:"ModeSMBData,omitempty"`
@@ -247,6 +248,7 @@ type Cat021Model struct {
 
 func (data *Cat021Model) write(rec goasterix.Record) {
 	for _, item := range rec.Items {
+		fmt.Printf("FRN: %d\n\n", item.Meta.FRN)
 		switch item.Meta.FRN {
 		case 1:
 			var payload [2]byte
@@ -254,7 +256,8 @@ func (data *Cat021Model) write(rec goasterix.Record) {
 			tmp, _ := sacSic(payload)
 			data.DataSourceIdentification = &tmp
 		case 2:
-			tmp := targetReportDescriptor(*item.Compound)
+			cmp := *item.Extended
+			tmp := targetReportDescriptor(cmp)
 			data.TargetReportDescriptor = &tmp
 		case 3:
 			var payload [2]byte
@@ -268,13 +271,14 @@ func (data *Cat021Model) write(rec goasterix.Record) {
 			copy(payload[:], item.Fixed.Data[:])
 			data.TimeOfApplicabilityForPosition, _ = timeOfDay(payload)
 		case 6:
-			var payload []byte
-			copy(payload[:], item.Fixed.Data[:])
+			fmt.Printf("BYTES RECEIVED: %v\n", item.Fixed.Data)
+			payload := FlipEndianness(item.Fixed.Data)
 			tmp := wgs84Coordinates(payload)
 			data.PositionWGS84 = &tmp
 		case 7:
-			var payload []byte
-			copy(payload[:], item.Fixed.Data[:])
+			//var payload []byte
+			//copy(payload[:], item.Fixed.Data[:])
+			payload := item.Fixed.Data[:]
 			tmp := wgs84Coordinates(payload)
 			data.PositionWGS84HighRes = &tmp
 		case 8:
@@ -319,10 +323,11 @@ func (data *Cat021Model) write(rec goasterix.Record) {
 			tmp := geometricHeight(payload)
 			data.GeometricHeight = &tmp
 		case 17:
-			tmp := qualityIndicators(*item.Compound)
+			tmp := qualityIndicators(*item.Extended)
 			data.QualityIndicators = &tmp
 		case 18:
-			tmp := mOPS(*item.Compound)
+			payload := item.Fixed.Payload()[0]
+			tmp := mOPS(payload)
 			data.MOPSVersion = &tmp
 		case 19:
 			var payload [2]byte
@@ -342,8 +347,7 @@ func (data *Cat021Model) write(rec goasterix.Record) {
 		case 22:
 			data.MagneticHeading = float64(uint16(item.Fixed.Data[0])<<8+uint16(item.Fixed.Data[1])) * 0.0055
 		case 23:
-			var payload []byte
-			copy(payload, item.Fixed.Data[:])
+			payload := item.Fixed.Data[:]
 			tmp := targetStatus(payload)
 			data.TargetStatus = tmp
 		case 24:
@@ -396,14 +400,12 @@ func (data *Cat021Model) write(rec goasterix.Record) {
 			copy(payload[:], item.Fixed.Data[:])
 			data.AircraftOperationStatus = aircraftOperationalStatus(payload)
 		case 37:
-			var payload []byte
-			copy(payload[:], item.Fixed.Data[:])
+			payload := item.Fixed.Data[:]
 			data.SurfaceCapabilitiesAndCharacteristic = surfaceCapabilitiesAndCharacteristics(payload)
 		case 38:
 			data.MessageAmplitude = goasterix.TwoComplement16(8, uint16(item.Fixed.Data[0]))
 		case 39:
-			var payload []byte
-			copy(payload[:], item.Repetitive.Payload()[:])
+			payload := item.Fixed.Data[:]
 			tmp := modeSMBDataCAT021(payload)
 			data.ModeSMBData = tmp
 		case 40:
@@ -421,7 +423,7 @@ func (data *Cat021Model) write(rec goasterix.Record) {
 
 // TODO: Refactor to cover for arbitrary number of extensions (currently only covers
 //       two as that's explicitly in the spec)
-func targetReportDescriptor(cp goasterix.Compound) TargetReportDescriptor {
+func targetReportDescriptor(cp goasterix.Extended) TargetReportDescriptor {
 	trd := new(TargetReportDescriptor)
 
 	tmpList := cp.Payload()
@@ -563,7 +565,7 @@ func targetReportDescriptor(cp goasterix.Compound) TargetReportDescriptor {
 	return *trd
 }
 
-func qualityIndicators(cp goasterix.Compound) QualityIndicators {
+func qualityIndicators(cp goasterix.Extended) QualityIndicators {
 	qi := new(QualityIndicators)
 
 	tmp := cp.Primary[0]
@@ -576,8 +578,7 @@ func qualityIndicators(cp goasterix.Compound) QualityIndicators {
 		fx1 := new(FirstExtensionQI)
 
 		fstItem := 0
-		fstByte := 0
-		tmp = cp.Secondary[fstItem].Payload()[fstByte]
+		tmp = cp.Secondary[fstItem]
 
 		fx1.NICBaro = int(tmp & 0x80 >> (BYTESIZE - 1))
 
@@ -588,7 +589,7 @@ func qualityIndicators(cp goasterix.Compound) QualityIndicators {
 		if isFieldExtention(tmp) {
 			fx2 := new(SecondExtensionQI)
 			sndItem := 1
-			tmp = cp.Secondary[sndItem].Payload()[fstByte]
+			tmp = cp.Secondary[sndItem]
 
 			if tmp&0x20 == 0 {
 				fx2.SILS = "flight-hour"
@@ -603,7 +604,7 @@ func qualityIndicators(cp goasterix.Compound) QualityIndicators {
 			if isFieldExtention(tmp) {
 				fx3 := new(ThirdExtensionQI)
 				thirdItem := 2
-				tmp = cp.Secondary[thirdItem].Payload()[fstByte]
+				tmp = cp.Secondary[thirdItem]
 
 				fx3.PIC = getPIC(int(tmp & 0xF0 >> 4))
 
@@ -628,17 +629,18 @@ func wgs84Coordinates(data []byte) WGS84Coordinates {
 	var pos WGS84Coordinates
 
 	if len(data) == 6 {
+		data = FlipEndianness(data) // Real world data seems to have its endianness flipped...
 		tmpLatitude := uint32(data[0])<<(2*BYTESIZE) + uint32(data[1])<<BYTESIZE + uint32(data[2])
-		pos.Latitude = float32(goasterix.TwoComplement32(24, tmpLatitude)) * 0.00002145767
+		pos.Latitude = float64(goasterix.TwoComplement32(24, tmpLatitude)) * 0.00002145767
 
 		tmpLongitude := uint32(data[3])<<(2*BYTESIZE) + uint32(data[4])<<BYTESIZE + uint32(data[5])
-		pos.Longitude = float32(goasterix.TwoComplement32(32, tmpLongitude)) * 0.00002145767
+		pos.Longitude = float64(goasterix.TwoComplement32(24, tmpLongitude)) * 0.00002145767
 	} else { // high precision data
-		tmpLatitude := uint32(data[0])<<23 + uint32(data[1])<<15 + uint32(data[2])<<7 + uint32(data[3])
-		pos.Latitude = float32(goasterix.TwoComplement32(32, tmpLatitude)) * 0.00000016764
+		tmpLatitude := uint32(data[0])<<(3*BYTESIZE) + uint32(data[1])<<(2*BYTESIZE) + uint32(data[2])<<BYTESIZE + uint32(data[3])
+		pos.Latitude = float64(goasterix.TwoComplement32(32, tmpLatitude)) * 0.00000016764
 
-		tmpLongitude := uint32(data[4])<<23 + uint32(data[5])<<15 + uint32(data[6])<<7 + uint32(data[7])
-		pos.Longitude = float32(goasterix.TwoComplement32(32, tmpLongitude)) * 0.00000016764
+		tmpLongitude := uint32(data[4])<<(3*BYTESIZE) + uint32(data[5])<<(2*BYTESIZE) + uint32(data[6])<<BYTESIZE + uint32(data[7])
+		pos.Longitude = float64(goasterix.TwoComplement32(32, tmpLongitude)) * 0.00000016764
 	}
 
 	return pos
@@ -684,10 +686,10 @@ func geometricHeight(data [2]byte) GeometricHeight {
 	}
 }
 
-func mOPS(cp goasterix.Compound) MOPSVersion {
+func mOPS(cp byte) MOPSVersion {
 	mops := new(MOPSVersion)
 
-	tmp := cp.Primary[0]
+	tmp := cp
 
 	if tmp&0x40>>6 == 0 {
 		mops.VNS = "supported"
@@ -754,9 +756,9 @@ func targetStatus(data []byte) *TargetStatus {
 	}
 
 	if tmp&0x40 == 0 {
-		ts.LNAV = "engaged"
+		ts.LNAV = "LNAV Mode engaged"
 	} else {
-		ts.LNAV = "not engaged"
+		ts.LNAV = "LNAV Mode not engaged"
 	}
 
 	if tmp&0x20 == 0 {
@@ -771,7 +773,7 @@ func targetStatus(data []byte) *TargetStatus {
 	case 1:
 		ts.PS = "General emergency"
 	case 2:
-		ts.PS = "Lifeguard/medical emergency"
+		ts.PS = "Lifeguard / medical emergency"
 	case 3:
 		ts.PS = "Minimum fuel"
 	case 4:
@@ -806,7 +808,7 @@ func rollAngle(data [2]byte) float64 {
 func verticalRate(data [2]byte) *VerticalRate {
 	baroRate := new(VerticalRate)
 
-	if int16(data[0])&0xF0>>BYTESIZE-1 == 0 {
+	if int16(data[0])&0x80>>(BYTESIZE-1) == 0 {
 		baroRate.RE = "Value in defined range"
 	} else {
 		baroRate.RE = "Value exceeds defined range "
@@ -820,16 +822,16 @@ func verticalRate(data [2]byte) *VerticalRate {
 func airborneGroundVector(data [4]byte) *AirborneGroundVector {
 	agv := new(AirborneGroundVector)
 
-	if data[0]&0x80>>3 == 0 {
+	if data[0]&0x80>>(BYTESIZE-1) == 0 {
 		agv.RE = "Value in defined range"
 	} else {
 		agv.RE = "Value exceeds defined range"
 	}
 
-	agv.GroundSpeed = float32(int16(data[0])&0x7F<<BYTESIZE+int16(data[1])&0xFF) * float32(math.Pow(2, -14))
+	agv.GroundSpeed = float64(int16(data[0])&0x7F<<BYTESIZE+int16(data[1])&0xFF) * float64(math.Pow(2, -14))
 
-	tmpLSBTrackAngle := float32(360 / math.Pow(2, 16))
-	agv.TrackAngle = float32(int16(data[2])&0xFF<<BYTESIZE+int16(data[3])&0xFF) * tmpLSBTrackAngle
+	tmpLSBTrackAngle := float64(360 / math.Pow(2, 16))
+	agv.TrackAngle = float64(uint16(data[2])&0xFF<<BYTESIZE+uint16(data[3])&0xFF) * tmpLSBTrackAngle
 
 	return agv
 }
@@ -990,7 +992,7 @@ func aircraftOperationalStatus(data [1]byte) *AircraftOperationStatus {
 		tmpAOS.RA = "TCAS RA active"
 	}
 
-	switch uint16(tmp&0x60)>>BYTESIZE - 3 {
+	switch uint16(tmp&0x60) >> (BYTESIZE - 3) {
 	case 0:
 		tmpAOS.TC = "no capability for Trajectory Change Reports"
 	case 1:
@@ -1001,25 +1003,25 @@ func aircraftOperationalStatus(data [1]byte) *AircraftOperationStatus {
 		tmpAOS.TC = "reserved"
 	}
 
-	if uint16(tmp&0x10)>>BYTESIZE-4 == 0 {
+	if uint16(tmp&0x10)>>(BYTESIZE-4) == 0 {
 		tmpAOS.TS = "no capability to support Target State Reports"
 	} else {
 		tmpAOS.TS = "capable of supporting target State Reports"
 	}
 
-	if uint16(tmp&0x08)>>BYTESIZE-3 == 0 {
+	if uint16(tmp&0x08)>>(BYTESIZE-5) == 0 {
 		tmpAOS.ARV = "no capability to generate ARV-reports"
 	} else {
 		tmpAOS.ARV = "capable of generate ARV-reports"
 	}
 
-	if uint16(tmp&0x04)>>BYTESIZE-2 == 0 {
+	if uint16(tmp&0x04)>>(BYTESIZE-6) == 0 {
 		tmpAOS.CDTIA = "CDTI not operational"
 	} else {
 		tmpAOS.CDTIA = "CDTI operational"
 	}
 
-	if uint16(tmp&0x02)>>BYTESIZE-1 == 0 {
+	if uint16(tmp&0x02)>>(BYTESIZE-7) == 0 {
 		tmpAOS.NotTCAS = "TCAS operational"
 	} else {
 		tmpAOS.NotTCAS = "TCAS not operational"
@@ -1205,4 +1207,13 @@ func getPIC(data int) *PIC {
 	tmpPIC.NIC_Version2OrHigher = tmpNICV2
 
 	return tmpPIC
+}
+
+func FlipEndianness(bytes []byte) []byte {
+	for i := 0; i < len(bytes)/2; i++ {
+		tmp := bytes[i]
+		bytes[i] = bytes[len(bytes)-i-1]
+		bytes[len(bytes)-i-1] = tmp
+	}
+	return bytes
 }

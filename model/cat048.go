@@ -94,7 +94,6 @@ func (m *Cat048Model) write(rec goasterix.IRecord) {
 			sub := dataItem.GetSubItems()
 			m.RadarPlotCharacteristics = getRadarPlotCharacteristics(sub)
 		case 8:
-			// decode AircraftAddress
 			// AircraftAddress returns the hexadecimal code in string format.
 			// Aircraft address (24-bits Mode S address) assigned uniquely to each aircraft.
 			sub := dataItem.GetSubItems()

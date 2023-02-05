@@ -14,9 +14,10 @@ func benchmarkWriteModel(input string, uap item.UAP, b *testing.B) {
 	//rec := goasterix.NewRecord()
 	rec := new(goasterix.Record)
 	_, _ = rec.Decode(rb, uap)
-
+	model := new(Cat048Model)
+	
 	for n := 0; n < b.N; n++ {
-		model := new(Cat048Model)
+
 		model.write(*rec)
 	}
 }

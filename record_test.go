@@ -390,7 +390,7 @@ func TestRecordDecodeCAT048(t *testing.T) {
 			Base: Base{
 				FRN:          2,
 				DataItemName: "I048/140",
-				Description:  "Time-of-Day",
+				Description:  "Time of Day",
 				Type:         FixedField,
 			},
 			Size: 3,
@@ -459,11 +459,10 @@ func TestRecordDecodeCAT048(t *testing.T) {
 				Type:         FixedField,
 			},
 			Size: 2,
-			//Data: []byte{0x02, 0xd0},
 			SubItems: []SubItem{
 				{Name: "V", Type: BitField, Bit: 16, Data: []byte{0x00}},
 				{Name: "G", Type: BitField, Bit: 15, Data: []byte{0x00}},
-				{Name: "Flight Level", Type: FromToField, From: 14, To: 1, Data: []byte{0x02, 0xd0}},
+				{Name: "LEVEL", Type: FromToField, From: 14, To: 1, Data: []byte{0x02, 0xd0}},
 			},
 		},
 		&Compound{
@@ -524,17 +523,15 @@ func TestRecordDecodeCAT048(t *testing.T) {
 				Type:         FixedField,
 			},
 			Size: 6,
-			//Data: []byte{0x38, 0xa1, 0x78, 0xcf, 0x42, 0x20},
-			// [00 1110][00 1010]-[00 0101][11-1000] [11 00-11][11 0100]-[00-10 00][10-0000]
 			SubItems: []SubItem{
-				{Name: "Char1", Type: FromToField, From: 48, To: 43, Data: []byte{0x0e}},
-				{Name: "Char2", Type: FromToField, From: 42, To: 37, Data: []byte{0x0a}},
-				{Name: "Char3", Type: FromToField, From: 36, To: 31, Data: []byte{0x05}},
-				{Name: "Char4", Type: FromToField, From: 30, To: 25, Data: []byte{0x38}},
-				{Name: "Char5", Type: FromToField, From: 24, To: 19, Data: []byte{0x33}},
-				{Name: "Char6", Type: FromToField, From: 18, To: 13, Data: []byte{0x34}},
-				{Name: "Char7", Type: FromToField, From: 12, To: 7, Data: []byte{0x08}},
-				{Name: "Char8", Type: FromToField, From: 6, To: 1, Data: []byte{0x20}},
+				{Name: "char1", Type: FromToField, From: 48, To: 43, Data: []byte{0x0e}},
+				{Name: "char2", Type: FromToField, From: 42, To: 37, Data: []byte{0x0a}},
+				{Name: "char3", Type: FromToField, From: 36, To: 31, Data: []byte{0x05}},
+				{Name: "char4", Type: FromToField, From: 30, To: 25, Data: []byte{0x38}},
+				{Name: "char5", Type: FromToField, From: 24, To: 19, Data: []byte{0x33}},
+				{Name: "char6", Type: FromToField, From: 18, To: 13, Data: []byte{0x34}},
+				{Name: "char7", Type: FromToField, From: 12, To: 7, Data: []byte{0x08}},
+				{Name: "char8", Type: FromToField, From: 6, To: 1, Data: []byte{0x20}},
 			},
 		},
 		&Repetitive{
@@ -546,15 +543,14 @@ func TestRecordDecodeCAT048(t *testing.T) {
 			},
 			SubItemSize: 8,
 			Rep:         0x02,
-			//Data:        []byte{0xe7, 0x9a, 0x5d, 0x27, 0xa0, 0x0c, 0x00, 0x60, 0xa3, 0x28, 0x00, 0x30, 0xa4, 0x00, 0x00, 0x40},
 			SubItems: []SubItem{
-				{Name: "MBData", Type: FromToField, From: 64, To: 9, Data: []byte{0xe7, 0x9a, 0x5d, 0x27, 0xa0, 0x0c, 0x00}},
-				{Name: "BDS1", Type: FromToField, From: 8, To: 5, Data: []byte{0x06}},
-				{Name: "BDS2", Type: FromToField, From: 4, To: 1, Data: []byte{0x00}},
+				{Name: "MBData", Type: FromToField, From: 64, To: 1, Data: []byte{0xe7, 0x9a, 0x5d, 0x27, 0xa0, 0x0c, 0x00, 0x60}},
+				//{Name: "BDS1", Type: FromToField, From: 8, To: 5, Data: []byte{0x06}},
+				//{Name: "BDS2", Type: FromToField, From: 4, To: 1, Data: []byte{0x00}},
 
-				{Name: "MBData", Type: FromToField, From: 64, To: 9, Data: []byte{0xa3, 0x28, 0x00, 0x30, 0xa4, 0x00, 0x00}},
-				{Name: "BDS1", Type: FromToField, From: 8, To: 5, Data: []byte{0x04}},
-				{Name: "BDS2", Type: FromToField, From: 4, To: 1, Data: []byte{0x00}},
+				{Name: "MBData", Type: FromToField, From: 64, To: 1, Data: []byte{0xa3, 0x28, 0x00, 0x30, 0xa4, 0x00, 0x00, 0x40}},
+				//{Name: "BDS1", Type: FromToField, From: 8, To: 5, Data: []byte{0x04}},
+				//{Name: "BDS2", Type: FromToField, From: 4, To: 1, Data: []byte{0x00}},
 			},
 		},
 		&Fixed{
@@ -565,7 +561,6 @@ func TestRecordDecodeCAT048(t *testing.T) {
 				Type:         FixedField,
 			},
 			Size: 2,
-			//Data: []byte{0x06, 0x3a},
 			SubItems: []SubItem{
 				{Name: "TRACK NUMBER", Type: FromToField, From: 12, To: 1, Data: []byte{0x06, 0x3a}},
 			},

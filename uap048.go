@@ -3,6 +3,13 @@ package goasterix
 import "github.com/mokhtarimokhtar/goasterix/item"
 
 const (
+	I048010Name = "I048/010"
+	I048010Desc = "Data Source Identifier"
+	I048140Name = "I048/140"
+	I048140Desc = "Time of Day"
+	I048020Name = "I048/020"
+	I048020Desc = "Target Report Descriptor"
+
 	I048130Name    = "I048/130"
 	I048130Desc    = "Radar Plot Characteristics"
 	I048130SRL     = "SRL"
@@ -42,8 +49,8 @@ var Cat048V127 = item.UAP{
 		&item.Fixed{
 			Base: item.Base{
 				FRN:          item.FRN1,
-				DataItemName: "I048/010",
-				Description:  "Data Source Identifier",
+				DataItemName: I048010Name,
+				Description:  I048010Desc,
 				Type:         item.FixedField,
 			},
 			Size: 2,
@@ -63,8 +70,8 @@ var Cat048V127 = item.UAP{
 		&item.Fixed{
 			Base: item.Base{
 				FRN:          item.FRN2,
-				DataItemName: "I048/140",
-				Description:  "Time-of-Day",
+				DataItemName: I048140Name,
+				Description:  I048140Desc,
 				Type:         item.FixedField,
 			},
 			Size: 3,
@@ -78,8 +85,8 @@ var Cat048V127 = item.UAP{
 		&item.Extended{
 			Base: item.Base{
 				FRN:          item.FRN3,
-				DataItemName: "I048/020",
-				Description:  "Target Report Descriptor",
+				DataItemName: I048020Name,
+				Description:  I048020Desc,
 				Type:         item.ExtendedField,
 			},
 			PrimaryItemSize:   1,
@@ -544,7 +551,7 @@ var Cat048V127 = item.UAP{
 		&item.SpecialPurpose{
 			Base: item.Base{
 				FRN:          item.FRN27,
-				DataItemName: "I060SPName-Data DataItemName",
+				DataItemName: "SP-Data Item",
 				Description:  "Special Purpose Field",
 				Type:         item.SPField,
 			},
@@ -552,7 +559,7 @@ var Cat048V127 = item.UAP{
 		&item.ReservedExpansion{
 			Base: item.Base{
 				FRN:          item.FRN28,
-				DataItemName: "I060REName-Data DataItemName",
+				DataItemName: "RE-Data Item",
 				Description:  "Reserved Expansion Field",
 				Type:         item.REField,
 			},

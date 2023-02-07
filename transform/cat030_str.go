@@ -263,7 +263,8 @@ func flp(data [2]byte) Flstr {
 
 	tmp := uint16(data[0])<<8 + uint16(data[1])
 	tmp = tmp & 0x3FFF
-	niveauVol := goasterix.TwoComplement16(13, tmp)
+	//niveauVol := goasterix.TwoComplement16(13, tmp)
+	niveauVol := goasterix.TwoComplement16(14, tmp)
 	flpm.NiveauVol = float64(niveauVol) / 4 // divide by 4 is in 100's feet
 
 	return flpm

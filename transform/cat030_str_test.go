@@ -32,7 +32,13 @@ func TestCat030STRModel_ToJsonRecord(t *testing.T) {
 			input:        "3ffb81604806e466ee0a090e0ecee134bee00e0154015401a20156f037090c08183465101826721724e0",
 			output:       []byte(`{"num":{"version":2,"nap":1,"st":"operational","ns":"principal","numero":882},"hptu":52700.078125,"pist":{"liv":"trafic_reel","cnf":"piste_confirmee","man":"defaut","tva":"defaut","type":"piste_monoradar_secondaire_pure","mort":"defaut","cre":"defaut","slr":"coordonnees_projetees_niveau_calcule","cor":"piste_non_correlee_plan_vol"},"alis":{"v":"code_valide","g":"defaut","c":"code_pas_changement","code":7316},"pos":{"x":-123.1875,"y":-260.5},"qual":7,"flpc":{"vc":"code_validated","gc":"default","niveauVol":85},"flpm":{"vc":"code_validated","gc":"default","niveauVol":85},"vit":{"x":0.02551263,"y":0.02087397},"mov":{"trans":"tendance_indeterminee","longi":"tendance_indeterminee","verti":"vol_palier"},"spe":{"sy":6,"m":1,"s":1,"o1":0,"o2":0,"o3":0,"o4":0,"o5":0,"o6":0,"o7":1,"o8":1,"o9":0,"o10":0,"o11":0,"o12":0,"o13":0,"o14":0,"o15":1,"o16":0,"o17":0,"o18":0,"o19":0,"r":0,"c":0},"radSacSic":{"sac":8,"sic":24},"adrs":"346510","ids":"FBY2E2S "}`),
 		},
+		{
+			TestCaseName: "Testcase 4",
+			input:        "3ffb7f605800a23abfd8014002004e84d1460e3ffe3ffe013700f3f017010c444c48313945202057453139304d4c464d4e454444463c546510c231e45820",
+			output:       []byte(`{"num":{"version":2,"nap":3,"st":"operational","ns":"principal","numero":81},"hptu":30079.6875,"pist":{"liv":"trafic_reel","cnf":"piste_confirmee","man":"defaut","tva":"defaut","type":"piste_association_multiple_primaire_secondaire","mort":"defaut","cre":"creation_de_piste","slr":"coordonnees_projetees_niveau_calcule","cor":"piste_correlation_plan_vol_confirmee"},"alis":{"v":"code_valide","g":"defaut","c":"code_pas_changement","code":1000},"pos":{"x":314.0625,"y":-186.90625},"qual":7,"flpc":{"vc":"code_validated","gc":"default","niveauVol":-0.5},"flpm":{"vc":"code_validated","gc":"default","niveauVol":-0.5},"vit":{"x":0.018981885,"y":0.014831505},"mov":{"trans":"tendance_indeterminee","longi":"tendance_indeterminee","verti":"vol_palier"},"spe":{"sy":2,"m":1,"s":1,"o1":0,"o2":0,"o3":0,"o4":0,"o5":0,"o6":0,"o7":1,"o8":1,"o9":0,"o10":0,"o11":0,"o12":0,"o13":0,"o14":0,"o15":0,"o16":0,"o17":0,"o18":0,"o19":0,"r":0,"c":0},"ivol":"DLH19E ","pln":8279,"av":"E190","turb":"M","terd":"LFMN","tera":"EDDF","adrs":"3C5465","ids":"DLH19E  "}`),
+		},
 	}
+
 	for _, row := range dataSet {
 		// Arrange
 		uap030 := uap.Cat030StrV51

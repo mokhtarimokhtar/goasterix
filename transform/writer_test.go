@@ -94,14 +94,14 @@ func TestWriteModel(t *testing.T) {
 
 func TestWriteModelJSON(t *testing.T) {
 	// Arrange
-	input := "fff702 0836 429b52 a0 94c70181 0913 02d0 6002b7 490d01 38a178cf4220 02e79a5d27a00c0060a3280030a4000040 063a 0743ce5b 40 20f5"
-	output := []byte(`{"sourceIdentifier":{"sac":8,"sic":54},"aircraftAddress":"490D01","aircraftIdentification":"NJE834H ","timeOfDay":34102.640625,"rhoTheta":{"rho":148.77734375,"theta":2.1174999999999997},"flightLevel":{"v":"code_validated","g":"default","level":180},"radarPlotCharacteristics":{"srr":2,"sam":-73},"mode3ACode":{"squawk":"4423","v":"code_validated","g":"default","l":"code_derived_from_transponder"},"trackNumber":1594,"trackVelocity":{"groundSpeed":0.113464065,"heading":290.5485},"trackStatus":{"cnf":"confirmed_track","rad":"ssr_modes_track","dou":"normal_confidence","mah":"no_horizontal_man_sensed","cdm":"maintaining"},"bdsRegisterData":[{"transponderRegisterNumber":"60","code60":{"magneticHeading":-68,"indicatedAirspeed":302,"mach":0.632,"barometricAltitudeRate":32}},{"transponderRegisterNumber":"40","code40":{"mcpSelectAltitude":18000,"barometricPressureSetting":1013}}],"comAcasCapabilityFlightStatus":{"com":"comm_a_and_comm_b_capability","stat":"no_alert_no_spi_aircraft_airborne","si":"si_code_capable","mssc":"yes","arc":"25_ft_resolution","aic":"yes","b1a":"1","b1b":"5"}}`)
+	input := "c71b3b6bc1810000000022ff2102428a117f90060121450a4075756dcb4b6dcb4b31f314120dab05f04000000781dd286dcb4c15a674c596a00303"
+	output := []byte(`{"aircraftOperationStatus":{"ra":"TCAS II or ACAS RA not active","tc":"no capability for Trajectory Change Reports","ts":"no capability to support Target State Reports","arv":"no capability to generate ARV-reports","cdtia":"CDTI not operational","nottcas":"TCAS not operational","sa":"Single Antenna only"},"DataSourceIdentification":{"sac":0,"sic":0},"EmitterCategory":"75000 lbs < medium a/c < 300000 lbs","TargetReportDescriptor":{"atp":"24-Bit ICAO address","arc":"25ft","rc":"Default","rab":"Report from target transponder"},"Mode3ACode":{"a2":4,"a1":8,"b2":128,"b1":1,"c4":1,"c2":2},"TimeOfMessageReceptionForPosition":56214.5859375,"TimeOfMessageReceptionForVelocity":56214.5859375,"TimeOfReportTransmission":56214.59375,"TargetAddress":"407575","QualityIndicators":{"nucrornacv":1,"nucpornic":8,"fx":{"nicbaro":1,"sil":3,"nacp":9,"fx":{"sils":"flight-hour","sda":2,"gva":2}}},"PositionWGS84":{"latitude":49.21396007879,"longitude":3.17800967302},"PositionWGS84HighRes":{"latitude":49.214513010960005,"longitude":3.17804837592},"FlightLevel":380,"BarometricVerticalRate":{"re":"Value in defined range"},"AirborneGroundVector":{"re":"Value in defined range","groundspeed":0.11724853515625,"trackangle":311.0009765625},"TargetIdentification":"EZY41YZ ","TargetStatus":{"icf":"No intent change active","lnav":"LNAV Mode not engaged","ps":"No emergency/not reported","ss":"No condition reported"},"MOPSVersion":{"vns":"supported","vn":"ED102A/DO-260B","ltt":"1090 es"}}`)
 
-	uap048 := uap.Cat048V127
+	uap021 := uap.Cat021v10
 	data, _ := util.HexStringToByte(input)
 	rec := new(goasterix.Record)
-	_, _ = rec.Decode(data, uap048)
-	cat048Model := new(Cat048Model)
+	_, _ = rec.Decode(data, uap021)
+	cat048Model := new(Cat021Model)
 
 	// Act
 	recJson, err := WriteModelJSON(cat048Model, *rec)
@@ -116,7 +116,7 @@ func TestWriteModelJSON(t *testing.T) {
 	if reflect.DeepEqual(recJson, output) == false {
 		t.Errorf("FAIL: %s; \nExpected: %s", recJson, output)
 	} else {
-		t.Logf("SUCCESS: %s; Expected: %s", recJson, output)
+		t.Logf("SUCCESS: %s;", recJson)
 	}
 }
 

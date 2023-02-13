@@ -2,7 +2,6 @@ package transform
 
 import (
 	"encoding/hex"
-	"fmt"
 	"math"
 	"strings"
 
@@ -248,7 +247,7 @@ type Cat021Model struct {
 
 func (data *Cat021Model) write(rec goasterix.Record) {
 	for _, item := range rec.Items {
-		fmt.Printf("FRN: %d\n\n", item.Meta.FRN)
+		//fmt.Printf("FRN: %d\n\n", item.Meta.FRN)
 		switch item.Meta.FRN {
 		case 1:
 			var payload [2]byte
@@ -271,7 +270,7 @@ func (data *Cat021Model) write(rec goasterix.Record) {
 			copy(payload[:], item.Fixed.Data[:])
 			data.TimeOfApplicabilityForPosition, _ = timeOfDay(payload)
 		case 6:
-			fmt.Printf("BYTES RECEIVED: %v\n", item.Fixed.Data)
+			//fmt.Printf("BYTES RECEIVED: %v\n", item.Fixed.Data)
 			payload := FlipEndianness(item.Fixed.Data)
 			tmp := wgs84Coordinates(payload)
 			data.PositionWGS84 = &tmp

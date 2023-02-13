@@ -87,13 +87,20 @@ func (rec *Record) Decode(data []byte, stdUAP uap.StandardUAP) (unRead int, err 
 			}
 			item.Compound = &tmp
 
-		case uap.SP, uap.RE:
+		case uap.SP:
 			tmp, err := SPAndREDataFieldReader(rb)
 			if err != nil {
 				unRead = rb.Len()
 				return unRead, err
 			}
 			item.SP = &tmp
+		case uap.RE:
+			tmp, err := SPAndREDataFieldReader(rb)
+			if err != nil {
+				unRead = rb.Len()
+				return unRead, err
+			}
+			item.RE = &tmp
 
 		case uap.RFS:
 			tmp, err := RFSDataFieldReader(rb, stdUAP.Items)
@@ -408,9 +415,9 @@ func RFSDataFieldReader(rb *bytes.Reader, items []uap.DataField) (RandomFieldSeq
 // 4.3.5 Non-Standard Data Fields:
 // Reserved Expansion Data
 // Field Special Purpose field
-func SPAndREDataFieldReader(rb *bytes.Reader) (SpecialPurpose, error) {
+func SPAndREDataFieldReader(rb *bytes.Reader) (SPandREField, error) {
 	var err error
-	sp := SpecialPurpose{}
+	sp := SPandREField{}
 
 	err = binary.Read(rb, binary.BigEndian, &sp.Len)
 	if err != nil {

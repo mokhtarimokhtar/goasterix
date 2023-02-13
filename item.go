@@ -20,7 +20,8 @@ type Item struct {
 	Repetitive *Repetitive
 	Compound   *Compound
 	RFS        *RandomFieldSequencing
-	SP         *SpecialPurpose
+	SP         *SPandREField
+	RE         *SPandREField
 }
 
 func NewItem(field uap.DataField) *Item {
@@ -167,7 +168,11 @@ type RandomField struct {
 	Field Item
 }
 
-type SpecialPurpose struct {
+// SPandREField
+// The Reserved Expansion Field is used only until and including Edition 2.1 of Part 1 of the ASTERIX documentation.
+// The Reserved Expansion Data field is intended to provide a mechanism to introduce  intermediate changes to a given
+// category, as explained in 7.2.3. In a way similar to the Special Purpose mechanism,
+type SPandREField struct {
 	Len  uint8
 	Data []byte
 }

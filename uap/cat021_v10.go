@@ -8,9 +8,10 @@ var Cat021v10 = StandardUAP{
 	Version:  2.5,
 	Items: []DataField{
 		{
-			FRN:      1,
-			DataItem: "I021/010",
-			Type:     Fixed,
+			FRN:         1,
+			DataItem:    "I021/010",
+			Description: "Data Source Identification",
+			Type:        Fixed,
 			Fixed: FixedField{
 				Size: 2,
 			},

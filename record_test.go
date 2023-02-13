@@ -593,14 +593,14 @@ func TestSPAndREDataFieldReader(t *testing.T) {
 	type dataTest struct {
 		TestCaseName string
 		input        string
-		output       SpecialPurpose
+		output       SPandREField
 		err          error
 	}
 	dataSet := []dataTest{
 		{
 			TestCaseName: "testcase 1",
 			input:        "03 FF FF",
-			output: SpecialPurpose{
+			output: SPandREField{
 				Len:  0x03,
 				Data: []byte{0xFF, 0xFF},
 			},
@@ -609,7 +609,7 @@ func TestSPAndREDataFieldReader(t *testing.T) {
 		{
 			TestCaseName: "testcase 2",
 			input:        "03 FF",
-			output: SpecialPurpose{
+			output: SPandREField{
 				Len:  0x03,
 				Data: nil,
 			},
@@ -618,7 +618,7 @@ func TestSPAndREDataFieldReader(t *testing.T) {
 		{
 			TestCaseName: "testcase 3",
 			input:        "",
-			output: SpecialPurpose{
+			output: SPandREField{
 				Len:  0x00,
 				Data: nil,
 			},
@@ -1023,7 +1023,7 @@ func TestRecordDecode_Cat4TestFullRecord(t *testing.T) {
 				Description: "SP (Special Purpose field) type field for test",
 				Type:        uap.SP,
 			},
-			SP: &SpecialPurpose{
+			SP: &SPandREField{
 				Len:  03,
 				Data: []byte{0xff, 0xff},
 			},
@@ -1967,6 +1967,190 @@ func TestRecordDecode_CAT004(t *testing.T) {
 	}
 
 	uap004 := uap.Cat004V112
+	data, _ := util.HexStringToByte(input)
+	rec := new(Record)
+
+	// Act
+	unRead, err := rec.Decode(data, uap004)
+
+	// Assert
+	if err != nil {
+		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+	} else {
+		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+	}
+	if unRead != 0 {
+		t.Errorf("FAIL: unRead = %v; Expected: %v", unRead, 0)
+	} else {
+		t.Logf("SUCCESS: unRead = %v; Expected: %v", unRead, 0)
+	}
+	for i, item := range rec.Items {
+		if reflect.DeepEqual(item, output[i]) == false {
+			t.Errorf("FAIL: %v; \nExpected: %v", item, output[i])
+		} else {
+			t.Logf("SUCCESS: %v; Expected: %v", item, output[i])
+		}
+	}
+}
+
+func TestRecordDecode_CAT021(t *testing.T) {
+	// Arrange
+	input := "c51d3101432304 0001 0140 2bb73efa65ba 000001 384176 3adab9f5 00 02 00 08 cb 540d0d0d 0508f00162"
+	output := []Item{
+		{
+			Meta: MetaItem{
+				FRN:         1,
+				DataItem:    "I021/010",
+				Description: "Data Source Identification",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x00, 0x01}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         2,
+				DataItem:    "I021/040",
+				Description: "Target Report Descriptor",
+				Type:        uap.Extended,
+			},
+			Extended: &Extended{
+				Primary:   []byte{0x01},
+				Secondary: []byte{0x40},
+			},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         6,
+				DataItem:    "I021/130",
+				Description: "Position in WGS-84 co-ordinates",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x2b, 0xb7, 0x3e, 0xfa, 0x65, 0xba}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         11,
+				DataItem:    "I021/080",
+				Description: "Target Address",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x00, 0x00, 0x01}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         12,
+				DataItem:    "I021/073",
+				Description: "Time of Message Reception of Position",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x38, 0x41, 0x76}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         13,
+				DataItem:    "I021/074",
+				Description: "Time of Message Reception of Position-High Precision",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x3a, 0xda, 0xb9, 0xf5}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         17,
+				DataItem:    "I021/090",
+				Description: "Quality Indicators",
+				Type:        uap.Extended,
+			},
+			Extended: &Extended{
+				Primary:   []byte{0x00},
+				Secondary: nil,
+			},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         18,
+				DataItem:    "I021/210",
+				Description: "MOPS Version",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x02}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         30,
+				DataItem:    "I021/020",
+				Description: "Emitter Category",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x00}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         35,
+				DataItem:    "I021/016",
+				Description: "Service Management",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0x08}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         38,
+				DataItem:    "I021/132",
+				Description: "Message Amplitude",
+				Type:        uap.Fixed,
+			},
+			Fixed: &Fixed{Data: []byte{0xcb}},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         42,
+				DataItem:    "I021/295",
+				Description: "Data Ages",
+				Type:        uap.Compound,
+			},
+			Compound: &Compound{
+				Primary: []byte{0x54}, // 0101-0100
+				Secondary: []Item{
+					{
+						Meta: MetaItem{
+							FRN:  2,
+							Type: uap.Fixed,
+						},
+						Fixed: &Fixed{Data: []byte{0x0d}},
+					},
+					{
+						Meta: MetaItem{
+							FRN:  4,
+							Type: uap.Fixed,
+						},
+						Fixed: &Fixed{Data: []byte{0x0d}},
+					},
+					{
+						Meta: MetaItem{
+							FRN:  6,
+							Type: uap.Fixed,
+						},
+						Fixed: &Fixed{Data: []byte{0x0d}},
+					},
+				},
+			},
+		},
+		{
+			Meta: MetaItem{
+				FRN:         48,
+				DataItem:    "RE-Data Item",
+				Description: "Reserved Expansion Field",
+				Type:        uap.RE,
+			},
+			RE: &SPandREField{
+				Len:  05,
+				Data: []byte{0x08, 0xf0, 0x01, 0x62},
+			},
+		},
+	}
+
+	uap004 := uap.Cat021v10
 	data, _ := util.HexStringToByte(input)
 	rec := new(Record)
 

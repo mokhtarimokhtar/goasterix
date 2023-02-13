@@ -75,6 +75,30 @@ func TestModelTimeOfDay(t *testing.T) {
 	}
 }
 
+func TestModelTimeOfDayHighPrecision(t *testing.T) {
+	// Arrange
+	input := [4]byte{0x3a, 0xda, 0xb9, 0xf5}
+	output := TimeOfDayHighPrecision{
+		FSI:             "+0",               // FSI = 00
+		TimeOfReception: 0.9195999996736646, // float64(0x3adab9f5) / 2^30
+	}
+	// Act
+	res, err := timeOfDayHighPrecision(input)
+
+	// Assert
+	if err != nil {
+		t.Errorf("FAIL: error = %v; Expected: %v", err, nil)
+	} else {
+		t.Logf("SUCCESS: error: %v; Expected: %v", err, nil)
+	}
+
+	if reflect.DeepEqual(res, output) == false {
+		t.Errorf("FAIL: %v; Expected: %v", res, output)
+	} else {
+		t.Logf("SUCCESS: %v; Expected: %v", res, output)
+	}
+}
+
 func TestModeSIdentification(t *testing.T) {
 	// setup
 	type dataTest struct {
